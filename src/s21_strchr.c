@@ -1,13 +1,14 @@
 #include "s21_string.h"
 
 char *s21_strchr(const char *str, int c) {
-    unsigned char *ptr = (unsigned char *)str;
-    int i = 0;
-    while(*ptr != '\0'){
-        if (ptr[i] == c) { 
-            return &ptr[i];
+    if (!str) return S21_NULL;
+    const char *ptr = str;
+    while (*ptr!= '\0') {
+        if (*ptr == c) {
+            return (char *)ptr;
         }
-        i++;
+        ptr++;
     }
+
     return S21_NULL;
 }
