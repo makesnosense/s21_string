@@ -1,12 +1,12 @@
 #include <stdio.h>
 #include <string.h>
-#include "s21_string.h"
+#include "../s21_string.h"
 
 void test_memchr();
 void test_memcmp();
 void test_memcpy();
-
-
+void test_memmove();//
+void test_memset();//
 void test_strcat();
 void test_strncat();
 void test_strchr();
@@ -15,7 +15,7 @@ void test_strncmp();
 void test_strcpy();
 void test_strncpy();
 void test_strcspn();
-//void test_strerror();
+void test_strerror();//
 void test_strlen();
 void test_strpbrk();
 void test_strrchr();
@@ -27,6 +27,8 @@ int main() {
     test_memchr();
     test_memcmp();
     test_memcpy();
+    test_memmove();//
+    test_memset();//
     test_strcat();
     test_strncat();
     test_strchr();
@@ -35,7 +37,7 @@ int main() {
     test_strcpy();
     test_strncpy();
     test_strcspn();
-    //test_strerror();
+    test_strerror();//
     test_strlen();
     test_strpbrk();
     test_strrchr();
