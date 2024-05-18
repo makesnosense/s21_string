@@ -1,13 +1,12 @@
-#ifndef SRC_CAT_S21_CAT_H_
-#define SRC_CAT_S21_CAT_H_
+#ifndef S21_STRING_H_
+#define S21_STRING_H_
 
 #define FAILURE
 #define SUCCESS
+
 #define S21_NULL (void *)0
 
 typedef long unsigned s21_size_t;
-
-
 
  	//Выполняет поиск первого вхождения символа c (беззнаковый тип) в первых n байтах строки,
     //на которую указывает аргумент str.
