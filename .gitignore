@@ -1,1 +1,4 @@
 .vscode/settings.json
+*.a
+src/object_files/
+*.o
