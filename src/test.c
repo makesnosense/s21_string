@@ -2,7 +2,6 @@
 #include <string.h>
 #include "s21_string.h"
 
-void test_strlen();
 void test_memchr();
 void test_memcmp();
 void test_memcpy();
@@ -16,9 +15,15 @@ void test_strncmp();
 void test_strcpy();
 void test_strncpy();
 void test_strcspn();
+//void test_strerror();
+void test_strlen();
+void test_strpbrk();
+void test_strrchr();
+void test_strspn();
+void test_strstr();
+void test_strtok();
 
 int main() {
-    test_strlen();
     test_memchr();
     test_memcmp();
     test_memcpy();
@@ -30,6 +35,13 @@ int main() {
     test_strcpy();
     test_strncpy();
     test_strcspn();
+    //test_strerror();
+    test_strlen();
+    test_strpbrk();
+    test_strrchr();
+    test_strspn();
+    test_strstr();
+    test_strtok();
 }
 
 void test_memchr(){
@@ -280,12 +292,84 @@ void test_strcspn() {
     printf("\n");
 }
 
+// void test_strerror() {
+//     printf("---------------------strerror()---------------------\n");
+//     // for(int i = 1; i < S21_ERRMSG_COUNT; i++){
+//     //     char *res1 = s21_strerror(i);
+//     //     char *res2 = strerror(i);
+//     //     if(!(s21_strcmp(res1, res2))){
+//     //         printf("Error Test number %d", i);
+//     //         break;
+//     //     }
+//     // }
+//     printf("%s", s21_strerror(2));
+// }
+
 void test_strlen() {
     printf("-------------------s21_strlen()-------------------\n");
     char *str = "Hello World";
     printf("%zu\n", s21_strlen(str));
     printf("---------------------strlen()---------------------\n");
     printf("%zu\n", strlen(str));
+    printf("--------------------------------------------------\n");
+    printf("\n");
+    printf("\n");
+}
+
+void test_strpbrk() {
+    printf("-------------------s21_strpbrk()-------------------\n");
+    char *str = "Hello";
+    char *str2 = "World";
+    printf("%s\n", s21_strpbrk(str, str2));
+    printf("---------------------strpbrk()---------------------\n");
+    printf("%s\n", strpbrk(str, str2));
+    printf("--------------------------------------------------\n");
+    printf("\n");
+    printf("\n");
+}
+
+void test_strrchr() {
+    printf("-------------------s21_strrchr()-------------------\n");
+    char *str = "Helloqhello";
+    printf("%s\n", s21_strrchr(str, 113)); // 113 = q
+    printf("---------------------strrchr()---------------------\n");
+    printf("%s\n", strrchr(str, 113));
+    printf("--------------------------------------------------\n");
+    printf("\n");
+    printf("\n");
+}
+
+void test_strspn() {
+    printf("-------------------s21_strspn()-------------------\n");
+    const char *str = "Hello";
+    const char *str2 = "World";
+    printf("%zu\n", s21_strspn(str, str2)); // 
+    printf("---------------------strspn()---------------------\n");
+    printf("%zu\n", strspn(str, str2));
+    printf("--------------------------------------------------\n");
+    printf("\n");
+    printf("\n");
+}
+
+void test_strstr() {
+    printf("-------------------s21_strstr()-------------------\n");
+    const char *str = "HelloWorldHello";
+    const char *str2 = "World";
+    printf("%s\n", s21_strstr(str, str2)); // 
+    printf("---------------------strstr()---------------------\n");
+    printf("%s\n", strstr(str, str2));
+    printf("--------------------------------------------------\n");
+    printf("\n");
+    printf("\n");
+}
+
+void test_strtok() {
+    printf("-------------------s21_strtok()-------------------\n");
+    char str[50] = "HelloWorldHello";
+    char *str2 = "World";
+    printf("%s\n", s21_strtok(str, str2)); // 
+    printf("---------------------strtok()---------------------\n");
+    printf("%s\n", strtok(str, str2));
     printf("--------------------------------------------------\n");
     printf("\n");
     printf("\n");
