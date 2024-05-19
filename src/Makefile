@@ -1,36 +1,36 @@
 СС = gcc
 CFLAGS = -Wall -Wextra -Werror -std=c11
+
+
 TESTS_FOLDER = tests
-TARGET = s21_string.a
-SRCDIR = .
+TESTS_SRC_FILES = $(filter-out $(TESTS_FOLDER)/test.c, $(wildcard $(TESTS_FOLDER)/*.c))
+
+
 
 STRING_SRC_FILES = $(wildcard *.c)
 STRING_OBJ_DIR = object_files
+STRING_OBJ_FILES = $(patsubst %.c,$(STRING_OBJ_DIR)/%.o,$(STRING_SRC_FILES))
+STRING_LIB = s21_string.a
 
 
-run: clean s21_string.a run_tests
+run: run_tests
+	./run_tests
+	
+
+test: $(STRING_LIB) run_tests
 	./run_tests
 
-
-run_tests: $(TESTS_FOLDER)/run_tests.c $(TARGET)
+run_tests: $(STRING_LIB) $(TESTS_SRC_FILES)
 	$(CC) $(FLAGS) $^ -o $@ -lcheck
 
-s21_string.a: $(wildcard $(STRING_OBJ_DIR)/*.o)
+
+$(STRING_LIB): $(STRING_OBJ_FILES)
 	ar rcs $@ $^
+ 
 
-
-
-
-
-# Шаблонное правило для компиляции каждого.c файла в объектный файл
 $(STRING_OBJ_DIR)/%.o: %.c
-	mkdir -p $(STRING_OBJ_DIR)
+	@mkdir -p $(STRING_OBJ_DIR)
 	$(CC) $(CFLAGS) -c $< -o $@
-
-# s21_strlen.o: s21_strlen.c
-# 	$(CC) $(FLAGS) -c $^
-
-
 
 clean:
 	rm -drf $(STRING_OBJ_DIR)
