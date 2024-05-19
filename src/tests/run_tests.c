@@ -10,7 +10,7 @@
     SRunner* suite_runner;
 
 
-    sui = strlen_suite();
+    sui = make_strlen_suite();
     suite_runner = srunner_create(sui);
 
     srunner_run_all(suite_runner, CK_NORMAL);
