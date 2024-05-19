@@ -1,7 +1,7 @@
 #include "s21_string.h"
 
-char *s21_strtok(char *str, const char *delim) {
-    static char *saveptr;
+char *s21_strtok(char* str, const char* delim) {
+    static char* saveptr;
 
     if (!str) {
         str = saveptr;
@@ -15,7 +15,7 @@ char *s21_strtok(char *str, const char *delim) {
     char *p = token;
 
     while (*p!= '\0') {
-        char *q = (char *)delim;
+        char* q = (char*) delim;
         while (*q!= '\0') {
             if (*p == *q) {
                 *p = '\0';
