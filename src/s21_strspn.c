@@ -1,6 +1,6 @@
 #include "s21_string.h"
 
-s21_size_t s21_strspn(const char *str1, const char *str2) {
+s21_size_t s21_strspn(const char* str1, const char* str2) {
     if (!*str1 ||!*str2) return 0;
 
     s21_size_t count = 0;
