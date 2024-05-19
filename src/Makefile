@@ -1,6 +1,7 @@
 СС = gcc
 CFLAGS = -Wall -Wextra -Werror -std=c11
 
+GCOVFLAGS = -fprofile-arcs -ftest-coverage
 
 TESTS_FOLDER = tests
 TESTS_SRC_FILES = $(filter-out $(TESTS_FOLDER)/test.c, $(wildcard $(TESTS_FOLDER)/*.c))
@@ -15,13 +16,13 @@ STRING_LIB = s21_string.a
 
 run: run_tests
 	./run_tests
+	for file in s21_strlen.c s21_strncat.c; do \
+		gcov $$file; \
+	done
 	
 
-test: $(STRING_LIB) run_tests
-	./run_tests
-
 run_tests: $(STRING_LIB) $(TESTS_SRC_FILES)
-	$(CC) $(FLAGS) $^ -o $@ -lcheck
+	$(CC) $(FLAGS) $(GCOVFLAGS) $^ -o $@ -lcheck
 
 
 $(STRING_LIB): $(STRING_OBJ_FILES)
@@ -30,8 +31,10 @@ $(STRING_LIB): $(STRING_OBJ_FILES)
 
 $(STRING_OBJ_DIR)/%.o: %.c
 	@mkdir -p $(STRING_OBJ_DIR)
-	$(CC) $(CFLAGS) -c $< -o $@
+	$(CC) $(CFLAGS) $(GCOVFLAGS) -c $< -o $@
 
 clean:
 	rm -drf $(STRING_OBJ_DIR)
 	rm -f s21_string.a
+	rm -f run_tests
+	rm -f *.gcda *.gcno *.gcov
