@@ -5,8 +5,8 @@
 void test_memchr();
 void test_memcmp();
 void test_memcpy();
-void test_memmove();//
-void test_memset();//
+void test_memmove();
+void test_memset();
 void test_strcat();
 void test_strncat();
 void test_strchr();
@@ -15,7 +15,7 @@ void test_strncmp();
 void test_strcpy();
 void test_strncpy();
 void test_strcspn();
-void test_strerror();//
+void test_strerror();
 void test_strlen();
 void test_strpbrk();
 void test_strrchr();
@@ -27,8 +27,8 @@ int main() {
     test_memchr();
     test_memcmp();
     test_memcpy();
-    test_memmove();//
-    test_memset();//
+    test_memmove();
+    test_memset();
     test_strcat();
     test_strncat();
     test_strchr();
@@ -37,7 +37,7 @@ int main() {
     test_strcpy();
     test_strncpy();
     test_strcspn();
-    test_strerror();//
+    test_strerror();
     test_strlen();
     test_strpbrk();
     test_strrchr();
@@ -110,16 +110,48 @@ void test_memcpy() {
 
     printf("---------------------memcpy()---------------------\n");
 
-    s21_memcpy(dest, src, n);
+    memcpy(dest, src, n);
     printf("%s\n", dest);
     printf("--------------------------------------------------\n");
     printf("\n");
     printf("\n");
 }
 
+void test_memmove(){
+    printf("------------------s21_memmove()-------------------\n");
 
+    char dest[20] = "Hello";
+    const char src[] = "World";
+    size_t n = 2; 
 
+    s21_memmove(dest, src, n);
+    printf("%s\n", dest); 
 
+    printf("--------------------memmove()---------------------\n");
+
+    memmove(dest, src, n);
+    printf("%s\n", dest);
+    printf("--------------------------------------------------\n");
+    printf("\n");
+    printf("\n");
+}
+
+void test_memset(){
+    printf("------------------s21_memset()--------------------\n");
+    char dest[20] = "Hello";
+    size_t n = 2; 
+
+    s21_memset(dest, 111, n);
+    printf("%s\n", dest); 
+
+    printf("--------------------memset()----------------------\n");
+
+    memset(dest, 111, n);
+    printf("%s\n", dest);
+    printf("--------------------------------------------------\n");
+    printf("\n");
+    printf("\n");
+}
 
 void test_strcat() {
     printf("-------------------s21_strcat()-------------------\n");
@@ -130,7 +162,7 @@ void test_strcat() {
     printf("---------------------strcat()---------------------\n");
     char str3[10] = "Hel";
     char *str4 = "lo";
-    s21_strcat(str3, str4);
+    strcat(str3, str4);
     printf("%s\n", str3);
     printf("--------------------------------------------------\n");
     printf("\n");
@@ -294,18 +326,24 @@ void test_strcspn() {
     printf("\n");
 }
 
-// void test_strerror() {
-//     printf("---------------------strerror()---------------------\n");
-//     // for(int i = 1; i < S21_ERRMSG_COUNT; i++){
-//     //     char *res1 = s21_strerror(i);
-//     //     char *res2 = strerror(i);
-//     //     if(!(s21_strcmp(res1, res2))){
-//     //         printf("Error Test number %d", i);
-//     //         break;
-//     //     }
-//     // }
-//     printf("%s", s21_strerror(2));
-// }
+void test_strerror() {
+    printf("--------------------strerror()--------------------\n");
+    int i = 0;
+    for(; i < ERR_COUNT; i++){
+        char *res1 = s21_strerror(i);
+        char *res2 = strerror(i);
+        if(!(s21_strcmp(res1, res2))){
+            printf("test number %d: |%s||%s|\n", i, res1, res2);
+            break;
+        }
+    }
+    if(i == ERR_COUNT){
+        printf("good\n");
+    }
+    printf("--------------------------------------------------\n");
+    printf("\n");
+    printf("\n");
+}
 
 void test_strlen() {
     printf("-------------------s21_strlen()-------------------\n");
