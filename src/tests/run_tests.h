@@ -7,5 +7,6 @@
 
 
 Suite* make_strlen_suite();
+Suite* make_strcat_suite();
 
 #endif
