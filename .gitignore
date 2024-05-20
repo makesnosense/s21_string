@@ -3,3 +3,5 @@
 src/object_files/
 *.o
 src/run_tests
+
+.DS_Store
