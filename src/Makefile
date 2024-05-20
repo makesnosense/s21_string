@@ -1,4 +1,4 @@
-СС = /usr/local/opt/gcc@10/bin/gcc-10
+СС = gcc
 CFLAGS = -Wall -Wextra -Werror -std=c11 -fprofile-arcs -ftest-coverage -lcheck
 
 TESTS_FOLDER = tests
@@ -19,7 +19,7 @@ test: clean build_tests
 	./run_tests
 
 gcov_report: clean build_tests test
-	@gcovr -o gcov_report.html --html --html-self-contained --exclude $(TESTS_FOLDER)
+	@gcovr -o gcov_report.html --html --html-theme github.dark-green --html-self-contained --exclude $(TESTS_FOLDER)
 	@open gcov_report.html
 
 build_tests: $(STRING_LIB) $(TESTS_SRC_FILES)
