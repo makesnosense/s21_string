@@ -6,6 +6,14 @@
 
 #define S21_NULL (void*) 0
 
+#if defined(__APPLE__)
+#define ERR_COUNT 106
+
+#elif defined(__linux__)
+#define ERR_COUNT 133
+
+#endif
+
 typedef long unsigned s21_size_t;
 
  	//Выполняет поиск первого вхождения символа c (беззнаковый тип) в первых n байтах строки,
