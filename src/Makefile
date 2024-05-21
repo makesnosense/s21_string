@@ -1,6 +1,6 @@
 СС = gcc
-CFLAGS = -Wall -Wextra -Werror -std=c11 -fprofile-arcs -ftest-coverage -lcheck
-
+CFLAGS = -Wall -Wextra -Werror -std=c11 -fprofile-arcs -ftest-coverage
+TESTFLAGS = -lcheck -lm -lsubunit
 TESTS_FOLDER = tests
 TESTS_SRC_FILES = $(filter-out $(TESTS_FOLDER)/test.c, $(wildcard $(TESTS_FOLDER)/*.c))
 
@@ -19,15 +19,15 @@ test: clean build_tests
 	./run_tests
 
 gcov_report: clean build_tests test
-	@gcovr -o gcov_report.html --html --html-theme github.dark-green --html-self-contained --exclude $(TESTS_FOLDER)
+	@gcovr -o gcov_report.html --html --html-self-contained --exclude $(TESTS_FOLDER)	
 	@open gcov_report.html
 
 build_tests: $(STRING_LIB) $(TESTS_SRC_FILES)
-	$(CC) $(CFLAGS) $^ -o run_tests
+	$(CC) $(CFLAGS) $^ -o run_tests $(STRING_LIB) $(TESTFLAGS)
 
 
 $(STRING_LIB): $(STRING_OBJ_FILES)
-	ar rcs $@ $^
+	ar rcs $@ $^ 
  
 
 $(STRING_OBJ_DIR)/%.o: %.c
