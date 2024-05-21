@@ -5,3 +5,6 @@ src/object_files/
 src/run_tests
 
 .DS_Store
+
+
+clang_all.sh
