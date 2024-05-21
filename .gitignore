@@ -1,0 +1,10 @@
+.vscode/settings.json
+*.a
+src/object_files/
+*.o
+src/run_tests
+
+.DS_Store
+
+
+clang_all.sh
