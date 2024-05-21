@@ -1,5 +1,5 @@
 СС = gcc
-CFLAGS = -Wall -Wextra -Werror -std=c11 -fprofile-arcs -ftest-coverage -lcheck
+CFLAGS = -Wall -Wextra -Werror -std=c11 -fprofile-arcs -ftest-coverage -lcheck -lpthread -lrt -lsubunit
 
 TESTS_FOLDER = tests
 TESTS_SRC_FILES = $(filter-out $(TESTS_FOLDER)/test.c, $(wildcard $(TESTS_FOLDER)/*.c))
@@ -8,7 +8,7 @@ TESTS_SRC_FILES = $(filter-out $(TESTS_FOLDER)/test.c, $(wildcard $(TESTS_FOLDER
 
 STRING_SRC_FILES = $(wildcard *.c)
 STRING_OBJ_DIR = object_files
-STRING_OBJ_FILES = $(patsubst %.c,$(STRING_OBJ_DIR)/%.o,$(STRING_SRC_FILES))
+STRINGBJ_FILES = $(patsubst %.c,$(STRING_OBJ_DIR)/%.o,$(STRING_SRC_FILES))
 STRING_LIB = s21_string.a
 
 
