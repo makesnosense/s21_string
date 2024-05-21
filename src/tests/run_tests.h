@@ -9,5 +9,6 @@
 Suite* make_strlen_suite();
 Suite* make_strcat_suite();
 Suite* make_memchr_suite();
+Suite* make_memcmp_suite();
 
 #endif
