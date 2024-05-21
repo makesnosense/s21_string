@@ -13,13 +13,13 @@ START_TEST(second_test) {
 END_TEST
 
 Suite* make_strlen_suite() {
-  Suite* sui = suite_create("strlen");
+  Suite* len_suite = suite_create("strlen");
   TCase* tc_core;
 
   tc_core = tcase_create("Core");
   tcase_add_test(tc_core, first_test);
   tcase_add_test(tc_core, second_test);
 
-  suite_add_tcase(sui, tc_core);
-  return sui;
+  suite_add_tcase(len_suite, tc_core);
+  return len_suite;
 }
