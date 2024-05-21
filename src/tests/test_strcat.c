@@ -16,12 +16,11 @@
 
 #include "run_tests.h"
 
-
 START_TEST(first_test) {
-char str1[10] = "Hel";
-char *str2 = "lo";
+  char str1[10] = "Hel";
+  char* str2 = "lo";
 
-ck_assert_str_eq(s21_strcat(str1, str2), strcat(str1, str2));
+  ck_assert_str_eq(s21_strcat(str1, str2), strcat(str1, str2));
 }
 END_TEST
 
@@ -33,15 +32,14 @@ END_TEST
 // }
 // END_TEST
 
-
 Suite* make_strcat_suite() {
-    Suite* cat_suite = suite_create("strcat");
-    TCase *tc_core;
+  Suite* cat_suite = suite_create("strcat");
+  TCase* tc_core;
 
-    tc_core = tcase_create("Core");
-    tcase_add_test(tc_core, first_test);
-    // tcase_add_test(tc_core, second_test);
+  tc_core = tcase_create("Core");
+  tcase_add_test(tc_core, first_test);
+  // tcase_add_test(tc_core, second_test);
 
-    suite_add_tcase(cat_suite, tc_core);
-    return cat_suite;
+  suite_add_tcase(cat_suite, tc_core);
+  return cat_suite;
 }

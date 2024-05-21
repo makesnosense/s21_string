@@ -254,13 +254,13 @@ static const char *errors_array[] = {
 #endif
 
 char *s21_strerror(int errnum) {
-    static char res[128] = {'\0'};
+  static char res[128] = {'\0'};
 
-    if(errnum < 0 || errnum > ERR_COUNT){
-        return "no error";
-    }else {
-        s21_strcpy(res, ((char *)errors_array[errnum]));
-    }
+  if (errnum < 0 || errnum > ERR_COUNT) {
+    return "no error";
+  } else {
+    s21_strcpy(res, ((char *)errors_array[errnum]));
+  }
 
-    return res;
+  return res;
 }
