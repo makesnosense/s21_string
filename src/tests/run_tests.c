@@ -5,16 +5,19 @@ int main() {
   Suite* strlen_suite;
   Suite* strcat_suite;
   Suite* memchr_suite;
+  Suite* memcmp_suite;
 
   SRunner* suite_runner;
 
   strlen_suite = make_strlen_suite();
   strcat_suite = make_strcat_suite();
   memchr_suite = make_memchr_suite();
+  memcmp_suite = make_memcmp_suite();
 
   suite_runner = srunner_create(strlen_suite);
   srunner_add_suite(suite_runner, strcat_suite);
   srunner_add_suite(suite_runner, memchr_suite);
+  srunner_add_suite(suite_runner, memcmp_suite);
 
   srunner_run_all(suite_runner, CK_VERBOSE);
 

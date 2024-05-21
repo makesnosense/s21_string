@@ -47,57 +47,57 @@ int main() {
   test_strtok();
 }
 
-void test_memchr() {
-  printf("-------------------s21_memchr()-------------------\n");
-  unsigned char buffer[] = "Hello, World";  // Пример буфера
-  int c = 'o';
-  s21_size_t n = sizeof(buffer);
+// void test_memchr() {
+//   printf("-------------------s21_memchr()-------------------\n");
+//   unsigned char buffer[] = "Hello, World";  // Пример буфера
+//   int c = 'o';
+//   s21_size_t n = sizeof(buffer);
 
-  void *result = s21_memchr(buffer, c, n);
+//   void *result = s21_memchr(buffer, c, n);
 
-  if (result != NULL) {
-    printf("%c\n", *(char *)result);
-  } else {
-    printf("%c\n", c);
-  }
+//   if (result != NULL) {
+//     printf("%c\n", *(char *)result);
+//   } else {
+//     printf("%c\n", c);
+//   }
 
-  printf("---------------------memchr()---------------------\n");
+//   printf("---------------------memchr()---------------------\n");
 
-  void *result1 = memchr(buffer, c, n);
+//   void *result1 = memchr(buffer, c, n);
 
-  if (result != NULL) {
-    printf("%c\n", *(char *)result1);
-  } else {
-    printf("%c\n", c);
-  }
-  printf("--------------------------------------------------\n");
-  printf("\n");
-  printf("\n");
-}
+//   if (result != NULL) {
+//     printf("%c\n", *(char *)result1);
+//   } else {
+//     printf("%c\n", c);
+//   }
+//   printf("--------------------------------------------------\n");
+//   printf("\n");
+//   printf("\n");
+// }
 
-void test_memcmp() {
-  printf("-------------------s21_memcmp()-------------------\n");
-  unsigned char block1[] = {1, 2, 3};
-  unsigned char block2[] = {1, 2, 3};
-  unsigned char block3[] = {1, 2, 4};
+// void test_memcmp() {
+//   printf("-------------------s21_memcmp()-------------------\n");
+//   unsigned char block1[] = {1, 2, 3};
+//   unsigned char block2[] = {1, 2, 3};
+//   unsigned char block3[] = {1, 2, 4};
 
-  int result1 = s21_memcmp(block1, block2, sizeof(block1));
-  int result2 = s21_memcmp(block1, block3, sizeof(block1));
+//   int result1 = s21_memcmp(block1, block2, sizeof(block1));
+//   int result2 = s21_memcmp(block1, block3, sizeof(block1));
 
-  printf("%d\n", result1);
-  printf("%d\n", result2);
+//   printf("%d\n", result1);
+//   printf("%d\n", result2);
 
-  printf("---------------------memcmp()---------------------\n");
+//   printf("---------------------memcmp()---------------------\n");
 
-  result1 = memcmp(block1, block2, sizeof(block1));
-  result2 = memcmp(block1, block3, sizeof(block1));
+//   result1 = memcmp(block1, block2, sizeof(block1));
+//   result2 = memcmp(block1, block3, sizeof(block1));
 
-  printf("%d\n", result1);
-  printf("%d\n", result2);
-  printf("--------------------------------------------------\n");
-  printf("\n");
-  printf("\n");
-}
+//   printf("%d\n", result1);
+//   printf("%d\n", result2);
+//   printf("--------------------------------------------------\n");
+//   printf("\n");
+//   printf("\n");
+// }
 
 void test_memcpy() {
   printf("-------------------s21_memcpy()-------------------\n");

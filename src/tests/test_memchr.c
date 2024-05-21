@@ -1,33 +1,5 @@
 #include <stdio.h>
 
-// void test_memchr() {
-//   printf("-------------------s21_memchr()-------------------\n");
-//   unsigned char buffer[] = "Hello, World";  // Пример буфера
-//   int c = 'o';
-//   s21_size_t n = sizeof(buffer);
-
-//   void *result = s21_memchr(buffer, c, n);
-
-//   if (result != NULL) {
-//     printf("%c\n", *(char *)result);
-//   } else {
-//     printf("%c\n", c);
-//   }
-
-//   printf("---------------------memchr()---------------------\n");
-
-//   void *result1 = memchr(buffer, c, n);
-
-//   if (result != NULL) {
-//     printf("%c\n", *(char *)result1);
-//   } else {
-//     printf("%c\n", c);
-//   }
-//   printf("--------------------------------------------------\n");
-//   printf("\n");
-//   printf("\n");
-// }
-
 #include "run_tests.h"
 
 START_TEST(hello_world_test) {
