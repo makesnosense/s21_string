@@ -99,24 +99,24 @@ int main() {
 //   printf("\n");
 // }
 
-void test_memcpy() {
-  printf("-------------------s21_memcpy()-------------------\n");
+// void test_memcpy() {
+//   printf("-------------------s21_memcpy()-------------------\n");
 
-  char dest[20] = "Hello";
-  const char src[] = "World";
-  size_t n = 2;
+//   char dest[20] = "Hello";
+//   const char src[] = "World";
+//   size_t n = 2;
 
-  s21_memcpy(dest, src, n);
-  printf("%s\n", dest);
+//   s21_memcpy(dest, src, n);
+//   printf("%s\n", dest);
 
-  printf("---------------------memcpy()---------------------\n");
+//   printf("---------------------memcpy()---------------------\n");
 
-  memcpy(dest, src, n);
-  printf("%s\n", dest);
-  printf("--------------------------------------------------\n");
-  printf("\n");
-  printf("\n");
-}
+//   memcpy(dest, src, n);
+//   printf("%s\n", dest);
+//   printf("--------------------------------------------------\n");
+//   printf("\n");
+//   printf("\n");
+// }
 
 void test_memmove() {
   printf("------------------s21_memmove()-------------------\n");
