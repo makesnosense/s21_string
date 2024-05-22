@@ -61,7 +61,8 @@ int s21_sprintf(char* str, const char* format, ...) {
           str[str_index++] = c;
           break;
         }
-        case 'd': {  // Если int
+        case 'i':  // Если int
+        case 'd': {
           int d = va_arg(args, int);
           char* d_str = int_to_str(d);
 
