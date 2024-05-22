@@ -14,11 +14,11 @@ int main() {
   scanf("%d", &year);
 
   // Моя sprintf
-  s21_sprintf(formatted_line, "%d-%d-%d%c%c", day, month, year, '\t', '@');
+  s21_sprintf(formatted_line, "%i-%d-%i%c%c", day, month, year, '\t', '@');
   printf("s21_sprintf-Отформатированная строка: %s\n", formatted_line);
 
   // Стандартная sprintf
-  sprintf(formatted_line, "%d-%d-%d%c%c", day, month, year, '\t', '@');
+  sprintf(formatted_line, "%i-%d-%i%c%c", day, month, year, '\t', '@');
   printf("----sprintf-Отформатированная строка: %s\n", formatted_line);
 
   return 0;
