@@ -6,5 +6,7 @@ src/run_tests
 
 .DS_Store
 
+// Файл с настройками формата
+CPPLINT.cfg
 
 clang_all.sh
