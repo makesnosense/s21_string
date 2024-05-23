@@ -1,0 +1,20 @@
+CC = gcc
+CFLAGS = -std=c11 
+
+OBJ = s21_sprintf.c s21_sprintf_main.c ../s21_strcpy.c ../s21_strlen.c ../s21_memmove.c
+EXE = s21_sprintf
+
+all: cpplint s21_sprintf
+
+s21_sprintf: $(OBJ)
+	$(CC) $(CFLAGS) $^ -o $@
+
+cpplint:
+	python3 ../../materials/linters/cpplint.py --extensions=c ../s21_sprintf_dir/*.c
+
+clean:
+	rm s21_sprintf
+
+rebuild:
+	$(MAKE) clean
+	$(MAKE) all

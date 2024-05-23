@@ -119,6 +119,8 @@ void* s21_insert(const char* src, const char* str, s21_size_t start_index);
 void* s21_trim(const char* src, const char* trim_chars);
 
 int s21_sscanf(const char* str, const char* format, ...);
+
+// Отправляет форматированный вывод в строку, на которую указывает str.
 int s21_sprintf(char* str, const char* format, ...);
 
 #endif
