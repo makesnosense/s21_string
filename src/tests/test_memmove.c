@@ -27,7 +27,7 @@ START_TEST(test_memmove_overlap_forward) {
 
   char* lib_expected_result = "1.2.31.2.3.4.5.6.7.8.9.10.11.12.";
 
-  void* s21_result = memmove(dest + 5, src, 27);
+  void* s21_result = s21_memmove(dest + 5, src, 27);
 
   ck_assert_mem_eq(dest, lib_expected_result, strlen(lib_expected_result));
   ck_assert_ptr_eq(s21_result - 5, dest);
