@@ -1,5 +1,6 @@
 СС = gcc
 CFLAGS = -Wall -Wextra -Werror -std=c11 -fprofile-arcs -ftest-coverage
+# CFLAGS = -std=c11 -fprofile-arcs -ftest-coverage
 ifeq ($(shell uname),Darwin)
     TESTFLAGS:=-lcheck
 	GCOVR_THEME = --html-theme github.dark-green
