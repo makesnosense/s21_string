@@ -1,10 +1,21 @@
 #include "run_tests.h"
 
-START_TEST(first_test) {
+START_TEST(test_strcat_hello) {
   char str1[10] = "Hel";
   char* str2 = "lo";
 
-  ck_assert_str_eq(s21_strcat(str1, str2), strcat(str1, str2));
+  char* s21_res;
+
+  s21_res = s21_strcat(str1, str2);
+
+  char lib_str1[10] = "Hel";
+  char* lib_str2 = "lo";
+  char* lib_res;
+
+  lib_res = strcat(lib_str1, lib_str2);
+
+  ck_assert_str_eq(s21_res, lib_res);
+  ck_assert_mem_eq(s21_res, lib_res, 10);
 }
 END_TEST
 
@@ -14,7 +25,7 @@ START_TEST(test_strcat_empty_src) {
   char expected[20] = "World";
 
   ck_assert_str_eq(s21_strcat(str1, str2), expected);
-  ck_assert_str_eq(str1, expected);
+  ck_assert_mem_eq(str1, expected, strlen(str1));
 }
 END_TEST
 
@@ -23,8 +34,8 @@ START_TEST(test_strcat_empty_dest) {
   char* str2 = "";
   char expected[20] = "Hello";
 
-  ck_assert_str_eq(s21_strcat(str1, str2), strcat(str1, str2));
-  ck_assert_str_eq(str1, expected);
+  ck_assert_str_eq(s21_strcat(str1, str2), expected);
+  ck_assert_mem_eq(str1, expected, strlen(str1));
 }
 END_TEST
 
@@ -42,7 +53,7 @@ Suite* make_strcat_suite() {
   TCase* tc_core;
 
   tc_core = tcase_create("Core");
-  tcase_add_test(tc_core, first_test);
+  tcase_add_test(tc_core, test_strcat_hello);
   tcase_add_test(tc_core, test_strcat_empty_src);
   tcase_add_test(tc_core, test_strcat_empty_dest);
   tcase_add_test(tc_core, test_strcat_return_value);
