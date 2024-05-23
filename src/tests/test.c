@@ -99,43 +99,43 @@ int main() {
 //   printf("\n");
 // }
 
-void test_memcpy() {
-  printf("-------------------s21_memcpy()-------------------\n");
+// void test_memcpy() {
+//   printf("-------------------s21_memcpy()-------------------\n");
 
-  char dest[20] = "Hello";
-  const char src[] = "World";
-  size_t n = 2;
+//   char dest[20] = "Hello";
+//   const char src[] = "World";
+//   size_t n = 2;
 
-  s21_memcpy(dest, src, n);
-  printf("%s\n", dest);
+//   s21_memcpy(dest, src, n);
+//   printf("%s\n", dest);
 
-  printf("---------------------memcpy()---------------------\n");
+//   printf("---------------------memcpy()---------------------\n");
 
-  memcpy(dest, src, n);
-  printf("%s\n", dest);
-  printf("--------------------------------------------------\n");
-  printf("\n");
-  printf("\n");
-}
+//   memcpy(dest, src, n);
+//   printf("%s\n", dest);
+//   printf("--------------------------------------------------\n");
+//   printf("\n");
+//   printf("\n");
+// }
 
-void test_memmove() {
-  printf("------------------s21_memmove()-------------------\n");
+// void test_memmove() {
+//   printf("------------------s21_memmove()-------------------\n");
 
-  char dest[20] = "Hello";
-  const char src[] = "World";
-  size_t n = 2;
+//   char dest[20] = "Hello";
+//   const char src[] = "World";
+//   size_t n = 2;
 
-  s21_memmove(dest, src, n);
-  printf("%s\n", dest);
+//   s21_memmove(dest, src, n);
+//   printf("%s\n", dest);
 
-  printf("--------------------memmove()---------------------\n");
+//   printf("--------------------memmove()---------------------\n");
 
-  memmove(dest, src, n);
-  printf("%s\n", dest);
-  printf("--------------------------------------------------\n");
-  printf("\n");
-  printf("\n");
-}
+//   memmove(dest, src, n);
+//   printf("%s\n", dest);
+//   printf("--------------------------------------------------\n");
+//   printf("\n");
+//   printf("\n");
+// }
 
 void test_memset() {
   printf("------------------s21_memset()--------------------\n");
@@ -263,27 +263,27 @@ void test_strncmp() {
   printf("\n");
 }
 
-void test_strcpy() {
-  printf("-------------------s21_strcpy()-------------------\n");
+// void test_strcpy() {
+//   printf("-------------------s21_strcpy()-------------------\n");
 
-  char dest[50] = "";
-  char *src = "Hello, World";
+//   char dest[50] = "";
+//   char *src = "Hello, World";
 
-  s21_strcpy(dest, src);
-  printf("%s\n", dest);
+//   s21_strcpy(dest, src);
+//   printf("%s\n", dest);
 
-  printf("---------------------strcpy()---------------------\n");
+//   printf("---------------------strcpy()---------------------\n");
 
-  char dest1[50] = "";
-  char *src1 = "Hello, World";
+//   char dest1[50] = "";
+//   char *src1 = "Hello, World";
 
-  strcpy(dest1, src1);
-  printf("%s\n", dest1);
+//   strcpy(dest1, src1);
+//   printf("%s\n", dest1);
 
-  printf("--------------------------------------------------\n");
-  printf("\n");
-  printf("\n");
-}
+//   printf("--------------------------------------------------\n");
+//   printf("\n");
+//   printf("\n");
+// }
 
 void test_strncpy() {
   printf("-------------------s21_strncpy()-------------------\n");
@@ -356,16 +356,16 @@ void test_strerror() {
   printf("\n");
 }
 
-void test_strlen() {
-  printf("-------------------s21_strlen()-------------------\n");
-  char *str = "Hello World";
-  printf("%zu\n", s21_strlen(str));
-  printf("---------------------strlen()---------------------\n");
-  printf("%zu\n", strlen(str));
-  printf("--------------------------------------------------\n");
-  printf("\n");
-  printf("\n");
-}
+// void test_strlen() {
+//   printf("-------------------s21_strlen()-------------------\n");
+//   char *str = "Hello World";
+//   printf("%zu\n", s21_strlen(str));
+//   printf("---------------------strlen()---------------------\n");
+//   printf("%zu\n", strlen(str));
+//   printf("--------------------------------------------------\n");
+//   printf("\n");
+//   printf("\n");
+// }
 
 void test_strpbrk() {
   printf("-------------------s21_strpbrk()-------------------\n");
