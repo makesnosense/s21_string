@@ -137,38 +137,38 @@ int main() {
 //   printf("\n");
 // }
 
-void test_memset() {
-  printf("------------------s21_memset()--------------------\n");
-  char dest[20] = "Hello";
-  size_t n = 2;
+// void test_memset() {
+//   printf("------------------s21_memset()--------------------\n");
+//   char dest[20] = "Hello";
+//   size_t n = 2;
 
-  s21_memset(dest, 111, n);
-  printf("%s\n", dest);
+//   s21_memset(dest, 111, n);
+//   printf("%s\n", dest);
 
-  printf("--------------------memset()----------------------\n");
+//   printf("--------------------memset()----------------------\n");
 
-  memset(dest, 111, n);
-  printf("%s\n", dest);
-  printf("--------------------------------------------------\n");
-  printf("\n");
-  printf("\n");
-}
+//   memset(dest, 111, n);
+//   printf("%s\n", dest);
+//   printf("--------------------------------------------------\n");
+//   printf("\n");
+//   printf("\n");
+// }
 
-void test_strcat() {
-  printf("-------------------s21_strcat()-------------------\n");
-  char str1[10] = "Hel";
-  char *str2 = "lo";
-  s21_strcat(str1, str2);
-  printf("%s\n", str1);
-  printf("---------------------strcat()---------------------\n");
-  char str3[10] = "Hel";
-  char *str4 = "lo";
-  strcat(str3, str4);
-  printf("%s\n", str3);
-  printf("--------------------------------------------------\n");
-  printf("\n");
-  printf("\n");
-}
+// void test_strcat() {
+//   printf("-------------------s21_strcat()-------------------\n");
+//   char str1[10] = "Hel";
+//   char *str2 = "lo";
+//   s21_strcat(str1, str2);
+//   printf("%s\n", str1);
+//   printf("---------------------strcat()---------------------\n");
+//   char str3[10] = "Hel";
+//   char *str4 = "lo";
+//   strcat(str3, str4);
+//   printf("%s\n", str3);
+//   printf("--------------------------------------------------\n");
+//   printf("\n");
+//   printf("\n");
+// }
 
 void test_strncat() {
   printf("------------------s21_strncat()-------------------\n");
