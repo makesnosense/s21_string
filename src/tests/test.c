@@ -392,8 +392,8 @@ void test_strrchr() {
 
 void test_strspn() {
   printf("-------------------s21_strspn()-------------------\n");
-  const char *str = "Hello";
-  const char *str2 = "World";
+  const char *str = "HelloWo";
+  const char *str2 = "HeWorld";
   printf("%zu\n", s21_strspn(str, str2));  //
   printf("---------------------strspn()---------------------\n");
   printf("%zu\n", strspn(str, str2));
