@@ -3,24 +3,28 @@
 #include "../s21_string.h"
 
 int main() {
-  int day, month;  // Переменные для считывания значений
-  float year;
-  char formatted_line[100];  // Для хранения отформатированной строки
+  int day, month;    // Целые числа
+  float year;        // Число с плавающей точкой
+  char string[30];   // Строка
+  char f_line[100];  // Отформатированная строка
 
+  // Читаем с терминала
   printf("Введите день: ");
   scanf("%d", &day);
   printf("Введите месяц: ");
   scanf("%d", &month);
   printf("Введите год: ");
   scanf("%f", &year);
+  printf("Введите строку: ");
+  scanf("%29s", string);
 
   // Моя sprintf
-  s21_sprintf(formatted_line, "%i-%d-%f%c%c", day, month, year, '\t', '@');
-  printf("s21_sprintf-Отформатированная строка: %s\n", formatted_line);
+  s21_sprintf(f_line, "%i-%d-%f%c%s%c", day, month, year, '\t', string, '@');
+  printf("s21_sprintf-Отформатированная строка: %s\n", f_line);
 
   // Стандартная sprintf
-  sprintf(formatted_line, "%i-%d-%f%c%c", day, month, year, '\t', '@');
-  printf("----sprintf-Отформатированная строка: %s\n", formatted_line);
+  sprintf(f_line, "%u-%d-%f%c%s%c", day, month, year, '\t', string, '@');
+  printf("----sprintf-Отформатированная строка: %s\n", f_line);
 
   return 0;
 }
