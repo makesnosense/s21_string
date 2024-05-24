@@ -1,6 +1,5 @@
-#include <stdio.h>
-
 #include "run_tests.h"
+
 START_TEST(test_memmove_empty) {
   char src[1] = {0};
   char dest[1];
