@@ -1,1 +1,0 @@
-python3 ../../materials/linters/cpplint.py --extensions=c ../s21_sprintf_dir/s21_sprintf.c
