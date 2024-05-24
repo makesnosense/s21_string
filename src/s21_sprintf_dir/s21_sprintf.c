@@ -31,7 +31,7 @@ char* int_to_str(long long int num) {
   if (len == 0) {
     s21_strcpy(str, "0");
   } else {
-    int i = len - 1;
+    s21_size_t i = len - 1;
     while (i >= 0) {
       str[i] = (num % 10) + '0';
       num /= 10;
