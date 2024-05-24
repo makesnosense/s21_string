@@ -5,9 +5,10 @@
 #include "../s21_string.h"
 
 // Функция для преобразования целого числа в строку
-char* int_to_str(int num) {
-  char* str = malloc(20);  // Для типа int хватит
-  int is_negative = 0;     // Является ли отр. числом
+char* int_to_str(long long int num) {
+  long long int temp_num = num;  // Для подсчета длины строки
+  s21_size_t len = 0;            // Длина строки
+  int is_negative = 0;           // Является ли отр. числом
 
   // Если число num отрицательное
   if (num < 0) {
@@ -16,12 +17,15 @@ char* int_to_str(int num) {
   }
 
   // Считаем длину числа
-  int len = 0;
-  int temp_num = num;
   while (temp_num != 0) {
     len++;
     temp_num /= 10;
   }
+
+  // Выделяем память под строку, учитывая знак минуса
+  // +1 для нулевого символа конца строки
+  int fixed_len = len == 0 ? 1 : len;
+  char* str = malloc(fixed_len + 1 + is_negative);
 
   // Преобразуем число в строку
   if (len == 0) {
@@ -39,7 +43,7 @@ char* int_to_str(int num) {
       s21_memmove(str + 1, str, len);
       str[0] = '-';
     }
-    str[is_negative ? len + 1 : len] = '\0';
+    str[len + is_negative] = '\0';
   }
 
   return str;
@@ -61,7 +65,7 @@ int s21_sprintf(char* str, const char* format, ...) {
           str[str_index++] = c;
           break;
         }
-        case 'i':  // Если int
+        case 'i':  // Если i или d (int)
         case 'd': {
           int d = va_arg(args, int);
           char* d_str = int_to_str(d);
