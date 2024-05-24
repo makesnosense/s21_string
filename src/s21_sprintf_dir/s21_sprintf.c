@@ -1,3 +1,4 @@
+#include <math.h>
 #include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -55,7 +56,7 @@ int s21_sprintf(char* str, const char* format, ...) {
   va_list args;  // Список аргументов
   va_start(args, format);  // Инициализируем список аргументов
 
-  int str_index = 0;  // Индекс буферной строки
+  s21_size_t str_index = 0;  // Индекс буферной строки
   while (*format != '\0') {
     if (*format == '%') {
       format++;
