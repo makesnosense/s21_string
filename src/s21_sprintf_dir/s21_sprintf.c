@@ -110,6 +110,21 @@ int s21_sprintf(char* str, const char* format, ...) {
           if (f_str) free(f_str);
           break;
         }
+        case 's': {
+          char* s = va_arg(args, char*);
+          s21_strcpy(str + str_index, s);
+          str_index += s21_strlen(s);
+          break;
+        }
+        case 'u': {
+          unsigned u = va_arg(args, unsigned);
+          char* u_str = int_to_str(u);
+
+          s21_strcpy(str + str_index, u_str);
+          str_index += s21_strlen(u_str);
+
+          if (u_str) free(u_str);
+        }
         default:
           break;
       }
