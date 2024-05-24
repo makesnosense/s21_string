@@ -12,6 +12,8 @@ int main() {
   Suite* memset_suite;
   Suite* strncat_suite;
   Suite* strchr_suite;
+  Suite* strncmp_suite;
+  Suite* strcmp_suite;
 
   SRunner* suite_runner;
 
@@ -25,6 +27,8 @@ int main() {
   memset_suite = make_memset_suite();
   strncat_suite = make_strncat_suite();
   strchr_suite = make_strchr_suite();
+  strncmp_suite = make_strncmp_suite();
+  strcmp_suite = make_strcmp_suite();
 
   suite_runner = srunner_create(strlen_suite);
 
@@ -37,6 +41,8 @@ int main() {
   srunner_add_suite(suite_runner, memset_suite);
   srunner_add_suite(suite_runner, strncat_suite);
   srunner_add_suite(suite_runner, strchr_suite);
+  srunner_add_suite(suite_runner, strncmp_suite);
+  srunner_add_suite(suite_runner, strcmp_suite);
 
   srunner_run_all(suite_runner, CK_VERBOSE);
 
