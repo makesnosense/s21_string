@@ -23,16 +23,15 @@ char* int_to_str(long long int num) {
     temp_num /= 10;
   }
 
-  // Выделяем память под строку, учитывая знак минуса
-  // +1 для нулевого символа конца строки
-  int fixed_len = len == 0 ? 1 : len;
-  char* str = malloc(fixed_len + 1 + is_negative);
+  // Выделяем память под строку, учитывая знак минуса,
+  // нулевой символ и конец строки
+  char* str = malloc(len + 3);
 
   // Преобразуем число в строку
   if (len == 0) {
     s21_strcpy(str, "0");
   } else {
-    s21_size_t i = len - 1;
+    int i = len - 1;  // Здесь по идее тоже должен быть s21_size_t :)
     while (i >= 0) {
       str[i] = (num % 10) + '0';
       num /= 10;
@@ -50,6 +49,30 @@ char* int_to_str(long long int num) {
   return str;
 }
 
+char* float_to_str(double num) {
+  // Преобразуем целочисленную часть
+  char* whole = int_to_str((long long int)num);
+
+  // Преобразуем часть с плавающей точкой
+  double frtemp = fabs(fmod(num, 1.0) * pow(10, 6));
+  char* fract = int_to_str(frtemp);
+
+  // Считаем размер для маллока
+  s21_size_t len = s21_strlen(whole) + s21_strlen(fract) + 3;
+
+  // Аллоцируем память и соединяем части в одну строку
+  char* res = malloc(len);
+  s21_strcpy(res, whole);
+  s21_strcat(res, ".");
+  s21_strcat(res, fract);
+
+  // Освобождаем память, выделенную под целую и десятичную части
+  free(whole);
+  free(fract);
+
+  return res;
+}
+
 int s21_sprintf(char* str, const char* format, ...) {
   int res = 0;  // Результат работы функции
 
@@ -61,7 +84,7 @@ int s21_sprintf(char* str, const char* format, ...) {
     if (*format == '%') {
       format++;
       switch (*format) {
-        case 'c': {  // Если char
+        case 'c': {  // Если c (char)
           char c = va_arg(args, int);
           str[str_index++] = c;
           break;
@@ -75,6 +98,16 @@ int s21_sprintf(char* str, const char* format, ...) {
           str_index += s21_strlen(d_str);
 
           if (d_str) free(d_str);
+          break;
+        }
+        case 'f': {  // Если f (float)
+          float f = va_arg(args, double);
+          char* f_str = float_to_str(f);
+
+          s21_strcpy(str + str_index, f_str);
+          str_index += s21_strlen(f_str);
+
+          if (f_str) free(f_str);
           break;
         }
         default:
