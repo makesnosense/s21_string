@@ -23,8 +23,9 @@ test: clean build_tests
 	./run_tests
 
 gcov_report: clean build_tests test
-	@gcovr -o gcov_report.html --html --html-self-contained $(GCOVR_THEME) --exclude $(TESTS_FOLDER)	
+	@gcovr -o gcov_report.html --html --html-self-contained --html-details $(GCOVR_THEME) --exclude $(TESTS_FOLDER)	
 	@open gcov_report.html
+
 
 build_tests: $(STRING_LIB) $(TESTS_SRC_FILES)
 	$(CC) $(CFLAGS) $^ -o run_tests $(STRING_LIB) $(TESTFLAGS)
@@ -47,5 +48,6 @@ clean:
 	rm -f run_tests
 	rm -f *.gcda *.gcno *.gcov
 	rm -f gcov_report.html
+	rm -f gcov_report.*
 
 	
