@@ -14,5 +14,6 @@ Suite* make_strcpy_suite();
 Suite* make_memcpy_suite();
 Suite* make_memmove_suite();
 Suite* make_memset_suite();
+Suite* make_strncat_suite();
 
 #endif
