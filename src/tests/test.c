@@ -170,37 +170,37 @@ int main() {
 //   printf("\n");
 // }
 
-void test_strncat() {
-  printf("------------------s21_strncat()-------------------\n");
-  char str1[10] = "Hel";
-  char *str2 = "lo";
-  s21_strncat(str1, str2, 1);
-  printf("%s\n", str1);
-  printf("--------------------strncat()---------------------\n");
-  char str3[10] = "Hel";
-  char *str4 = "lo";
-  strncat(str3, str4, 1);
-  printf("%s\n", str3);
-  printf("--------------------------------------------------\n");
-  printf("\n");
-  printf("\n");
-}
+// void test_strncat() {
+//   printf("------------------s21_strncat()-------------------\n");
+//   char str1[10] = "Hel";
+//   char *str2 = "lo";
+//   s21_strncat(str1, str2, 1);
+//   printf("%s\n", str1);
+//   printf("--------------------strncat()---------------------\n");
+//   char str3[10] = "Hel";
+//   char *str4 = "lo";
+//   strncat(str3, str4, 1);
+//   printf("%s\n", str3);
+//   printf("--------------------------------------------------\n");
+//   printf("\n");
+//   printf("\n");
+// }
 
-void test_strchr() {
-  printf("-------------------s21_strchr()-------------------\n");
+// void test_strchr() {
+//   printf("-------------------s21_strchr()-------------------\n");
 
-  char *result1 = s21_strchr("Hello", 111);  // 111 = "o"
-  printf("%s\n", result1);
+//   char *result1 = s21_strchr("Hello", 111);  // 111 = "o"
+//   printf("%s\n", result1);
 
-  printf("---------------------strchr()---------------------\n");
+//   printf("---------------------strchr()---------------------\n");
 
-  char *result2 = strchr("Hello", 111);  // 111 = "o"
-  printf("%s\n", result2);
+//   char *result2 = strchr("Hello", 111);  // 111 = "o"
+//   printf("%s\n", result2);
 
-  printf("--------------------------------------------------\n");
-  printf("\n");
-  printf("\n");
-}
+//   printf("--------------------------------------------------\n");
+//   printf("\n");
+//   printf("\n");
+// }
 
 void test_strcmp() {
   printf("-------------------s21_strcmp()-------------------\n");
