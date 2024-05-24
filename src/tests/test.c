@@ -202,66 +202,66 @@ int main() {
 //   printf("\n");
 // }
 
-void test_strcmp() {
-  printf("-------------------s21_strcmp()-------------------\n");
+// void test_strcmp() {
+//   printf("-------------------s21_strcmp()-------------------\n");
 
-  const char *str1 = "hello";
-  const char *str2 = "world";
+//   const char *str1 = "hello";
+//   const char *str2 = "world";
 
-  int result = s21_strcmp(str1, str2);
-  if (result < 0) {
-    printf("str1 меньше str2: %d\n", result);
-  } else if (result > 0) {
-    printf("str1 больше str2: %d\n", result);
-  } else {
-    printf("str1 и str2 идентичны: %d\n", result);
-  }
+//   int result = s21_strcmp(str1, str2);
+//   if (result < 0) {
+//     printf("str1 меньше str2: %d\n", result);
+//   } else if (result > 0) {
+//     printf("str1 больше str2: %d\n", result);
+//   } else {
+//     printf("str1 и str2 идентичны: %d\n", result);
+//   }
 
-  printf("---------------------strcmp()---------------------\n");
+//   printf("---------------------strcmp()---------------------\n");
 
-  int result1 = strcmp(str1, str2);
-  if (result1 < 0) {
-    printf("str1 меньше str2: %d\n", result1);
-  } else if (result1 > 0) {
-    printf("str1 больше str2: %d\n", result1);
-  } else {
-    printf("str1 и str2 идентичны: %d\n", result1);
-  }
-  printf("--------------------------------------------------\n");
-  printf("\n");
-  printf("\n");
-}
+//   int result1 = strcmp(str1, str2);
+//   if (result1 < 0) {
+//     printf("str1 меньше str2: %d\n", result1);
+//   } else if (result1 > 0) {
+//     printf("str1 больше str2: %d\n", result1);
+//   } else {
+//     printf("str1 и str2 идентичны: %d\n", result1);
+//   }
+//   printf("--------------------------------------------------\n");
+//   printf("\n");
+//   printf("\n");
+// }
 
-void test_strncmp() {
-  printf("-------------------s21_strncmp()------------------\n");
+// void test_strncmp() {
+//   printf("-------------------s21_strncmp()------------------\n");
 
-  const char *str1 = "hello";
-  const char *str2 = "helloworld";
-  s21_size_t n = 5;
+//   const char *str1 = "hello";
+//   const char *str2 = "helloworld";
+//   s21_size_t n = 5;
 
-  int result = s21_strncmp(str1, str2, n);
-  if (result < 0) {
-    printf("str1 меньше str2 по первым %zu символам: %d\n", n, result);
-  } else if (result > 0) {
-    printf("str1 больше str2 по первым %zu символам: %d\n", n, result);
-  } else {
-    printf("Первые %zu символов str1 и str2 идентичны: %d\n", n, result);
-  }
+//   int result = s21_strncmp(str1, str2, n);
+//   if (result < 0) {
+//     printf("str1 меньше str2 по первым %zu символам: %d\n", n, result);
+//   } else if (result > 0) {
+//     printf("str1 больше str2 по первым %zu символам: %d\n", n, result);
+//   } else {
+//     printf("Первые %zu символов str1 и str2 идентичны: %d\n", n, result);
+//   }
 
-  printf("---------------------strcmp()---------------------\n");
+//   printf("---------------------strcmp()---------------------\n");
 
-  int result1 = strncmp(str1, str2, n);
-  if (result1 < 0) {
-    printf("str1 меньше str2 по первым %zu символам: %d\n", n, result1);
-  } else if (result1 > 0) {
-    printf("str1 больше str2 по первым %zu символам: %d\n", n, result1);
-  } else {
-    printf("Первые %zu символов str1 и str2 идентичны: %d\n", n, result);
-  }
-  printf("--------------------------------------------------\n");
-  printf("\n");
-  printf("\n");
-}
+//   int result1 = strncmp(str1, str2, n);
+//   if (result1 < 0) {
+//     printf("str1 меньше str2 по первым %zu символам: %d\n", n, result1);
+//   } else if (result1 > 0) {
+//     printf("str1 больше str2 по первым %zu символам: %d\n", n, result1);
+//   } else {
+//     printf("Первые %zu символов str1 и str2 идентичны: %d\n", n, result);
+//   }
+//   printf("--------------------------------------------------\n");
+//   printf("\n");
+//   printf("\n");
+// }
 
 // void test_strcpy() {
 //   printf("-------------------s21_strcpy()-------------------\n");
