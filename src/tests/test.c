@@ -186,21 +186,21 @@ int main() {
 //   printf("\n");
 // }
 
-void test_strchr() {
-  printf("-------------------s21_strchr()-------------------\n");
+// void test_strchr() {
+//   printf("-------------------s21_strchr()-------------------\n");
 
-  char *result1 = s21_strchr("Hello", 111);  // 111 = "o"
-  printf("%s\n", result1);
+//   char *result1 = s21_strchr("Hello", 111);  // 111 = "o"
+//   printf("%s\n", result1);
 
-  printf("---------------------strchr()---------------------\n");
+//   printf("---------------------strchr()---------------------\n");
 
-  char *result2 = strchr("Hello", 111);  // 111 = "o"
-  printf("%s\n", result2);
+//   char *result2 = strchr("Hello", 111);  // 111 = "o"
+//   printf("%s\n", result2);
 
-  printf("--------------------------------------------------\n");
-  printf("\n");
-  printf("\n");
-}
+//   printf("--------------------------------------------------\n");
+//   printf("\n");
+//   printf("\n");
+// }
 
 void test_strcmp() {
   printf("-------------------s21_strcmp()-------------------\n");
