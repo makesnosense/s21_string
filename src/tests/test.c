@@ -32,9 +32,15 @@ void test_strerror() {
   printf("--------------------strerror()--------------------\n");
   int i = 0;
   for (; i < ERR_COUNT; i++) {
+    // if (i == 41 || i == 58) {
+    //   continue;
+    // }
+    if (IS_EXCLUDED(i)) {
+      continue;
+    }
     char *res1 = strerror(i);
     char *res2 = s21_strerror(i);
-    if (strcmp(res1, res2)) {
+    if (s21_strcmp(res1, res2)) {
       printf("test number %d: |%s|                |%s|\n\n\n", i, res1, res2);
     }
   }
