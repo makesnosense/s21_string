@@ -3,7 +3,7 @@
 #if defined(__APPLE__)
 #define UNKNOWN "Unknown error: "
 
-static const char *errors_array[] = {
+static const char* errors_array[] = {
     "Undefined error: 0",
     "Operation not permitted",
     "No such file or directory",
@@ -115,7 +115,7 @@ static const char *errors_array[] = {
 #elif defined(__linux__)
 #define UNKNOWN "Unknown error "
 
-static const char *errors_array[] = {
+static const char* errors_array[] = {
     "Success",
     "Operation not permitted",
     "No such file or directory",
@@ -253,15 +253,13 @@ static const char *errors_array[] = {
 
 #endif
 
-char *s21_strerror(int errnum) {
+char* s21_strerror(int errnum) {
   static char res[128] = {'\0'};
 
   if (errnum < 0 || errnum > ERR_COUNT) {
     s21_strcpy(res, "no error");
   } else {
-
-    
-    s21_strcpy(res, ((char *)errors_array[errnum]));
+    s21_strcpy(res, ((char*)errors_array[errnum]));
   }
 
   return res;
