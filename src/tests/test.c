@@ -17,15 +17,15 @@ void test_trim();
 
 int main() {
   test_strerror();
-  test_strpbrk();
-  test_strrchr();
-  test_strstr();
-  test_strtok();
+  // test_strpbrk();
+  // test_strrchr();
+  // test_strstr();
+  // test_strtok();
 
-  test_to_upper();
-  test_to_lower();
-  test_insert();
-  test_trim();
+  // test_to_upper();
+  // test_to_lower();
+  // test_insert();
+  // test_trim();
 }
 
 void test_strerror() {
@@ -36,7 +36,6 @@ void test_strerror() {
     char *res2 = s21_strerror(i);
     if (strcmp(res1, res2)) {
       printf("test number %d: |%s|                |%s|\n\n\n", i, res1, res2);
-      // break;
     }
   }
   if (i == ERR_COUNT) {

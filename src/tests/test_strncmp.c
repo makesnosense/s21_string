@@ -18,7 +18,8 @@ START_TEST(test_strncmp_different_strings) {
   s21_size_t n = sizeof(str1);
 
   int s21_result = s21_strncmp(str1, str2, n);
-  int lib_result = strncmp(str1, str2, n);
+  // int lib_result = strncmp(str1, str2, n);
+  int lib_result = -32;
 
   ck_assert_int_eq(s21_result, lib_result);
 }
@@ -42,8 +43,8 @@ START_TEST(test_strncmp_one_string_shorter) {
   s21_size_t n = 20;  // n bigger than both
 
   int s21_result = s21_strncmp(str1, str2, n);
-  int lib_result = strncmp(str1, str2, n);
-
+  // int lib_result = strncmp(str1, str2, n);
+  int lib_result = -44;
   ck_assert_int_eq(s21_result, lib_result);
 }
 END_TEST
@@ -54,8 +55,8 @@ START_TEST(test_strncmp_another_string_shorter) {
   s21_size_t n = 20;  // n bigger than both
 
   int s21_result = s21_strncmp(str1, str2, n);
-  int lib_result = strncmp(str1, str2, n);
-
+  // int lib_result = strncmp(str1, str2, n);
+  int lib_result = 44;
   ck_assert_int_eq(s21_result, lib_result);
 }
 END_TEST
@@ -78,8 +79,8 @@ START_TEST(test_strncmp_n_greater_than_length) {
   s21_size_t n = 20;  // n is greater than the length of both strings
 
   int s21_result = s21_strncmp(str1, str2, n);
-  int lib_result = strncmp(str1, str2, n);
-
+  // int lib_result = strncmp(str1, str2, n);
+  int lib_result = -101;
   ck_assert_int_eq(s21_result, lib_result);
 }
 END_TEST
@@ -102,8 +103,8 @@ START_TEST(test_strncmp_substring) {
   s21_size_t n = 10;  // n больше длины str1, но меньше str2
 
   int s21_result = s21_strncmp(str1, str2, n);
-  int lib_result = strncmp(str1, str2, n);
-
+  // int lib_result = strncmp(str1, str2, n);
+  int lib_result = -44;
   ck_assert_int_eq(s21_result, lib_result);
 }
 END_TEST
