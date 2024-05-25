@@ -259,6 +259,8 @@ char *s21_strerror(int errnum) {
   if (errnum < 0 || errnum > ERR_COUNT) {
     s21_strcpy(res, "no error");
   } else {
+
+    
     s21_strcpy(res, ((char *)errors_array[errnum]));
   }
 
