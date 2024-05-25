@@ -6,6 +6,9 @@
 
 #include "../s21_string.h"
 
+void run_suite(Suite* current_suite, int* total_number_run,
+               int* total_number_failed);
+
 Suite* make_strlen_suite();
 Suite* make_strcat_suite();
 Suite* make_memchr_suite();
