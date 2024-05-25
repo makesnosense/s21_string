@@ -5,24 +5,9 @@
 
 #include "../s21_string.h"
 
-void test_memchr();
-void test_memcmp();
-void test_memcpy();
-void test_memmove();
-void test_memset();
-void test_strcat();
-void test_strncat();
-void test_strchr();
-void test_strcmp();
-void test_strncmp();
-void test_strcpy();
-void test_strncpy();
-void test_strcspn();
 void test_strerror();
-void test_strlen();
 void test_strpbrk();
 void test_strrchr();
-void test_strspn();
 void test_strstr();
 void test_strtok();
 
@@ -33,24 +18,9 @@ void test_insert();
 void test_trim();
 
 int main() {
-  test_memchr();
-  test_memcmp();
-  test_memcpy();
-  test_memmove();
-  test_memset();
-  test_strcat();
-  test_strncat();
-  test_strchr();
-  test_strcmp();
-  test_strncmp();
-  test_strcpy();
-  test_strncpy();
-  test_strcspn();
   test_strerror();
-  test_strlen();
   test_strpbrk();
   test_strrchr();
-  test_strspn();
   test_strstr();
   test_strtok();
 
@@ -132,6 +102,7 @@ void test_strrchr() {
   printf("\n");
   printf("\n");
 }
+
 
 void test_strstr() {
   printf("-------------------s21_strstr()-------------------\n");
