@@ -49,6 +49,49 @@ char* int_to_str(long long int num) {
   return str;
 }
 
+char* int_to_str(char* str, s21_size_t str_len, long long int num) {
+  long long int temp_num = num;  // Для подсчета длины строки
+  s21_size_t num_len = 0;        // Длина строки
+  int is_negative = 0;           // Является ли отр. числом
+
+  // Если число num отрицательное
+  if (num < 0) {
+    is_negative = 1;
+    num = -num;
+  }
+
+  // Считаем длину числа
+  while (temp_num != 0) {
+    num_len++;
+    temp_num /= 10;
+  }
+
+  // Выделяем память под строку, учитывая знак минуса,
+  // нулевой символ и конец строки
+  char* str = malloc(num_len + 3);
+
+  // Преобразуем число в строку
+  if (num_len == 0) {
+    s21_strcpy(str, "0");
+  } else {
+    int i = num_len - 1;  // Здесь по идее тоже должен быть s21_size_t :)
+    while (i >= 0) {
+      str[i] = (num % 10) + '0';
+      num /= 10;
+      i--;
+    }
+
+    // Если число отрицательное, добавляем '-'
+    if (is_negative) {
+      s21_memmove(str + 1, str, num_len);
+      str[0] = '-';
+    }
+    str[num_len + is_negative] = '\0';
+  }
+
+  return str;
+}
+
 char* float_to_str(double num) {
   // Преобразуем целочисленную часть
   char* whole = int_to_str((long long int)num);
