@@ -3,15 +3,9 @@
 void* s21_memcpy(void* dest, const void* src, s21_size_t n) {
   char* ptr1 = (char*)dest;
   const char* ptr2 = (const char*)src;
-  int flag_limitSize_array = 0;
 
-  if (n > sizeof(ptr2)) {
-    flag_limitSize_array += 1;
+  for (s21_size_t i = 0; i < n; i++) {
+    ptr1[i] = ptr2[i];
   }
-  if(flag_limitSize_array == 0){
-    for (s21_size_t i = 0; i < n; ++i) {
-      ptr1[i] = ptr2[i];
-    }
-  }
-  return flag_limitSize_array ? dest : S21_NULL;
+  return dest;
 }

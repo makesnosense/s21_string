@@ -39,8 +39,7 @@ void* s21_memset(void* str, int c, s21_size_t n);
 char* s21_strcat(char* dest, const char* src);
 
 // Добавляет строку, на которую указывает src, в конец строки, на которую
-// указывает dest,
-// длиной до n символов.
+// указывает dest, длиной до n символов.
 char* s21_strncat(char* dest, const char* src, s21_size_t n);
 
 // Выполняет поиск первого вхождения символа c (беззнаковый тип) в строке, на
@@ -97,6 +96,8 @@ char* s21_strtok(char* str, const char* delim);
 
 // дополнительные функции
 
+
+
 // Возвращает копию строки (str), преобразованной в верхний регистр. В случае
 // какой-либо ошибки следует вернуть
 // значение NULL
@@ -117,6 +118,8 @@ void* s21_insert(const char* src, const char* str, s21_size_t start_index);
 // заданных символов (trim_chars) из данной строки (src).
 // В случае какой-либо ошибки следует вернуть значение NULL
 void* s21_trim(const char* src, const char* trim_chars);
+
+
 
 int s21_sscanf(const char* str, const char* format, ...);
 

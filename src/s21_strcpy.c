@@ -5,6 +5,5 @@ char* s21_strcpy(char* dest, const char* src) {
   while ((*ptr++ = *src++) != '\0') {
     continue;
   }
-
-  return ptr - 1;
+  return dest;
 }

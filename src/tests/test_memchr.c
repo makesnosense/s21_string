@@ -1,5 +1,3 @@
-#include <stdio.h>
-
 #include "run_tests.h"
 
 START_TEST(hello_world_test) {
