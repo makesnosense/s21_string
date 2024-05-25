@@ -5,12 +5,11 @@ char* s21_strchr(const char* str, int c) {
 
   if (str != S21_NULL) {
     const char* ptr = str;
-    while (*ptr != '\0' || (c == '\0' && *ptr == '\0')) {
-      if (*ptr == c) {
-        result = (char*)ptr;
-        break;
-      }
+    while (*ptr != '\0' && *ptr != c) {
       ptr++;
+    }
+    if (*ptr == c) {
+      result = (char*)ptr;
     }
   }
   return result;
