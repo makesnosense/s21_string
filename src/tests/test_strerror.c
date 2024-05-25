@@ -1,3 +1,5 @@
+#include <stdio.h>
+
 #include "run_tests.h"
 
 START_TEST(test_strerror) {
