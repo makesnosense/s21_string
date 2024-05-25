@@ -37,6 +37,7 @@ void run_suite(Suite* current_suite, int* total_number_run,
   SRunner* suite_runner;
 
   suite_runner = srunner_create(current_suite);
+  srunner_set_fork_status(suite_runner, CK_NOFORK);
   srunner_run_all(suite_runner, CK_VERBOSE);
   *total_number_run += srunner_ntests_run(suite_runner);
   *total_number_failed += srunner_ntests_failed(suite_runner);
