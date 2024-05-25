@@ -1,6 +1,8 @@
 #ifndef S21_STRING_H_
 #define S21_STRING_H_
 
+
+
 #define FAILURE
 #define SUCCESS
 
@@ -8,9 +10,11 @@
 
 #if defined(__APPLE__)
 #define ERR_COUNT 106
+#define IS_EXCLUDED(x) (0)
 
 #elif defined(__linux__)
 #define ERR_COUNT 133
+#define IS_EXCLUDED(x) ((x) == 41 || (x) == 58)
 
 #endif
 
