@@ -21,5 +21,6 @@ Suite* make_strcmp_suite();
 Suite* make_strncpy_suite();
 Suite* make_strspn_suite();
 Suite* make_strcspn_suite();
+Suite* make_strrchr_suite();
 
 #endif
