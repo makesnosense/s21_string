@@ -5,72 +5,61 @@
 
 #include "../s21_string.h"
 
+#define F_PRESICION 6
+
 // Функция для преобразования целого числа в строку
-char* int_to_str(long long int num) {
+void int_to_str(char* str, s21_size_t* str_len, long long int num, int pr) {
   long long int temp_num = num;  // Для подсчета длины строки
-  s21_size_t len = 0;            // Длина строки
+  s21_size_t len_num = 0;        // Длина строки
   int is_negative = 0;           // Является ли отр. числом
 
   // Если число num отрицательное
   if (num < 0) {
     is_negative = 1;
+    str[(*str_len)++] = '-';
     num = -num;
   }
 
   // Считаем длину числа
   while (temp_num != 0) {
-    len++;
+    len_num++;
     temp_num /= 10;
   }
 
-  // Выделяем память под строку, учитывая знак минуса,
-  // нулевой символ и конец строки
-  char* str = malloc(len + 3);
-
   // Преобразуем число в строку
-  if (len == 0) {
-    s21_strcpy(str, "0");
+  int i = 0;
+  if (len_num == 0) {
+    str[(*str_len)++] = '0';
+    i++;
   } else {
-    int i = len - 1;  // Здесь по идее тоже должен быть s21_size_t :)
-    while (i >= 0) {
-      str[i] = (num % 10) + '0';
-      num /= 10;
-      i--;
+    while (num != 0) {
+      long long int temp = pow(10, --len_num);
+      str[(*str_len)++] = (num / temp) + '0';
+      num %= temp;
+      i++;
     }
-
-    // Если число отрицательное, добавляем '-'
-    if (is_negative) {
-      s21_memmove(str + 1, str, len);
-      str[0] = '-';
-    }
-    str[len + is_negative] = '\0';
   }
-
-  return str;
+  while (i < pr && pr != -1) {
+    str[(*str_len)++] = '0';
+    i++;
+  }
+  str[*str_len + is_negative] = '\0';
 }
 
-char* float_to_str(double num) {
-  // Преобразуем целочисленную часть
-  char* whole = int_to_str((long long int)num);
+void float_to_str(char* str, s21_size_t* str_len, double num) {
+  // Округляем дробную часть до нужного числа
+  double multiplier = pow(10.0, F_PRESICION);
+  num = round(num * multiplier + 0.5) / multiplier;
 
-  // Преобразуем часть с плавающей точкой
-  double frtemp = fabs(fmod(num, 1.0) * pow(10, 6));
-  char* fract = int_to_str(frtemp);
+  // Отделяем целую часть и записываем в строку
+  int_to_str(str, str_len, (long long int)num, -1);
 
-  // Считаем размер для маллока
-  s21_size_t len = s21_strlen(whole) + s21_strlen(fract) + 3;
+  // Отделяем дробную часть
+  double fract = fabs(fmod(num, 1.0) * multiplier);
 
-  // Аллоцируем память и соединяем части в одну строку
-  char* res = malloc(len);
-  s21_strcpy(res, whole);
-  s21_strcat(res, ".");
-  s21_strcat(res, fract);
-
-  // Освобождаем память, выделенную под целую и десятичную части
-  free(whole);
-  free(fract);
-
-  return res;
+  // Добавляем точку и дробную часть
+  str[(*str_len)++] = '.';
+  int_to_str(str, str_len, fract, F_PRESICION);
 }
 
 int s21_sprintf(char* str, const char* format, ...) {
@@ -79,61 +68,47 @@ int s21_sprintf(char* str, const char* format, ...) {
   va_list args;  // Список аргументов
   va_start(args, format);  // Инициализируем список аргументов
 
-  s21_size_t str_index = 0;  // Индекс буферной строки
+  s21_size_t str_len = 0;  // Индекс буферной строки + её длина
   while (*format != '\0') {
     if (*format == '%') {
       format++;
       switch (*format) {
         case 'c': {  // Если c (char)
           char c = va_arg(args, int);
-          str[str_index++] = c;
+          str[str_len++] = c;
           break;
         }
         case 'i':  // Если i или d (int)
         case 'd': {
           int d = va_arg(args, int);
-          char* d_str = int_to_str(d);
-
-          s21_strcpy(str + str_index, d_str);
-          str_index += s21_strlen(d_str);
-
-          if (d_str) free(d_str);
+          int_to_str(str, &str_len, d, -1);
           break;
         }
         case 'f': {  // Если f (float)
           float f = va_arg(args, double);
-          char* f_str = float_to_str(f);
-
-          s21_strcpy(str + str_index, f_str);
-          str_index += s21_strlen(f_str);
-
-          if (f_str) free(f_str);
+          float_to_str(str, &str_len, f);
           break;
         }
         case 's': {
           char* s = va_arg(args, char*);
-          s21_strcpy(str + str_index, s);
-          str_index += s21_strlen(s);
+          s21_strcpy(str + str_len, s);
+          str_len += s21_strlen(s);
           break;
         }
         case 'u': {
           unsigned u = va_arg(args, unsigned);
-          char* u_str = int_to_str(u);
-
-          s21_strcpy(str + str_index, u_str);
-          str_index += s21_strlen(u_str);
-
-          if (u_str) free(u_str);
+          int_to_str(str, &str_len, u, -1);
+          break;
         }
         default:
           break;
       }
     } else {
-      str[str_index++] = *format;
+      str[str_len++] = *format;
     }
     format++;
   }
-  str[str_index] = '\0';
+  str[str_len] = '\0';
   va_end(args);
 
   return res;
