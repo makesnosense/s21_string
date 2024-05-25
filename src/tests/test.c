@@ -1,7 +1,6 @@
 #include <stdio.h>
-#include <string.h>
-
 #include <stdlib.h>
+#include <string.h>
 
 #include "../s21_string.h"
 
@@ -10,7 +9,6 @@ void test_strpbrk();
 void test_strrchr();
 void test_strstr();
 void test_strtok();
-
 
 void test_to_upper();
 void test_to_lower();
@@ -30,36 +28,6 @@ int main() {
   test_trim();
 }
 
-
-void test_strcspn() {
-  printf("---------------------strcspn()---------------------\n");
-
-  printf("Тест 1: s21: |%zu|  orig: |%zu|\n", s21_strcspn("hello", "he"),
-         strcspn("hello", "he"));
-  printf("Тест 2: s21: |%zu|  orig: |%zu|\n", s21_strcspn("world", "o"),
-         strcspn("world", "o"));
-  printf("Тест 3: s21: |%zu|  orig: |%zu|\n", s21_strcspn("12345", "12"),
-         strcspn("12345", "12"));
-  printf("Тест 4: s21: |%zu|  orig: |%zu|\n", s21_strcspn("abcde", "bc"),
-         strcspn("abcde", "bc"));
-  printf("Тест 5: s21: |%zu|  orig: |%zu|\n", s21_strcspn("abcdefg", "fgh"),
-         strcspn("abcdefg", "fgh"));
-  printf("Тест 6: s21: |%zu|  orig: |%zu|\n", s21_strcspn("", ""),
-         strcspn("", ""));
-  printf("Тест 7: s21: |%zu|  orig: |%zu|\n", s21_strcspn("a", "b"),
-         strcspn("a", "b"));
-  printf("Тест 8: s21: |%zu|  orig: |%zu|\n", s21_strcspn("ab", "b"),
-         strcspn("ab", "b"));
-  printf("Тест 9: s21: |%zu|  orig: |%zu|\n", s21_strcspn("abc", "b"),
-         strcspn("abc", "b"));
-  printf("Тест 10: s21:|%zu|  orig: |%zu|\n", s21_strcspn("abcd", "d"),
-         strcspn("abcd", "d"));
-
-  printf("---------------------------------------------------\n");
-  printf("\n");
-  printf("\n");
-}
-
 void test_strerror() {
   printf("--------------------strerror()--------------------\n");
   int i = 0;
@@ -68,7 +36,7 @@ void test_strerror() {
     char *res2 = s21_strerror(i);
     if (strcmp(res1, res2)) {
       printf("test number %d: |%s|                |%s|\n\n\n", i, res1, res2);
-      //break;
+      // break;
     }
   }
   if (i == ERR_COUNT) {
@@ -78,7 +46,6 @@ void test_strerror() {
   printf("\n");
   printf("\n");
 }
-
 
 void test_strpbrk() {
   printf("-------------------s21_strpbrk()-------------------\n");
@@ -103,7 +70,6 @@ void test_strrchr() {
   printf("\n");
 }
 
-
 void test_strstr() {
   printf("-------------------s21_strstr()-------------------\n");
   const char *str = "HelloWorldHello";
@@ -127,8 +93,6 @@ void test_strtok() {
   printf("\n");
   printf("\n");
 }
-
-
 
 void test_to_upper() {
   printf("-------------------s21_to_upper()-------------------\n");
