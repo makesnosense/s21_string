@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <string.h>
 
+#include <stdlib.h>
+
 #include "../s21_string.h"
 
 void test_memchr();
@@ -24,6 +26,12 @@ void test_strspn();
 void test_strstr();
 void test_strtok();
 
+
+void test_to_upper();
+void test_to_lower();
+void test_insert();
+void test_trim();
+
 int main() {
   test_memchr();
   test_memcmp();
@@ -45,59 +53,64 @@ int main() {
   test_strspn();
   test_strstr();
   test_strtok();
+
+  test_to_upper();
+  test_to_lower();
+  test_insert();
+  test_trim();
 }
 
-// void test_memchr() {
-//   printf("-------------------s21_memchr()-------------------\n");
-//   unsigned char buffer[] = "Hello, World";  // Пример буфера
-//   int c = 'o';
-//   s21_size_t n = sizeof(buffer);
+void test_memchr() {
+  printf("-------------------s21_memchr()-------------------\n");
+  unsigned char buffer[] = "Hello, World";  // Пример буфера
+  int c = 'o';
+  s21_size_t n = sizeof(buffer);
 
-//   void *result = s21_memchr(buffer, c, n);
+  void *result = s21_memchr(buffer, c, n);
 
-//   if (result != NULL) {
-//     printf("%c\n", *(char *)result);
-//   } else {
-//     printf("%c\n", c);
-//   }
+  if (result != NULL) {
+    printf("%c\n", *(char *)result);
+  } else {
+    printf("%c\n", c);
+  }
 
-//   printf("---------------------memchr()---------------------\n");
+  printf("---------------------memchr()---------------------\n");
 
-//   void *result1 = memchr(buffer, c, n);
+  void *result1 = memchr(buffer, c, n);
 
-//   if (result != NULL) {
-//     printf("%c\n", *(char *)result1);
-//   } else {
-//     printf("%c\n", c);
-//   }
-//   printf("--------------------------------------------------\n");
-//   printf("\n");
-//   printf("\n");
-// }
+  if (result != NULL) {
+    printf("%c\n", *(char *)result1);
+  } else {
+    printf("%c\n", c);
+  }
+  printf("--------------------------------------------------\n");
+  printf("\n");
+  printf("\n");
+}
 
-// void test_memcmp() {
-//   printf("-------------------s21_memcmp()-------------------\n");
-//   unsigned char block1[] = {1, 2, 3};
-//   unsigned char block2[] = {1, 2, 3};
-//   unsigned char block3[] = {1, 2, 4};
+void test_memcmp() {
+  printf("-------------------s21_memcmp()-------------------\n");
+  unsigned char block1[] = {1, 2, 3};
+  unsigned char block2[] = {1, 2, 3};
+  unsigned char block3[] = {1, 2, 4};
 
-//   int result1 = s21_memcmp(block1, block2, sizeof(block1));
-//   int result2 = s21_memcmp(block1, block3, sizeof(block1));
+  int result1 = s21_memcmp(block1, block2, sizeof(block1));
+  int result2 = s21_memcmp(block1, block3, sizeof(block1));
 
-//   printf("%d\n", result1);
-//   printf("%d\n", result2);
+  printf("%d\n", result1);
+  printf("%d\n", result2);
 
-//   printf("---------------------memcmp()---------------------\n");
+  printf("---------------------memcmp()---------------------\n");
 
-//   result1 = memcmp(block1, block2, sizeof(block1));
-//   result2 = memcmp(block1, block3, sizeof(block1));
+  result1 = memcmp(block1, block2, sizeof(block1));
+  result2 = memcmp(block1, block3, sizeof(block1));
 
-//   printf("%d\n", result1);
-//   printf("%d\n", result2);
-//   printf("--------------------------------------------------\n");
-//   printf("\n");
-//   printf("\n");
-// }
+  printf("%d\n", result1);
+  printf("%d\n", result2);
+  printf("--------------------------------------------------\n");
+  printf("\n");
+  printf("\n");
+}
 
 void test_memcpy() {
   printf("-------------------s21_memcpy()-------------------\n");
@@ -341,11 +354,11 @@ void test_strerror() {
   printf("--------------------strerror()--------------------\n");
   int i = 0;
   for (; i < ERR_COUNT; i++) {
-    char *res1 = s21_strerror(i);
-    char *res2 = strerror(i);
-    if (!(s21_strcmp(res1, res2))) {
-      printf("test number %d: |%s||%s|\n", i, res1, res2);
-      break;
+    char *res1 = strerror(i);
+    char *res2 = s21_strerror(i);
+    if (strcmp(res1, res2)) {
+      printf("test number %d: |%s|                |%s|\n\n\n", i, res1, res2);
+      //break;
     }
   }
   if (i == ERR_COUNT) {
@@ -392,8 +405,8 @@ void test_strrchr() {
 
 void test_strspn() {
   printf("-------------------s21_strspn()-------------------\n");
-  const char *str = "Hello";
-  const char *str2 = "World";
+  const char *str = "HelloWo";
+  const char *str2 = "HeWorld";
   printf("%zu\n", s21_strspn(str, str2));  //
   printf("---------------------strspn()---------------------\n");
   printf("%zu\n", strspn(str, str2));
@@ -421,6 +434,49 @@ void test_strtok() {
   printf("%s\n", s21_strtok(str, str2));  //
   printf("---------------------strtok()---------------------\n");
   printf("%s\n", strtok(str, str2));
+  printf("--------------------------------------------------\n");
+  printf("\n");
+  printf("\n");
+}
+
+
+
+void test_to_upper() {
+  printf("-------------------s21_to_upper()-------------------\n");
+  char *str2 = "World";
+  char *result = s21_to_upper(str2);
+  printf("%s\n", result);
+  free(result);
+  printf("--------------------------------------------------\n");
+  printf("\n");
+  printf("\n");
+}
+
+void test_to_lower() {
+  printf("-------------------s21_to_lower()-------------------\n");
+  char *str2 = "wORLD";
+  char *result = s21_to_lower(str2);
+  printf("%s\n", result);
+  free(result);
+  printf("--------------------------------------------------\n");
+  printf("\n");
+  printf("\n");
+}
+
+void test_insert() {
+  printf("-------------------s21_insert()-------------------\n");
+  char *result = s21_insert("Hello", " world", 0);
+  printf("%s\n", result);
+  free(result);
+  printf("--------------------------------------------------\n");
+  printf("\n");
+  printf("\n");
+}
+void test_trim() {
+  printf("-------------------s21_trim()-------------------\n");
+  char *result = s21_trim("+!!++Abo+ba++00", "+!0-");
+  printf("%s\n", result);
+  free(result);
   printf("--------------------------------------------------\n");
   printf("\n");
   printf("\n");
