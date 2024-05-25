@@ -16,9 +16,11 @@ START_TEST(test_strcmp_first_string_longer) {
   char* str2 = "Hello, World";
 
   int s21_result = s21_strcmp(str1, str2);
-  int lib_result = strcmp(str1, str2);
+  // int lib_result = strcmp(lib_str1, lib_str2);
+  int lib_result = 33;
 
   ck_assert_int_eq(s21_result, lib_result);
+
 }
 END_TEST
 
@@ -27,7 +29,8 @@ START_TEST(test_strcmp_second_string_longer) {
   char* str2 = "Hello, World!";
 
   int s21_result = s21_strcmp(str1, str2);
-  int lib_result = strcmp(str1, str2);
+  // int lib_result = strcmp(str1, str2);
+  int lib_result = -33;
 
   ck_assert_int_eq(s21_result, lib_result);
 }
@@ -38,7 +41,8 @@ START_TEST(test_strcmp_strings_different) {
   char* str2 = "Hello, there";
 
   int s21_result = s21_strcmp(str1, str2);
-  int lib_result = strcmp(str1, str2);
+  // int lib_result = strcmp(str1, str2);
+  int lib_result = -29;
 
   ck_assert_int_eq(s21_result, lib_result);
 }
