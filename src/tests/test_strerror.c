@@ -24,12 +24,21 @@ START_TEST(test_strerror_unknown) {
 END_TEST
 
 START_TEST(test_strerror_unknown_above) {
-  int err_code = 333;  
+  int err_code = 333;
   if (!IS_EXCLUDED(err_code)) {
-    char* lib_result = strerror(err_code);
+#if defined(__linux__)
+    char* lib_result = "Unknown error 333";
+#elif defined(__APPLE__)
+    char* lib_result = "Unknown error: 333";
+#endif
+    // char* lib_result = strerror(err_code);
+
     char* s21_result = s21_strerror(err_code);
     ck_assert_str_eq(s21_result, lib_result);
-    free(lib_result);
+
+    // #if defined(__linux__)
+    //     free(lib_result);
+    // #endif
   }
 }
 END_TEST
