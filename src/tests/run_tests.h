@@ -2,7 +2,6 @@
 #define _RUN_TESTS_H_
 
 #include <check.h>
-#include <stdio.h>
 #include <stdlib.h>
 
 #include "../s21_string.h"
@@ -27,5 +26,6 @@ Suite* make_strspn_suite();
 Suite* make_strcspn_suite();
 Suite* make_strrchr_suite();
 Suite* make_strerror_suite();
+Suite* make_strpbrk_suite();
 
 #endif
