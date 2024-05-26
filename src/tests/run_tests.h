@@ -26,5 +26,6 @@ Suite* make_strspn_suite();
 Suite* make_strcspn_suite();
 Suite* make_strrchr_suite();
 Suite* make_strerror_suite();
+Suite* make_strpbrk_suite();
 
 #endif
