@@ -2,7 +2,6 @@
 #define _RUN_TESTS_H_
 
 #include <check.h>
-#include <stdio.h>
 #include <stdlib.h>
 
 #include "../s21_string.h"
