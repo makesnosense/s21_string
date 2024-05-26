@@ -8,8 +8,11 @@ else
     TESTFLAGS:=-lcheck -lm -lsubunit
 endif
 
-TESTS_FOLDER = tests
-TESTS_SRC_FILES = $(filter-out $(TESTS_FOLDER)/test.c, $(wildcard $(TESTS_FOLDER)/*.c))
+TESTS_DIR = tests
+TESTS_SRC_FILES = $(filter-out $(TESTS_DIR)/test.c, $(wildcard $(TESTS_DIR)/*.c))
+GCOV_REPORT_DIR = gcov_report
+
+
 
 STRING_SRC_FILES = $(wildcard *.c)
 STRING_OBJ_DIR = object_files
@@ -23,8 +26,10 @@ test: clean build_tests
 	./run_tests
 
 gcov_report: clean build_tests test
-	@gcovr -o gcov_report.html --html --html-self-contained --html-details $(GCOVR_THEME) --exclude $(TESTS_FOLDER)	
-	@open gcov_report.html
+	@mkdir -p $(GCOV_REPORT_DIR)
+	@gcovr -o $(GCOV_REPORT_DIR)/gcov_report.html --html --html-self-contained --html-details $(GCOVR_THEME) --exclude $(TESTS_DIR)	
+	@open $(GCOV_REPORT_DIR)/gcov_report.html
+	rm -f *.gcda *.gcno *.gcov
 
 
 build_tests: $(STRING_LIB) $(TESTS_SRC_FILES)
@@ -47,7 +52,6 @@ clean:
 	rm -f s21_string.a
 	rm -f run_tests
 	rm -f *.gcda *.gcno *.gcov
-	rm -f gcov_report.html
-	rm -f gcov_report.*
+	rm -drf $(GCOV_REPORT_DIR)
 
 	
