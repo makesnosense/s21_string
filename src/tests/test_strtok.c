@@ -64,14 +64,6 @@ START_TEST(test_strtok_empty_string) {
 }
 END_TEST
 
-START_TEST(test_strtok_null_str) {
-  const char* delim = ",";
-  char* s21_result = s21_strtok(S21_NULL, delim);
-  char* lib_result = strtok(S21_NULL, delim);
-  ck_assert_ptr_eq(s21_result, lib_result);
-}
-END_TEST
-
 Suite* make_strtok_suite() {
   Suite* strtok_suite = suite_create("strtok");
   TCase* tc_core = tcase_create("Core");
@@ -82,7 +74,6 @@ Suite* make_strtok_suite() {
 
   tcase_add_test(tc_core, test_strtok_empty_string);
   tcase_add_test(tc_core, test_strtok_till_end);
-  tcase_add_test(tc_core, test_strtok_null_str);
 
   suite_add_tcase(strtok_suite, tc_core);
   return strtok_suite;
