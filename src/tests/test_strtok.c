@@ -12,15 +12,6 @@ START_TEST(test_strtok_single_delim) {
 }
 END_TEST
 
-// START_TEST(test_strtok_multiple_delims) {
-//   char str[] = "Hello, world! This is a test.";
-//   const char* delim = ", .!";
-//   char* s21_result = s21_strtok(str, delim);
-//   char* lib_result = strtok(str, delim);
-//   ck_assert_str_eq(s21_result, lib_result);
-// }
-// END_TEST
-
 START_TEST(test_strtok_no_delim_found) {
   char str[] = "Hello";
   const char* delim = ",";
@@ -60,7 +51,6 @@ START_TEST(test_strtok_till_end) {
     lib_result = strtok(S21_NULL, delim);
   }
 
-  //   ck_assert_str_eq(s21_result, lib_result);
   ck_assert_ptr_eq(s21_result, lib_result);
 }
 END_TEST
