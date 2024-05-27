@@ -1,3 +1,4 @@
+#include <limits.h>
 #include <math.h>
 #include <stdarg.h>
 #include <stdio.h>
@@ -8,10 +9,10 @@
 #define F_PRESICION 6
 
 // Функция для преобразования целого числа в строку
-void int_to_str(char* str, s21_size_t* str_len, long long int num, int pr) {
-  long long int temp_num = num;  // Для подсчета длины строки
-  s21_size_t len_num = 0;        // Длина строки
-  int is_negative = 0;           // Является ли отр. числом
+void int_to_str(char* str, s21_size_t* str_len, long long num, int pr) {
+  long long temp_num = num;  // Для подсчета длины строки
+  s21_size_t len_num = 0;    // Длина строки
+  int is_negative = 0;       // Является ли отр. числом
 
   // Если число num отрицательное
   if (num < 0) {
@@ -32,8 +33,8 @@ void int_to_str(char* str, s21_size_t* str_len, long long int num, int pr) {
     str[(*str_len)++] = '0';
     i++;
   } else {
-    while (num != 0) {
-      long long int temp = pow(10, --len_num);
+    while (len_num != 0) {
+      long long temp = pow(10, --len_num);
       str[(*str_len)++] = (num / temp) + '0';
       num %= temp;
       i++;
@@ -49,15 +50,14 @@ void int_to_str(char* str, s21_size_t* str_len, long long int num, int pr) {
 void float_to_str(char* str, s21_size_t* str_len, double num) {
   // Округляем дробную часть до нужного числа
   double multiplier = pow(10.0, F_PRESICION);
-  num = round(num * multiplier + 0.5) / multiplier;
+  num = round(num * multiplier) / multiplier;
 
-  // Отделяем целую часть и записываем в строку
-  int_to_str(str, str_len, (long long int)num, -1);
+  // Отделяем целую и дробную часть
+  long long whole = (long long)num;
+  double fract = (num - whole) * multiplier;
 
-  // Отделяем дробную часть
-  double fract = fabs(fmod(num, 1.0) * multiplier);
-
-  // Добавляем точку и дробную часть
+  // Записываем все в строку
+  int_to_str(str, str_len, whole, -1);
   str[(*str_len)++] = '.';
   int_to_str(str, str_len, fract, F_PRESICION);
 }
