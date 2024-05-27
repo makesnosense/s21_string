@@ -1,7 +1,7 @@
 #include "s21_string.h"
 
 char* s21_strtok(char* str, const char* delim) {
-  static char* saveptr;
+  static char* saveptr = S21_NULL;
   char* token = S21_NULL;
 
   if (str == S21_NULL) {
