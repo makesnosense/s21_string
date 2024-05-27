@@ -28,5 +28,6 @@ Suite* make_strrchr_suite();
 Suite* make_strerror_suite();
 Suite* make_strpbrk_suite();
 Suite* make_strstr_suite();
+Suite* make_strtok_suite();
 
 #endif
