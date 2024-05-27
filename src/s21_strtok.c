@@ -2,31 +2,27 @@
 
 char* s21_strtok(char* str, const char* delim) {
   static char* saveptr;
+  char* token = S21_NULL;
 
-  if (!str) {
+  if (str == S21_NULL) {
     str = saveptr;
-  } else {
-    saveptr = str;
   }
 
-  if (!*str) return S21_NULL;
-
-  char* token = str;
-  char* p = token;
-
-  while (*p != '\0') {
-    char* q = (char*)delim;
-    while (*q != '\0') {
-      if (*p == *q) {
-        *p = '\0';
-        p += 1;
-        break;
-      }
-      q++;
+  while (*str && s21_strchr(delim, *str)) {
+    str++;
+  }
+  if (*str) {
+    token = str;
+    while (*str && !s21_strchr(delim, *str)) {
+      str++;
     }
-    if (*p == '\0') break;
-    p++;
-  }
 
+    if (*str) {
+      *str = '\0';
+      saveptr = str + 1;
+    } else {
+      saveptr = str;
+    }
+  }
   return token;
 }
