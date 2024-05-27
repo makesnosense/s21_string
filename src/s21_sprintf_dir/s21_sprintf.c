@@ -1,4 +1,3 @@
-#include <limits.h>
 #include <math.h>
 #include <stdarg.h>
 #include <stdio.h>
@@ -62,8 +61,14 @@ void float_to_str(char* str, s21_size_t* str_len, double num) {
   int_to_str(str, str_len, fract, F_PRESICION);
 }
 
+int get_flag(char* flags, char ch) {
+  char* res = s21_strchr(flags, ch);
+  return res == S21_NULL ? 0 : 1;
+}
+
 int s21_sprintf(char* str, const char* format, ...) {
   int res = 0;  // Результат работы функции
+  char* flags = "+- ";
 
   va_list args;  // Список аргументов
   va_start(args, format);  // Инициализируем список аргументов
