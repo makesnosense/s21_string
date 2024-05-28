@@ -1,3 +1,4 @@
+#include <ctype.h>
 #include <math.h>
 #include <stdarg.h>
 #include <stdio.h>
@@ -14,6 +15,7 @@ typedef struct Options {
   int width;   // Ширина *.
   int prec;    // Точность .*
   int prec_i;  // Параметр для целой части float чисел
+  int prec_f;  // Параметр для дробной части float чисел
 } Options;
 
 // Функция для преобразования целого числа в строку
@@ -70,13 +72,26 @@ void float_to_str(char* str, s21_size_t* str_len, double num, Options opts) {
   double fract = (num - whole) * multiplier;
 
   // Записываем все в строку
-  int_to_str(str, str_len, whole, opts, opts.prec_i);
-  str[(*str_len)++] = '.';
-  int_to_str(str, str_len, fract, opts, opts.prec);
+  if (opts.prec_f && !opts.prec) {
+    int_to_str(str, str_len, whole, opts, opts.prec_i);
+  } else if (!opts.prec_f) {
+    int_to_str(str, str_len, whole, opts, opts.prec_i);
+    str[(*str_len)++] = '.';
+    int_to_str(str, str_len, fract, opts, F_PRESICION);
+  } else {
+    int_to_str(str, str_len, whole, opts, opts.prec_i);
+    str[(*str_len)++] = '.';
+    int_to_str(str, str_len, fract, opts, opts.prec);
+  }
 }
 
 int is_flag(char* flags, char ch) {
   char* res = s21_strchr(flags, ch);
+  return res == S21_NULL ? 0 : 1;
+}
+
+int is_spec(char* specs, char ch) {
+  char* res = s21_strchr(specs, ch);
   return res == S21_NULL ? 0 : 1;
 }
 
@@ -99,21 +114,55 @@ void parse_flags(char* flags, const char** format, Options* opts) {
   }
 }
 
+int parse_width(char* specs, const char** format, Options* opts) {
+  int res = 0;
+  opts->width = 0;
+
+  while (**format != '.' && !is_spec(specs, **format)) {
+    if (isdigit(**format)) {
+      opts->width = opts->width * 10 + (**format - '0');
+      res++;
+    }
+    (*format)++;
+  }
+  // printf("WIDTH: %d\n", opts->width);
+
+  return res;
+}
+
+int parse_precision(char* specs, const char** format, Options* opts) {
+  int res = 0;
+  opts->prec = 0;
+
+  while (!is_spec(specs, **format)) {
+    if (isdigit(**format)) {
+      opts->prec = opts->prec * 10 + (**format - '0');
+      res++;
+    }
+    (*format)++;
+  }
+  // printf("PRECISION: %d\n", opts->prec);
+
+  return res;
+}
+
 int s21_sprintf(char* str, const char* format, ...) {
   int res = 0;  // Результат работы функции
   char* flags = "+- ";
+  char* specs = "cidfsu";
   Options opts = {0};
-  opts.prec = F_PRESICION;
   opts.prec_i = -1;
 
   va_list args;  // Список аргументов
   va_start(args, format);  // Инициализируем список аргументов
 
-  s21_size_t str_len = 0;  // Индекс буферной строки + её длина
+  s21_size_t str_len = 0;  // Индекс буферной строки aka её длина
   while (*format != '\0') {
     if (*format == '%') {
       format++;
       parse_flags(flags, &format, &opts);
+      parse_width(specs, &format, &opts);
+      opts.prec_f = parse_precision(specs, &format, &opts);
       switch (*format) {
         case 'c': {  // Если c (char)
           char c = va_arg(args, int);
