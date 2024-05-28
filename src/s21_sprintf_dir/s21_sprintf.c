@@ -78,6 +78,25 @@ int is_flag(char* flags, char ch) {
   return res == S21_NULL ? 0 : 1;
 }
 
+void parse_flags(char* flags, const char** format, Options* opts) {
+  while (is_flag(flags, **format)) {
+    switch (**format) {
+      case '+':
+        opts->plus = 1;
+        break;
+      case '-':
+        opts->minus = 1;
+        break;
+      case ' ':
+        opts->space = 1;
+        break;
+      default:
+        break;
+    }
+    (*format)++;
+  }
+}
+
 int s21_sprintf(char* str, const char* format, ...) {
   int res = 0;  // Результат работы функции
   char* flags = "+- ";
@@ -92,25 +111,7 @@ int s21_sprintf(char* str, const char* format, ...) {
   while (*format != '\0') {
     if (*format == '%') {
       format++;
-      if (is_flag(flags, *format)) {
-        switch (*format) {
-          case '+':
-            printf("FL: %c\n", *format);
-            opts.plus = 1;
-            format++;
-            break;
-          case '-':
-            printf("FL: %c\n", *format);
-            opts.minus = 1;
-            format++;
-            break;
-          case ' ':
-            printf("FL: %c\n", *format);
-            opts.space = 1;
-            format++;
-            break;
-        }
-      }
+      parse_flags(flags, &format, &opts);
       switch (*format) {
         case 'c': {  // Если c (char)
           char c = va_arg(args, int);
