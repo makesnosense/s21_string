@@ -27,6 +27,8 @@ int main() {
                      make_strtok_suite(),
                      make_trim_suite(),
                      make_insert_suite(),
+                     make_to_lower_suite(),
+                     make_to_upper_suite(),
                      NULL};
 
   for (Suite** current_suite = suites; *current_suite != NULL;
