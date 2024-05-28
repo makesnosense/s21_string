@@ -30,6 +30,8 @@ void int_to_str(char* str, s21_size_t* str_len, long long num, Options opts,
     num = -num;
   } else if (opts.plus && prec == -1) {
     str[(*str_len)++] = '+';
+  } else if (opts.space) {
+    str[(*str_len)++] = ' ';
   }
 
   // Считаем длину числа
