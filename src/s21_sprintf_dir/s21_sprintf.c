@@ -14,8 +14,8 @@ typedef struct Options {
   int space;   // Флаг ' '
   int width;   // Ширина *.
   int prec;    // Точность .*
-  int prec_i;  // Параметр для целой части float чисел
-  int prec_f;  // Считалось ли precision для спецификатора
+  int prec_i;  // Опция для целых чисел
+  int prec_f;  // Была ли задана precision для спецификатора
 } Options;
 
 // Функция для преобразования целого числа в строку
