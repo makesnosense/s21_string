@@ -7,8 +7,18 @@
 
 #define F_PRESICION 6
 
+typedef struct Options {
+  int plus;    // Флаг '+'
+  int minus;   // Флаг '-'
+  int space;   // Флаг ' '
+  int width;   // Ширина *.
+  int prec;    // Точность .*
+  int prec_i;  // Параметр для целой части float чисел
+} Options;
+
 // Функция для преобразования целого числа в строку
-void int_to_str(char* str, s21_size_t* str_len, long long num, int pr) {
+void int_to_str(char* str, s21_size_t* str_len, long long num, Options opts,
+                int prec) {
   long long temp_num = num;  // Для подсчета длины строки
   s21_size_t len_num = 0;    // Длина строки
   int is_negative = 0;       // Является ли отр. числом
@@ -18,6 +28,8 @@ void int_to_str(char* str, s21_size_t* str_len, long long num, int pr) {
     is_negative = 1;
     str[(*str_len)++] = '-';
     num = -num;
+  } else if (opts.plus && prec == -1) {
+    str[(*str_len)++] = '+';
   }
 
   // Считаем длину числа
@@ -39,16 +51,16 @@ void int_to_str(char* str, s21_size_t* str_len, long long num, int pr) {
       i++;
     }
   }
-  while (i < pr && pr != -1) {
+  while (i < prec && prec != -1) {
     str[(*str_len)++] = '0';
     i++;
   }
-  str[*str_len + is_negative] = '\0';
+  str[*str_len + (is_negative || opts.plus)] = '\0';
 }
 
-void float_to_str(char* str, s21_size_t* str_len, double num) {
+void float_to_str(char* str, s21_size_t* str_len, double num, Options opts) {
   // Округляем дробную часть до нужного числа
-  double multiplier = pow(10.0, F_PRESICION);
+  double multiplier = pow(10.0, opts.prec);
   num = round(num * multiplier) / multiplier;
 
   // Отделяем целую и дробную часть
@@ -56,12 +68,12 @@ void float_to_str(char* str, s21_size_t* str_len, double num) {
   double fract = (num - whole) * multiplier;
 
   // Записываем все в строку
-  int_to_str(str, str_len, whole, -1);
+  int_to_str(str, str_len, whole, opts, opts.prec_i);
   str[(*str_len)++] = '.';
-  int_to_str(str, str_len, fract, F_PRESICION);
+  int_to_str(str, str_len, fract, opts, opts.prec);
 }
 
-int get_flag(char* flags, char ch) {
+int is_flag(char* flags, char ch) {
   char* res = s21_strchr(flags, ch);
   return res == S21_NULL ? 0 : 1;
 }
@@ -69,6 +81,9 @@ int get_flag(char* flags, char ch) {
 int s21_sprintf(char* str, const char* format, ...) {
   int res = 0;  // Результат работы функции
   char* flags = "+- ";
+  Options opts = {0};
+  opts.prec = F_PRESICION;
+  opts.prec_i = -1;
 
   va_list args;  // Список аргументов
   va_start(args, format);  // Инициализируем список аргументов
@@ -77,6 +92,25 @@ int s21_sprintf(char* str, const char* format, ...) {
   while (*format != '\0') {
     if (*format == '%') {
       format++;
+      if (is_flag(flags, *format)) {
+        switch (*format) {
+          case '+':
+            printf("FL: %c\n", *format);
+            opts.plus = 1;
+            format++;
+            break;
+          case '-':
+            printf("FL: %c\n", *format);
+            opts.minus = 1;
+            format++;
+            break;
+          case ' ':
+            printf("FL: %c\n", *format);
+            opts.space = 1;
+            format++;
+            break;
+        }
+      }
       switch (*format) {
         case 'c': {  // Если c (char)
           char c = va_arg(args, int);
@@ -86,12 +120,12 @@ int s21_sprintf(char* str, const char* format, ...) {
         case 'i':  // Если i или d (int)
         case 'd': {
           int d = va_arg(args, int);
-          int_to_str(str, &str_len, d, -1);
+          int_to_str(str, &str_len, d, opts, opts.prec_i);
           break;
         }
         case 'f': {  // Если f (float)
           float f = va_arg(args, double);
-          float_to_str(str, &str_len, f);
+          float_to_str(str, &str_len, f, opts);
           break;
         }
         case 's': {
@@ -102,7 +136,7 @@ int s21_sprintf(char* str, const char* format, ...) {
         }
         case 'u': {
           unsigned u = va_arg(args, unsigned);
-          int_to_str(str, &str_len, u, -1);
+          int_to_str(str, &str_len, u, opts, opts.prec_i);
           break;
         }
         default:
@@ -111,6 +145,9 @@ int s21_sprintf(char* str, const char* format, ...) {
     } else {
       str[str_len++] = *format;
     }
+    opts.plus = 0;
+    opts.minus = 0;
+    opts.space = 0;
     format++;
   }
   str[str_len] = '\0';
