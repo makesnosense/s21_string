@@ -19,11 +19,11 @@ int main() {
   scanf("%29s", string);
 
   // Стандартная sprintf
-  sprintf(f_line, "%+i-%+d-%+f%c%s%c", day, month, year, '\t', string, '@');
+  sprintf(f_line, "%+i-% d-%+f%c%s%c", day, month, year, '\t', string, '@');
   printf("----sprintf-Отформатированная строка: %s\n", f_line);
 
   // Моя sprintf
-  s21_sprintf(f_line, "%+i-%+d-%+f%c%s%c", day, month, year, '\t', string, '@');
+  s21_sprintf(f_line, "%+i-% d-%+f%c%s%c", day, month, year, '\t', string, '@');
   printf("s21_sprintf-Отформатированная строка: %s\n", f_line);
 
   return 0;
