@@ -33,5 +33,6 @@ Suite* make_trim_suite();
 Suite* make_insert_suite();
 Suite* make_to_upper_suite();
 Suite* make_to_lower_suite();
+Suite* make_sprintf_suite();
 
 #endif
