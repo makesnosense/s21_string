@@ -15,7 +15,7 @@ typedef struct Options {
   int width;   // Ширина *.
   int prec;    // Точность .*
   int prec_i;  // Параметр для целой части float чисел
-  int prec_f;  // Параметр для дробной части float чисел
+  int prec_f;  // Считалось ли precision для спецификатора
 } Options;
 
 // Функция для преобразования целого числа в строку
@@ -62,23 +62,41 @@ void int_to_str(char* str, s21_size_t* str_len, long long num, Options opts,
   str[*str_len + (is_negative || opts.plus)] = '\0';
 }
 
-void float_to_str(char* str, s21_size_t* str_len, double num, Options opts) {
+void div_num(double num, double mul, long long* wh, double* fr) {
   // Округляем дробную часть до нужного числа
-  double multiplier = pow(10.0, opts.prec);
-  num = round(num * multiplier) / multiplier;
+  num = round(num * mul) / mul;
 
   // Отделяем целую и дробную часть
-  long long whole = (long long)num;
-  double fract = (num - whole) * multiplier;
+  *wh = (long long)num;
+  *fr = (num - *wh) * mul;
+}
 
-  // Записываем все в строку
+void float_to_str(char* str, s21_size_t* str_len, double num, Options opts) {
+  double multiplier;  // Множитель для округления числа
+  long long whole;    // Целая часть
+  double fract;       // Дробная часть
+
+  // Если считали precision, но она == 0
   if (opts.prec_f && !opts.prec) {
+    multiplier = pow(10.0, opts.prec);
+    div_num(num, multiplier, &whole, &fract);
+
     int_to_str(str, str_len, whole, opts, opts.prec_i);
+
+    // Если не считали precision
   } else if (!opts.prec_f) {
+    multiplier = pow(10.0, F_PRESICION);
+    div_num(num, multiplier, &whole, &fract);
+
     int_to_str(str, str_len, whole, opts, opts.prec_i);
     str[(*str_len)++] = '.';
     int_to_str(str, str_len, fract, opts, F_PRESICION);
+
+    // Иначе
   } else {
+    multiplier = pow(10.0, opts.prec);
+    div_num(num, multiplier, &whole, &fract);
+
     int_to_str(str, str_len, whole, opts, opts.prec_i);
     str[(*str_len)++] = '.';
     int_to_str(str, str_len, fract, opts, opts.prec);
@@ -114,7 +132,7 @@ void parse_flags(char* flags, const char** format, Options* opts) {
   }
 }
 
-int parse_width(char* specs, const char** format, Options* opts) {
+void parse_width(char* specs, const char** format, Options* opts) {
   int res = 0;
   opts->width = 0;
 
@@ -125,12 +143,9 @@ int parse_width(char* specs, const char** format, Options* opts) {
     }
     (*format)++;
   }
-  // printf("WIDTH: %d\n", opts->width);
-
-  return res;
 }
 
-int parse_precision(char* specs, const char** format, Options* opts) {
+void parse_precision(char* specs, const char** format, Options* opts) {
   int res = 0;
   opts->prec = 0;
 
@@ -141,9 +156,7 @@ int parse_precision(char* specs, const char** format, Options* opts) {
     }
     (*format)++;
   }
-  // printf("PRECISION: %d\n", opts->prec);
-
-  return res;
+  opts->prec_f = res;
 }
 
 int s21_sprintf(char* str, const char* format, ...) {
@@ -162,7 +175,7 @@ int s21_sprintf(char* str, const char* format, ...) {
       format++;
       parse_flags(flags, &format, &opts);
       parse_width(specs, &format, &opts);
-      opts.prec_f = parse_precision(specs, &format, &opts);
+      parse_precision(specs, &format, &opts);
       switch (*format) {
         case 'c': {  // Если c (char)
           char c = va_arg(args, int);
