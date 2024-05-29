@@ -37,6 +37,68 @@ void parse_precision(char* specs, const char** format, Options* opts);
 
 int s21_sprintf(char* str, const char* format, ...);
 
+// %[flags][width][.precision][length][specifier]
+int s21_sprintf(char* str, const char* format, ...) {
+  DestStr dest = {str, 0};
+  int res = 0;  // Результат работы функции
+  char* flags = "+- ";
+  char* specs = "cidfsu";
+  Options opts = {0};
+  opts.prec_i = -1;
+
+  va_list args;  // Список аргументов
+  va_start(args, format);  // Инициализируем список аргументов
+  while (*format != '\0') {
+    if (*format == '%') {
+      format++;
+      parse_flags(flags, &format, &opts);
+      parse_width(specs, &format, &opts);
+      parse_precision(specs, &format, &opts);
+      switch (*format) {
+        case 'c': {  // Если c (char)
+          char c = va_arg(args, int);
+          dest.str[dest.curr_ind++] = c;
+          break;
+        }
+        case 'i':  // Если i или d (int)
+        case 'd': {
+          int d = va_arg(args, int);
+          int_to_str(&dest, d, opts, opts.prec_i);
+          break;
+        }
+        case 'f': {  // Если f (float)
+          float input_float = va_arg(args, double);
+          float_to_str(&dest, input_float, opts);
+          break;
+        }
+        case 's': {
+          char* s = va_arg(args, char*);
+          s21_strcpy(dest.str + dest.curr_ind, s);
+          dest.curr_ind += s21_strlen(s);
+          break;
+        }
+        case 'u': {
+          unsigned u = va_arg(args, unsigned);
+          int_to_str(&dest, u, opts, opts.prec_i);
+          break;
+        }
+        default:
+          break;
+      }
+    } else {
+      dest.str[dest.curr_ind++] = *format;
+    }
+    opts.plus = 0;
+    opts.minus = 0;
+    opts.space = 0;
+    format++;
+  }
+  dest.str[dest.curr_ind] = '\0';
+  va_end(args);
+
+  return res;
+}
+
 // Флаги '+', '-' и ' '
 void apply_flags(DestStr* dest, long long* num, Options opts, int prec) {
   if (*num < 0) {
@@ -193,66 +255,4 @@ void parse_precision(char* specs, const char** format, Options* opts) {
     (*format)++;
   }
   opts->prec_f = res;
-}
-
-// %[flags][width][.precision][length][specifier]
-int s21_sprintf(char* str, const char* format, ...) {
-  DestStr dest = {str, 0};
-  int res = 0;  // Результат работы функции
-  char* flags = "+- ";
-  char* specs = "cidfsu";
-  Options opts = {0};
-  opts.prec_i = -1;
-
-  va_list args;  // Список аргументов
-  va_start(args, format);  // Инициализируем список аргументов
-  while (*format != '\0') {
-    if (*format == '%') {
-      format++;
-      parse_flags(flags, &format, &opts);
-      parse_width(specs, &format, &opts);
-      parse_precision(specs, &format, &opts);
-      switch (*format) {
-        case 'c': {  // Если c (char)
-          char c = va_arg(args, int);
-          dest.str[dest.curr_ind++] = c;
-          break;
-        }
-        case 'i':  // Если i или d (int)
-        case 'd': {
-          int d = va_arg(args, int);
-          int_to_str(&dest, d, opts, opts.prec_i);
-          break;
-        }
-        case 'f': {  // Если f (float)
-          float input_float = va_arg(args, double);
-          float_to_str(&dest, input_float, opts);
-          break;
-        }
-        case 's': {
-          char* s = va_arg(args, char*);
-          s21_strcpy(dest.str + dest.curr_ind, s);
-          dest.curr_ind += s21_strlen(s);
-          break;
-        }
-        case 'u': {
-          unsigned u = va_arg(args, unsigned);
-          int_to_str(&dest, u, opts, opts.prec_i);
-          break;
-        }
-        default:
-          break;
-      }
-    } else {
-      dest.str[dest.curr_ind++] = *format;
-    }
-    opts.plus = 0;
-    opts.minus = 0;
-    opts.space = 0;
-    format++;
-  }
-  dest.str[dest.curr_ind] = '\0';
-  va_end(args);
-
-  return res;
 }
