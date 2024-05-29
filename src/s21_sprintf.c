@@ -159,6 +159,7 @@ void parse_precision(char* specs, const char** format, Options* opts) {
   opts->prec_f = res;
 }
 
+// %[flags][width][.precision][length][specifier]
 int s21_sprintf(char* str, const char* format, ...) {
   int res = 0;  // Результат работы функции
   char* flags = "+- ";
