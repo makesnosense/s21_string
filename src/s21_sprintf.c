@@ -18,48 +18,68 @@ typedef struct Options {
   int prec_f;  // Была ли задана precision для спецификатора
 } Options;
 
-// Функция для преобразования целого числа в строку
-void int_to_str(char* str, s21_size_t* str_len, long long num, Options opts,
-                int prec) {
-  long long temp_num = num;  // Для подсчета длины строки
-  s21_size_t len_num = 0;    // Длина строки
-  int is_negative = 0;       // Является ли отр. числом
-
-  // Если число num отрицательное
-  if (num < 0) {
-    is_negative = 1;
+// Флаги '+', '-' и ' '
+void apply_flags(char* str, s21_size_t* str_len, long long* num, Options opts,
+                 int prec) {
+  if (*num < 0) {
     str[(*str_len)++] = '-';
-    num = -num;
+    *num *= -1;
   } else if (opts.plus && prec == -1) {
     str[(*str_len)++] = '+';
   } else if (opts.space) {
     str[(*str_len)++] = ' ';
   }
+}
 
-  // Считаем длину числа
-  while (temp_num != 0) {
-    len_num++;
-    temp_num /= 10;
+// Считаем длину числа
+int get_num_length(long long num) {
+  int num_len = 0;
+
+  while (num != 0) {
+    num_len++;
+    num /= 10;
   }
 
-  // Преобразуем число в строку
-  int i = 0;
-  if (len_num == 0) {
+  return num_len;
+}
+
+// Преобразуем число в строку
+int decimal_to_str(char* str, s21_size_t* str_len, int num_len, long long num) {
+  int res = 0;
+
+  if (num_len == 0) {
     str[(*str_len)++] = '0';
-    i++;
+    res++;
   } else {
-    while (len_num != 0) {
-      long long temp = pow(10, --len_num);
+    while (num_len != 0) {
+      long long temp = pow(10, --num_len);
       str[(*str_len)++] = (num / temp) + '0';
       num %= temp;
-      i++;
+      res++;
     }
   }
+
+  return res;
+}
+
+// Функция для преобразования целого числа в строку
+void int_to_str(char* str, s21_size_t* str_len, long long num, Options opts,
+                int prec) {
+  // Обрабатываем флаги
+  apply_flags(str, str_len, &num, opts, prec);
+
+  // Считаем длину числа
+  int num_len = get_num_length(num);
+
+  // Преобразуем целое число в строку и получаем i
+  // presicion - i = сколько символов не хватает до нужной точности
+  int i = decimal_to_str(str, str_len, num_len, num);
+
   while (i < prec && prec != -1) {
     str[(*str_len)++] = '0';
     i++;
   }
-  str[*str_len + (is_negative || opts.plus)] = '\0';
+  str[*str_len] = '\0';
 }
 
 void div_num(double num, double mul, long long* wh, double* fr) {
