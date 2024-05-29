@@ -23,8 +23,20 @@ typedef struct DestinationString {
   s21_size_t curr_ind;
 } DestStr;
 
-// void apply_flags(DestStr* dest, long long* num, Options opts, int prec);
-// int get_num_length(long long num);
+void apply_flags(DestStr* dest, long long* num, Options opts, int prec);
+int get_num_length(long long num);
+int get_num_length(long long num);
+int whole_number_to_str(DestStr* dest, int num_len, long long num);
+void int_to_str(DestStr* dest, long long num, Options opts, int prec);
+void div_num(double num, double mul, long long* wh, double* fr);
+void float_to_str(DestStr* dest, double num, Options opts);
+int is_flag(char* flags, char ch);
+int is_spec(char* specs, char ch);
+void parse_flags(char* flags, const char** format, Options* opts);
+void parse_width(char* specs, const char** format, Options* opts);
+void parse_precision(char* specs, const char** format, Options* opts);
+
+int s21_sprintf(char* str, const char* format, ...);
 
 // Флаги '+', '-' и ' '
 void apply_flags(DestStr* dest, long long* num, Options opts, int prec) {
