@@ -25,7 +25,6 @@ typedef struct DestinationString {
 
 void apply_flags(DestStr* dest, long long* num, Options opts, int prec);
 int get_num_length(long long num);
-int get_num_length(long long num);
 int whole_number_to_str(DestStr* dest, int num_len, long long num);
 void int_to_str(DestStr* dest, long long num, Options opts, int prec);
 void div_num(double num, double mul, long long* wh, double* fr);
@@ -199,10 +198,6 @@ void parse_precision(char* specs, const char** format, Options* opts) {
 // %[flags][width][.precision][length][specifier]
 int s21_sprintf(char* str, const char* format, ...) {
   DestStr dest = {str, 0};
-
-  // DestinationString* pointer_dest = &dest;
-  // printf("%s%ld", pointer_dest->str, pointer_dest->current_index);
-
   int res = 0;  // Результат работы функции
   char* flags = "+- ";
   char* specs = "cidfsu";
@@ -211,8 +206,6 @@ int s21_sprintf(char* str, const char* format, ...) {
 
   va_list args;  // Список аргументов
   va_start(args, format);  // Инициализируем список аргументов
-
-  // s21_size_t str_len = 0;  // Индекс буферной строки aka её длина
   while (*format != '\0') {
     if (*format == '%') {
       format++;
@@ -223,7 +216,6 @@ int s21_sprintf(char* str, const char* format, ...) {
         case 'c': {  // Если c (char)
           char c = va_arg(args, int);
           dest.str[dest.curr_ind++] = c;
-          // str[str_len++] = c;
           break;
         }
         case 'i':  // Если i или d (int)
@@ -233,8 +225,8 @@ int s21_sprintf(char* str, const char* format, ...) {
           break;
         }
         case 'f': {  // Если f (float)
-          float f = va_arg(args, double);
-          float_to_str(&dest, f, opts);
+          float input_float = va_arg(args, double);
+          float_to_str(&dest, input_float, opts);
           break;
         }
         case 's': {
