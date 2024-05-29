@@ -5,9 +5,8 @@
 START_TEST(test_sprintf_basic) {
   char lib_res[100];
   char s21_res[100];
-  sprintf(lib_res, "%+i-% d-%+f%c%s%c", 100, -100, 9.9999, '\t', "JOMA", '@');
-  s21_sprintf(s21_res, "%+i-% d-%+f%c%s%c", 100, -100, 9.9999, '\t', "JOMA",
-              '@');
+  sprintf(lib_res, "%+i-% d-%+f%c%s%c", -100, 0, 9.9999, '\t', "JOMA", '@');
+  s21_sprintf(s21_res, "%+i-% d-%+f%c%s%c", -100, 0, 9.9999, '\t', "JOMA", '@');
   ck_assert_str_eq(lib_res, s21_res);
 }
 END_TEST
