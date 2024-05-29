@@ -18,16 +18,23 @@ typedef struct Options {
   int prec_f;  // Была ли задана precision для спецификатора
 } Options;
 
+typedef struct DestinationString {
+  char* str;
+  s21_size_t curr_ind;
+} DestStr;
+
+// void apply_flags(DestStr* dest, long long* num, Options opts, int prec);
+// int get_num_length(long long num);
+
 // Флаги '+', '-' и ' '
-void apply_flags(char* str, s21_size_t* str_len, long long* num, Options opts,
-                 int prec) {
+void apply_flags(DestStr* dest, long long* num, Options opts, int prec) {
   if (*num < 0) {
-    str[(*str_len)++] = '-';
+    dest->str[dest->curr_ind++] = '-';
     *num *= -1;
   } else if (opts.plus && prec == -1) {
-    str[(*str_len)++] = '+';
+    dest->str[dest->curr_ind++] = '+';
   } else if (opts.space) {
-    str[(*str_len)++] = ' ';
+    dest->str[dest->curr_ind++] = ' ';
   }
 }
 
@@ -44,42 +51,40 @@ int get_num_length(long long num) {
 }
 
 // Преобразуем число в строку
-int decimal_to_str(char* str, s21_size_t* str_len, int num_len, long long num) {
+int whole_number_to_str(DestStr* dest, int num_len, long long num) {
   int res = 0;
 
   if (num_len == 0) {
-    str[(*str_len)++] = '0';
+    dest->str[dest->curr_ind++] = '0';
     res++;
   } else {
     while (num_len != 0) {
       long long temp = pow(10, --num_len);
-      str[(*str_len)++] = (num / temp) + '0';
+      dest->str[dest->curr_ind++] = (num / temp) + '0';
       num %= temp;
       res++;
     }
   }
-
   return res;
 }
 
 // Функция для преобразования целого числа в строку
-void int_to_str(char* str, s21_size_t* str_len, long long num, Options opts,
-                int prec) {
+void int_to_str(DestStr* dest, long long num, Options opts, int prec) {
   // Обрабатываем флаги
-  apply_flags(str, str_len, &num, opts, prec);
+  apply_flags(dest, &num, opts, prec);
 
   // Считаем длину числа
   int num_len = get_num_length(num);
 
   // Преобразуем целое число в строку и получаем i
   // presicion - i = сколько символов не хватает до нужной точности
-  int i = decimal_to_str(str, str_len, num_len, num);
+  int i = whole_number_to_str(dest, num_len, num);
 
   while (i < prec && prec != -1) {
-    str[(*str_len)++] = '0';
+    dest->str[dest->curr_ind++] = '0';
     i++;
   }
-  str[*str_len] = '\0';
+  dest->str[dest->curr_ind] = '\0';
 }
 
 void div_num(double num, double mul, long long* wh, double* fr) {
@@ -91,7 +96,7 @@ void div_num(double num, double mul, long long* wh, double* fr) {
   *fr = (num - *wh) * mul;
 }
 
-void float_to_str(char* str, s21_size_t* str_len, double num, Options opts) {
+void float_to_str(DestStr* dest, double num, Options opts) {
   double multiplier;  // Множитель для округления числа
   long long whole;    // Целая часть
   double fract;       // Дробная часть
@@ -101,25 +106,25 @@ void float_to_str(char* str, s21_size_t* str_len, double num, Options opts) {
     multiplier = pow(10.0, opts.prec);
     div_num(num, multiplier, &whole, &fract);
 
-    int_to_str(str, str_len, whole, opts, opts.prec_i);
+    int_to_str(dest, whole, opts, opts.prec_i);
 
     // Если не считали precision
   } else if (!opts.prec_f) {
     multiplier = pow(10.0, F_PRESICION);
     div_num(num, multiplier, &whole, &fract);
 
-    int_to_str(str, str_len, whole, opts, opts.prec_i);
-    str[(*str_len)++] = '.';
-    int_to_str(str, str_len, fract, opts, F_PRESICION);
+    int_to_str(dest, whole, opts, opts.prec_i);
+    dest->str[dest->curr_ind++] = '.';
+    int_to_str(dest, fract, opts, F_PRESICION);
 
     // Иначе
   } else {
     multiplier = pow(10.0, opts.prec);
     div_num(num, multiplier, &whole, &fract);
 
-    int_to_str(str, str_len, whole, opts, opts.prec_i);
-    str[(*str_len)++] = '.';
-    int_to_str(str, str_len, fract, opts, opts.prec);
+    int_to_str(dest, whole, opts, opts.prec_i);
+    dest->str[dest->curr_ind++] = '.';
+    int_to_str(dest, fract, opts, opts.prec);
   }
 }
 
@@ -181,6 +186,11 @@ void parse_precision(char* specs, const char** format, Options* opts) {
 
 // %[flags][width][.precision][length][specifier]
 int s21_sprintf(char* str, const char* format, ...) {
+  DestStr dest = {str, 0};
+
+  // DestinationString* pointer_dest = &dest;
+  // printf("%s%ld", pointer_dest->str, pointer_dest->current_index);
+
   int res = 0;  // Результат работы функции
   char* flags = "+- ";
   char* specs = "cidfsu";
@@ -190,7 +200,7 @@ int s21_sprintf(char* str, const char* format, ...) {
   va_list args;  // Список аргументов
   va_start(args, format);  // Инициализируем список аргументов
 
-  s21_size_t str_len = 0;  // Индекс буферной строки aka её длина
+  // s21_size_t str_len = 0;  // Индекс буферной строки aka её длина
   while (*format != '\0') {
     if (*format == '%') {
       format++;
@@ -200,43 +210,44 @@ int s21_sprintf(char* str, const char* format, ...) {
       switch (*format) {
         case 'c': {  // Если c (char)
           char c = va_arg(args, int);
-          str[str_len++] = c;
+          dest.str[dest.curr_ind++] = c;
+          // str[str_len++] = c;
           break;
         }
         case 'i':  // Если i или d (int)
         case 'd': {
           int d = va_arg(args, int);
-          int_to_str(str, &str_len, d, opts, opts.prec_i);
+          int_to_str(&dest, d, opts, opts.prec_i);
           break;
         }
         case 'f': {  // Если f (float)
           float f = va_arg(args, double);
-          float_to_str(str, &str_len, f, opts);
+          float_to_str(&dest, f, opts);
           break;
         }
         case 's': {
           char* s = va_arg(args, char*);
-          s21_strcpy(str + str_len, s);
-          str_len += s21_strlen(s);
+          s21_strcpy(dest.str + dest.curr_ind, s);
+          dest.curr_ind += s21_strlen(s);
           break;
         }
         case 'u': {
           unsigned u = va_arg(args, unsigned);
-          int_to_str(str, &str_len, u, opts, opts.prec_i);
+          int_to_str(&dest, u, opts, opts.prec_i);
           break;
         }
         default:
           break;
       }
     } else {
-      str[str_len++] = *format;
+      dest.str[dest.curr_ind++] = *format;
     }
     opts.plus = 0;
     opts.minus = 0;
     opts.space = 0;
     format++;
   }
-  str[str_len] = '\0';
+  dest.str[dest.curr_ind] = '\0';
   va_end(args);
 
   return res;
