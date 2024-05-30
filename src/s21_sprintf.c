@@ -1,6 +1,7 @@
 #include <ctype.h>
 #include <math.h>
 #include <stdarg.h>
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -13,12 +14,12 @@
 
 // Опции функции s21_sprintf
 typedef struct SpecifierOptions {
-  int plus;    // Флаг '+'
-  int minus;   // Флаг '-'
-  int space;   // Флаг ' '
-  int width;   // Ширина *.
-  int prec;    // Точность .*
-  int prec_f;  // Есть ли precision у спецификатора
+  bool plus;           // Флаг '+'
+  bool minus;          // Флаг '-'
+  bool space;          // Флаг ' '
+  int width;           // Ширина *.
+  int precision;       // Точность .*
+  bool precision_set;  // Есть ли precision у спецификатора
 } SpecOptions;
 
 // Структура для строки-буфера
@@ -28,7 +29,7 @@ typedef struct DestinationString {
 } DestStr;
 
 // Функция обрабатывает флаги '+', '-' и ' '
-void apply_flags(DestStr* dest, long long* num, SpecOptions opts);
+void apply_flags(DestStr* dest, long long* num, SpecOptions spec_opts);
 
 // Функция считает длину целого числа
 int get_num_length(long long num);
@@ -39,18 +40,18 @@ int itoa(DestStr* dest, int num_len, long long num);
 
 // Функция записывает целое число в строку dest
 // --------готовое решение с обработкой флагов---------
-void whole_to_str(DestStr* dest, long long num, SpecOptions opts);
+void whole_to_str(DestStr* dest, long long num, SpecOptions spec_opts);
 
 // Функция записывает дробную часть числа в строку dest
-void fract_to_str(DestStr* dest, long long num, SpecOptions opts);
+void fract_to_str(DestStr* dest, long long num, SpecOptions spec_opts);
 
 // Функция для чисел с плавающей точкой:
 //  1. Округляет число до нужной точности
 //  2. Делит число на целую и дробную часть
-void div_num(double num, int prec, long long* wh, double* fr);
+void div_num(double num, int precision, long long* wh, double* fr);
 
 // Функция записывает число с плавающей точкой в строку dest
-void float_to_str(DestStr* dest, double num, SpecOptions opts);
+void float_to_str(DestStr* dest, double num, SpecOptions spec_opts);
 
 // Функция возвращает 1, если ch - это флаг
 int is_flag(char ch);
@@ -59,13 +60,13 @@ int is_flag(char ch);
 int is_specifier(char ch);
 
 // Функция парсит флаги для спецификатора
-void parse_flags(const char** format, SpecOptions* opts);
+void parse_flags(const char** format, SpecOptions* spec_opts);
 
 // Функция парсит ширину для спецификатора
-void parse_width(const char** format, SpecOptions* opts);
+void parse_width(const char** format, SpecOptions* spec_opts);
 
 // Функция парсит точность для спецификатора
-void parse_precision(const char** format, SpecOptions* opts);
+void parse_precision(const char** format, SpecOptions* spec_opts);
 
 // %[flags][width][.precision][length][specifier]
 int s21_sprintf(char* str, const char* format, ...);
@@ -74,16 +75,16 @@ int s21_sprintf(char* str, const char* format, ...) {
   DestStr dest = {str, 0};
   int fin_result = 0;  // Результат работы функции, пока не используется нигде
 
-  SpecOptions opts = {0};
+  SpecOptions spec_opts = {0};
 
   va_list args;  // Список аргументов
   va_start(args, format);  // Инициализируем список аргументов
   while (*format != '\0') {
     if (*format == '%') {
       format++;
-      parse_flags(&format, &opts);
-      parse_width(&format, &opts);
-      parse_precision(&format, &opts);
+      parse_flags(&format, &spec_opts);
+      parse_width(&format, &spec_opts);
+      parse_precision(&format, &spec_opts);
       switch (*format) {
         case 'c': {  // Если c (char)
           char input_char = va_arg(args, int);
@@ -93,12 +94,12 @@ int s21_sprintf(char* str, const char* format, ...) {
         case 'i':  // Если i или d (int)
         case 'd': {
           int input_int = va_arg(args, int);
-          whole_to_str(&dest, input_int, opts);
+          whole_to_str(&dest, input_int, spec_opts);
           break;
         }
         case 'f': {  // Если f (float)
           float input_float = va_arg(args, double);
-          float_to_str(&dest, input_float, opts);
+          float_to_str(&dest, input_float, spec_opts);
           break;
         }
         case 's': {
@@ -109,7 +110,7 @@ int s21_sprintf(char* str, const char* format, ...) {
         }
         case 'u': {
           unsigned input_unsingned = va_arg(args, unsigned);
-          whole_to_str(&dest, input_unsingned, opts);
+          whole_to_str(&dest, input_unsingned, spec_opts);
           break;
         }
         default:
@@ -118,9 +119,9 @@ int s21_sprintf(char* str, const char* format, ...) {
     } else {
       dest.str[dest.curr_ind++] = *format;
     }
-    opts.plus = 0;
-    opts.minus = 0;
-    opts.space = 0;
+    spec_opts.plus = 0;
+    spec_opts.minus = 0;
+    spec_opts.space = 0;
     format++;
   }
   dest.str[dest.curr_ind] = '\0';
@@ -129,13 +130,13 @@ int s21_sprintf(char* str, const char* format, ...) {
   return fin_result;
 }
 
-void apply_flags(DestStr* dest, long long* num, SpecOptions opts) {
+void apply_flags(DestStr* dest, long long* num, SpecOptions spec_opts) {
   if (*num < 0) {
     dest->str[dest->curr_ind++] = '-';
     *num *= -1;
-  } else if (opts.plus) {
+  } else if (spec_opts.plus) {
     dest->str[dest->curr_ind++] = '+';
-  } else if (opts.space) {
+  } else if (spec_opts.space) {
     dest->str[dest->curr_ind++] = ' ';
   }
 }
@@ -170,9 +171,9 @@ int itoa(DestStr* dest, int num_len, long long num) {
   return digits_written;
 }
 
-void whole_to_str(DestStr* dest, long long num, SpecOptions opts) {
+void whole_to_str(DestStr* dest, long long num, SpecOptions spec_opts) {
   // Обрабатываем флаги
-  apply_flags(dest, &num, opts);
+  apply_flags(dest, &num, spec_opts);
 
   // Считаем длину числа
   int num_len = get_num_length(num);
@@ -185,7 +186,7 @@ void whole_to_str(DestStr* dest, long long num, SpecOptions opts) {
   dest->str[dest->curr_ind] = '\0';
 }
 
-void fract_to_str(DestStr* dest, long long input_num, SpecOptions opts) {
+void fract_to_str(DestStr* dest, long long input_num, SpecOptions spec_opts) {
   // Считаем длину числа
   int num_len = get_num_length(input_num);
 
@@ -194,16 +195,16 @@ void fract_to_str(DestStr* dest, long long input_num, SpecOptions opts) {
   int i = itoa(dest, num_len, input_num);
 
   // Доводим число до нужной точности
-  while (i < opts.prec) {
+  while (i < spec_opts.precision) {
     dest->str[dest->curr_ind++] = '0';
     i++;
   }
   dest->str[dest->curr_ind] = '\0';
 }
 
-void div_num(double num, int prec, long long* wh, double* fr) {
+void div_num(double num, int precision, long long* wh, double* fr) {
   // Округляем дробную часть до нужного числа
-  double mul = pow(10.0, prec);
+  double mul = pow(10.0, precision);
   num = round(num * mul) / mul;
 
   // Отделяем целую и дробную часть
@@ -211,31 +212,31 @@ void div_num(double num, int prec, long long* wh, double* fr) {
   *fr = (num - *wh) * mul;
 }
 
-void float_to_str(DestStr* dest, double num, SpecOptions opts) {
+void float_to_str(DestStr* dest, double num, SpecOptions spec_opts) {
   long long whole;  // Целая часть
   double fract;     // Дробная часть
 
   // Если спарсили precision, но она == 0
-  if (opts.prec_f && !opts.prec) {
-    div_num(num, opts.prec, &whole, &fract);
+  if (spec_opts.precision_set && !spec_opts.precision) {
+    div_num(num, spec_opts.precision, &whole, &fract);
 
-    whole_to_str(dest, whole, opts);
+    whole_to_str(dest, whole, spec_opts);
 
     // Если не спарсили precision
-  } else if (!opts.prec_f) {
-    div_num(num, opts.prec, &whole, &fract);
+  } else if (!spec_opts.precision_set) {
+    div_num(num, spec_opts.precision, &whole, &fract);
 
-    whole_to_str(dest, whole, opts);
+    whole_to_str(dest, whole, spec_opts);
     dest->str[dest->curr_ind++] = '.';
-    fract_to_str(dest, fract, opts);
+    fract_to_str(dest, fract, spec_opts);
 
     // Иначе
   } else {
-    div_num(num, opts.prec, &whole, &fract);
+    div_num(num, spec_opts.precision, &whole, &fract);
 
-    whole_to_str(dest, whole, opts);
+    whole_to_str(dest, whole, spec_opts);
     dest->str[dest->curr_ind++] = '.';
-    fract_to_str(dest, fract, opts);
+    fract_to_str(dest, fract, spec_opts);
   }
 }
 
@@ -249,17 +250,17 @@ int is_specifier(char ch) {
   return res == S21_NULL ? 0 : 1;
 }
 
-void parse_flags(const char** format, SpecOptions* opts) {
+void parse_flags(const char** format, SpecOptions* spec_opts) {
   while (is_flag(**format)) {
     switch (**format) {
       case '+':
-        opts->plus = 1;
+        spec_opts->plus = 1;
         break;
       case '-':
-        opts->minus = 1;
+        spec_opts->minus = 1;
         break;
       case ' ':
-        opts->space = 1;
+        spec_opts->space = 1;
         break;
       default:
         break;
@@ -268,25 +269,26 @@ void parse_flags(const char** format, SpecOptions* opts) {
   }
 }
 
-void parse_width(const char** format, SpecOptions* opts) {
-  opts->width = 0;
+void parse_width(const char** format, SpecOptions* spec_opts) {
+  spec_opts->width = 0;
   while (**format != '.' && !is_specifier(**format)) {
     if (isdigit(**format)) {
-      opts->width = opts->width * 10 + (**format - '0');
+      spec_opts->width = spec_opts->width * 10 + (**format - '0');
     }
     (*format)++;
   }
 }
 
-void parse_precision(const char** format, SpecOptions* opts) {
-  opts->prec = 0;
-  opts->prec_f = 0;
+void parse_precision(const char** format, SpecOptions* spec_opts) {
+  spec_opts->precision = 0;
+  spec_opts->precision_set = 0;
   while (!is_specifier(**format)) {
     if (isdigit(**format)) {
-      opts->prec = opts->prec * 10 + (**format - '0');
-      opts->prec_f = 1;
+      spec_opts->precision = spec_opts->precision * 10 + (**format - '0');
+      spec_opts->precision_set = 1;
     }
     (*format)++;
   }
-  opts->prec = opts->prec_f == 0 ? F_PRECISION : opts->prec;
+  spec_opts->precision =
+      spec_opts->precision_set == 0 ? F_PRECISION : spec_opts->precision;
 }
