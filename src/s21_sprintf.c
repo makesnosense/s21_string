@@ -8,6 +8,8 @@
 
 // Точность для %f по умолчанию
 #define F_PRECISION 6
+#define VALID_FLAGS "+- "
+#define VALID_SPECIFIERS "cidfsu"
 
 // Опции функции s21_sprintf
 typedef struct SpecifierOptions {
@@ -51,19 +53,19 @@ void div_num(double num, int prec, long long* wh, double* fr);
 void float_to_str(DestStr* dest, double num, SpecOptions opts);
 
 // Функция возвращает 1, если ch - это флаг
-int is_flag(char* flags, char ch);
+int is_flag(char ch);
 
 // Функция возвращает 1, если ch - это спецификатор
-int is_specifier(char* specs, char ch);
+int is_specifier(char ch);
 
 // Функция парсит флаги для спецификатора
-void parse_flags(char* flags, const char** format, SpecOptions* opts);
+void parse_flags(const char** format, SpecOptions* opts);
 
 // Функция парсит ширину для спецификатора
-void parse_width(char* specs, const char** format, SpecOptions* opts);
+void parse_width(const char** format, SpecOptions* opts);
 
 // Функция парсит точность для спецификатора
-void parse_precision(char* specs, const char** format, SpecOptions* opts);
+void parse_precision(const char** format, SpecOptions* opts);
 
 // %[flags][width][.precision][length][specifier]
 int s21_sprintf(char* str, const char* format, ...);
@@ -71,8 +73,7 @@ int s21_sprintf(char* str, const char* format, ...);
 int s21_sprintf(char* str, const char* format, ...) {
   DestStr dest = {str, 0};
   int fin_result = 0;  // Результат работы функции, пока не используется нигде
-  char* flags = "+- ";
-  char* specifiers = "cidfsu";
+
   SpecOptions opts = {0};
 
   va_list args;  // Список аргументов
@@ -80,9 +81,9 @@ int s21_sprintf(char* str, const char* format, ...) {
   while (*format != '\0') {
     if (*format == '%') {
       format++;
-      parse_flags(flags, &format, &opts);
-      parse_width(specifiers, &format, &opts);
-      parse_precision(specifiers, &format, &opts);
+      parse_flags(&format, &opts);
+      parse_width(&format, &opts);
+      parse_precision(&format, &opts);
       switch (*format) {
         case 'c': {  // Если c (char)
           char input_char = va_arg(args, int);
@@ -238,18 +239,18 @@ void float_to_str(DestStr* dest, double num, SpecOptions opts) {
   }
 }
 
-int is_flag(char* flags, char ch) {
-  char* res = s21_strchr(flags, ch);
+int is_flag(char ch) {
+  char* res = s21_strchr(VALID_FLAGS, ch);
   return res == S21_NULL ? 0 : 1;
 }
 
-int is_specifier(char* specs, char ch) {
-  char* res = s21_strchr(specs, ch);
+int is_specifier(char ch) {
+  char* res = s21_strchr(VALID_SPECIFIERS, ch);
   return res == S21_NULL ? 0 : 1;
 }
 
-void parse_flags(char* flags, const char** format, SpecOptions* opts) {
-  while (is_flag(flags, **format)) {
+void parse_flags(const char** format, SpecOptions* opts) {
+  while (is_flag(**format)) {
     switch (**format) {
       case '+':
         opts->plus = 1;
@@ -267,9 +268,9 @@ void parse_flags(char* flags, const char** format, SpecOptions* opts) {
   }
 }
 
-void parse_width(char* specifiers, const char** format, SpecOptions* opts) {
+void parse_width(const char** format, SpecOptions* opts) {
   opts->width = 0;
-  while (**format != '.' && !is_specifier(specifiers, **format)) {
+  while (**format != '.' && !is_specifier(**format)) {
     if (isdigit(**format)) {
       opts->width = opts->width * 10 + (**format - '0');
     }
@@ -277,10 +278,10 @@ void parse_width(char* specifiers, const char** format, SpecOptions* opts) {
   }
 }
 
-void parse_precision(char* specifiers, const char** format, SpecOptions* opts) {
+void parse_precision(const char** format, SpecOptions* opts) {
   opts->prec = 0;
   opts->prec_f = 0;
-  while (!is_specifier(specifiers, **format)) {
+  while (!is_specifier(**format)) {
     if (isdigit(**format)) {
       opts->prec = opts->prec * 10 + (**format - '0');
       opts->prec_f = 1;
