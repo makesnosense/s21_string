@@ -23,17 +23,22 @@ typedef struct DestinationString {
   s21_size_t curr_ind;
 } DestStr;
 
-void apply_flags(DestStr* dest, long long* num, SpecOptions spec_options, int prec);
+void apply_flags(DestStr* dest, long long* num, SpecOptions spec_options,
+                 int prec);
 int get_num_length(long long num);
 int whole_number_to_str(DestStr* dest, int num_len, long long num);
-void int_to_str(DestStr* dest, long long num, SpecOptions spec_options, int prec);
+void int_to_str(DestStr* dest, long long num, SpecOptions spec_options,
+                int prec);
 void div_num(double num, double mul, long long* wh, double* fr);
 void float_to_str(DestStr* dest, double num, SpecOptions spec_options);
 int is_flag(char* flags, char ch);
 int is_specifier(char* specs, char ch);
-void parse_flags(char* flags, const char** format_string, SpecOptions* spec_options);
-void parse_width(char* specs, const char** format_string, SpecOptions* spec_options);
-void parse_precision(char* specs, const char** format_string, SpecOptions* spec_options);
+void parse_flags(char* flags, const char** format_string,
+                 SpecOptions* spec_options);
+void parse_width(char* specs, const char** format_string,
+                 SpecOptions* spec_options);
+void parse_precision(char* specs, const char** format_string,
+                     SpecOptions* spec_options);
 
 int s21_sprintf(char* str, const char* format, ...);
 
@@ -79,7 +84,8 @@ int s21_sprintf(char* str, const char* format, ...) {
         }
         case 'u': {
           unsigned input_unsingned_int = va_arg(args, unsigned);
-          int_to_str(&dest, input_unsingned_int, spec_options, spec_options.prec_i);
+          int_to_str(&dest, input_unsingned_int, spec_options,
+                     spec_options.prec_i);
           break;
         }
         default:
@@ -100,13 +106,14 @@ int s21_sprintf(char* str, const char* format, ...) {
 }
 
 // Флаги '+', '-' и ' '
-void apply_flags(DestStr* dest, long long* num, SpecOptions spec_options, int precision) {
+void apply_flags(DestStr* dest, long long* num, SpecOptions spec_options,
+                 int precision) {
   if (*num < 0) {
     dest->str[dest->curr_ind++] = '-';
     *num *= -1;
   } else if (spec_options.plus && precision == -1) {
     dest->str[dest->curr_ind++] = '+';
-  } else if (spec_options.space) {
+  } else if (spec_options.space && precision == -1) {
     dest->str[dest->curr_ind++] = ' ';
   }
 }
@@ -141,7 +148,8 @@ int whole_number_to_str(DestStr* dest, int num_len, long long num) {
 }
 
 // Функция для преобразования целого числа в строку
-void int_to_str(DestStr* dest, long long input_num, SpecOptions spec_options, int precision) {
+void int_to_str(DestStr* dest, long long input_num, SpecOptions spec_options,
+                int precision) {
   // Обрабатываем флаги
   apply_flags(dest, &input_num, spec_options, precision);
 
@@ -210,7 +218,8 @@ int is_specifier(char* specs, char ch) {
   return res == S21_NULL ? 0 : 1;
 }
 
-void parse_flags(char* valid_flags, const char** format_string, SpecOptions* spec_options) {
+void parse_flags(char* valid_flags, const char** format_string,
+                 SpecOptions* spec_options) {
   while (is_flag(valid_flags, **format_string)) {
     switch (**format_string) {
       case '+':
@@ -229,11 +238,13 @@ void parse_flags(char* valid_flags, const char** format_string, SpecOptions* spe
   }
 }
 
-void parse_width(char* valid_specifiers, const char** format_string, SpecOptions* spec_options) {
+void parse_width(char* valid_specifiers, const char** format_string,
+                 SpecOptions* spec_options) {
   // int res = 0;
   spec_options->width = 0;
 
-  while (**format_string != '.' && !is_specifier(valid_specifiers, **format_string)) {
+  while (**format_string != '.' &&
+         !is_specifier(valid_specifiers, **format_string)) {
     if (isdigit(**format_string)) {
       spec_options->width = spec_options->width * 10 + (**format_string - '0');
       // res++;
@@ -242,7 +253,8 @@ void parse_width(char* valid_specifiers, const char** format_string, SpecOptions
   }
 }
 
-void parse_precision(char* valid_specifiers, const char** format_string, SpecOptions* spec_options) {
+void parse_precision(char* valid_specifiers, const char** format_string,
+                     SpecOptions* spec_options) {
   int res = 0;
   spec_options->prec = 0;
 
