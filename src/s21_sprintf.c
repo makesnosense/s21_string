@@ -43,7 +43,7 @@ int itoa(DestStr* dest, int num_len, long long num);
 void whole_to_str(DestStr* dest, long long num, SpecOptions spec_opts);
 
 // Функция записывает дробную часть числа в строку dest
-void fract_to_str(DestStr* dest, long long num, SpecOptions spec_opts);
+void fract_to_str(DestStr* dest, long long num, int needed_precision);
 
 // Функция для чисел с плавающей точкой:
 //  1. Округляет число до нужной точности
@@ -80,8 +80,8 @@ int s21_sprintf(char* str, const char* format, ...) {
   va_start(args, format);  // Инициализируем список аргументов
   while (*format != '\0') {
     if (*format == '%') {
-      s21_memset(&spec_opts, 0, sizeof(spec_opts));
       format++;
+      s21_memset(&spec_opts, 0, sizeof(spec_opts));
       parse_flags(&format, &spec_opts);
       parse_width(&format, &spec_opts);
       parse_precision(&format, &spec_opts);
@@ -171,6 +171,26 @@ int itoa(DestStr* dest, int num_len, long long num) {
   return digits_written;
 }
 
+void float_to_str(DestStr* dest, double input_num, SpecOptions spec_opts) {
+  long long whole_part;  // Целая часть
+  double fraction_part;  // Дробная часть
+  div_num(input_num, spec_opts.precision, &whole_part, &fraction_part);
+  /// здесь еще докидываются потенциально пробелы для width
+  whole_to_str(dest, whole_part, spec_opts);
+
+  // эта часть определяет to which extent надо распечатывать fraction part
+  if (spec_opts.precision_set && spec_opts.precision == 0) {
+    ;
+  }  // default six
+  else if (!spec_opts.precision_set) {
+    dest->str[dest->curr_ind++] = '.';
+    fract_to_str(dest, fraction_part, F_PRECISION);
+  } else {
+    dest->str[dest->curr_ind++] = '.';
+    fract_to_str(dest, fraction_part, spec_opts.precision);
+  }
+}
+
 void whole_to_str(DestStr* dest, long long num, SpecOptions spec_opts) {
   // Обрабатываем флаги
   apply_flags(dest, &num, spec_opts);
@@ -186,7 +206,7 @@ void whole_to_str(DestStr* dest, long long num, SpecOptions spec_opts) {
   dest->str[dest->curr_ind] = '\0';
 }
 
-void fract_to_str(DestStr* dest, long long input_num, SpecOptions spec_opts) {
+void fract_to_str(DestStr* dest, long long input_num, int needed_precision) {
   // Считаем длину числа
   int num_len = get_num_length(input_num);
 
@@ -195,7 +215,7 @@ void fract_to_str(DestStr* dest, long long input_num, SpecOptions spec_opts) {
   int i = itoa(dest, num_len, input_num);
 
   // Доводим число до нужной точности
-  while (i < spec_opts.precision) {
+  while (i < needed_precision) {
     dest->str[dest->curr_ind++] = '0';
     i++;
   }
@@ -210,34 +230,6 @@ void div_num(double num, int precision, long long* wh, double* fr) {
   // Отделяем целую и дробную часть
   *wh = (long long)num;
   *fr = (num - *wh) * mul;
-}
-
-void float_to_str(DestStr* dest, double num, SpecOptions spec_opts) {
-  long long whole;  // Целая часть
-  double fract;     // Дробная часть
-
-  // Если спарсили precision, но она == 0
-  if (spec_opts.precision_set && spec_opts.precision == 0) {
-    div_num(num, spec_opts.precision, &whole, &fract);
-
-    whole_to_str(dest, whole, spec_opts);
-
-    // Если не спарсили precision
-  } else if (!spec_opts.precision_set) {
-    div_num(num, spec_opts.precision, &whole, &fract);
-
-    whole_to_str(dest, whole, spec_opts);
-    dest->str[dest->curr_ind++] = '.';
-    fract_to_str(dest, fract, spec_opts);
-
-    // Иначе
-  } else {
-    div_num(num, spec_opts.precision, &whole, &fract);
-
-    whole_to_str(dest, whole, spec_opts);
-    dest->str[dest->curr_ind++] = '.';
-    fract_to_str(dest, fract, spec_opts);
-  }
 }
 
 int is_flag(char ch) {
@@ -280,8 +272,6 @@ void parse_width(const char** format, SpecOptions* spec_opts) {
 }
 
 void parse_precision(const char** format, SpecOptions* spec_opts) {
-  // spec_opts->precision = 0;
-  // spec_opts->precision_set = 0;
   while (!is_specifier(**format)) {
     if (isdigit(**format)) {
       spec_opts->precision = spec_opts->precision * 10 + (**format - '0');
@@ -289,6 +279,4 @@ void parse_precision(const char** format, SpecOptions* spec_opts) {
     }
     (*format)++;
   }
-  spec_opts->precision =
-      spec_opts->precision_set == 0 ? F_PRECISION : spec_opts->precision;
 }
