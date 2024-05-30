@@ -279,4 +279,6 @@ void parse_precision(const char** format, SpecOptions* spec_opts) {
     }
     (*format)++;
   }
+  spec_opts->precision =
+      spec_opts->precision_set == 0 ? F_PRECISION : spec_opts->precision;
 }
