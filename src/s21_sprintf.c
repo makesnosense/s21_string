@@ -73,14 +73,14 @@ int s21_sprintf(char* str, const char* format, ...);
 
 int s21_sprintf(char* str, const char* format, ...) {
   DestStr dest = {str, 0};
-  int fin_result = 0;  // Результат работы функции, пока не используется нигде
-
   SpecOptions spec_opts = {0};
+  int fin_result = 0;  // Результат работы функции, пока не используется нигде
 
   va_list args;  // Список аргументов
   va_start(args, format);  // Инициализируем список аргументов
   while (*format != '\0') {
     if (*format == '%') {
+      s21_memset(&spec_opts, 0, sizeof(spec_opts));
       format++;
       parse_flags(&format, &spec_opts);
       parse_width(&format, &spec_opts);
@@ -217,7 +217,7 @@ void float_to_str(DestStr* dest, double num, SpecOptions spec_opts) {
   double fract;     // Дробная часть
 
   // Если спарсили precision, но она == 0
-  if (spec_opts.precision_set && !spec_opts.precision) {
+  if (spec_opts.precision_set && spec_opts.precision == 0) {
     div_num(num, spec_opts.precision, &whole, &fract);
 
     whole_to_str(dest, whole, spec_opts);
@@ -280,8 +280,8 @@ void parse_width(const char** format, SpecOptions* spec_opts) {
 }
 
 void parse_precision(const char** format, SpecOptions* spec_opts) {
-  spec_opts->precision = 0;
-  spec_opts->precision_set = 0;
+  // spec_opts->precision = 0;
+  // spec_opts->precision_set = 0;
   while (!is_specifier(**format)) {
     if (isdigit(**format)) {
       spec_opts->precision = spec_opts->precision * 10 + (**format - '0');
