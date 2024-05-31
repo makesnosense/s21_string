@@ -175,32 +175,22 @@ void float_to_str(DestStr* dest, double input_num, SpecOptions spec_opts) {
   long long whole_part;  // Целая часть
   double fraction_part;  // Дробная часть
 
-  div_num(input_num, spec_opts.precision, &whole_part, &fraction_part);
-  /// здесь еще докидываются потенциально пробелы для width
-
-  int needed_precision = F_PRECISION;
-  whole_to_str(dest, whole_part, spec_opts);
+  int needed_precision = F_PRECISION; // precision by default
 
   if (spec_opts.precision_set) {
     needed_precision = spec_opts.precision;
   }
+
+  div_num(input_num, needed_precision, &whole_part, &fraction_part);
+  /// здесь еще докидываются потенциально пробелы для width
+
+  whole_to_str(dest, whole_part, spec_opts);
 
   if (!(spec_opts.precision_set && spec_opts.precision == 0)) {
     dest->str[dest->curr_ind++] = '.';
     fract_to_str(dest, fraction_part, needed_precision);
   }
 
-  // // эта часть определяет to which extent надо распечатывать fraction part
-  // if (spec_opts.precision_set && spec_opts.precision == 0) {
-  //   ;
-  // }  // default six
-  // else if (!spec_opts.precision_set) {
-  //   dest->str[dest->curr_ind++] = '.';
-  //   fract_to_str(dest, fraction_part, F_PRECISION);
-  // } else {
-  //   dest->str[dest->curr_ind++] = '.';
-  //   fract_to_str(dest, fraction_part, spec_opts.precision);
-  // }
 }
 
 void whole_to_str(DestStr* dest, long long num, SpecOptions spec_opts) {
@@ -291,6 +281,4 @@ void parse_precision(const char** format, SpecOptions* spec_opts) {
     }
     (*format)++;
   }
-  // spec_opts->precision =
-  //     spec_opts->precision_set == 0 ? F_PRECISION : spec_opts->precision;
 }
