@@ -29,6 +29,15 @@ START_TEST(test_sprintf_string) {
 }
 END_TEST
 
+START_TEST(test_sprintf_empty_string) {
+  char lib_res[100];
+  char s21_res[100];
+  sprintf(lib_res, "%s", "");
+  s21_sprintf(s21_res, "%s", "");
+  ck_assert_str_eq(lib_res, s21_res);
+}
+END_TEST
+
 START_TEST(test_sprintf_very_float) {
   char lib_res[100];
   char s21_res[100];
@@ -64,6 +73,7 @@ Suite* make_sprintf_suite() {
   tcase_add_test(tc_core, test_sprintf_int);
   tcase_add_test(tc_core, test_sprintf_char);
   tcase_add_test(tc_core, test_sprintf_string);
+  tcase_add_test(tc_core, test_sprintf_empty_string);
   tcase_add_test(tc_core, test_sprintf_very_float);
   tcase_add_test(tc_core, test_sprintf_a_bit_float);
   tcase_add_test(tc_core, test_sprintf_unsigned);
