@@ -53,9 +53,10 @@ START_TEST(test_sprintf_float_width_precision_flag) {
   float sd = -3;
   float sd2 = 3.123456;
   float sd3 = 3.333;
+  float sd4 = 3;
 
-  sprintf(lib_res, "%-15f %+-20.1f % -10f", sd, sd2, sd3);
-  s21_sprintf(s21_res, "%-15f %+-20.1f % -10f", sd, sd2, sd3);
+  sprintf(lib_res, "%-15f %+-20.1f % -10f % f", sd, sd2, sd3, sd4);
+  s21_sprintf(s21_res, "%-15f %+-20.1f % -10f % f", sd, sd2, sd3, sd4);
   ck_assert_str_eq(lib_res, s21_res);
 }
 END_TEST

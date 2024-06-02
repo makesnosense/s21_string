@@ -15,7 +15,7 @@
 #define VALID_SPECIFIERS "cidfsu"
 
 // Макрос для смены знака числа
-#define CONVERT_NUM(x) (x) < 0 ? -(x) : (x)
+#define TO_ABS(x) (x) < 0 ? -(x) : (x)
 
 // Опции функции s21_sprintf
 typedef struct SpecifierOptions {
@@ -120,7 +120,7 @@ int s21_sprintf(char* str, const char* format, ...) {
         case 'd': {
           int input_int = va_arg(args, int);
           is_negative_int(input_int, &spec_opts);
-          input_int = CONVERT_NUM(input_int);
+          input_int = TO_ABS(input_int);
           whole_to_str(&dest, input_int, &spec_opts);
           break;
         }
@@ -128,7 +128,7 @@ int s21_sprintf(char* str, const char* format, ...) {
           spec_opts.is_float = 1;
           float input_float = va_arg(args, double);
           is_negative_float(input_float, &spec_opts);
-          input_float = CONVERT_NUM(input_float);
+          input_float = TO_ABS(input_float);
           float_to_str(&dest, input_float, &spec_opts);
           break;
         }
