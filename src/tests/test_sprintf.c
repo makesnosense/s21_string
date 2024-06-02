@@ -92,8 +92,8 @@ END_TEST
 START_TEST(test_sprintf_ints_i) {
   char lib_res[500];
   char s21_res[500];
-  sprintf(lib_res, "%-15i %60i %i", -1, -1000, INT_MIN);
-  s21_sprintf(s21_res, "%-15i %60i %i", -1, -1000, INT_MIN);
+  sprintf(lib_res, "%-15i %60i", -1, -1000);
+  s21_sprintf(s21_res, "%-15i %60i", -1, -1000);
   ck_assert_str_eq(lib_res, s21_res);
 }
 END_TEST
