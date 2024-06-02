@@ -1,3 +1,4 @@
+#include <limits.h>
 #include <stdio.h>
 
 #include "run_tests.h"
@@ -73,8 +74,8 @@ END_TEST
 START_TEST(test_sprintf_unsigned) {
   char lib_res[100];
   char s21_res[100];
-  sprintf(lib_res, "%u", 33);
-  s21_sprintf(s21_res, "%u", 33);
+  sprintf(lib_res, "%-15u %60u %u", 1, 1000, UINT_MAX);
+  s21_sprintf(s21_res, "%-15u %60u %u", 1, 1000, UINT_MAX);
   ck_assert_str_eq(lib_res, s21_res);
 }
 END_TEST
