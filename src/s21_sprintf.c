@@ -299,8 +299,6 @@ void apply_minus_width(DestStr* dest, SpecOptions spec_opts) {
 void whole_to_str(DestStr* dest, long long num, SpecOptions* spec_opts) {
   // Считаем длину числа
   int num_len = get_num_length(num);
-  // num = (-1) * (num);
-  // printf("\n%lld\n", num);
   // Если ширина больше длины числа, добавляем пробелы в начало
   apply_width(dest, num_len, spec_opts);
 
