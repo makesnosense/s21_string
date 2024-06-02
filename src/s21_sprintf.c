@@ -118,8 +118,9 @@ int s21_sprintf(char* str, const char* format, ...) {
         }
         case 'i':  // Если i или d (int)
         case 'd': {
-          int input_int = va_arg(args, int);
+          long long int input_int = va_arg(args, int);
           is_negative_int(input_int, &spec_opts);
+
           input_int = TO_ABS(input_int);
           whole_to_str(&dest, input_int, &spec_opts);
           break;
@@ -298,7 +299,6 @@ void apply_minus_width(DestStr* dest, SpecOptions spec_opts) {
 void whole_to_str(DestStr* dest, long long num, SpecOptions* spec_opts) {
   // Считаем длину числа
   int num_len = get_num_length(num);
-
   // Если ширина больше длины числа, добавляем пробелы в начало
   apply_width(dest, num_len, spec_opts);
 
