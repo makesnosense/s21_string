@@ -47,6 +47,19 @@ START_TEST(test_sprintf_a_bit_float) {
 }
 END_TEST
 
+START_TEST(test_sprintf_float_width_precision_flag) {
+  char lib_res[100];
+  char s21_res[100];
+  float sd = -3;
+  float sd2 = 3.123456;
+  float sd3 = 3.333;
+
+  sprintf(lib_res, "%-15f %+-20.1f % -10f", sd, sd2, sd3);
+  s21_sprintf(s21_res, "%-15f %+-20.1f % -10f", sd, sd2, sd3);
+  ck_assert_str_eq(lib_res, s21_res);
+}
+END_TEST
+
 START_TEST(test_sprintf_unsigned) {
   char lib_res[100];
   char s21_res[100];
@@ -66,6 +79,7 @@ Suite* make_sprintf_suite() {
   tcase_add_test(tc_core, test_sprintf_string);
   tcase_add_test(tc_core, test_sprintf_very_float);
   tcase_add_test(tc_core, test_sprintf_a_bit_float);
+  tcase_add_test(tc_core, test_sprintf_float_width_precision_flag);
   tcase_add_test(tc_core, test_sprintf_unsigned);
 
   suite_add_tcase(sprintf_suite, tc_core);
