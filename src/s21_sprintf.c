@@ -13,6 +13,7 @@
 // Валидные флаги и спецификаторы
 #define VALID_FLAGS "+- "
 #define VALID_SPECIFIERS "cidfsu"
+#define VALID_LENGTHS "lh"
 
 // Макрос для смены знака числа
 #define TO_ABS(x) (x) < 0 ? -(x) : (x)
@@ -25,6 +26,8 @@ typedef struct SpecifierOptions {
   int width;           // Ширина *.
   int precision;       // Точность .*
   int padding;         // Количество пробелов для width
+  bool length_l;       // Длина l
+  bool length_h;       // Длина h
   bool precision_set;  // Есть ли precision у спецификатора
   bool is_float;       // Является ли float/double
   bool is_negative;    // Является ли отр. числом
@@ -45,6 +48,9 @@ int is_flag(char ch);
 // Функция возвращает 1, если ch - это спецификатор
 int is_specifier(char ch);
 
+// Функция возвращает 1, если ch - это длина
+int is_length(char ch);
+
 // Функция парсит флаги для спецификатора
 void parse_flags(const char** format, SpecOptions* spec_opts);
 
@@ -53,6 +59,9 @@ void parse_width(const char** format, SpecOptions* spec_opts);
 
 // Функция парсит точность для спецификатора
 void parse_precision(const char** format, SpecOptions* spec_opts);
+
+// Функция парсит длины l и h
+void parse_length(const char** format, SpecOptions* spec_opts);
 
 // Функция устанавливает флаг is_negative
 void is_negative_int(long long num, SpecOptions* spec_opts);
@@ -165,6 +174,11 @@ int is_specifier(char ch) {
   return res == S21_NULL ? 0 : 1;
 }
 
+int is_length(char ch) {
+  char* res = s21_strchr(VALID_LENGTHS, ch);
+  return res == S21_NULL ? 0 : 1;
+}
+
 void parse_flags(const char** format, SpecOptions* spec_opts) {
   while (is_flag(**format)) {
     switch (**format) {
@@ -186,7 +200,7 @@ void parse_flags(const char** format, SpecOptions* spec_opts) {
 
 void parse_width(const char** format, SpecOptions* spec_opts) {
   spec_opts->width = 0;
-  while (**format != '.' && !is_specifier(**format)) {
+  while (**format != '.' && !is_specifier(**format) && !is_length(**format)) {
     if (isdigit(**format)) {
       spec_opts->width = spec_opts->width * 10 + (**format - '0');
     }
@@ -195,10 +209,26 @@ void parse_width(const char** format, SpecOptions* spec_opts) {
 }
 
 void parse_precision(const char** format, SpecOptions* spec_opts) {
-  while (!is_specifier(**format)) {
+  while (!is_specifier(**format) && !is_length(**format)) {
     if (isdigit(**format)) {
       spec_opts->precision = spec_opts->precision * 10 + (**format - '0');
       spec_opts->precision_set = 1;
+    }
+    (*format)++;
+  }
+}
+
+void parse_length(const char** format, SpecOptions* spec_opts) {
+  while (is_length(**format)) {
+    switch (**format) {
+      case 'l':
+        spec_opts->length_l = 1;
+        break;
+      case 'h':
+        spec_opts->length_h = 1;
+        break;
+      default:
+        break;
     }
     (*format)++;
   }
