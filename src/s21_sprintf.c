@@ -15,7 +15,7 @@
 #define VALID_SPECIFIERS "cidfsu"
 
 // Макрос для смены знака числа
-#define CONVERT_NUM(x) (x) < 0 ? -(x) : (x)
+#define TO_ABS(x) (x) < 0 ? -(x) : (x)
 
 // Опции функции s21_sprintf
 typedef struct SpecifierOptions {
@@ -63,17 +63,17 @@ void is_negative_float(double num, SpecOptions* spec_opts);
 // Функция считает длину целого числа
 int get_num_length(long long num);
 
-// Функция корректирует num_len для случая нуля
-int null_correction(int num_len);
-
 // Функция обрабатывает значение width для вывода
 void apply_width(DestStr* dest, int num_len, SpecOptions* spec_opts);
 
 // Функция обрабатывает флаги '+', '-' и ' '
 void apply_flags(DestStr* dest, SpecOptions spec_opts);
 
+// Вспомогательная функция для itoa
+void reverse_num(DestStr* dest, s21_size_t l_index, s21_size_t r_index);
+
 // Функция записывает целое число в строку dest
-int itoa(DestStr* dest, int num_len, long long num);
+int itoa(DestStr* dest, long long input_num);
 
 // Функция обрабатывает значение width для вывода, флаг '-'
 void apply_minus_width(DestStr* dest, SpecOptions spec_opts);
@@ -120,7 +120,6 @@ int s21_sprintf(char* str, const char* format, ...) {
         case 'd': {
           int input_int = va_arg(args, int);
           is_negative_int(input_int, &spec_opts);
-          input_int = CONVERT_NUM(input_int);
           whole_to_str(&dest, input_int, &spec_opts);
           break;
         }
@@ -128,7 +127,6 @@ int s21_sprintf(char* str, const char* format, ...) {
           spec_opts.is_float = 1;
           float input_float = va_arg(args, double);
           is_negative_float(input_float, &spec_opts);
-          input_float = CONVERT_NUM(input_float);
           float_to_str(&dest, input_float, &spec_opts);
           break;
         }
@@ -217,24 +215,21 @@ void is_negative_float(double num, SpecOptions* spec_opts) {
 int get_num_length(long long num) {
   int num_len = 0;
 
-  while (num != 0) {
+  if (num == 0) {
     num_len++;
-    num /= 10;
+  } else {
+    while (num != 0) {
+      num_len++;
+      num /= 10;
+    }
   }
 
   return num_len;
 }
 
-int null_correction(int num_len) {
-  return num_len == 0 ? num_len + 1 : num_len;
-}
-
 void apply_width(DestStr* dest, int num_len, SpecOptions* spec_opts) {
   int flag_corr;  // Коррекция кол-ва пробелов
   int prec_corr;  // Коррекция кол-ва пробелов
-
-  // Коррекция для нуля
-  num_len = null_correction(num_len);
 
   // Если ширина > длины числа
   if (spec_opts->width > num_len) {
@@ -267,23 +262,38 @@ void apply_flags(DestStr* dest, SpecOptions spec_opts) {
   }
 }
 
-int itoa(DestStr* dest, int num_len, long long num) {
-  int digits_written = 0;
+void reverse_num(DestStr* dest, s21_size_t l_index, s21_size_t r_index) {
+  int i = l_index, j = r_index, temp;
+  while (i < j) {
+    temp = dest->str[i];
+    dest->str[i] = dest->str[j];
+    dest->str[j] = temp;
+    i++;
+    j--;
+  }
+}
 
-  if (num_len == 0) {
+int itoa(DestStr* dest, long long input_num) {
+  int current_int = 0;
+  int num_len = 0;
+  s21_size_t l_index = dest->curr_ind;
+
+  if (input_num == 0) {
     dest->str[dest->curr_ind++] = '0';
-    digits_written++;
+    num_len++;
   } else {
-    while (num_len != 0) {
-      long long temp = pow(10, --num_len);
-      dest->str[dest->curr_ind++] = (num / temp) + '0';
-      num %= temp;
-      digits_written++;
+    while (input_num != 0) {
+      current_int = (int)TO_ABS((input_num % 10));
+      dest->str[dest->curr_ind++] = current_int + '0';
+      input_num /= 10;
+      num_len++;
     }
+    s21_size_t r_index = dest->curr_ind - 1;
+    reverse_num(dest, l_index, r_index);
   }
   dest->str[dest->curr_ind] = '\0';
 
-  return digits_written;
+  return num_len;
 }
 
 void apply_minus_width(DestStr* dest, SpecOptions spec_opts) {
@@ -306,13 +316,12 @@ void whole_to_str(DestStr* dest, long long num, SpecOptions* spec_opts) {
   apply_flags(dest, *spec_opts);
 
   if (!spec_opts->is_float) {
-    num_len = null_correction(num_len);
     for (int i = 0; i < spec_opts->precision - num_len; i++)
       dest->str[dest->curr_ind++] = '0';
   }
 
   // Преобразуем целое число в строку
-  itoa(dest, num_len, num);
+  itoa(dest, num);
 
   // Если ширина больше длины числа, добавляем пробелы в конец
   if (!spec_opts->is_float) apply_minus_width(dest, *spec_opts);
@@ -338,12 +347,9 @@ void divide_number(double num, int precision, long long* wh, double* fr) {
 }
 
 void fract_to_str(DestStr* dest, long long input_num, SpecOptions spec_opts) {
-  // Считаем длину числа
-  int num_len = get_num_length(input_num);
-
   // Преобразуем целое число в строку и получаем i
   // presicion - i = сколько символов не хватает до нужной точности
-  int i = itoa(dest, num_len, input_num);
+  int i = itoa(dest, input_num);
 
   // Доводим число до нужной точности
   while (i < spec_opts.precision) {
