@@ -6,8 +6,8 @@ s21_size_t s21_strlen(const char* str) {
   int err_flag = 0;
   if (str == S21_NULL) {
     err_flag = 1;
-    fprintf(stderr,
-            "error: null argument where non-null required (argument 1)\n");
+    // fprintf(stderr,
+    // // "error: null argument where non-null required (argument 1)\n");
   } else {
     const char* ptr = str;
     while (*ptr != '\0') {
