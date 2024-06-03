@@ -16,6 +16,7 @@
 
 // Макрос для смены знака числа
 #define TO_ABS(x) (x) < 0 ? -(x) : (x)
+#define TO_ABS(x) (x) < 0 ? -(x) : (x)
 
 // Опции функции s21_sprintf
 typedef struct SpecifierOptions {

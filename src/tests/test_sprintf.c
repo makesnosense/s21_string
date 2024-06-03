@@ -1,3 +1,4 @@
+#include <limits.h>
 #include <stdio.h>
 
 #include "run_tests.h"
@@ -29,6 +30,15 @@ START_TEST(test_sprintf_string) {
 }
 END_TEST
 
+START_TEST(test_sprintf_empty_string) {
+  char lib_res[100];
+  char s21_res[100];
+  sprintf(lib_res, "%s", "");
+  s21_sprintf(s21_res, "%s", "");
+  ck_assert_str_eq(lib_res, s21_res);
+}
+END_TEST
+
 START_TEST(test_sprintf_very_float) {
   char lib_res[100];
   char s21_res[100];
@@ -47,11 +57,52 @@ START_TEST(test_sprintf_a_bit_float) {
 }
 END_TEST
 
+START_TEST(test_sprintf_float_width_precision_flag) {
+  char lib_res[100];
+  char s21_res[100];
+  float sd = -3;
+  float sd2 = 3.123456;
+  float sd3 = 3.333;
+  float sd4 = 3;
+
+  sprintf(lib_res, "%-15f %+-20.1f % -10f % f", sd, sd2, sd3, sd4);
+  s21_sprintf(s21_res, "%-15f %+-20.1f % -10f % f", sd, sd2, sd3, sd4);
+  ck_assert_str_eq(lib_res, s21_res);
+}
+END_TEST
+
 START_TEST(test_sprintf_unsigned) {
   char lib_res[100];
   char s21_res[100];
-  sprintf(lib_res, "%u", 33);
-  s21_sprintf(s21_res, "%u", 33);
+  sprintf(lib_res, "%-15u %60u %u", 1, 1000, UINT_MAX);
+  s21_sprintf(s21_res, "%-15u %60u %u", 1, 1000, UINT_MAX);
+  ck_assert_str_eq(lib_res, s21_res);
+}
+END_TEST
+
+START_TEST(test_sprintf_ints_d) {
+  char lib_res[500];
+  char s21_res[500];
+  sprintf(lib_res, "%-15d %60d %d", 1, 1000, INT_MAX);
+  s21_sprintf(s21_res, "%-15d %60d %d", 1, 1000, INT_MAX);
+  ck_assert_str_eq(lib_res, s21_res);
+}
+END_TEST
+
+START_TEST(test_sprintf_ints_i) {
+  char lib_res[500];
+  char s21_res[500];
+  sprintf(lib_res, "%-15i %60i", -1, -1000);
+  s21_sprintf(s21_res, "%-15i %60i", -1, -1000);
+  ck_assert_str_eq(lib_res, s21_res);
+}
+END_TEST
+
+START_TEST(test_sprintf_ints_d_min) {
+  char lib_res[500];
+  char s21_res[500];
+  sprintf(lib_res, "%d", INT_MIN);
+  s21_sprintf(s21_res, "%d", INT_MIN);
   ck_assert_str_eq(lib_res, s21_res);
 }
 END_TEST
@@ -64,9 +115,14 @@ Suite* make_sprintf_suite() {
   tcase_add_test(tc_core, test_sprintf_int);
   tcase_add_test(tc_core, test_sprintf_char);
   tcase_add_test(tc_core, test_sprintf_string);
+  tcase_add_test(tc_core, test_sprintf_empty_string);
   tcase_add_test(tc_core, test_sprintf_very_float);
   tcase_add_test(tc_core, test_sprintf_a_bit_float);
+  tcase_add_test(tc_core, test_sprintf_float_width_precision_flag);
   tcase_add_test(tc_core, test_sprintf_unsigned);
+  tcase_add_test(tc_core, test_sprintf_ints_d);
+  tcase_add_test(tc_core, test_sprintf_ints_i);
+  tcase_add_test(tc_core, test_sprintf_ints_d_min);
 
   suite_add_tcase(sprintf_suite, tc_core);
   return sprintf_suite;
