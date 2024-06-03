@@ -63,6 +63,9 @@ void parse_precision(const char** format, SpecOptions* spec_opts);
 // Функция парсит длины l и h
 void parse_length(const char** format, SpecOptions* spec_opts);
 
+// Функция парсит сразу весь формат
+void parse_format(const char** format, SpecOptions* spec_opts);
+
 // Функция устанавливает флаг is_negative
 void is_negative_int(long long num, SpecOptions* spec_opts);
 
@@ -116,9 +119,7 @@ int s21_sprintf(char* str, const char* format, ...) {
     if (*format == '%') {
       format++;
       s21_memset(&spec_opts, 0, sizeof(spec_opts));
-      parse_flags(&format, &spec_opts);
-      parse_width(&format, &spec_opts);
-      parse_precision(&format, &spec_opts);
+      parse_format(&format, &spec_opts);
       switch (*format) {
         case 'c': {  // Если c (char)
           char input_char = va_arg(args, int);
@@ -232,6 +233,13 @@ void parse_length(const char** format, SpecOptions* spec_opts) {
     }
     (*format)++;
   }
+}
+
+void parse_format(const char** format, SpecOptions* spec_opts) {
+  parse_flags(format, spec_opts);
+  parse_width(format, spec_opts);
+  parse_precision(format, spec_opts);
+  parse_length(format, spec_opts);
 }
 
 void is_negative_int(long long num, SpecOptions* spec_opts) {
