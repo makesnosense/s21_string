@@ -128,7 +128,12 @@ int s21_sprintf(char* str, const char* format, ...) {
         }
         case 'i':  // Если i или d (int)
         case 'd': {
-          long long int input_int = va_arg(args, int);
+          long long int input_int = 0;
+          if (spec_opts.length_l) {
+            input_int = va_arg(args, long int);
+          } else {
+            input_int = va_arg(args, int);
+          }
           is_negative_int(input_int, &spec_opts);
           whole_to_str(&dest, input_int, &spec_opts);
           break;
