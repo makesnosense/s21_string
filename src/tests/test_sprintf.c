@@ -89,6 +89,28 @@ START_TEST(test_sprintf_ints_d) {
 }
 END_TEST
 
+START_TEST(test_sprintf_long_ints_d) {
+  char lib_res[500];
+  char s21_res[500];
+  sprintf(lib_res, "%60ld_%ld_%-+15ld_%-+15ld", LONG_MAX, LONG_MIN, LONG_MAX,
+          LONG_MIN);
+  s21_sprintf(s21_res, "%60ld_%ld_%-+15ld_%-+15ld", LONG_MAX, LONG_MIN,
+              LONG_MAX, LONG_MIN);
+  ck_assert_str_eq(lib_res, s21_res);
+}
+END_TEST
+
+START_TEST(test_sprintf_short_ints_d) {
+  char lib_res[500];
+  char s21_res[500];
+  sprintf(lib_res, "%60hd_%hd_%-+15hd_%-+15hd", SHRT_MAX, SHRT_MIN, SHRT_MAX,
+          SHRT_MIN);
+  s21_sprintf(s21_res, "%60hd_%hd_%-+15hd_%-+15hd", SHRT_MAX, SHRT_MIN,
+              SHRT_MAX, SHRT_MIN);
+  ck_assert_str_eq(lib_res, s21_res);
+}
+END_TEST
+
 START_TEST(test_sprintf_ints_i) {
   char lib_res[500];
   char s21_res[500];
@@ -123,6 +145,8 @@ Suite* make_sprintf_suite() {
   tcase_add_test(tc_core, test_sprintf_ints_d);
   tcase_add_test(tc_core, test_sprintf_ints_i);
   tcase_add_test(tc_core, test_sprintf_ints_d_min);
+  tcase_add_test(tc_core, test_sprintf_long_ints_d);
+  tcase_add_test(tc_core, test_sprintf_short_ints_d);
 
   suite_add_tcase(sprintf_suite, tc_core);
   return sprintf_suite;
