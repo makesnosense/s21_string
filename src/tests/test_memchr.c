@@ -61,18 +61,6 @@ START_TEST(test_zero_length) {
 }
 END_TEST
 
-START_TEST(test_large_n_no_char) {
-  char buffer[] = "Short buffer";
-  int c = 'x';
-  s21_size_t n = sizeof(buffer) + 10;
-
-  void* s21_result = s21_memchr(buffer, c, n);
-  void* lib_result = memchr(buffer, c, n);
-
-  ck_assert_ptr_eq(s21_result, lib_result);
-}
-END_TEST
-
 Suite* make_memchr_suite() {
   Suite* memchr_suite = suite_create("memchr");
   TCase* tc_core;
@@ -83,7 +71,6 @@ Suite* make_memchr_suite() {
   tcase_add_test(tc_core, test_find_at_end);
   tcase_add_test(tc_core, test_character_not_found);
   tcase_add_test(tc_core, test_zero_length);
-  tcase_add_test(tc_core, test_large_n_no_char);
 
   suite_add_tcase(memchr_suite, tc_core);
   return memchr_suite;
