@@ -110,8 +110,15 @@ void fract_to_str(DestStr* dest, long double num, SpecOptions spec_opts);
 // Функция записывает число с плавающей точкой в строку dest
 void float_to_str(DestStr* dest, long double input_num, SpecOptions* spec_opts);
 
+void specE(DestStr* dest, double input_num, SpecOptions* spec_opts,
+           const char* format);
+
+void wide_char(DestStr* dest, wchar_t input_char);
+
+void wide_str(DestStr* dest, wchar_t* input_string);
+
 int s21_sprintf(char* str, const char* format, ...) {
-  setlocale(LC_ALL, "");
+  // setlocale(LC_ALL, "");
   DestStr dest = {str, 0};
   SpecOptions spec_opts = {0};
   int fin_result = 0;  // Результат работы функции, пока не используется нигде
@@ -125,8 +132,13 @@ int s21_sprintf(char* str, const char* format, ...) {
       parse_format(&format, &spec_opts);
       switch (*format) {
         case 'c': {  // Если c (char)
-          char input_char = va_arg(args, int);
-          dest.str[dest.curr_ind++] = input_char;
+          if (!spec_opts.length_l) {
+            char input_char = va_arg(args, int);
+            dest.str[dest.curr_ind++] = input_char;
+          } else {
+            wchar_t input_char = va_arg(args, wchar_t);
+            wide_char(&dest, input_char);
+          }
           break;
         }
         case 'i':  // Если i или d (int)
@@ -174,9 +186,14 @@ int s21_sprintf(char* str, const char* format, ...) {
           break;
         }
         case 's': {
-          char* input_string = va_arg(args, char*);
-          s21_strcpy(dest.str + dest.curr_ind, input_string);
-          dest.curr_ind += s21_strlen(input_string);
+          if (!spec_opts.length_l) {
+            char* input_string = va_arg(args, char*);
+            s21_strcpy(dest.str + dest.curr_ind, input_string);
+            dest.curr_ind += s21_strlen(input_string);
+          } else {
+            wchar_t* input_string = va_arg(args, wchar_t*);
+            wide_str(&dest, input_string);
+          }
           break;
         }
         case 'u': {
@@ -189,6 +206,17 @@ int s21_sprintf(char* str, const char* format, ...) {
           whole_to_str(&dest, input_unsingned, &spec_opts);
           break;
         }
+        case 'e':
+        case 'E': {
+          float double_string = va_arg(args, double);
+          spec_opts.is_float = true;
+          specE(&dest, double_string, &spec_opts, format);
+          break;
+        }
+        case 'n':
+          int* counter_n = va_arg(args, int*);
+          *counter_n = s21_strlen(dest.str);
+          break;
         default:
           break;
       }
@@ -237,23 +265,45 @@ void parse_flags(const char** format, SpecOptions* spec_opts) {
   }
 }
 
+// void parse_width(const char** format, SpecOptions* spec_opts) {
+//   spec_opts->width = 0;
+//   while (**format != '.' && !is_specifier(**format) && !is_length(**format))
+//   {
+//     if (isdigit(**format)) {
+//       spec_opts->width = spec_opts->width * 10 + (**format - '0');
+//     }
+//     (*format)++;
+//   }
+// }
+
+// void parse_precision(const char** format, SpecOptions* spec_opts) {
+//   while (!is_specifier(**format) && !is_length(**format)) {
+//     if (isdigit(**format)) {
+//       spec_opts->precision = spec_opts->precision * 10 + (**format - '0');
+//       spec_opts->precision_set = 1;
+//     }
+//     (*format)++;
+//   }
+// }
+
 void parse_width(const char** format, SpecOptions* spec_opts) {
   spec_opts->width = 0;
-  while (**format != '.' && !is_specifier(**format) && !is_length(**format)) {
-    if (isdigit(**format)) {
-      spec_opts->width = spec_opts->width * 10 + (**format - '0');
-    }
+  while (isdigit(**format)) {
+    spec_opts->width = spec_opts->width * 10 + (**format - '0');
     (*format)++;
   }
 }
 
 void parse_precision(const char** format, SpecOptions* spec_opts) {
-  while (!is_specifier(**format) && !is_length(**format)) {
-    if (isdigit(**format)) {
-      spec_opts->precision = spec_opts->precision * 10 + (**format - '0');
-      spec_opts->precision_set = 1;
-    }
+  spec_opts->precision = 0;
+  spec_opts->precision_set = false;
+  if (**format == '.') {
     (*format)++;
+    spec_opts->precision_set = true;
+    while (isdigit(**format)) {
+      spec_opts->precision = spec_opts->precision * 10 + (**format - '0');
+      (*format)++;
+    }
   }
 }
 
@@ -466,5 +516,84 @@ void float_to_str(DestStr* dest, long double input_num,
     dest->str[dest->curr_ind++] = '.';
 
     fract_to_str(dest, fraction_part, *spec_opts);
+  }
+}
+
+void specE(DestStr* dest, double input_num, SpecOptions* spec_opts,
+           const char* format) {
+  int exponent = 0;
+  int sign = 0;  // для обработки знака минуса
+
+  // Обработка нулевого случая
+  if (input_num == 0.0) {
+    dest->str[dest->curr_ind++] = '0';
+    dest->str[dest->curr_ind++] = '.';
+    for (int i = 0; i < 6; i++) {  // По умолчанию точность 6
+      dest->str[dest->curr_ind++] = '0';
+    }
+    dest->str[dest->curr_ind++] = (*format == 'e') ? 'e' : 'E';
+    dest->str[dest->curr_ind++] = '+';
+    dest->str[dest->curr_ind++] = '0';
+    dest->str[dest->curr_ind++] = '0';
+    return;
+  }
+
+  if (input_num < 0) {
+    sign = 1;
+    input_num *= -1;
+  }
+
+  while (input_num >= 10.0) {
+    input_num /= 10.0;
+    exponent++;
+  }
+  while (input_num < 1.0) {
+    input_num *= 10.0;
+    exponent--;
+  }
+
+  if (sign) {
+    dest->str[dest->curr_ind++] = '-';
+  }
+
+  // Используем float_to_str для форматирования мантиссы
+  float_to_str(dest, input_num, spec_opts);
+
+  dest->str[dest->curr_ind++] = (*format == 'e') ? 'e' : 'E';
+
+  if (exponent < 0) {
+    dest->str[dest->curr_ind++] = '-';
+    exponent *= -1;
+  } else {
+    dest->str[dest->curr_ind++] = '+';
+  }
+
+  // Убедитесь, что экспонента имеет как минимум два знака
+  if (exponent < 10) {
+    dest->str[dest->curr_ind++] = '0';
+  }
+  itoa(dest, exponent);
+}
+
+void wide_char(DestStr* dest, wchar_t input_char) {
+  char temp[MB_CUR_MAX];
+  int len = wctomb(temp, input_char);
+  if (len > 0) {
+    for (int i = 0; i < len; i++) {
+      dest->str[dest->curr_ind++] = temp[i];
+    }
+  }
+}
+
+void wide_str(DestStr* dest, wchar_t* input_string) {
+  size_t len = wcstombs(NULL, input_string, 0);
+  if (len != (size_t)-1) {
+    char* temp_str = (char*)malloc(len + 1);
+    if (temp_str) {
+      wcstombs(temp_str, input_string, len + 1);
+      s21_strcpy(dest->str + dest->curr_ind, temp_str);
+      dest->str += len;
+      free(temp_str);
+    }
   }
 }
