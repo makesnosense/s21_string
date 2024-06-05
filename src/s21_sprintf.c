@@ -15,7 +15,8 @@
 
 // Валидные флаги и спецификаторы
 #define VALID_FLAGS "+- "
-#define VALID_SPECIFIERS "cidfsux"
+#define VALID_SPECIFIERS "cdefinsuxE"
+
 #define VALID_LENGTHS "Llh"
 
 // Макрос для смены знака числа
@@ -265,45 +266,23 @@ void parse_flags(const char** format, SpecOptions* spec_opts) {
   }
 }
 
-// void parse_width(const char** format, SpecOptions* spec_opts) {
-//   spec_opts->width = 0;
-//   while (**format != '.' && !is_specifier(**format) && !is_length(**format))
-//   {
-//     if (isdigit(**format)) {
-//       spec_opts->width = spec_opts->width * 10 + (**format - '0');
-//     }
-//     (*format)++;
-//   }
-// }
-
-// void parse_precision(const char** format, SpecOptions* spec_opts) {
-//   while (!is_specifier(**format) && !is_length(**format)) {
-//     if (isdigit(**format)) {
-//       spec_opts->precision = spec_opts->precision * 10 + (**format - '0');
-//       spec_opts->precision_set = 1;
-//     }
-//     (*format)++;
-//   }
-// }
-
 void parse_width(const char** format, SpecOptions* spec_opts) {
   spec_opts->width = 0;
-  while (isdigit(**format)) {
-    spec_opts->width = spec_opts->width * 10 + (**format - '0');
+  while (**format != '.' && !is_specifier(**format) && !is_length(**format)) {
+    if (isdigit(**format)) {
+      spec_opts->width = spec_opts->width * 10 + (**format - '0');
+    }
     (*format)++;
   }
 }
 
 void parse_precision(const char** format, SpecOptions* spec_opts) {
-  spec_opts->precision = 0;
-  spec_opts->precision_set = false;
-  if (**format == '.') {
-    (*format)++;
-    spec_opts->precision_set = true;
-    while (isdigit(**format)) {
+  while (!is_specifier(**format) && !is_length(**format)) {
+    if (isdigit(**format)) {
       spec_opts->precision = spec_opts->precision * 10 + (**format - '0');
-      (*format)++;
+      spec_opts->precision_set = 1;
     }
+    (*format)++;
   }
 }
 
