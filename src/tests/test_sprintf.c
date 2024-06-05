@@ -192,8 +192,62 @@ START_TEST(test_sprintf_long_overflow) {
 }
 END_TEST
 
+START_TEST(test_sprintf_scientific_zero_double) {
+  char lib_res[100];
+  char s21_res[100];
+  double num = 0;
+  sprintf(lib_res, "%e", num);
+  s21_sprintf(s21_res, "%e", num);
+  ck_assert_str_eq(lib_res, s21_res);
+}
+END_TEST
+
+START_TEST(test_sprintf_scientific_front_double) {
+  char lib_res[100];
+  char s21_res[100];
+  double num = 1234.5678;
+  sprintf(lib_res, "%e", num);
+  s21_sprintf(s21_res, "%e", num);
+  ck_assert_str_eq(lib_res, s21_res);
+}
+END_TEST
+
+START_TEST(test_sprintf_scientific_from_negative_double) {
+  char lib_res[100];
+  char s21_res[100];
+  double num = -0.9;
+  sprintf(lib_res, "%e", num);
+  s21_sprintf(s21_res, "%e", num);
+  ck_assert_str_eq(lib_res, s21_res);
+}
+END_TEST
+
+START_TEST(test_sprintf_scientific_from_big_double) {
+  char lib_res[100];
+  char s21_res[100];
+  double num =
+      1.7976931348623157165654643542544769789787575443755869766556454334242544676909809776765654543;
+  sprintf(lib_res, "%e", num);
+  s21_sprintf(s21_res, "%e", num);
+  ck_assert_str_eq(lib_res, s21_res);
+}
+END_TEST
+
+START_TEST(test_sprintf_Number_of_characters) {
+  char lib_res[100];
+  char s21_res[100];
+  double num = 1.79769313486231571308;
+  int res_or = 0;
+  int res_s21 = 0;
+  s21_sprintf(s21_res, "sprintf: %+E hdhgd %+d hdkjgh %n", num, 555, &res_s21);
+  sprintf(lib_res, "sprintf: %+E hdhgd %+d hdkjgh %n", num, 555, &res_or);
+  ck_assert_str_eq(lib_res, s21_res);
+  //
+}
+END_TEST
+
 Suite* make_sprintf_suite() {
-  setlocale(LC_ALL, "");
+  // setlocale(LC_ALL, "");
   Suite* sprintf_suite = suite_create("sprintf");
   TCase* tc_core;
 
@@ -217,6 +271,11 @@ Suite* make_sprintf_suite() {
   tcase_add_test(tc_core, test_sprintf_short_overflow);
   tcase_add_test(tc_core, test_sprintf_int_overflow);
   tcase_add_test(tc_core, test_sprintf_long_overflow);
+  tcase_add_test(tc_core, test_sprintf_scientific_zero_double);
+  tcase_add_test(tc_core, test_sprintf_scientific_front_double);
+  tcase_add_test(tc_core, test_sprintf_scientific_from_negative_double);
+  tcase_add_test(tc_core, test_sprintf_scientific_from_big_double);
+  tcase_add_test(tc_core, test_sprintf_Number_of_characters);
   suite_add_tcase(sprintf_suite, tc_core);
   return sprintf_suite;
 }
