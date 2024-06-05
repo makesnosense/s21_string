@@ -71,7 +71,7 @@ void parse_format(const char** format, SpecOptions* spec_opts);
 void is_negative(long double num, SpecOptions* spec_opts);
 
 // Функция считает длину целого числа
-int get_num_length(long long num);
+int get_num_length(long double num);
 
 // Функция обрабатывает значение width для вывода
 void apply_width(DestStr* dest, int num_len, SpecOptions* spec_opts);
@@ -265,18 +265,16 @@ void is_negative(long double num, SpecOptions* spec_opts) {
   spec_opts->is_negative = num < 0.0 ? 1 : 0;
 }
 
-int get_num_length(long long num) {
+int get_num_length(long double num) {
   int num_len = 0;
-
   if (num == 0) {
     num_len++;
   } else {
-    while (num != 0) {
+    while (num >= 1) {
       num_len++;
-      num /= 10;
+      num /= 10.0;
     }
   }
-
   return num_len;
 }
 
