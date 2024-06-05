@@ -16,7 +16,6 @@
 // Валидные флаги и спецификаторы
 #define VALID_FLAGS "+- "
 #define VALID_SPECIFIERS "cdefinsuxE"
-
 #define VALID_LENGTHS "Llh"
 
 // Макрос для смены знака числа
@@ -119,7 +118,7 @@ void wide_char(DestStr* dest, wchar_t input_char);
 void wide_str(DestStr* dest, wchar_t* input_string);
 
 int s21_sprintf(char* str, const char* format, ...) {
-  // setlocale(LC_ALL, "");
+  setlocale(LC_ALL, "");
   DestStr dest = {str, 0};
   SpecOptions spec_opts = {0};
   int fin_result = 0;  // Результат работы функции, пока не используется нигде

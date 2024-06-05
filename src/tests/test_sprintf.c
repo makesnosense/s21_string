@@ -1,5 +1,4 @@
 #include <limits.h>
-#include <locale.h>
 #include <stdio.h>
 
 #include "run_tests.h"
@@ -233,7 +232,7 @@ START_TEST(test_sprintf_scientific_from_big_double) {
 }
 END_TEST
 
-START_TEST(test_sprintf_Number_of_characters) {
+START_TEST(test_sprintf_number_of_characters) {
   char lib_res[100];
   char s21_res[100];
   double num = 1.79769313486231571308;
@@ -246,8 +245,30 @@ START_TEST(test_sprintf_Number_of_characters) {
 }
 END_TEST
 
+START_TEST(test_sprintf_wide_character) {
+  char lib_res[1000];
+  char s21_res[1000];
+  wchar_t wide_char = L'あ';
+
+  s21_sprintf(s21_res, "Широкий символ: %lc\n fgtffghghgutf", wide_char);
+  sprintf(lib_res, "Широкий символ: %lc\n fgtffghghgutf", wide_char);
+
+  ck_assert_str_eq(lib_res, s21_res);
+}
+END_TEST
+
+START_TEST(test_sprintf_wide_character_string) {
+  char lib_res[100];
+  char s21_res[100];
+  wchar_t wide_string[] = L"こんにちは";
+
+  s21_sprintf(s21_res, "Широкий символ: %ls\n fgtffghghgutf", wide_string);
+  sprintf(lib_res, "Широкий символ: %ls\n fgtffghghgutf", wide_string);
+  ck_assert_str_eq(lib_res, s21_res);
+}
+END_TEST
+
 Suite* make_sprintf_suite() {
-  // setlocale(LC_ALL, "");
   Suite* sprintf_suite = suite_create("sprintf");
   TCase* tc_core;
 
@@ -275,7 +296,9 @@ Suite* make_sprintf_suite() {
   tcase_add_test(tc_core, test_sprintf_scientific_front_double);
   tcase_add_test(tc_core, test_sprintf_scientific_from_negative_double);
   tcase_add_test(tc_core, test_sprintf_scientific_from_big_double);
-  tcase_add_test(tc_core, test_sprintf_Number_of_characters);
+  tcase_add_test(tc_core, test_sprintf_number_of_characters);
+  tcase_add_test(tc_core, test_sprintf_wide_character);
+  tcase_add_test(tc_core, test_sprintf_wide_character_string);
   suite_add_tcase(sprintf_suite, tc_core);
   return sprintf_suite;
 }
