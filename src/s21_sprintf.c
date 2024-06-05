@@ -1,9 +1,12 @@
 #include <ctype.h>
+#include <limits.h>
+#include <locale.h>
 #include <math.h>
 #include <stdarg.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <wchar.h>
 
 #include "s21_string.h"
 
@@ -12,7 +15,7 @@
 
 // Валидные флаги и спецификаторы
 #define VALID_FLAGS "+- "
-#define VALID_SPECIFIERS "cidfsu"
+#define VALID_SPECIFIERS "cidfsux"
 #define VALID_LENGTHS "Llh"
 
 // Макрос для смены знака числа
@@ -108,6 +111,7 @@ void fract_to_str(DestStr* dest, long double num, SpecOptions spec_opts);
 void float_to_str(DestStr* dest, long double input_num, SpecOptions* spec_opts);
 
 int s21_sprintf(char* str, const char* format, ...) {
+  setlocale(LC_ALL, "");
   DestStr dest = {str, 0};
   SpecOptions spec_opts = {0};
   int fin_result = 0;  // Результат работы функции, пока не используется нигде
@@ -128,10 +132,28 @@ int s21_sprintf(char* str, const char* format, ...) {
         case 'i':  // Если i или d (int)
         case 'd': {
           long long int input_int = 0;
-          if (spec_opts.length_l) {
-            input_int = va_arg(args, long int);
-          } else {
+          long long int absolute_input = 0;
+          if (spec_opts.length_h)  // обрабатываем short
+          {
             input_int = va_arg(args, int);
+            absolute_input = TO_ABS(input_int);
+            if (absolute_input > SHRT_MAX) {
+              input_int = (short)+(input_int);
+            }
+          } else if (spec_opts.length_l)  // обрабатываем long
+          {
+            absolute_input = TO_ABS(input_int);
+            input_int = va_arg(args, long int);
+            if (absolute_input > LONG_MAX) {
+              input_int = (long)+(input_int);
+            }
+          } else  // обрабатываем простой int
+          {
+            input_int = va_arg(args, int);
+            absolute_input = TO_ABS(input_int);
+            if (absolute_input > INT_MAX) {
+              input_int = (int)+(input_int);
+            }
           }
           is_negative(input_int, &spec_opts);
           whole_to_str(&dest, input_int, &spec_opts);
