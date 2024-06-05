@@ -1,4 +1,5 @@
 #include <limits.h>
+#include <locale.h>
 #include <stdio.h>
 
 #include "run_tests.h"
@@ -155,7 +156,44 @@ START_TEST(test_sprintf_long_doubles) {
 }
 END_TEST
 
+START_TEST(test_sprintf_short_overflow) {
+  char lib_res[500];
+  char s21_res[500];
+  sprintf(lib_res, "%hd %hd %hd %hd", (SHRT_MAX + 33), (SHRT_MIN - 10), INT_MAX,
+          INT_MIN);
+  s21_sprintf(s21_res, "%hd %hd %hd %hd", SHRT_MAX + 33, SHRT_MIN - 10, INT_MAX,
+              INT_MIN);
+  ck_assert_str_eq(lib_res, s21_res);
+}
+END_TEST
+
+START_TEST(test_sprintf_int_overflow) {
+  char lib_res[500];
+  char s21_res[500];
+  int very_int = INT_MAX;
+  int very_min_int = INT_MIN;
+  sprintf(lib_res, "%d %d", (very_int + 33), (very_min_int - 1500));
+  s21_sprintf(s21_res, "%d %d", (very_int + 33), (very_min_int - 1500));
+
+  ck_assert_str_eq(lib_res, s21_res);
+}
+END_TEST
+
+START_TEST(test_sprintf_long_overflow) {
+  char lib_res[500];
+  char s21_res[500];
+  long int long_int = LONG_MAX;
+  long int long_min_int = LONG_MIN;
+  sprintf(lib_res, "%+40.5ld %-40ld", (long_int + 33), (long_min_int - 1500));
+  s21_sprintf(s21_res, "%+40.5ld %-40ld", (long_int + 33),
+              (long_min_int - 1500));
+
+  ck_assert_str_eq(lib_res, s21_res);
+}
+END_TEST
+
 Suite* make_sprintf_suite() {
+  setlocale(LC_ALL, "");
   Suite* sprintf_suite = suite_create("sprintf");
   TCase* tc_core;
 
@@ -176,6 +214,9 @@ Suite* make_sprintf_suite() {
   tcase_add_test(tc_core, test_sprintf_long_ints_d);
   tcase_add_test(tc_core, test_sprintf_short_ints_d);
   tcase_add_test(tc_core, test_sprintf_long_doubles);
+  tcase_add_test(tc_core, test_sprintf_short_overflow);
+  tcase_add_test(tc_core, test_sprintf_int_overflow);
+  tcase_add_test(tc_core, test_sprintf_long_overflow);
   suite_add_tcase(sprintf_suite, tc_core);
   return sprintf_suite;
 }
