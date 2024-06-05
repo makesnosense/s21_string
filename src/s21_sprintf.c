@@ -68,10 +68,7 @@ void parse_length(const char** format, SpecOptions* spec_opts);
 void parse_format(const char** format, SpecOptions* spec_opts);
 
 // Функция устанавливает флаг is_negative
-void is_negative_int(long long num, SpecOptions* spec_opts);
-
-// Функция устанавливает флаг is_negative
-void is_negative_float(long double num, SpecOptions* spec_opts);
+void is_negative(long double num, SpecOptions* spec_opts);
 
 // Функция считает длину целого числа
 int get_num_length(long long num);
@@ -136,7 +133,7 @@ int s21_sprintf(char* str, const char* format, ...) {
           } else {
             input_int = va_arg(args, int);
           }
-          is_negative_int(input_int, &spec_opts);
+          is_negative(input_int, &spec_opts);
           whole_to_str(&dest, input_int, &spec_opts);
           break;
         }
@@ -149,7 +146,7 @@ int s21_sprintf(char* str, const char* format, ...) {
             input_float = va_arg(args, double);
           }
 
-          is_negative_float(input_float, &spec_opts);
+          is_negative(input_float, &spec_opts);
 
           float_to_str(&dest, input_float, &spec_opts);
           break;
@@ -264,11 +261,7 @@ void parse_format(const char** format, SpecOptions* spec_opts) {
   parse_length(format, spec_opts);
 }
 
-void is_negative_int(long long num, SpecOptions* spec_opts) {
-  spec_opts->is_negative = num < 0 ? 1 : 0;
-}
-
-void is_negative_float(long double num, SpecOptions* spec_opts) {
+void is_negative(long double num, SpecOptions* spec_opts) {
   spec_opts->is_negative = num < 0.0 ? 1 : 0;
 }
 
