@@ -80,16 +80,16 @@ int get_num_length(long double num);
 void apply_width(DestStr* dest, int num_len, SpecOptions* spec_opts);
 
 // Функция обрабатывает флаги '+', '-' и ' '
-void apply_flags(DestStr* dest, SpecOptions spec_opts);
+void apply_flags(DestStr* dest, SpecOptions* spec_opts);
 
 // Вспомогательная функция для itoa
 void reverse_num(DestStr* dest, s21_size_t l_index, s21_size_t r_index);
 
 // Функция записывает целое число в строку dest
-int itoa(DestStr* dest, long double input_num);
+int itoa(DestStr* dest, long double input_num, SpecOptions* spec_opts);
 
 // Функция обрабатывает значение width для вывода, флаг '-'
-void apply_minus_width(DestStr* dest, SpecOptions spec_opts);
+void apply_minus_width(DestStr* dest, SpecOptions* spec_opts);
 
 // Функция записывает целое число в строку dest
 // --------готовое решение с обработкой флагов---------
@@ -105,7 +105,7 @@ void divide_number(long double num, int precision, long double* wh,
                    long double* fr);
 
 // Функция записывает дробную часть числа в строку dest
-void fract_to_str(DestStr* dest, long double num, SpecOptions spec_opts);
+void fract_to_str(DestStr* dest, long double num, SpecOptions* spec_opts);
 
 // Функция записывает число с плавающей точкой в строку dest
 void float_to_str(DestStr* dest, long double input_num, SpecOptions* spec_opts);
@@ -353,12 +353,12 @@ void apply_width(DestStr* dest, int num_len, SpecOptions* spec_opts) {
   }
 }
 
-void apply_flags(DestStr* dest, SpecOptions spec_opts) {
-  if (spec_opts.is_negative) {
+void apply_flags(DestStr* dest, SpecOptions* spec_opts) {
+  if (spec_opts->is_negative) {
     dest->str[dest->curr_ind++] = '-';
-  } else if (spec_opts.plus) {
+  } else if (spec_opts->plus) {
     dest->str[dest->curr_ind++] = '+';
-  } else if (spec_opts.space) {
+  } else if (spec_opts->space) {
     dest->str[dest->curr_ind++] = ' ';
   }
 }
@@ -374,7 +374,7 @@ void reverse_num(DestStr* dest, s21_size_t l_index, s21_size_t r_index) {
   }
 }
 
-int itoa(DestStr* dest, long double input_num) {
+int itoa(DestStr* dest, long double input_num, SpecOptions* spec_opts) {
   int current_int = 0;
   int num_len = 0;
   long double base = 10.0;
@@ -398,10 +398,10 @@ int itoa(DestStr* dest, long double input_num) {
   return num_len;
 }
 
-void apply_minus_width(DestStr* dest, SpecOptions spec_opts) {
+void apply_minus_width(DestStr* dest, SpecOptions* spec_opts) {
   // Если ширина > длины числа и флаг '-' == 1
-  if (spec_opts.minus) {
-    for (int i = 0; i < spec_opts.padding; i++) {
+  if (spec_opts->minus) {
+    for (int i = 0; i < spec_opts->padding; i++) {
       dest->str[dest->curr_ind++] = ' ';
     }
   }
@@ -415,7 +415,7 @@ void whole_to_str(DestStr* dest, long double num, SpecOptions* spec_opts) {
   apply_width(dest, num_len, spec_opts);
 
   // Обрабатываем флаги
-  apply_flags(dest, *spec_opts);
+  apply_flags(dest, spec_opts);
 
   if (!spec_opts->is_float) {
     for (int i = 0; i < spec_opts->precision - num_len; i++)
@@ -423,10 +423,10 @@ void whole_to_str(DestStr* dest, long double num, SpecOptions* spec_opts) {
   }
 
   // Преобразуем целое число в строку
-  itoa(dest, num);
+  itoa(dest, num, spec_opts);
 
   // Если ширина больше длины числа, добавляем пробелы в конец
-  if (!spec_opts->is_float) apply_minus_width(dest, *spec_opts);
+  if (!spec_opts->is_float) apply_minus_width(dest, spec_opts);
 
   // Добавляем нуль-терминатор
   dest->str[dest->curr_ind] = '\0';
@@ -443,21 +443,22 @@ void divide_number(long double num, int precision, long double* wh,
   // Округляем дробную часть до нужного числа
   long double mul = (float)pow(10.0, precision);
 
-  num = round(num * mul) / mul;
+  num = lround(num * mul) / mul;
 
   // Отделяем целую и дробную часть
   *wh = (long long)num;
   *fr = (num - *wh) * mul;
 }
 
-void fract_to_str(DestStr* dest, long double input_num, SpecOptions spec_opts) {
+void fract_to_str(DestStr* dest, long double input_num,
+                  SpecOptions* spec_opts) {
   // Преобразуем целое число в строку и получаем i
   // presicion - i = сколько символов не хватает до нужной точности
 
-  int i = itoa(dest, input_num);
+  int i = itoa(dest, input_num, spec_opts);
 
   // Доводим число до нужной точности
-  while (i < spec_opts.precision) {
+  while (i < spec_opts->precision) {
     dest->str[dest->curr_ind++] = '0';
     i++;
   }
@@ -479,7 +480,7 @@ void float_to_str(DestStr* dest, long double input_num,
   set_needed_precision(spec_opts);
 
   // Делим число на целую и дробную часть
-  divide_number(input_num, spec_opts->precision, &whole_part, &fraction_part);
+  divide_number(input_num, (spec_opts->precision), &whole_part, &fraction_part);
 
   // Записываем целую часть в строку dest
   whole_to_str(dest, whole_part, spec_opts);
@@ -493,7 +494,7 @@ void float_to_str(DestStr* dest, long double input_num,
   if (!(spec_opts->precision_set && !spec_opts->precision)) {
     dest->str[dest->curr_ind++] = '.';
 
-    fract_to_str(dest, fraction_part, *spec_opts);
+    fract_to_str(dest, fraction_part, spec_opts);
   }
 }
 
@@ -550,7 +551,7 @@ void specE(DestStr* dest, double input_num, SpecOptions* spec_opts,
   if (exponent < 10) {
     dest->str[dest->curr_ind++] = '0';
   }
-  itoa(dest, exponent);
+  itoa(dest, exponent, spec_opts);
 }
 
 void wide_char(DestStr* dest, wchar_t input_char) {

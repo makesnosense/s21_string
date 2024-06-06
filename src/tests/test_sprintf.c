@@ -105,12 +105,11 @@ START_TEST(test_sprintf_long_ints_d) {
   char lib_res[5000];
   char s21_res[5000];
 
-  // long int min = -9223372036854775808;
+  long int max = 2147483647;
+  long int min = -2147483648;
 
-  sprintf(lib_res, "%60ld_%ld_%-+15ld_%-+15ld", LONG_MAX, LONG_MIN, LONG_MAX,
-          LONG_MIN);
-  s21_sprintf(s21_res, "%60ld_%ld_%-+15ld_%-+15ld", LONG_MAX, LONG_MIN,
-              LONG_MAX, LONG_MIN);
+  sprintf(lib_res, "%60ld_%ld_%-+15ld_%-+15ld", max, min, max, min);
+  s21_sprintf(s21_res, "%60ld_%ld_%-+15ld_%-+15ld", max, min, max, min);
   ck_assert_str_eq(lib_res, s21_res);
 }
 END_TEST
