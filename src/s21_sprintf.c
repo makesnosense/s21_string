@@ -117,6 +117,9 @@ void wide_char(DestStr* dest, wchar_t input_char);
 
 void wide_str(DestStr* dest, wchar_t* input_string);
 
+void spec_G(DestStr* dest, double double_input, SpecOptions* spec_opts,
+            const char* format);
+
 int s21_sprintf(char* str, const char* format, ...) {
   setlocale(LC_ALL, "en_US.UTF-8");
   DestStr dest = {str, 0};
@@ -217,6 +220,13 @@ int s21_sprintf(char* str, const char* format, ...) {
           int* counter_n = va_arg(args, int*);
           *counter_n = s21_strlen(dest.str);
           break;
+        // case 'g':
+        // case 'G': {
+        //   printf("kjdfhg");
+        //   double double_input = va_arg(args, double);
+        //   spec_G(&dest, double_input, &spec_opts, format);
+        //   break;
+        // }
         default:
           break;
       }
@@ -485,7 +495,7 @@ void float_to_str(DestStr* dest, long double input_num,
   whole_to_str(dest, whole_part, spec_opts);
 
   // if (spec_opts->length_big_l == false) {
-  fraction_part = (double)fraction_part;
+  fraction_part = (float)fraction_part;
   // }
   // printf("\n\n%Lf\n\n", fraction_part);
 
@@ -573,5 +583,21 @@ void wide_str(DestStr* dest, wchar_t* input_string) {
       dest->str += len;
       free(temp_str);
     }
+  }
+}
+
+void spec_G(DestStr* dest, double double_input, SpecOptions* spec_opts,
+            const char* format) {
+  printf("kjdfhg");
+  DestStr format_exponent;
+  DestStr format_mantis;
+
+  float_to_str(&format_mantis, double_input, spec_opts);
+  specE(&format_exponent, double_input, spec_opts, format);
+
+  if (s21_strlen(format_mantis.str) > s21_strlen(format_mantis.str)) {
+    s21_strcpy(dest->str + dest->curr_ind, format_exponent.str);
+  } else {
+    printf("kjdfhgjndvxbhjvkblkg");
   }
 }
