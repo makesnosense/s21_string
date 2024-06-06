@@ -1,4 +1,5 @@
 #include <limits.h>
+#include <locale.h>
 #include <stdio.h>
 
 #include "run_tests.h"
@@ -269,6 +270,7 @@ START_TEST(test_sprintf_wide_character_string) {
 END_TEST
 
 Suite* make_sprintf_suite() {
+  // setlocale(LC_ALL, "en_US.UTF-8");
   Suite* sprintf_suite = suite_create("sprintf");
   TCase* tc_core;
 
