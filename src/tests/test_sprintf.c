@@ -100,10 +100,10 @@ START_TEST(test_sprintf_unsigned_problematic) {
   char lib_res[1000];
   char s21_res[1000];
 
-  sprintf(lib_res, "%hu %hu %u %lu %lu %u %u", USHRT_MAX + 5, UINT_MAX + 10,
-          UINT_MAX, ULONG_MAX, ULONG_MAX + 5, -1000, -65545);
-  s21_sprintf(s21_res, "%hu %hu %u %lu %lu %u %u", USHRT_MAX + 5, UINT_MAX + 10,
-              UINT_MAX, ULONG_MAX, ULONG_MAX + 5, -1000, -65545);
+  sprintf(lib_res, "%-20hu %-30hu %-30u %lu %lu %u %u", USHRT_MAX + 5,
+          UINT_MAX + 10, UINT_MAX, ULONG_MAX, ULONG_MAX + 5, -1000, -65555);
+  s21_sprintf(s21_res, "%-20hu %-30hu %-30u %lu %lu %u %u", USHRT_MAX + 5,
+              UINT_MAX + 10, UINT_MAX, ULONG_MAX, ULONG_MAX + 5, -1000, -65555);
   ck_assert_str_eq(lib_res, s21_res);
 }
 END_TEST
