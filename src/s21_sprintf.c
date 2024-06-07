@@ -15,7 +15,7 @@
 
 // Валидные флаги и спецификаторы
 #define VALID_FLAGS "+- "
-#define VALID_SPECIFIERS "cdefinsuxE"
+#define VALID_SPECIFIERS "cdefinsouxEX"
 #define VALID_LENGTHS "Llh"
 
 // Макрос для смены знака числа
@@ -35,6 +35,9 @@ typedef struct SpecifierOptions {
   bool precision_set;  // Есть ли precision у спецификатора
   bool is_float;       // Является ли float/double
   bool is_negative;    // Является ли отр. числом
+  bool octal;
+  bool hexadecimal;
+  bool hexadecimal_capital;
 } SpecOptions;
 
 // Структура для строки-буфера
@@ -84,6 +87,9 @@ void apply_flags(DestStr* dest, SpecOptions* spec_opts);
 
 // Вспомогательная функция для itoa
 void reverse_num(DestStr* dest, s21_size_t l_index, s21_size_t r_index);
+
+void process_int(va_list* args, DestStr* dest, SpecOptions* spec_opts);
+long long int ingest_int(va_list* args, SpecOptions* spec_opts);
 
 // Функция записывает целое число в строку dest
 int itoa(DestStr* dest, long double input_num, SpecOptions* spec_opts);
@@ -141,34 +147,10 @@ int s21_sprintf(char* str, const char* format, ...) {
           }
           break;
         }
-        case 'i':  // Если i или d (int)
+
+        case 'i':
         case 'd': {
-          long long int input_int = 0;
-          long long int absolute_input = 0;
-          if (spec_opts.length_h)  // обрабатываем short
-          {
-            input_int = va_arg(args, int);
-            absolute_input = TO_ABS(input_int);
-            if (absolute_input > SHRT_MAX) {
-              input_int = (short)+(input_int);
-            }
-          } else if (spec_opts.length_l)  // обрабатываем long
-          {
-            absolute_input = TO_ABS(input_int);
-            input_int = va_arg(args, long int);
-            if (absolute_input > LONG_MAX) {
-              input_int = (long)+(input_int);
-            }
-          } else  // обрабатываем простой int
-          {
-            input_int = va_arg(args, int);
-            absolute_input = TO_ABS(input_int);
-            if (absolute_input > INT_MAX) {
-              input_int = (int)+(input_int);
-            }
-          }
-          is_negative(input_int, &spec_opts);
-          whole_to_str(&dest, input_int, &spec_opts);
+          process_int(&args, &dest, &spec_opts);
           break;
         }
         case 'f': {  // Если f (float)
@@ -179,9 +161,7 @@ int s21_sprintf(char* str, const char* format, ...) {
           } else {
             input_float = va_arg(args, double);
           }
-
           is_negative(input_float, &spec_opts);
-
           float_to_str(&dest, input_float, &spec_opts);
           break;
         }
@@ -196,8 +176,19 @@ int s21_sprintf(char* str, const char* format, ...) {
           }
           break;
         }
+        case 'x':
+        case 'X':
+        case 'o':
         case 'u': {
+          if (*format == 'x') {
+            spec_opts.hexadecimal = true;
+          } else if (*format == 'X') {
+            spec_opts.hexadecimal_capital = true;
+          } else if (*format == 'o') {
+            spec_opts.octal = true;
+          }
           unsigned long input_unsingned = 0;
+
           if (spec_opts.length_l) {
             input_unsingned = va_arg(args, unsigned long);
           } else {
@@ -217,8 +208,6 @@ int s21_sprintf(char* str, const char* format, ...) {
           int* counter_n = va_arg(args, int*);
           *counter_n = s21_strlen(dest.str);
           break;
-        default:
-          break;
       }
     } else {
       dest.str[dest.curr_ind++] = *format;
@@ -230,6 +219,67 @@ int s21_sprintf(char* str, const char* format, ...) {
 
   return fin_result;
 }
+
+void process_int(va_list* args, DestStr* dest, SpecOptions* spec_opts) {
+  long long int input_int = ingest_int(args, spec_opts);
+  is_negative(input_int, spec_opts);
+  whole_to_str(dest, input_int, spec_opts);
+}
+
+long long int ingest_int(va_list* args, SpecOptions* spec_opts) {
+  long long int input_int = 0;
+  long long int absolute_input = 0;
+  if (spec_opts->length_h)  // обрабатываем short
+  {
+    input_int = va_arg(*args, int);
+    absolute_input = TO_ABS(input_int);
+    if (absolute_input > SHRT_MAX) {
+      input_int = (short)+(input_int);
+    }
+  } else if (spec_opts->length_l)  // обрабатываем long
+  {
+    absolute_input = TO_ABS(input_int);
+    input_int = va_arg(*args, long int);
+    if (absolute_input > LONG_MAX) {
+      input_int = (long)+(input_int);
+    }
+  } else  // обрабатываем простой int
+  {
+    input_int = va_arg(*args, int);
+    absolute_input = TO_ABS(input_int);
+    if (absolute_input > INT_MAX) {
+      input_int = (int)+(input_int);
+    }
+  }
+  return input_int;
+}
+
+// long long unsigned ingest_unsinged(va_list* args, SpecOptions* spec_opts) {
+//   long long unsigned input_unsingned = 0;
+
+//   if (spec_opts->length_h)  // обрабатываем short
+//   {
+//     input_unsingned = va_arg(*args, short unsigned);
+//     if (input_unsingned > USHRT_MAX) {
+//       input_unsingned = (short unsigned)+(input_unsingned);
+//     }
+//   } else if (spec_opts->length_l)  // обрабатываем long
+//   {
+//     absolute_input = TO_ABS(input_int);
+//     input_int = va_arg(*args, long int);
+//     if (absolute_input > LONG_MAX) {
+//       input_int = (long)+(input_int);
+//     }
+//   } else  // обрабатываем простой int
+//   {
+//     input_int = va_arg(*args, int);
+//     absolute_input = TO_ABS(input_int);
+//     if (absolute_input > INT_MAX) {
+//       input_int = (int)+(input_int);
+//     }
+//   }
+//   return input_int;
+// }
 
 int is_flag(char ch) {
   char* res = s21_strchr(VALID_FLAGS, ch);
@@ -257,8 +307,6 @@ void parse_flags(const char** format, SpecOptions* spec_opts) {
         break;
       case ' ':
         spec_opts->space = 1;
-        break;
-      default:
         break;
     }
     (*format)++;
@@ -297,8 +345,6 @@ void parse_length(const char** format, SpecOptions* spec_opts) {
       case 'h':
         spec_opts->length_h = 1;
         break;
-      default:
-        break;
     }
     (*format)++;
   }
@@ -309,6 +355,7 @@ void parse_format(const char** format, SpecOptions* spec_opts) {
   parse_width(format, spec_opts);
   parse_precision(format, spec_opts);
   parse_length(format, spec_opts);
+  // parse_octal_and_hex(format, spec_opts);
 }
 
 void is_negative(long double num, SpecOptions* spec_opts) {
@@ -378,6 +425,16 @@ int itoa(DestStr* dest, long double input_num, SpecOptions* spec_opts) {
   int current_int = 0;
   int num_len = 0;
   long double base = 10.0;
+  const char* digits = "0123456789abcdef";
+  if (spec_opts->octal) {
+    base = 8.0;
+  } else if (spec_opts->hexadecimal || spec_opts->hexadecimal_capital) {
+    base = 16.0;
+  }
+  if (spec_opts->hexadecimal_capital) {
+    digits = "0123456789ABCDEF";
+  }
+
   s21_size_t l_index = dest->curr_ind;
 
   if (input_num == 0) {
@@ -386,7 +443,8 @@ int itoa(DestStr* dest, long double input_num, SpecOptions* spec_opts) {
   } else {
     while (input_num >= 1) {
       current_int = (int)fmodl(input_num, base);
-      dest->str[dest->curr_ind++] = current_int + '0';
+      dest->str[dest->curr_ind++] = digits[current_int];
+      // dest->str[dest->curr_ind++] = current_int + '0';
       input_num /= base;
       num_len++;
     }
