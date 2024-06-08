@@ -558,7 +558,7 @@ void float_to_str(DestStr* dest, long double input_num,
   whole_to_str(dest, whole_part, spec_opts);
 
   // if (spec_opts->length_big_l == false) {
-  fraction_part = (float)fraction_part;
+  fraction_part = (double)fraction_part;
   // }
   // printf("\n\n%Lf\n\n", fraction_part);
 
