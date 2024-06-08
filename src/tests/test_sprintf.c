@@ -16,8 +16,8 @@ END_TEST
 START_TEST(test_sprintf_char) {
   char lib_res[100];
   char s21_res[100];
-  sprintf(lib_res, "%c %c %c", '\t', '@', '\n');
-  s21_sprintf(s21_res, "%c %c %c", '\t', '@', '\n');
+  sprintf(lib_res, "%c %c %c %c %c %c", '\t', '@', '\n', 2, 50, 123);
+  s21_sprintf(s21_res, "%c %c %c %c %c %c", '\t', '@', '\n', 2, 50, 123);
   ck_assert_str_eq(lib_res, s21_res);
 }
 END_TEST
@@ -25,8 +25,17 @@ END_TEST
 START_TEST(test_sprintf_char_width) {
   char lib_res[300];
   char s21_res[300];
-  sprintf(lib_res, "%20c %3c %-20c %-3c", 'A', '@', 'A', '@');
-  s21_sprintf(s21_res, "%20c %3c %-20c %-3c", 'A', '@', 'A', '@');
+  sprintf(lib_res, "%20c %3c %-20c %-3c %-20c", 'A', '@', 'A', '@', 50);
+  s21_sprintf(s21_res, "%20c %3c %-20c %-3c %-20c", 'A', '@', 'A', '@', 50);
+  ck_assert_str_eq(lib_res, s21_res);
+}
+END_TEST
+
+START_TEST(test_sprintf_char_problematic) {
+  char lib_res[300];
+  char s21_res[300];
+  sprintf(lib_res, "%20c %3c %-20c", 2, 50, 123);
+  s21_sprintf(s21_res, "%20c %3c %-20c", 2, 50, 123);
   ck_assert_str_eq(lib_res, s21_res);
 }
 END_TEST
@@ -300,8 +309,12 @@ START_TEST(test_sprintf_hex_lower_with_modifiers) {
   unsigned short us_value = 255;
   unsigned long ul_value = 4294967295;  // Максимум для unsigned long
 
-  sprintf(lib_res, "%x %hx %lx ", -33, us_value, ul_value);
-  s21_sprintf(s21_res, "%x %hx %lx ", -33, us_value, ul_value);
+  sprintf(lib_res, "%x %hx %lx %20lx %-20lx %-40hx", -33, us_value, ul_value,
+          ul_value, ul_value, us_value);
+  s21_sprintf(s21_res, "%x %hx %lx %20lx %-20lx %-40hx", -33, us_value,
+              ul_value, ul_value, ul_value, us_value);
+  // sprintf(lib_res, "%20hx", us_value);
+  // s21_sprintf(s21_res, "%20hx", us_value);
   ck_assert_str_eq(lib_res, s21_res);
 }
 END_TEST
@@ -313,8 +326,10 @@ START_TEST(test_sprintf_hex_upper_with_modifiers) {
   unsigned short us_value = 255;
   unsigned long ul_value = 4294967295UL + 5;  // Максимум для unsigned long
 
-  sprintf(lib_res, "%hX %lX", us_value, ul_value);
-  s21_sprintf(s21_res, "%hX %lX", us_value, ul_value);
+  sprintf(lib_res, "%hX %lX %-20hX %20lX", us_value, ul_value, us_value,
+          ul_value);
+  s21_sprintf(s21_res, "%hX %lX %-20hX %20lX", us_value, ul_value, us_value,
+              ul_value);
   ck_assert_str_eq(lib_res, s21_res);
 }
 END_TEST
@@ -333,7 +348,7 @@ START_TEST(test_sprintf_octal_with_modifiers) {
 }
 END_TEST
 
-START_TEST(test_sprintf_octal_problematic_two) {
+START_TEST(test_sprintf_octal_negative_long) {
   char lib_res[300];
   char s21_res[300];
 
@@ -345,14 +360,15 @@ START_TEST(test_sprintf_octal_problematic_two) {
 }
 END_TEST
 
-START_TEST(test_sprintf_octal_problematic) {
+START_TEST(test_sprintf_octal_width) {
   char lib_res[300];
   char s21_res[300];
 
-  int m = -33;
+  int first_test_int = -33;
+  int second_test_int = INT_MAX;
 
-  sprintf(lib_res, "%20o", m);
-  s21_sprintf(s21_res, "%20o", m);
+  sprintf(lib_res, "%20o %-20o", first_test_int, second_test_int);
+  s21_sprintf(s21_res, "%20o %-20o", first_test_int, second_test_int);
   ck_assert_str_eq(lib_res, s21_res);
 }
 END_TEST
@@ -417,10 +433,11 @@ Suite* make_sprintf_suite() {
   tcase_add_test(tc_core, test_sprintf_hex_lower_with_modifiers);
   tcase_add_test(tc_core, test_sprintf_hex_upper_with_modifiers);
   tcase_add_test(tc_core, test_sprintf_octal_with_modifiers);
-  tcase_add_test(tc_core, test_sprintf_octal_problematic_two);
-  tcase_add_test(tc_core, test_sprintf_octal_problematic);
+  tcase_add_test(tc_core, test_sprintf_octal_negative_long);
+  tcase_add_test(tc_core, test_sprintf_octal_width);
   tcase_add_test(tc_core, test_sprintf_mantiss_or_exponent_negative_value);
   tcase_add_test(tc_core, test_sprintf_mantiss_or_exponent_formats);
+  tcase_add_test(tc_core, test_sprintf_char_problematic);
   suite_add_tcase(sprintf_suite, tc_core);
   return sprintf_suite;
 }

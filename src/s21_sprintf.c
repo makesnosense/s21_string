@@ -24,12 +24,13 @@
 
 // Опции функции s21_sprintf
 typedef struct SpecifierOptions {
-  bool plus;           // Флаг '+'
-  bool minus;          // Флаг '-'
-  bool space;          // Флаг ' '
-  int width;           // Ширина *.
-  int precision;       // Точность .*
-  int padding;         // Количество пробелов для width
+  bool plus;      // Флаг '+'
+  bool minus;     // Флаг '-'
+  bool space;     // Флаг ' '
+  int width;      // Ширина *.
+  int precision;  // Точность .*
+  int padding;    // Количество пробелов для width
+  long double base;
   bool length_l;       // Длина l
   bool length_h;       // Длина h
   bool length_big_l;   // Длина L
@@ -80,7 +81,7 @@ void parse_format(const char** format, SpecOptions* spec_opts);
 void is_negative(long double num, SpecOptions* spec_opts);
 
 // Функция считает длину целого числа
-int get_num_length(long double num);
+int get_num_length(long double num, SpecOptions* spec_opts);
 
 // Функция обрабатывает значение width для вывода
 void apply_width(DestStr* dest, int num_len, SpecOptions* spec_opts);
@@ -107,6 +108,8 @@ void whole_to_str(DestStr* dest, long double num, SpecOptions* spec_opts);
 
 // Функция устанавливает корректную presicion
 void set_needed_precision(SpecOptions* spec_opts);
+
+void set_base(SpecOptions* spec_opts);
 
 // Функция для чисел с плавающей точкой:
 //  1. Округляет число до нужной точности
@@ -145,11 +148,13 @@ int s21_sprintf(char* str, const char* format, ...) {
       format++;
       s21_memset(&spec_opts, 0, sizeof(spec_opts));
       parse_format(&format, &spec_opts);
+      set_base(&spec_opts);
+
       switch (*format) {
         case 'c': {  // Если c (char)
           if (!spec_opts.length_l) {
             char input_char = va_arg(args, int);
-            int num_len = get_num_length(input_char);
+            int num_len = get_num_length(input_char, &spec_opts);
             // Если ширина больше длины числа, добавляем пробелы в начало
             apply_width(&dest, num_len, &spec_opts);
 
@@ -396,28 +401,37 @@ void parse_specifier(const char** format, SpecOptions* spec_opts) {
   }
 }
 
+void set_base(SpecOptions* spec_opts) {
+  if (spec_opts->is_octal) {
+    spec_opts->base = 8.0;
+  } else if (spec_opts->is_hexadecimal || spec_opts->is_hexadecimal_capital) {
+    spec_opts->base = 16.0;
+  } else {
+    spec_opts->base = 10.0;
+  }
+}
+
 void parse_format(const char** format, SpecOptions* spec_opts) {
   parse_flags(format, spec_opts);
   parse_width(format, spec_opts);
   parse_precision(format, spec_opts);
   parse_length(format, spec_opts);
   parse_specifier(format, spec_opts);
-
-  // parse_octal_and_hex(format, spec_opts);
 }
 
 void is_negative(long double num, SpecOptions* spec_opts) {
   spec_opts->is_negative = num < 0.0 ? 1 : 0;
 }
 
-int get_num_length(long double num) {
+int get_num_length(long double num, SpecOptions* spec_opts) {
   int num_len = 0;
-  if (num == 0) {
+
+  if (num == 0 || spec_opts->is_char) {
     num_len++;
   } else {
     while (num >= 1) {
       num_len++;
-      num /= 10.0;
+      num /= spec_opts->base;
     }
   }
   return num_len;
@@ -436,11 +450,6 @@ void apply_width(DestStr* dest, int num_len, SpecOptions* spec_opts) {
     if (spec_opts->is_float) {
       spec_opts->padding =
           spec_opts->width - num_len - spec_opts->precision - flag_corr - 1;
-    } else if (spec_opts->is_octal) {
-      spec_opts->padding = spec_opts->width - num_len - flag_corr - 1;
-    } else if (spec_opts->is_char) {
-      spec_opts->padding = spec_opts->width - num_len - flag_corr + 1;
-
     } else {
       spec_opts->padding = spec_opts->width - num_len - flag_corr - prec_corr;
     }
@@ -477,13 +486,9 @@ void reverse_num(DestStr* dest, s21_size_t l_index, s21_size_t r_index) {
 int itoa(DestStr* dest, long double input_num, SpecOptions* spec_opts) {
   int current_int = 0;
   int num_len = 0;
-  long double base = 10.0;
+  // long double base = 10.0;
   const char* digits = "0123456789abcdef";
-  if (spec_opts->is_octal) {
-    base = 8.0;
-  } else if (spec_opts->is_hexadecimal || spec_opts->is_hexadecimal_capital) {
-    base = 16.0;
-  }
+
   if (spec_opts->is_hexadecimal_capital) {
     digits = "0123456789ABCDEF";
   }
@@ -495,10 +500,10 @@ int itoa(DestStr* dest, long double input_num, SpecOptions* spec_opts) {
     num_len++;
   } else {
     while (input_num >= 1) {
-      current_int = (int)fmodl(input_num, base);
+      current_int = (int)fmodl(input_num, spec_opts->base);
       dest->str[dest->curr_ind++] = digits[current_int];
       // dest->str[dest->curr_ind++] = current_int + '0';
-      input_num /= base;
+      input_num /= spec_opts->base;
       num_len++;
     }
     s21_size_t r_index = dest->curr_ind - 1;
@@ -521,7 +526,7 @@ void apply_minus_width(DestStr* dest, SpecOptions* spec_opts) {
 void whole_to_str(DestStr* dest, long double num, SpecOptions* spec_opts) {
   num = TO_ABS(num);
 
-  int num_len = get_num_length(num);
+  int num_len = get_num_length(num, spec_opts);
   // Если ширина больше длины числа, добавляем пробелы в начало
   apply_width(dest, num_len, spec_opts);
 
@@ -706,12 +711,13 @@ void spec_G(DestStr* dest, double double_input, SpecOptions* spec_opts,
 
   // apply_flags(dest, spec_opts);
 
-  divide_number(double_input, 6 - get_num_length((long long)double_input),
+  divide_number(double_input,
+                6 - get_num_length((long long)double_input, spec_opts),
                 &whole_part, &fraction_part);
 
   // modfl(whole_part, &whole_part);
 
-  long long num_len = get_num_length(whole_part);
+  long long num_len = get_num_length(whole_part, spec_opts);
   if (num_len <= F_PRECISION) {
     apply_width(dest, num_len, spec_opts);
     apply_flags(dest, spec_opts);
