@@ -223,10 +223,11 @@ int s21_sprintf(char* str, const char* format, ...) {
           specE(&dest, double_string, &spec_opts, format);
           break;
         }
-        case 'n':
+        case 'n': {
           int* counter_n = va_arg(args, int*);
           *counter_n = s21_strlen(dest.str);
           break;
+        }
         case 'g':
         case 'G': {
           double double_input = va_arg(args, double);
@@ -234,10 +235,11 @@ int s21_sprintf(char* str, const char* format, ...) {
           spec_G(&dest, double_input, &spec_opts, format);
           break;
         }
-        case 'p':
+        case 'p': {
           void* pointer_str_input = va_arg(args, void*);
           pointer_to_str(&dest, pointer_str_input, &spec_opts);
           break;
+        }
         default:
           break;
       }
