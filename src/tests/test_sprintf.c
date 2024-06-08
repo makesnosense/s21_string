@@ -398,6 +398,24 @@ START_TEST(test_sprintf_mantiss_or_exponent_formats) {
 }
 END_TEST
 
+START_TEST(test_sprintf_pointer_type) {
+  char lib_res[300];
+  char s21_res[300];
+
+  long double value1 = -44366537.53746;
+
+  long long value2 = 4568376973;
+
+  char value3 = 'f';
+
+  sprintf(lib_res, "%-4p %-6p %35p", (void*)&value1, (void*)&value2,
+          (void*)&value3);
+  s21_sprintf(s21_res, "%-4p %-6p %35p", (void*)&value1, (void*)&value2,
+              (void*)&value3);
+  ck_assert_str_eq(lib_res, s21_res);
+}
+END_TEST
+
 Suite* make_sprintf_suite() {
   Suite* sprintf_suite = suite_create("sprintf");
   TCase* tc_core;
@@ -438,6 +456,8 @@ Suite* make_sprintf_suite() {
   tcase_add_test(tc_core, test_sprintf_mantiss_or_exponent_negative_value);
   tcase_add_test(tc_core, test_sprintf_mantiss_or_exponent_formats);
   tcase_add_test(tc_core, test_sprintf_char_problematic);
+  tcase_add_test(tc_core, test_sprintf_pointer_type);
+
   suite_add_tcase(sprintf_suite, tc_core);
   return sprintf_suite;
 }
