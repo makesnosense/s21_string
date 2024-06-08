@@ -15,7 +15,7 @@
 
 // Валидные флаги и спецификаторы
 #define VALID_FLAGS "+- "
-#define VALID_SPECIFIERS "cdefinsuxE"
+#define VALID_SPECIFIERS "cdefginsuxEG"
 #define VALID_LENGTHS "Llh"
 
 // Макрос для смены знака числа
@@ -211,7 +211,7 @@ int s21_sprintf(char* str, const char* format, ...) {
         }
         case 'e':
         case 'E': {
-          float double_string = va_arg(args, double);
+          double double_string = va_arg(args, double);
           spec_opts.is_float = true;
           specE(&dest, double_string, &spec_opts, format);
           break;
@@ -220,13 +220,13 @@ int s21_sprintf(char* str, const char* format, ...) {
           int* counter_n = va_arg(args, int*);
           *counter_n = s21_strlen(dest.str);
           break;
-        // case 'g':
-        // case 'G': {
-        //   printf("kjdfhg");
-        //   double double_input = va_arg(args, double);
-        //   spec_G(&dest, double_input, &spec_opts, format);
-        //   break;
-        // }
+        case 'g':
+        case 'G': {
+          float double_input = va_arg(args, double);
+          spec_opts.is_float = true;
+          spec_G(&dest, double_input, &spec_opts, format);
+          break;
+        }
         default:
           break;
       }
@@ -519,7 +519,7 @@ void specE(DestStr* dest, double input_num, SpecOptions* spec_opts,
     for (int i = 0; i < 6; i++) {  // По умолчанию точность 6
       dest->str[dest->curr_ind++] = '0';
     }
-    dest->str[dest->curr_ind++] = (*format == 'e') ? 'e' : 'E';
+    dest->str[dest->curr_ind++] = (*format == ('e' || 'g')) ? 'e' : 'E';
     dest->str[dest->curr_ind++] = '+';
     dest->str[dest->curr_ind++] = '0';
     dest->str[dest->curr_ind++] = '0';
@@ -547,7 +547,7 @@ void specE(DestStr* dest, double input_num, SpecOptions* spec_opts,
   // Используем float_to_str для форматирования мантиссы
   float_to_str(dest, input_num, spec_opts);
 
-  dest->str[dest->curr_ind++] = (*format == 'e') ? 'e' : 'E';
+  dest->str[dest->curr_ind++] = (*format == ('e' || 'g')) ? 'e' : 'E';
 
   if (exponent < 0) {
     dest->str[dest->curr_ind++] = '-';
@@ -588,16 +588,33 @@ void wide_str(DestStr* dest, wchar_t* input_string) {
 
 void spec_G(DestStr* dest, double double_input, SpecOptions* spec_opts,
             const char* format) {
-  printf("kjdfhg");
-  DestStr format_exponent;
-  DestStr format_mantis;
+  // char buffer1[1000] = {'\0'};
+  // char buffer2[1000] = {'\0'};
 
-  float_to_str(&format_mantis, double_input, spec_opts);
-  specE(&format_exponent, double_input, spec_opts, format);
+  // DestStr format_exponent = {buffer1, 0};
+  // DestStr format_mantis = {buffer2, 0};
 
-  if (s21_strlen(format_mantis.str) > s21_strlen(format_mantis.str)) {
-    s21_strcpy(dest->str + dest->curr_ind, format_exponent.str);
+  // int g = 0;
+
+  long double whole_part = 0;
+  long double fraction_part = 0;
+
+  divide_number(double_input, 6 - get_num_length((int)double_input),
+                &whole_part, &fraction_part);
+
+  modfl(whole_part, &whole_part);
+
+  int num_len = get_num_length(whole_part);
+
+  if (num_len <= 6) {
+    // float_to_str(dest, double_input, spec_opts);
+    itoa(dest, double_input);
+    if (num_len != 6) {
+      dest->str[dest->curr_ind++] = '.';
+      itoa(dest, fraction_part);
+    }
+
   } else {
-    printf("kjdfhgjndvxbhjvkblkg");
+    specE(dest, double_input, spec_opts, format);
   }
 }
