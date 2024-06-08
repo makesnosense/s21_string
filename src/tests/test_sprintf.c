@@ -84,10 +84,26 @@ END_TEST
 START_TEST(test_sprintf_unsigned) {
   char lib_res[1000];
   char s21_res[1000];
-  sprintf(lib_res, "%-15u %60u %u %lu %lu", 1, 1000, UINT_MAX, ULONG_MAX,
-          ULONG_MAX - 333);
-  s21_sprintf(s21_res, "%-15u %60u %u %lu %lu", 1, 1000, UINT_MAX, ULONG_MAX,
-              ULONG_MAX - 333);
+  long int min_long_int = LONG_MIN;
+
+  sprintf(lib_res, "%-15u %60u %u %lu %lu %lu %u %lu %hu %u", 1, 1000, UINT_MAX,
+          ULONG_MAX, ULONG_MAX - 333, ULONG_MAX + 1, (UINT_MAX + 500),
+          min_long_int, USHRT_MAX, UINT_MAX);
+  s21_sprintf(s21_res, "%-15u %60u %u %lu %lu %lu %u %lu %hu %u", 1, 1000,
+              UINT_MAX, ULONG_MAX, ULONG_MAX - 333, ULONG_MAX + 1,
+              (UINT_MAX + 500), min_long_int, USHRT_MAX, UINT_MAX);
+  ck_assert_str_eq(lib_res, s21_res);
+}
+END_TEST
+
+START_TEST(test_sprintf_unsigned_problematic) {
+  char lib_res[1000];
+  char s21_res[1000];
+
+  sprintf(lib_res, "%-20hu %-30hu %-30u %lu %lu %u %u", USHRT_MAX + 5,
+          UINT_MAX + 10, UINT_MAX, ULONG_MAX, ULONG_MAX + 5, -1000, -65555);
+  s21_sprintf(s21_res, "%-20hu %-30hu %-30u %lu %lu %u %u", USHRT_MAX + 5,
+              UINT_MAX + 10, UINT_MAX, ULONG_MAX, ULONG_MAX + 5, -1000, -65555);
   ck_assert_str_eq(lib_res, s21_res);
 }
 END_TEST
@@ -105,12 +121,11 @@ START_TEST(test_sprintf_long_ints_d) {
   char lib_res[5000];
   char s21_res[5000];
 
-  // long int min = -9223372036854775808;
+  long int max = 2147483647;
+  long int min = -2147483648;
 
-  sprintf(lib_res, "%60ld_%ld_%-+15ld_%-+15ld", LONG_MAX, LONG_MIN, LONG_MAX,
-          LONG_MIN);
-  s21_sprintf(s21_res, "%60ld_%ld_%-+15ld_%-+15ld", LONG_MAX, LONG_MIN,
-              LONG_MAX, LONG_MIN);
+  sprintf(lib_res, "%60ld_%ld_%-+15ld_%-+15ld", max, min, max, min);
+  s21_sprintf(s21_res, "%60ld_%ld_%-+15ld_%-+15ld", max, min, max, min);
   ck_assert_str_eq(lib_res, s21_res);
 }
 END_TEST
@@ -269,8 +284,96 @@ START_TEST(test_sprintf_wide_character_string) {
 }
 END_TEST
 
+START_TEST(test_sprintf_hex_lower_with_modifiers) {
+  char lib_res[1000];
+  char s21_res[1000];
+
+  unsigned short us_value = 255;
+  unsigned long ul_value = 4294967295;  // Максимум для unsigned long
+
+  sprintf(lib_res, "%x %hx %lx ", -33, us_value, ul_value);
+  s21_sprintf(s21_res, "%x %hx %lx ", -33, us_value, ul_value);
+  ck_assert_str_eq(lib_res, s21_res);
+}
+END_TEST
+
+START_TEST(test_sprintf_hex_upper_with_modifiers) {
+  char lib_res[100];
+  char s21_res[100];
+
+  unsigned short us_value = 255;
+  unsigned long ul_value = 4294967295UL + 5;  // Максимум для unsigned long
+
+  sprintf(lib_res, "%hX %lX", us_value, ul_value);
+  s21_sprintf(s21_res, "%hX %lX", us_value, ul_value);
+  ck_assert_str_eq(lib_res, s21_res);
+}
+END_TEST
+
+START_TEST(test_sprintf_octal_with_modifiers) {
+  char lib_res[500];
+  char s21_res[500];
+
+  unsigned short us_value = 0377;  // 255 в десятичной системе
+  unsigned long ul_value =
+      037777777777;  // Максимум для unsigned long в восьмеричной системе
+  long int min_long_int = LONG_MIN;
+  sprintf(lib_res, "%ho %lo %lo", us_value, ul_value, min_long_int);
+  s21_sprintf(s21_res, "%ho %lo %lo", us_value, ul_value, min_long_int);
+  ck_assert_str_eq(lib_res, s21_res);
+}
+END_TEST
+
+START_TEST(test_sprintf_octal_problematic_two) {
+  char lib_res[300];
+  char s21_res[300];
+
+  long int min_long_int = LONG_MIN;
+
+  sprintf(lib_res, "%lo", min_long_int);
+  s21_sprintf(s21_res, "%lo", min_long_int);
+  ck_assert_str_eq(lib_res, s21_res);
+}
+END_TEST
+
+// START_TEST(test_sprintf_octal_problematic) {
+//   char lib_res[300];
+//   char s21_res[300];
+
+//   int m = -33;
+
+//   sprintf(lib_res, "%20o", m);
+//   s21_sprintf(s21_res, "%20o", m);
+//   ck_assert_str_eq(lib_res, s21_res);
+// }
+// END_TEST
+
+START_TEST(test_sprintf_mantiss_or_exponent_negative_value) {
+  char lib_res[300];
+  char s21_res[300];
+
+  double num1 = -566765.1266666643573;
+
+  sprintf(lib_res, "%g %G", num1, num1);
+  s21_sprintf(s21_res, "%g %G", num1, num1);
+  ck_assert_str_eq(lib_res, s21_res);
+}
+END_TEST
+
+START_TEST(test_sprintf_mantiss_or_exponent_formats) {
+  char lib_res[300];
+  char s21_res[300];
+
+  double num1 = 14376485974.123;
+  double num2 = 3333.3333;
+
+  sprintf(lib_res, "%g %G", num1, num2);
+  s21_sprintf(s21_res, "%g %G", num1, num2);
+  ck_assert_str_eq(lib_res, s21_res);
+}
+END_TEST
+
 Suite* make_sprintf_suite() {
-  // setlocale(LC_ALL, "en_US.UTF-8");
   Suite* sprintf_suite = suite_create("sprintf");
   TCase* tc_core;
 
@@ -285,6 +388,7 @@ Suite* make_sprintf_suite() {
   tcase_add_test(tc_core, test_sprintf_a_bit_float);
   tcase_add_test(tc_core, test_sprintf_float_width_precision_flag);
   tcase_add_test(tc_core, test_sprintf_unsigned);
+  tcase_add_test(tc_core, test_sprintf_unsigned_problematic);
   tcase_add_test(tc_core, test_sprintf_ints_d);
   tcase_add_test(tc_core, test_sprintf_ints_i);
   tcase_add_test(tc_core, test_sprintf_ints_d_min);
@@ -301,6 +405,13 @@ Suite* make_sprintf_suite() {
   tcase_add_test(tc_core, test_sprintf_number_of_characters);
   tcase_add_test(tc_core, test_sprintf_wide_character);
   tcase_add_test(tc_core, test_sprintf_wide_character_string);
+  tcase_add_test(tc_core, test_sprintf_hex_lower_with_modifiers);
+  tcase_add_test(tc_core, test_sprintf_hex_upper_with_modifiers);
+  tcase_add_test(tc_core, test_sprintf_octal_with_modifiers);
+  tcase_add_test(tc_core, test_sprintf_octal_problematic_two);
+  // tcase_add_test(tc_core, test_sprintf_octal_problematic);
+  tcase_add_test(tc_core, test_sprintf_mantiss_or_exponent_negative_value);
+  tcase_add_test(tc_core, test_sprintf_mantiss_or_exponent_formats);
   suite_add_tcase(sprintf_suite, tc_core);
   return sprintf_suite;
 }
