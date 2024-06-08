@@ -13,6 +13,15 @@ START_TEST(test_sprintf_int) {
 }
 END_TEST
 
+START_TEST(test_sprintf_int_0_padding) {
+  char lib_res[100];
+  char s21_res[100];
+  sprintf(lib_res, "%+020i-% d %020d", -100, 0, 3333);
+  s21_sprintf(s21_res, "%+020i-% d %020d", -100, 0, 3333);
+  ck_assert_str_eq(lib_res, s21_res);
+}
+END_TEST
+
 START_TEST(test_sprintf_char) {
   char lib_res[100];
   char s21_res[100];
@@ -70,8 +79,8 @@ END_TEST
 START_TEST(test_sprintf_very_float) {
   char lib_res[100];
   char s21_res[100];
-  sprintf(lib_res, "% .5f %+.0f %f", 33.0, 33.33, 3.33);
-  s21_sprintf(s21_res, "% .5f %+.0f %f", 33.0, 33.33, 3.33);
+  sprintf(lib_res, "% .5f %+.0f %f %+020f", 33.0, 33.33, 3.33, 3.33);
+  s21_sprintf(s21_res, "% .5f %+.0f %f %+020f", 33.0, 33.33, 3.33, 3.33);
   ck_assert_str_eq(lib_res, s21_res);
 }
 END_TEST
@@ -272,8 +281,9 @@ START_TEST(test_sprintf_number_of_characters) {
   double num = 1.79769313486231571308;
   int res_or = 0;
   int res_s21 = 0;
-  s21_sprintf(s21_res, "sprintf: %+E hdhgd %+d hdkjgh %n", num, 555, &res_s21);
-  sprintf(lib_res, "sprintf: %+E hdhgd %+d hdkjgh %n", num, 555, &res_or);
+  s21_sprintf(s21_res, "sprintf: %+E %% hdhgd %+d hdkjgh %n %%", num, 555,
+              &res_s21);
+  sprintf(lib_res, "sprintf: %+E %% hdhgd %+d hdkjgh %n %%", num, 555, &res_or);
   ck_assert_str_eq(lib_res, s21_res);
   //
 }
@@ -422,6 +432,7 @@ Suite* make_sprintf_suite() {
 
   tc_core = tcase_create("Core");
   tcase_add_test(tc_core, test_sprintf_int);
+  tcase_add_test(tc_core, test_sprintf_int_0_padding);
   tcase_add_test(tc_core, test_sprintf_char);
   tcase_add_test(tc_core, test_sprintf_char_width);
   tcase_add_test(tc_core, test_sprintf_string);
