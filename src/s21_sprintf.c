@@ -16,7 +16,7 @@
 #define MANTISSA_DIGITS 5
 
 // Валидные флаги и спецификаторы
-#define VALID_FLAGS "+- "
+#define VALID_FLAGS "+- 0"
 #define VALID_SPECIFIERS "cdefginsopuxEGX%"
 #define VALID_LENGTHS "Llh"
 
@@ -25,13 +25,15 @@
 
 // Опции функции s21_sprintf
 typedef struct SpecifierOptions {
-  bool plus;      // Флаг '+'
-  bool minus;     // Флаг '-'
-  bool space;     // Флаг ' '
+  bool flag_plus;   // Флаг '+'
+  bool flag_minus;  // Флаг '-'
+  bool flag_space;  // Флаг ' '
+  bool flag_zero;
   int width;      // Ширина *.
   int precision;  // Точность .*
   int padding;    // Количество пробелов для width
   long double base;
+  int padding_char;
   bool length_l;       // Длина l
   bool length_h;       // Длина h
   bool length_big_l;   // Длина L
@@ -112,6 +114,8 @@ void set_needed_precision(SpecOptions* spec_opts);
 
 void set_base(SpecOptions* spec_opts);
 
+void set_padding_char(SpecOptions* spec_opts);
+
 // Функция для чисел с плавающей точкой:
 //  1. Округляет число до нужной точности
 //  2. Делит число на целую и дробную часть
@@ -152,12 +156,14 @@ int s21_sprintf(char* str, const char* format, ...) {
       s21_memset(&spec_opts, 0, sizeof(spec_opts));
       parse_format(&format, &spec_opts);
       set_base(&spec_opts);
+      set_padding_char(&spec_opts);
 
       switch (*format) {
         case 'c': {  // Если c (char)
           if (!spec_opts.length_l) {
             char input_char = va_arg(args, int);
             int num_len = get_num_length(input_char, &spec_opts);
+
             // Если ширина больше длины числа, добавляем пробелы в начало
             apply_width(&dest, num_len, &spec_opts);
 
@@ -332,13 +338,19 @@ void parse_flags(const char** format, SpecOptions* spec_opts) {
   while (is_flag(**format)) {
     switch (**format) {
       case '+':
-        spec_opts->plus = 1;
+        spec_opts->flag_plus = 1;
         break;
       case '-':
-        spec_opts->minus = 1;
+        spec_opts->flag_minus = 1;
+        spec_opts->flag_zero = 0;
         break;
       case ' ':
-        spec_opts->space = 1;
+        spec_opts->flag_space = 1;
+        break;
+      case '0':
+        if (spec_opts->flag_minus == 0) {
+          spec_opts->flag_zero = 1;
+        }
         break;
     }
     (*format)++;
@@ -425,6 +437,14 @@ void set_base(SpecOptions* spec_opts) {
   }
 }
 
+void set_padding_char(SpecOptions* spec_opts) {
+  if (spec_opts->flag_zero) {
+    spec_opts->padding_char = '0';
+  } else {
+    spec_opts->padding_char = ' ';
+  }
+}
+
 void parse_format(const char** format, SpecOptions* spec_opts) {
   parse_flags(format, spec_opts);
   parse_width(format, spec_opts);
@@ -457,7 +477,8 @@ void apply_width(DestStr* dest, int num_len, SpecOptions* spec_opts) {
 
   // Если ширина > длины числа
   if (spec_opts->width > num_len) {
-    flag_corr = spec_opts->plus || spec_opts->space || spec_opts->is_negative;
+    flag_corr =
+        spec_opts->flag_plus || spec_opts->flag_space || spec_opts->is_negative;
     prec_corr =
         spec_opts->precision > num_len ? spec_opts->precision - num_len : 0;
 
@@ -469,9 +490,9 @@ void apply_width(DestStr* dest, int num_len, SpecOptions* spec_opts) {
     }
 
     // Если флаг '-' == 0
-    if (!spec_opts->minus) {
+    if (!spec_opts->flag_minus) {
       for (int i = 0; i < spec_opts->padding; i++)
-        dest->str[dest->curr_ind++] = ' ';
+        dest->str[dest->curr_ind++] = spec_opts->padding_char;
     }
   }
 }
@@ -479,9 +500,9 @@ void apply_width(DestStr* dest, int num_len, SpecOptions* spec_opts) {
 void apply_flags(DestStr* dest, SpecOptions* spec_opts) {
   if (spec_opts->is_negative) {
     dest->str[dest->curr_ind++] = '-';
-  } else if (spec_opts->plus) {
+  } else if (spec_opts->flag_plus) {
     dest->str[dest->curr_ind++] = '+';
-  } else if (spec_opts->space) {
+  } else if (spec_opts->flag_space) {
     dest->str[dest->curr_ind++] = ' ';
   }
 }
@@ -530,7 +551,7 @@ int itoa(DestStr* dest, long double input_num, SpecOptions* spec_opts) {
 
 void apply_minus_width(DestStr* dest, SpecOptions* spec_opts) {
   // Если ширина > длины числа и флаг '-' == 1
-  if (spec_opts->minus) {
+  if (spec_opts->flag_minus) {
     for (int i = 0; i < spec_opts->padding; i++) {
       dest->str[dest->curr_ind++] = ' ';
     }
@@ -541,11 +562,16 @@ void whole_to_str(DestStr* dest, long double num, SpecOptions* spec_opts) {
   num = TO_ABS(num);
 
   int num_len = get_num_length(num, spec_opts);
+
+  if (spec_opts->flag_zero) {
+    apply_flags(dest, spec_opts);
+  }
   // Если ширина больше длины числа, добавляем пробелы в начало
   apply_width(dest, num_len, spec_opts);
 
-  // Обрабатываем флаги
-  apply_flags(dest, spec_opts);
+  if (!spec_opts->flag_zero) {
+    apply_flags(dest, spec_opts);
+  }
 
   if (!spec_opts->is_float) {
     for (int i = 0; i < spec_opts->precision - num_len; i++)
