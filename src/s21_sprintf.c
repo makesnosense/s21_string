@@ -4,6 +4,7 @@
 #include <math.h>
 #include <stdarg.h>
 #include <stdbool.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <wchar.h>
@@ -16,7 +17,7 @@
 
 // Валидные флаги и спецификаторы
 #define VALID_FLAGS "+- "
-#define VALID_SPECIFIERS "cdefginsouxEGX"
+#define VALID_SPECIFIERS "cdefginsopuxEGX"
 #define VALID_LENGTHS "Llh"
 
 // Макрос для смены знака числа
@@ -133,6 +134,8 @@ void wide_str(DestStr* dest, wchar_t* input_string);
 void spec_G(DestStr* dest, double double_input, SpecOptions* spec_opts,
             const char* format);
 
+void pointer_to_str(DestStr* dest, void* ptr, SpecOptions* spec_opts);
+
 // double my_round(double x, unsigned int digits);
 
 int s21_sprintf(char* str, const char* format, ...) {
@@ -231,6 +234,10 @@ int s21_sprintf(char* str, const char* format, ...) {
           spec_G(&dest, double_input, &spec_opts, format);
           break;
         }
+        case 'p':
+          void* pointer_str_input = va_arg(args, void*);
+          pointer_to_str(&dest, pointer_str_input, &spec_opts);
+          break;
         default:
           break;
       }
@@ -381,6 +388,7 @@ void parse_specifier(const char** format, SpecOptions* spec_opts) {
         spec_opts->is_hexadecimal_capital = true;
         break;
       }
+      case 'p':
       case 'x': {
         spec_opts->is_hexadecimal = true;
         break;
@@ -709,13 +717,9 @@ void spec_G(DestStr* dest, double double_input, SpecOptions* spec_opts,
   long double whole_part = 0;
   long double fraction_part = 0;
 
-  // apply_flags(dest, spec_opts);
-
   divide_number(double_input,
                 6 - get_num_length((long long)double_input, spec_opts),
                 &whole_part, &fraction_part);
-
-  // modfl(whole_part, &whole_part);
 
   long long num_len = get_num_length(whole_part, spec_opts);
   if (num_len <= F_PRECISION) {
@@ -730,4 +734,16 @@ void spec_G(DestStr* dest, double double_input, SpecOptions* spec_opts,
   } else {
     specE(dest, double_input, spec_opts, format);
   }
+}
+
+void pointer_to_str(DestStr* dest, void* ptr, SpecOptions* spec_opts) {
+  uintptr_t addres = (uintptr_t)ptr;
+  long long num_len = get_num_length(addres, spec_opts);
+
+  apply_width(dest, num_len + 2, spec_opts);
+  apply_flags(dest, spec_opts);
+  dest->str[dest->curr_ind++] = '0';
+  dest->str[dest->curr_ind++] = 'x';
+
+  itoa(dest, addres, spec_opts);
 }
