@@ -34,11 +34,13 @@ typedef struct SpecifierOptions {
   bool length_h;       // Длина h
   bool length_big_l;   // Длина L
   bool precision_set;  // Есть ли precision у спецификатора
-  bool is_float;       // Является ли float/double
   bool is_negative;    // Является ли отр. числом
-  bool octal;
-  bool hexadecimal;
-  bool hexadecimal_capital;
+  bool is_float;       // Является ли float/double
+  bool is_char;
+  bool is_octal;
+  bool is_hexadecimal;
+  bool is_hexadecimal_capital;
+
 } SpecOptions;
 
 // Структура для строки-буфера
@@ -147,6 +149,13 @@ int s21_sprintf(char* str, const char* format, ...) {
         case 'c': {  // Если c (char)
           if (!spec_opts.length_l) {
             char input_char = va_arg(args, int);
+            int num_len = get_num_length(input_char);
+            // Если ширина больше длины числа, добавляем пробелы в начало
+            apply_width(&dest, num_len, &spec_opts);
+
+            // Обрабатываем флаги
+            apply_flags(&dest, &spec_opts);
+
             dest.str[dest.curr_ind++] = input_char;
           } else {
             wchar_t input_char = va_arg(args, wchar_t);
@@ -161,7 +170,6 @@ int s21_sprintf(char* str, const char* format, ...) {
           break;
         }
         case 'f': {  // Если f (float)
-          spec_opts.is_float = 1;
           long double input_float = 0;
           if (spec_opts.length_big_l) {
             input_float = va_arg(args, long double);
@@ -187,13 +195,6 @@ int s21_sprintf(char* str, const char* format, ...) {
         case 'X':
         case 'o':
         case 'u': {
-          if (*format == 'x') {
-            spec_opts.hexadecimal = true;
-          } else if (*format == 'X') {
-            spec_opts.hexadecimal_capital = true;
-          } else if (*format == 'o') {
-            spec_opts.octal = true;
-          }
           unsigned long input_unsingned = 0;
 
           input_unsingned = ingest_unsinged(&args, &spec_opts);
@@ -209,7 +210,6 @@ int s21_sprintf(char* str, const char* format, ...) {
         case 'e':
         case 'E': {
           double double_string = va_arg(args, double);
-          spec_opts.is_float = true;
           is_negative(double_string, &spec_opts);
           specE(&dest, double_string, &spec_opts, format);
           break;
@@ -221,7 +221,6 @@ int s21_sprintf(char* str, const char* format, ...) {
         case 'g':
         case 'G': {
           double double_input = va_arg(args, double);
-          spec_opts.is_float = true;
           is_negative(double_input, &spec_opts);
           spec_G(&dest, double_input, &spec_opts, format);
           break;
@@ -364,11 +363,45 @@ void parse_length(const char** format, SpecOptions* spec_opts) {
   }
 }
 
+void parse_specifier(const char** format, SpecOptions* spec_opts) {
+  if (is_specifier(**format)) {
+    int current_specifier = **format;
+    switch (current_specifier) {
+      case 'c': {
+        spec_opts->is_char = true;
+        break;
+      }
+      case 'X': {
+        spec_opts->is_hexadecimal_capital = true;
+        break;
+      }
+      case 'x': {
+        spec_opts->is_hexadecimal = true;
+        break;
+      }
+      case 'o': {
+        spec_opts->is_octal = true;
+        break;
+      }
+      case 'f':
+      case 'g':
+      case 'G':
+      case 'e':
+      case 'E': {
+        spec_opts->is_float = true;
+        break;
+      }
+    }
+  }
+}
+
 void parse_format(const char** format, SpecOptions* spec_opts) {
   parse_flags(format, spec_opts);
   parse_width(format, spec_opts);
   parse_precision(format, spec_opts);
   parse_length(format, spec_opts);
+  parse_specifier(format, spec_opts);
+
   // parse_octal_and_hex(format, spec_opts);
 }
 
@@ -399,7 +432,7 @@ void apply_width(DestStr* dest, int num_len, SpecOptions* spec_opts) {
     prec_corr =
         spec_opts->precision > num_len ? spec_opts->precision - num_len : 0;
 
-    if (spec_opts->is_float) {
+    if (spec_opts->is_float || spec_opts->is_octal) {
       spec_opts->padding =
           spec_opts->width - num_len - spec_opts->precision - flag_corr - 1;
     } else {
@@ -440,12 +473,12 @@ int itoa(DestStr* dest, long double input_num, SpecOptions* spec_opts) {
   int num_len = 0;
   long double base = 10.0;
   const char* digits = "0123456789abcdef";
-  if (spec_opts->octal) {
+  if (spec_opts->is_octal) {
     base = 8.0;
-  } else if (spec_opts->hexadecimal || spec_opts->hexadecimal_capital) {
+  } else if (spec_opts->is_hexadecimal || spec_opts->is_hexadecimal_capital) {
     base = 16.0;
   }
-  if (spec_opts->hexadecimal_capital) {
+  if (spec_opts->is_hexadecimal_capital) {
     digits = "0123456789ABCDEF";
   }
 
