@@ -348,6 +348,31 @@ END_TEST
 // }
 // END_TEST
 
+START_TEST(test_sprintf_mantiss_or_exponent_negative_value) {
+  char lib_res[300];
+  char s21_res[300];
+
+  double num1 = -566765.1266666643573;
+
+  sprintf(lib_res, "%g %G", num1, num1);
+  s21_sprintf(s21_res, "%g %G", num1, num1);
+  ck_assert_str_eq(lib_res, s21_res);
+}
+END_TEST
+
+START_TEST(test_sprintf_mantiss_or_exponent_formats) {
+  char lib_res[300];
+  char s21_res[300];
+
+  double num1 = 14376485974.123;
+  double num2 = 3333.3333;
+
+  sprintf(lib_res, "%g %G", num1, num2);
+  s21_sprintf(s21_res, "%g %G", num1, num2);
+  ck_assert_str_eq(lib_res, s21_res);
+}
+END_TEST
+
 Suite* make_sprintf_suite() {
   Suite* sprintf_suite = suite_create("sprintf");
   TCase* tc_core;
@@ -385,6 +410,8 @@ Suite* make_sprintf_suite() {
   tcase_add_test(tc_core, test_sprintf_octal_with_modifiers);
   tcase_add_test(tc_core, test_sprintf_octal_problematic_two);
   // tcase_add_test(tc_core, test_sprintf_octal_problematic);
+  tcase_add_test(tc_core, test_sprintf_mantiss_or_exponent_negative_value);
+  tcase_add_test(tc_core, test_sprintf_mantiss_or_exponent_formats);
   suite_add_tcase(sprintf_suite, tc_core);
   return sprintf_suite;
 }

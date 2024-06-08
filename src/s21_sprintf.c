@@ -12,10 +12,11 @@
 
 // Точность для %f по умолчанию
 #define F_PRECISION 6
+#define MANTISSA_DIGITS 5
 
 // Валидные флаги и спецификаторы
 #define VALID_FLAGS "+- "
-#define VALID_SPECIFIERS "cdefinsouxEX"
+#define VALID_SPECIFIERS "cdefginsouxEGX"
 #define VALID_LENGTHS "Llh"
 
 // Макрос для смены знака числа
@@ -124,6 +125,11 @@ void wide_char(DestStr* dest, wchar_t input_char);
 
 void wide_str(DestStr* dest, wchar_t* input_string);
 
+void spec_G(DestStr* dest, double double_input, SpecOptions* spec_opts,
+            const char* format);
+
+// double my_round(double x, unsigned int digits);
+
 int s21_sprintf(char* str, const char* format, ...) {
   setlocale(LC_ALL, "en_US.UTF-8");
   DestStr dest = {str, 0};
@@ -202,14 +208,25 @@ int s21_sprintf(char* str, const char* format, ...) {
         }
         case 'e':
         case 'E': {
-          float double_string = va_arg(args, double);
+          double double_string = va_arg(args, double);
           spec_opts.is_float = true;
+          is_negative(double_string, &spec_opts);
           specE(&dest, double_string, &spec_opts, format);
           break;
         }
         case 'n':
           int* counter_n = va_arg(args, int*);
           *counter_n = s21_strlen(dest.str);
+          break;
+        case 'g':
+        case 'G': {
+          double double_input = va_arg(args, double);
+          spec_opts.is_float = true;
+          is_negative(double_input, &spec_opts);
+          spec_G(&dest, double_input, &spec_opts, format);
+          break;
+        }
+        default:
           break;
       }
     } else {
@@ -555,6 +572,9 @@ void float_to_str(DestStr* dest, long double input_num,
 
 void specE(DestStr* dest, double input_num, SpecOptions* spec_opts,
            const char* format) {
+  input_num = TO_ABS(input_num);
+  long double whole_part = 0;
+  long double fraction_part = 0;
   int exponent = 0;
   int sign = 0;  // для обработки знака минуса
 
@@ -565,16 +585,12 @@ void specE(DestStr* dest, double input_num, SpecOptions* spec_opts,
     for (int i = 0; i < 6; i++) {  // По умолчанию точность 6
       dest->str[dest->curr_ind++] = '0';
     }
-    dest->str[dest->curr_ind++] = (*format == 'e') ? 'e' : 'E';
+    dest->str[dest->curr_ind++] =
+        ((*format == 'e') || (*format == 'g')) ? 'e' : 'E';
     dest->str[dest->curr_ind++] = '+';
     dest->str[dest->curr_ind++] = '0';
     dest->str[dest->curr_ind++] = '0';
     return;
-  }
-
-  if (input_num < 0) {
-    sign = 1;
-    input_num *= -1;
   }
 
   while (input_num >= 10.0) {
@@ -591,9 +607,20 @@ void specE(DestStr* dest, double input_num, SpecOptions* spec_opts,
   }
 
   // Используем float_to_str для форматирования мантиссы
-  float_to_str(dest, input_num, spec_opts);
+  if (*format == 'g' || *format == 'G') {
+    divide_number(input_num, MANTISSA_DIGITS, &whole_part, &fraction_part);
 
-  dest->str[dest->curr_ind++] = (*format == 'e') ? 'e' : 'E';
+    fraction_part /= pow(10, MANTISSA_DIGITS);
+    input_num = whole_part + fraction_part;
+
+    float_to_str(dest, input_num, spec_opts);
+    dest->str[dest->curr_ind--] = '\0';
+  } else {
+    float_to_str(dest, input_num, spec_opts);
+  }
+
+  dest->str[dest->curr_ind++] =
+      ((*format == 'e') || (*format == 'g')) ? 'e' : 'E';
 
   if (exponent < 0) {
     dest->str[dest->curr_ind++] = '-';
@@ -629,5 +656,33 @@ void wide_str(DestStr* dest, wchar_t* input_string) {
       dest->str += len;
       free(temp_str);
     }
+  }
+}
+
+void spec_G(DestStr* dest, double double_input, SpecOptions* spec_opts,
+            const char* format) {
+  double_input = TO_ABS(double_input);
+  long double whole_part = 0;
+  long double fraction_part = 0;
+
+  // apply_flags(dest, spec_opts);
+
+  divide_number(double_input, 6 - get_num_length((long long)double_input),
+                &whole_part, &fraction_part);
+
+  // modfl(whole_part, &whole_part);
+
+  long long num_len = get_num_length(whole_part);
+  if (num_len <= F_PRECISION) {
+    apply_width(dest, num_len, spec_opts);
+    apply_flags(dest, spec_opts);
+    itoa(dest, double_input, spec_opts);
+    if (num_len != F_PRECISION) {
+      dest->str[dest->curr_ind++] = '.';
+      itoa(dest, lround(fraction_part), spec_opts);
+    }
+
+  } else {
+    specE(dest, double_input, spec_opts, format);
   }
 }
