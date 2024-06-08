@@ -23,10 +23,10 @@ START_TEST(test_sprintf_char) {
 END_TEST
 
 START_TEST(test_sprintf_char_width) {
-  char lib_res[100];
-  char s21_res[100];
-  sprintf(lib_res, "%20c", 'A');
-  s21_sprintf(s21_res, "%20c", 'A');
+  char lib_res[300];
+  char s21_res[300];
+  sprintf(lib_res, "%20c %3c %-20c %-3c", 'A', '@', 'A', '@');
+  s21_sprintf(s21_res, "%20c %3c %-20c %-3c", 'A', '@', 'A', '@');
   ck_assert_str_eq(lib_res, s21_res);
 }
 END_TEST

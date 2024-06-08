@@ -157,6 +157,7 @@ int s21_sprintf(char* str, const char* format, ...) {
             apply_flags(&dest, &spec_opts);
 
             dest.str[dest.curr_ind++] = input_char;
+            apply_minus_width(&dest, &spec_opts);
           } else {
             wchar_t input_char = va_arg(args, wchar_t);
             wide_char(&dest, input_char);
@@ -432,9 +433,14 @@ void apply_width(DestStr* dest, int num_len, SpecOptions* spec_opts) {
     prec_corr =
         spec_opts->precision > num_len ? spec_opts->precision - num_len : 0;
 
-    if (spec_opts->is_float || spec_opts->is_octal) {
+    if (spec_opts->is_float) {
       spec_opts->padding =
           spec_opts->width - num_len - spec_opts->precision - flag_corr - 1;
+    } else if (spec_opts->is_octal) {
+      spec_opts->padding = spec_opts->width - num_len - flag_corr - 1;
+    } else if (spec_opts->is_char) {
+      spec_opts->padding = spec_opts->width - num_len - flag_corr + 1;
+
     } else {
       spec_opts->padding = spec_opts->width - num_len - flag_corr - prec_corr;
     }
