@@ -90,6 +90,7 @@ void reverse_num(DestStr* dest, s21_size_t l_index, s21_size_t r_index);
 
 void process_int(va_list* args, DestStr* dest, SpecOptions* spec_opts);
 long long int ingest_int(va_list* args, SpecOptions* spec_opts);
+long long unsigned ingest_unsinged(va_list* args, SpecOptions* spec_opts);
 
 // Функция записывает целое число в строку dest
 int itoa(DestStr* dest, long double input_num, SpecOptions* spec_opts);
@@ -189,11 +190,13 @@ int s21_sprintf(char* str, const char* format, ...) {
           }
           unsigned long input_unsingned = 0;
 
-          if (spec_opts.length_l) {
-            input_unsingned = va_arg(args, unsigned long);
-          } else {
-            input_unsingned = va_arg(args, unsigned);
-          }
+          input_unsingned = ingest_unsinged(&args, &spec_opts);
+
+          // if (spec_opts.length_l) {
+          //   input_unsingned = va_arg(args, unsigned long);
+          // } else {
+          //   input_unsingned = va_arg(args, unsigned);
+          // }
           whole_to_str(&dest, input_unsingned, &spec_opts);
           break;
         }
@@ -254,32 +257,26 @@ long long int ingest_int(va_list* args, SpecOptions* spec_opts) {
   return input_int;
 }
 
-// long long unsigned ingest_unsinged(va_list* args, SpecOptions* spec_opts) {
-//   long long unsigned input_unsingned = 0;
+long long unsigned ingest_unsinged(va_list* args, SpecOptions* spec_opts) {
+  long long unsigned input_unsingned = 0;
 
-//   if (spec_opts->length_h)  // обрабатываем short
-//   {
-//     input_unsingned = va_arg(*args, short unsigned);
-//     if (input_unsingned > USHRT_MAX) {
-//       input_unsingned = (short unsigned)+(input_unsingned);
-//     }
-//   } else if (spec_opts->length_l)  // обрабатываем long
-//   {
-//     absolute_input = TO_ABS(input_int);
-//     input_int = va_arg(*args, long int);
-//     if (absolute_input > LONG_MAX) {
-//       input_int = (long)+(input_int);
-//     }
-//   } else  // обрабатываем простой int
-//   {
-//     input_int = va_arg(*args, int);
-//     absolute_input = TO_ABS(input_int);
-//     if (absolute_input > INT_MAX) {
-//       input_int = (int)+(input_int);
-//     }
-//   }
-//   return input_int;
-// }
+  if (spec_opts->length_h)  // обрабатываем short
+  {
+    input_unsingned = va_arg(*args, unsigned);
+    if (input_unsingned > USHRT_MAX) {
+      input_unsingned = (short unsigned)+(input_unsingned);
+    }
+  } else if (spec_opts->length_l)  // обрабатываем long
+  {
+    input_unsingned = va_arg(*args, long unsigned);
+  } else {
+    input_unsingned = va_arg(*args, unsigned);
+    if (input_unsingned > UINT_MAX) {
+      input_unsingned = (unsigned)+(input_unsingned);
+    }
+  }
+  return input_unsingned;
+}
 
 int is_flag(char ch) {
   char* res = s21_strchr(VALID_FLAGS, ch);
@@ -499,7 +496,7 @@ void set_needed_precision(SpecOptions* spec_opts) {
 void divide_number(long double num, int precision, long double* wh,
                    long double* fr) {
   // Округляем дробную часть до нужного числа
-  long double mul = (float)pow(10.0, precision);
+  long double mul = (double)pow(10.0, precision);
 
   num = lround(num * mul) / mul;
 
