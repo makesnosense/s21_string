@@ -272,8 +272,9 @@ START_TEST(test_sprintf_number_of_characters) {
   double num = 1.79769313486231571308;
   int res_or = 0;
   int res_s21 = 0;
-  s21_sprintf(s21_res, "sprintf: %+E hdhgd %+d hdkjgh %n", num, 555, &res_s21);
-  sprintf(lib_res, "sprintf: %+E hdhgd %+d hdkjgh %n", num, 555, &res_or);
+  s21_sprintf(s21_res, "sprintf: %+E %% hdhgd %+d hdkjgh %n %%", num, 555,
+              &res_s21);
+  sprintf(lib_res, "sprintf: %+E %% hdhgd %+d hdkjgh %n %%", num, 555, &res_or);
   ck_assert_str_eq(lib_res, s21_res);
   //
 }

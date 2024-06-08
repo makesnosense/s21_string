@@ -17,7 +17,7 @@
 
 // Валидные флаги и спецификаторы
 #define VALID_FLAGS "+- "
-#define VALID_SPECIFIERS "cdefginsopuxEGX"
+#define VALID_SPECIFIERS "cdefginsopuxEGX%"
 #define VALID_LENGTHS "Llh"
 
 // Макрос для смены знака числа
@@ -238,6 +238,10 @@ int s21_sprintf(char* str, const char* format, ...) {
         case 'p': {
           void* pointer_str_input = va_arg(args, void*);
           pointer_to_str(&dest, pointer_str_input, &spec_opts);
+          break;
+        }
+        case '%': {
+          dest.str[dest.curr_ind++] = '%';
           break;
         }
         default:
