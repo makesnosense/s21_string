@@ -259,7 +259,7 @@ char* s21_strerror(int errnum) {
   static char res[128] = {'\0'};
 
   if (errnum < 0 || errnum > ERR_COUNT) {
-    snprintf(res, sizeof(res), "%s%d", UNKNOWN, errnum);
+    s21_sprintf(res, "%s%d", UNKNOWN, errnum);
   } else {
     s21_strcpy(res, ((char*)errors_array[errnum]));
   }
