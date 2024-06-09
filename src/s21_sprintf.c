@@ -16,7 +16,7 @@
 #define MANTISSA_DIGITS 5
 
 // Валидные флаги и спецификаторы
-#define VALID_FLAGS "+- 0"
+#define VALID_FLAGS "+- 0#"
 #define VALID_SPECIFIERS "cdefginsopuxEGX%"
 #define VALID_LENGTHS "Llh"
 
@@ -28,10 +28,11 @@ typedef struct SpecifierOptions {
   bool flag_plus;   // Флаг '+'
   bool flag_minus;  // Флаг '-'
   bool flag_space;  // Флаг ' '
-  bool flag_zero;
-  int width;      // Ширина *.
-  int precision;  // Точность .*
-  int padding;    // Количество пробелов для width
+  bool flag_zero;   // флаг '0'
+  bool flag_sharp;  // флаг '#'
+  int width;        // Ширина *.
+  int precision;    // Точность .*
+  int padding;      // Количество пробелов для width
   long double base;
   int padding_char;
   bool length_l;       // Длина l
@@ -352,6 +353,9 @@ void parse_flags(const char** format, SpecOptions* spec_opts) {
           spec_opts->flag_zero = 1;
         }
         break;
+      case '#':
+        spec_opts->flag_sharp = 1;
+        break;
     }
     (*format)++;
   }
@@ -504,6 +508,16 @@ void apply_flags(DestStr* dest, SpecOptions* spec_opts) {
     dest->str[dest->curr_ind++] = '+';
   } else if (spec_opts->flag_space) {
     dest->str[dest->curr_ind++] = ' ';
+  } else if (spec_opts->flag_sharp) {
+    if (spec_opts->is_octal) {
+      dest->str[dest->curr_ind++] = '0';
+    } else if (spec_opts->is_hexadecimal) {
+      dest->str[dest->curr_ind++] = '0';
+      dest->str[dest->curr_ind++] = 'x';
+    } else if (spec_opts->is_hexadecimal_capital) {
+      dest->str[dest->curr_ind++] = '0';
+      dest->str[dest->curr_ind++] = 'X';
+    }
   }
 }
 
@@ -749,9 +763,10 @@ void spec_G(DestStr* dest, double double_input, SpecOptions* spec_opts,
   long double whole_part = 0;
   long double fraction_part = 0;
 
-  divide_number(double_input,
-                6 - get_num_length((long long)double_input, spec_opts),
-                &whole_part, &fraction_part);
+  divide_number(
+      double_input,
+      F_PRECISION - get_num_length((long long)double_input, spec_opts),
+      &whole_part, &fraction_part);
 
   long long num_len = get_num_length(whole_part, spec_opts);
   if (num_len <= F_PRECISION) {
@@ -772,7 +787,9 @@ void pointer_to_str(DestStr* dest, void* ptr, SpecOptions* spec_opts) {
   uintptr_t addres = (uintptr_t)ptr;
   long long num_len = get_num_length(addres, spec_opts);
 
-  apply_width(dest, num_len + 2, spec_opts);
+  apply_width(dest, num_len + 2,
+              spec_opts);  // мы добовляем двойку что бы покрыть два
+                           // дополнительных символа
   apply_flags(dest, spec_opts);
   dest->str[dest->curr_ind++] = '0';
   dest->str[dest->curr_ind++] = 'x';

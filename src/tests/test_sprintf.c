@@ -426,6 +426,18 @@ START_TEST(test_sprintf_pointer_type) {
 }
 END_TEST
 
+START_TEST(test_sprintf_flag_sharp) {
+  char lib_res[300];
+  char s21_res[300];
+
+  int value1 = -44366537;
+
+  sprintf(lib_res, "%#o %#x %#X", value1, value1, value1);
+  sprintf(s21_res, "%#o %#x %#X", value1, value1, value1);
+  ck_assert_str_eq(lib_res, s21_res);
+}
+END_TEST
+
 Suite* make_sprintf_suite() {
   Suite* sprintf_suite = suite_create("sprintf");
   TCase* tc_core;
@@ -468,6 +480,7 @@ Suite* make_sprintf_suite() {
   tcase_add_test(tc_core, test_sprintf_mantiss_or_exponent_formats);
   tcase_add_test(tc_core, test_sprintf_char_problematic);
   tcase_add_test(tc_core, test_sprintf_pointer_type);
+  tcase_add_test(tc_core, test_sprintf_flag_sharp);
 
   suite_add_tcase(sprintf_suite, tc_core);
   return sprintf_suite;
