@@ -198,8 +198,14 @@ int s21_sprintf(char* str, const char* format, ...) {
         case 's': {
           if (!spec_opts.length_l) {
             char* input_string = va_arg(args, char*);
+            apply_width(&dest, s21_strlen(input_string), &spec_opts);
+
+            // Обрабатываем флаги
+            apply_flags(&dest, &spec_opts);
+
             s21_strcpy(dest.str + dest.curr_ind, input_string);
             dest.curr_ind += s21_strlen(input_string);
+            apply_minus_width(&dest, &spec_opts);
           } else {
             wchar_t* input_string = va_arg(args, wchar_t*);
             wide_str(&dest, input_string);
