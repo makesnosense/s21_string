@@ -50,10 +50,12 @@ START_TEST(test_sprintf_char_problematic) {
 END_TEST
 
 START_TEST(test_sprintf_string) {
-  char lib_res[100];
-  char s21_res[100];
-  sprintf(lib_res, "%s", "JOMA");
-  s21_sprintf(s21_res, "%s", "JOMA");
+  char lib_res[500];
+  char s21_res[500];
+  sprintf(lib_res, "%s %40s %-40s %d", "JOMA", "}l{u3Hb – 3TO 6oJlb",
+          "}l{u3Hb – 3TO 6oJlb", 42);
+  s21_sprintf(s21_res, "%s %40s %-40s %d", "JOMA", "}l{u3Hb – 3TO 6oJlb",
+              "}l{u3Hb – 3TO 6oJlb", 42);
   ck_assert_str_eq(lib_res, s21_res);
 }
 END_TEST
