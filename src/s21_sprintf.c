@@ -113,8 +113,11 @@ void specE(DestStr* dest, double input_num, SpecOptions* spec_opts,
 void spec_G(DestStr* dest, double double_input, SpecOptions* spec_opts,
             const char* format);
 
+// Функция устанавливает локаль в зависимости от ОС
+void set_locale_for_wide_chars();
+
 int s21_sprintf(char* str, const char* format, ...) {
-  setlocale(LC_ALL, "C.UTF-8");
+  set_locale_for_wide_chars();
   DestStr dest = {str, 0};
   SpecOptions spec_opts = {0};
   int fin_result = 0;  // Результат работы функции, пока не используется нигде
@@ -790,4 +793,14 @@ void pointer_to_str(DestStr* dest, void* ptr, SpecOptions* spec_opts) {
   dest->str[dest->curr_ind++] = 'x';
 
   itoa(dest, addres, spec_opts);
+}
+
+void set_locale_for_wide_chars() {
+#if defined(__APPLE__)
+  setlocale(LC_ALL, "en_US.UTF-8");
+
+#elif defined(__linux__)
+  setlocale(LC_ALL, "C.UTF-8");
+
+#endif
 }
