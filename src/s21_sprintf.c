@@ -60,10 +60,10 @@ int is_specifier(char ch);
 int is_length(char ch);
 
 void parse_flags(const char** format, SpecOptions* spec_opts);
-void parse_width(const char** format, SpecOptions* spec_opts);
-void parse_precision(const char** format, SpecOptions* spec_opts);
+void parse_width(const char** format, va_list args, SpecOptions* spec_opts);
+void parse_precision(const char** format, va_list args, SpecOptions* spec_opts);
 void parse_length(const char** format, SpecOptions* spec_opts);
-void parse_format(const char** format, SpecOptions* spec_opts);
+void parse_format(const char** format, va_list args, SpecOptions* spec_opts);
 void parse_specifier(const char** format, SpecOptions* spec_opts);
 
 void set_needed_precision(SpecOptions* spec_opts);
@@ -113,8 +113,11 @@ void specE(DestStr* dest, double input_num, SpecOptions* spec_opts,
 void spec_G(DestStr* dest, double double_input, SpecOptions* spec_opts,
             const char* format);
 
+// Функция устанавливает локаль в зависимости от ОС
+void set_locale_for_wide_chars();
+
 int s21_sprintf(char* str, const char* format, ...) {
-  setlocale(LC_ALL, "en_US.UTF-8");
+  set_locale_for_wide_chars();
   DestStr dest = {str, 0};
   SpecOptions spec_opts = {0};
   int fin_result = 0;  // Результат работы функции, пока не используется нигде
@@ -125,7 +128,7 @@ int s21_sprintf(char* str, const char* format, ...) {
     if (*format == '%') {
       format++;
       s21_memset(&spec_opts, 0, sizeof(spec_opts));
-      parse_format(&format, &spec_opts);
+      parse_format(&format, args, &spec_opts);
       set_base(&spec_opts);
       set_padding_char(&spec_opts);
 
@@ -196,10 +199,10 @@ int s21_sprintf(char* str, const char* format, ...) {
   return fin_result;
 }
 
-void parse_format(const char** format, SpecOptions* spec_opts) {
+void parse_format(const char** format, va_list args, SpecOptions* spec_opts) {
   parse_flags(format, spec_opts);
-  parse_width(format, spec_opts);
-  parse_precision(format, spec_opts);
+  parse_width(format, args, spec_opts);
+  parse_precision(format, args, spec_opts);
   parse_length(format, spec_opts);
   parse_specifier(format, spec_opts);
 }
@@ -245,20 +248,25 @@ void parse_flags(const char** format, SpecOptions* spec_opts) {
   }
 }
 
-void parse_width(const char** format, SpecOptions* spec_opts) {
-  spec_opts->width = 0;
+void parse_width(const char** format, va_list args, SpecOptions* spec_opts) {
   while (**format != '.' && !is_specifier(**format) && !is_length(**format)) {
     if (isdigit(**format)) {
       spec_opts->width = spec_opts->width * 10 + (**format - '0');
+    } else if (**format == '*') {
+      spec_opts->width = va_arg(args, int);
     }
     (*format)++;
   }
 }
 
-void parse_precision(const char** format, SpecOptions* spec_opts) {
+void parse_precision(const char** format, va_list args,
+                     SpecOptions* spec_opts) {
   while (!is_specifier(**format) && !is_length(**format)) {
     if (isdigit(**format)) {
       spec_opts->precision = spec_opts->precision * 10 + (**format - '0');
+      spec_opts->precision_set = 1;
+    } else if (**format == '*') {
+      spec_opts->precision = va_arg(args, int);
       spec_opts->precision_set = 1;
     }
     (*format)++;
@@ -401,22 +409,19 @@ void process_wide_string(va_list* args, DestStr* dest) {
 long long int ingest_int(va_list* args, SpecOptions* spec_opts) {
   long long int input_int = 0;
   long long int absolute_input = 0;
-  if (spec_opts->length_h)  // обрабатываем short
-  {
+  if (spec_opts->length_h) {  // обрабатываем short
     input_int = va_arg(*args, int);
     absolute_input = TO_ABS(input_int);
     if (absolute_input > SHRT_MAX) {
       input_int = (short)+(input_int);
     }
-  } else if (spec_opts->length_l)  // обрабатываем long
-  {
+  } else if (spec_opts->length_l) {  // обрабатываем long
     absolute_input = TO_ABS(input_int);
     input_int = va_arg(*args, long int);
     if (absolute_input > LONG_MAX) {
       input_int = (long)+(input_int);
     }
-  } else  // обрабатываем простой int
-  {
+  } else {  // обрабатываем простой int
     input_int = va_arg(*args, int);
     absolute_input = TO_ABS(input_int);
     if (absolute_input > INT_MAX) {
@@ -440,14 +445,12 @@ long double ingest_floating_point_number(va_list* args,
 long long unsigned ingest_unsinged(va_list* args, SpecOptions* spec_opts) {
   long long unsigned input_unsingned = 0;
 
-  if (spec_opts->length_h)  // обрабатываем short
-  {
+  if (spec_opts->length_h) {  // обрабатываем short
     input_unsingned = va_arg(*args, unsigned);
     if (input_unsingned > USHRT_MAX) {
       input_unsingned = (short unsigned)+(input_unsingned);
     }
-  } else if (spec_opts->length_l)  // обрабатываем long
-  {
+  } else if (spec_opts->length_l) {  // обрабатываем long
     input_unsingned = va_arg(*args, long unsigned);
   } else {
     input_unsingned = va_arg(*args, unsigned);
@@ -790,4 +793,14 @@ void pointer_to_str(DestStr* dest, void* ptr, SpecOptions* spec_opts) {
   dest->str[dest->curr_ind++] = 'x';
 
   itoa(dest, addres, spec_opts);
+}
+
+void set_locale_for_wide_chars() {
+#if defined(__APPLE__)
+  setlocale(LC_ALL, "en_US.UTF-8");
+
+#elif defined(__linux__)
+  setlocale(LC_ALL, "C.UTF-8");
+
+#endif
 }
