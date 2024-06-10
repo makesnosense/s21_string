@@ -45,10 +45,8 @@ typedef struct SpecifierOptions {
   bool is_octal;
   bool is_hexadecimal;
   bool is_hexadecimal_capital;
-  bool is_sharp_activ;
 } SpecOptions;
 
-// Структура для строки-буфера
 typedef struct DestinationString {
   char* str;
   s21_size_t curr_ind;
@@ -540,7 +538,7 @@ void apply_flags(DestStr* dest, SpecOptions* spec_opts) {
       dest->str[dest->curr_ind++] = 'X';
     } else if (spec_opts->is_floating_point_number &&
                spec_opts->precision == 0) {
-      spec_opts->is_sharp_activ = true;
+      spec_opts->flag_sharp = true;
     }
   }
 }
@@ -566,8 +564,6 @@ int itoa(DestStr* dest, long double input_num, SpecOptions* spec_opts) {
   }
 
   s21_size_t l_index = dest->curr_ind;
-
-  // printf("\n%Lf\n", num);
 
   if (input_num == 0) {
     dest->str[dest->curr_ind++] = '0';
@@ -687,7 +683,7 @@ void floating_point_number_to_str(DestStr* dest, long double input_num,
 
     fraction_to_str(dest, fraction_part, spec_opts);
   }
-  if (spec_opts->is_sharp_activ && spec_opts->precision_set &&
+  if (spec_opts->flag_sharp && spec_opts->precision_set &&
       spec_opts->precision == 0) {
     dest->str[dest->curr_ind++] = '.';
   }
