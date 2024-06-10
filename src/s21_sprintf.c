@@ -45,10 +45,8 @@ typedef struct SpecifierOptions {
   bool is_octal;
   bool is_hexadecimal;
   bool is_hexadecimal_capital;
-
 } SpecOptions;
 
-// Структура для строки-буфера
 typedef struct DestinationString {
   char* str;
   s21_size_t curr_ind;
@@ -538,6 +536,9 @@ void apply_flags(DestStr* dest, SpecOptions* spec_opts) {
     } else if (spec_opts->is_hexadecimal_capital) {
       dest->str[dest->curr_ind++] = '0';
       dest->str[dest->curr_ind++] = 'X';
+    } else if (spec_opts->is_floating_point_number &&
+               spec_opts->precision == 0) {
+      spec_opts->flag_sharp = true;
     }
   }
 }
@@ -682,6 +683,10 @@ void floating_point_number_to_str(DestStr* dest, long double input_num,
 
     fraction_to_str(dest, fraction_part, spec_opts);
   }
+  if (spec_opts->flag_sharp && spec_opts->precision_set &&
+      spec_opts->precision == 0) {
+    dest->str[dest->curr_ind++] = '.';
+  }
 }
 
 void specE(DestStr* dest, double input_num, SpecOptions* spec_opts,
@@ -690,7 +695,6 @@ void specE(DestStr* dest, double input_num, SpecOptions* spec_opts,
   long double whole_part = 0;
   long double fraction_part = 0;
   int exponent = 0;
-  int sign = 0;  // для обработки знака минуса
 
   // Обработка нулевого случая
   if (input_num == 0.0) {
@@ -716,10 +720,6 @@ void specE(DestStr* dest, double input_num, SpecOptions* spec_opts,
     exponent--;
   }
 
-  if (sign) {
-    dest->str[dest->curr_ind++] = '-';
-  }
-
   // Используем floating_point_number_to_str для форматирования мантиссы
   if (*format == 'g' || *format == 'G') {
     divide_number(input_num, MANTISSA_DIGITS, &whole_part, &fraction_part);
@@ -728,7 +728,9 @@ void specE(DestStr* dest, double input_num, SpecOptions* spec_opts,
     input_num = whole_part + fraction_part;
 
     floating_point_number_to_str(dest, input_num, spec_opts);
-    dest->str[dest->curr_ind--] = '\0';
+
+    if (!spec_opts->precision_set) dest->str[dest->curr_ind--] = '\0';
+
   } else {
     floating_point_number_to_str(dest, input_num, spec_opts);
   }
@@ -762,7 +764,7 @@ void spec_G(DestStr* dest, double double_input, SpecOptions* spec_opts,
       &whole_part, &fraction_part);
 
   long long num_len = get_num_length(whole_part, spec_opts);
-  if (num_len <= F_PRECISION) {
+  if ((num_len <= F_PRECISION) && (spec_opts->precision_set == false)) {
     apply_width(dest, num_len, spec_opts);
     apply_flags(dest, spec_opts);
     itoa(dest, double_input, spec_opts);
