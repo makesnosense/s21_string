@@ -236,47 +236,6 @@ START_TEST(test_sprintf_long_overflow) {
 }
 END_TEST
 
-START_TEST(test_sprintf_scientific_zero_double) {
-  char lib_res[100];
-  char s21_res[100];
-  double num = 0;
-  sprintf(lib_res, "%e", num);
-  s21_sprintf(s21_res, "%e", num);
-  ck_assert_str_eq(lib_res, s21_res);
-}
-END_TEST
-
-START_TEST(test_sprintf_scientific_front_double) {
-  char lib_res[100];
-  char s21_res[100];
-  double num = 1234.5678;
-  sprintf(lib_res, "%e", num);
-  s21_sprintf(s21_res, "%e", num);
-  ck_assert_str_eq(lib_res, s21_res);
-}
-END_TEST
-
-START_TEST(test_sprintf_scientific_from_negative_double) {
-  char lib_res[100];
-  char s21_res[100];
-  double num = -0.9;
-  sprintf(lib_res, "%e", num);
-  s21_sprintf(s21_res, "%e", num);
-  ck_assert_str_eq(lib_res, s21_res);
-}
-END_TEST
-
-START_TEST(test_sprintf_scientific_from_big_double) {
-  char lib_res[100];
-  char s21_res[100];
-  double num =
-      1.7976931348623157165654643542544769789787575443755869766556454334242544676909809776765654543;
-  sprintf(lib_res, "%e", num);
-  s21_sprintf(s21_res, "%e", num);
-  ck_assert_str_eq(lib_res, s21_res);
-}
-END_TEST
-
 START_TEST(test_sprintf_number_of_characters) {
   char lib_res[100];
   char s21_res[100];
@@ -385,31 +344,6 @@ START_TEST(test_sprintf_octal_width) {
 }
 END_TEST
 
-START_TEST(test_sprintf_mantiss_or_exponent_negative_value) {
-  char lib_res[300];
-  char s21_res[300];
-
-  double num1 = -566765.1266666643573;
-
-  sprintf(lib_res, "%g %G", num1, num1);
-  s21_sprintf(s21_res, "%g %G", num1, num1);
-  ck_assert_str_eq(lib_res, s21_res);
-}
-END_TEST
-
-START_TEST(test_sprintf_mantiss_or_exponent_formats) {
-  char lib_res[300];
-  char s21_res[300];
-
-  double num1 = 14376485974.123;
-  double num2 = 3333.3333;
-
-  sprintf(lib_res, "%g %G", num1, num2);
-  s21_sprintf(s21_res, "%g %G", num1, num2);
-  ck_assert_str_eq(lib_res, s21_res);
-}
-END_TEST
-
 START_TEST(test_sprintf_pointer_type) {
   char lib_res[300];
   char s21_res[300];
@@ -428,7 +362,7 @@ START_TEST(test_sprintf_pointer_type) {
 }
 END_TEST
 
-START_TEST(test_sprintf_flag_sharp) {
+START_TEST(test_sprintf_flag_sharp_oxX) {
   char lib_res[300];
   char s21_res[300];
 
@@ -436,6 +370,166 @@ START_TEST(test_sprintf_flag_sharp) {
 
   sprintf(lib_res, "%#o %#x %#X", value1, value1, value1);
   sprintf(s21_res, "%#o %#x %#X", value1, value1, value1);
+  ck_assert_str_eq(lib_res, s21_res);
+}
+END_TEST
+
+START_TEST(test_sprintf_scientific_zero_double) {
+  char lib_res[100];
+  char s21_res[100];
+  double num = 0;
+  sprintf(lib_res, "%e", num);
+  s21_sprintf(s21_res, "%e", num);
+  ck_assert_str_eq(lib_res, s21_res);
+}
+END_TEST
+
+START_TEST(test_sprintf_scientific_front_double) {
+  char lib_res[100];
+  char s21_res[100];
+  double num = 1234.5678;
+  sprintf(lib_res, "%e", num);
+  s21_sprintf(s21_res, "%e", num);
+  ck_assert_str_eq(lib_res, s21_res);
+}
+END_TEST
+
+START_TEST(test_sprintf_scientific_from_negative_double) {
+  char lib_res[100];
+  char s21_res[100];
+  double num = -0.9;
+  sprintf(lib_res, "%e", num);
+  s21_sprintf(s21_res, "%e", num);
+  ck_assert_str_eq(lib_res, s21_res);
+}
+END_TEST
+
+START_TEST(test_sprintf_scientific_from_big_double) {
+  char lib_res[100];
+  char s21_res[100];
+  double num =
+      1.7976931348623157165654643542544769789787575443755869766556454334242544676909809776765654543;
+  sprintf(lib_res, "%e", num);
+  s21_sprintf(s21_res, "%e", num);
+  ck_assert_str_eq(lib_res, s21_res);
+}
+END_TEST
+
+START_TEST(test_sprintf_mantissa_or_exponent_formats) {
+  char lib_res[300];
+  char s21_res[300];
+
+  double num1 = 14376485974.123;
+  double num2 = 3333.3333;
+
+  sprintf(lib_res, "%g %G", num1, num2);
+  s21_sprintf(s21_res, "%g %G", num1, num2);
+  ck_assert_str_eq(lib_res, s21_res);
+}
+END_TEST
+
+START_TEST(test_sprintf_mantissa_or_exponent_negative_value) {
+  char lib_res[300];
+  char s21_res[300];
+
+  double num1 = -566765.1266666643573;
+
+  sprintf(lib_res, "%g %G", num1, num1);
+  s21_sprintf(s21_res, "%g %G", num1, num1);
+  ck_assert_str_eq(lib_res, s21_res);
+}
+END_TEST
+
+START_TEST(test_sprintf_scientific_loop_precisions) {
+  char lib_res[100];
+  char s21_res[100];
+  double num1 = 1234.5678;
+  double num2 = 1234.0;
+  double num3 = 123.5678910;
+  double num4 = 1;
+  // double num5 = 0.0;
+
+  int precision = _i;  // supplied through add_loop_test func
+
+  char format_string[70];
+
+  s21_sprintf(format_string, "%%.%de %%.%de %%.%de %%.%de", precision,
+              precision, precision, precision);
+  sprintf(lib_res, format_string, num1, num2, num3, num4);
+  s21_sprintf(s21_res, format_string, num1, num2, num3, num4);
+  ck_assert_str_eq(lib_res, s21_res);
+}
+END_TEST
+
+START_TEST(test_sprintf_scientific_long_loop_precisions) {
+  char lib_res[1000];
+  char s21_res[1000];
+  long double num1 = 1234.5678;
+  long double num2 = 1234.0;
+  long double num3 = 123.5678910;
+  long double num4 = 1;
+
+  int precision = _i;  // supplied through add_loop_test func
+
+  char format_string[70];
+
+  s21_sprintf(format_string, "%%.%dLe %%.%dLe %%.%dLe %%.%dLe", precision,
+              precision, precision, precision);
+  sprintf(lib_res, format_string, num1, num2, num3, num4);
+  s21_sprintf(s21_res, format_string, num1, num2, num3, num4);
+  ck_assert_str_eq(lib_res, s21_res);
+}
+END_TEST
+
+START_TEST(test_sprintf_scientific_zero_loop_precisions) {
+  char lib_res[100];
+  char s21_res[100];
+
+  double zero = 0.0;
+
+  int precision = _i;  // supplied through add_loop_test func
+
+  char format_string[70];
+
+  s21_sprintf(format_string, "%%.%de %%.e", precision);
+  sprintf(lib_res, format_string, zero, zero);
+  s21_sprintf(s21_res, format_string, zero, zero);
+  ck_assert_str_eq(lib_res, s21_res);
+}
+END_TEST
+
+START_TEST(test_sprintf_g_spec_loop_precisions) {
+  char lib_res[1000];
+  char s21_res[1000];
+  double num1 = 1234.5678;
+  double num2 = 1234.0;
+  double num3 = 123.5678910;
+  double num4 = 1;
+
+  int precision = _i;  // supplied through add_loop_test func
+
+  char format_string[70];
+
+  s21_sprintf(format_string, "%%.%dg %%.%dg %%.%dg %%.%dg", precision,
+              precision, precision, precision);
+  sprintf(lib_res, format_string, num1, num2, num3, num4);
+  s21_sprintf(s21_res, format_string, num1, num2, num3, num4);
+  ck_assert_str_eq(lib_res, s21_res);
+}
+END_TEST
+
+START_TEST(test_sprintf_g_spec_no_precision) {
+  char lib_res[1000];
+  char s21_res[1000];
+  double num1 = 1234.5678;
+  double num2 = 1234.0;
+  double num3 = 123.5678910;
+  double num4 = 1;
+
+  sprintf(lib_res, "%g %g %g %g %.0g %.0g %.0g %.0g", num1, num2, num3, num4,
+          num1, num2, num3, num4);
+  s21_sprintf(s21_res, "%g %g %g %g %.0g %.0g %.0g %.0g", num1, num2, num3,
+              num4, num1, num2, num3, num4);
   ck_assert_str_eq(lib_res, s21_res);
 }
 END_TEST
@@ -466,10 +560,6 @@ Suite* make_sprintf_suite() {
   tcase_add_test(tc_core, test_sprintf_short_overflow);
   tcase_add_test(tc_core, test_sprintf_int_overflow);
   tcase_add_test(tc_core, test_sprintf_long_overflow);
-  tcase_add_test(tc_core, test_sprintf_scientific_zero_double);
-  tcase_add_test(tc_core, test_sprintf_scientific_front_double);
-  tcase_add_test(tc_core, test_sprintf_scientific_from_negative_double);
-  tcase_add_test(tc_core, test_sprintf_scientific_from_big_double);
   tcase_add_test(tc_core, test_sprintf_number_of_characters);
   tcase_add_test(tc_core, test_sprintf_wide_character);
   tcase_add_test(tc_core, test_sprintf_wide_character_string);
@@ -478,11 +568,28 @@ Suite* make_sprintf_suite() {
   tcase_add_test(tc_core, test_sprintf_octal_with_modifiers);
   tcase_add_test(tc_core, test_sprintf_octal_negative_long);
   tcase_add_test(tc_core, test_sprintf_octal_width);
-  tcase_add_test(tc_core, test_sprintf_mantiss_or_exponent_negative_value);
-  tcase_add_test(tc_core, test_sprintf_mantiss_or_exponent_formats);
   tcase_add_test(tc_core, test_sprintf_char_problematic);
   tcase_add_test(tc_core, test_sprintf_pointer_type);
-  tcase_add_test(tc_core, test_sprintf_flag_sharp);
+  tcase_add_test(tc_core, test_sprintf_flag_sharp_oxX);
+
+  tcase_add_test(tc_core, test_sprintf_scientific_zero_double);
+  tcase_add_test(tc_core, test_sprintf_scientific_front_double);
+  tcase_add_test(tc_core, test_sprintf_scientific_from_negative_double);
+  tcase_add_test(tc_core, test_sprintf_scientific_from_big_double);
+  tcase_add_test(tc_core, test_sprintf_mantissa_or_exponent_negative_value);
+  tcase_add_test(tc_core, test_sprintf_mantissa_or_exponent_formats);
+
+  tcase_add_loop_test(tc_core, test_sprintf_scientific_loop_precisions, 0, 18);
+
+  tcase_add_loop_test(tc_core, test_sprintf_scientific_long_loop_precisions, 0,
+                      18);
+
+  tcase_add_loop_test(tc_core, test_sprintf_scientific_zero_loop_precisions, 0,
+                      18);
+
+  tcase_add_loop_test(tc_core, test_sprintf_g_spec_loop_precisions, 0, 18);
+
+  tcase_add_test(tc_core, test_sprintf_g_spec_no_precision);
 
   suite_add_tcase(sprintf_suite, tc_core);
   return sprintf_suite;
