@@ -66,56 +66,48 @@ int is_specifier(char ch);
 // Функция возвращает 1, если ch - это длина
 int is_length(char ch);
 
-// Функция парсит флаги для спецификатора
 void parse_flags(const char** format, SpecOptions* spec_opts);
-
-// Функция парсит ширину для спецификатора
 void parse_width(const char** format, SpecOptions* spec_opts);
-
-// Функция парсит точность для спецификатора
 void parse_precision(const char** format, SpecOptions* spec_opts);
-
-// Функция парсит длины l и h
 void parse_length(const char** format, SpecOptions* spec_opts);
-
-// Функция парсит сразу весь формат
 void parse_format(const char** format, SpecOptions* spec_opts);
+void parse_specifier(const char** format, SpecOptions* spec_opts);
 
-// Функция устанавливает флаг is_negative
+void set_needed_precision(SpecOptions* spec_opts);
+void set_base(SpecOptions* spec_opts);
+void set_padding_char(SpecOptions* spec_opts);
+
 void is_negative(long double num, SpecOptions* spec_opts);
-
-// Функция считает длину целого числа
 int get_num_length(long double num, SpecOptions* spec_opts);
 
-// Функция обрабатывает значение width для вывода
 void apply_width(DestStr* dest, int num_len, SpecOptions* spec_opts);
-
-// Функция обрабатывает флаги '+', '-' и ' '
+void apply_minus_width(DestStr* dest, SpecOptions* spec_opts);
 void apply_flags(DestStr* dest, SpecOptions* spec_opts);
 
-// Вспомогательная функция для itoa
-void reverse_num(DestStr* dest, s21_size_t l_index, s21_size_t r_index);
-
+void process_chars(va_list* args, DestStr* dest, SpecOptions* spec_opts);
+void process_narrow_char(va_list* args, DestStr* dest, SpecOptions* spec_opts);
+void process_wide_char(va_list* args, DestStr* dest);
+void process_strings(va_list* args, DestStr* dest, SpecOptions* spec_opts);
+void process_narrow_string(va_list* args, DestStr* dest, SpecOptions* spc_opts);
+void process_wide_string(va_list* args, DestStr* dest);
 void process_int(va_list* args, DestStr* dest, SpecOptions* spec_opts);
+void process_unsigned(va_list* args, DestStr* dest, SpecOptions* spec_opts);
+void process_floating_point_number(va_list* args, DestStr* dest,
+                                   SpecOptions* spec_opts);
+
 long long int ingest_int(va_list* args, SpecOptions* spec_opts);
 long long unsigned ingest_unsinged(va_list* args, SpecOptions* spec_opts);
+long double ingest_floating_point_number(va_list* args, SpecOptions* spec_opts);
 
 // Функция записывает целое число в строку dest
 int itoa(DestStr* dest, long double input_num, SpecOptions* spec_opts);
+void reverse_num(DestStr* dest, s21_size_t l_index, s21_size_t r_index);
 
-// Функция обрабатывает значение width для вывода, флаг '-'
-void apply_minus_width(DestStr* dest, SpecOptions* spec_opts);
-
-// Функция записывает целое число в строку dest
-// --------готовое решение с обработкой флагов---------
+void floating_point_number_to_str(DestStr* dest, long double input_num,
+                                  SpecOptions* spec_opts);
 void whole_to_str(DestStr* dest, long double num, SpecOptions* spec_opts);
-
-// Функция устанавливает корректную presicion
-void set_needed_precision(SpecOptions* spec_opts);
-
-void set_base(SpecOptions* spec_opts);
-
-void set_padding_char(SpecOptions* spec_opts);
+void fraction_to_str(DestStr* dest, long double num, SpecOptions* spec_opts);
+void pointer_to_str(DestStr* dest, void* ptr, SpecOptions* spec_opts);
 
 // Функция для чисел с плавающей точкой:
 //  1. Округляет число до нужной точности
@@ -123,23 +115,10 @@ void set_padding_char(SpecOptions* spec_opts);
 void divide_number(long double num, int precision, long double* wh,
                    long double* fr);
 
-// Функция записывает дробную часть числа в строку dest
-void fract_to_str(DestStr* dest, long double num, SpecOptions* spec_opts);
-
-// Функция записывает число с плавающей точкой в строку dest
-void float_to_str(DestStr* dest, long double input_num, SpecOptions* spec_opts);
-
 void specE(DestStr* dest, double input_num, SpecOptions* spec_opts,
            const char* format);
-
-void wide_char(DestStr* dest, wchar_t input_char);
-
-void wide_str(DestStr* dest, wchar_t* input_string);
-
 void spec_G(DestStr* dest, double double_input, SpecOptions* spec_opts,
             const char* format);
-
-void pointer_to_str(DestStr* dest, void* ptr, SpecOptions* spec_opts);
 
 // double my_round(double x, unsigned int digits);
 
@@ -160,73 +139,24 @@ int s21_sprintf(char* str, const char* format, ...) {
       set_padding_char(&spec_opts);
 
       switch (*format) {
-        case 'c': {  // Если c (char)
-          if (!spec_opts.length_l) {
-            char input_char = va_arg(args, int);
-            int num_len = get_num_length(input_char, &spec_opts);
-
-            // Если ширина больше длины числа, добавляем пробелы в начало
-            apply_width(&dest, num_len, &spec_opts);
-
-            // Обрабатываем флаги
-            apply_flags(&dest, &spec_opts);
-
-            dest.str[dest.curr_ind++] = input_char;
-            apply_minus_width(&dest, &spec_opts);
-          } else {
-            wchar_t input_char = va_arg(args, wchar_t);
-            wide_char(&dest, input_char);
-          }
-          break;
-        }
-
-        case 'i':
-        case 'd': {
-          process_int(&args, &dest, &spec_opts);
-          break;
-        }
-        case 'f': {  // Если f (float)
-          long double input_float = 0;
-          if (spec_opts.length_big_l) {
-            input_float = va_arg(args, long double);
-          } else {
-            input_float = va_arg(args, double);
-          }
-          is_negative(input_float, &spec_opts);
-          float_to_str(&dest, input_float, &spec_opts);
+        case 'c': {
+          process_chars(&args, &dest, &spec_opts);
           break;
         }
         case 's': {
-          if (!spec_opts.length_l) {
-            char* input_string = va_arg(args, char*);
-            apply_width(&dest, s21_strlen(input_string), &spec_opts);
-
-            // Обрабатываем флаги
-            apply_flags(&dest, &spec_opts);
-
-            s21_strcpy(dest.str + dest.curr_ind, input_string);
-            dest.curr_ind += s21_strlen(input_string);
-            apply_minus_width(&dest, &spec_opts);
-          } else {
-            wchar_t* input_string = va_arg(args, wchar_t*);
-            wide_str(&dest, input_string);
-          }
+          process_strings(&args, &dest, &spec_opts);
+          break;
+        }
+        case 'i':
+        case 'd': {
+          process_int(&args, &dest, &spec_opts);
           break;
         }
         case 'x':
         case 'X':
         case 'o':
         case 'u': {
-          unsigned long input_unsingned = 0;
-
-          input_unsingned = ingest_unsinged(&args, &spec_opts);
-
-          // if (spec_opts.length_l) {
-          //   input_unsingned = va_arg(args, unsigned long);
-          // } else {
-          //   input_unsingned = va_arg(args, unsigned);
-          // }
-          whole_to_str(&dest, input_unsingned, &spec_opts);
+          process_unsigned(&args, &dest, &spec_opts);
           break;
         }
         case 'e':
@@ -253,6 +183,10 @@ int s21_sprintf(char* str, const char* format, ...) {
           pointer_to_str(&dest, pointer_str_input, &spec_opts);
           break;
         }
+        case 'f': {
+          process_floating_point_number(&args, &dest, &spec_opts);
+          break;
+        }
         case '%': {
           dest.str[dest.curr_ind++] = '%';
           break;
@@ -271,59 +205,12 @@ int s21_sprintf(char* str, const char* format, ...) {
   return fin_result;
 }
 
-void process_int(va_list* args, DestStr* dest, SpecOptions* spec_opts) {
-  long long int input_int = ingest_int(args, spec_opts);
-  is_negative(input_int, spec_opts);
-  whole_to_str(dest, input_int, spec_opts);
-}
-
-long long int ingest_int(va_list* args, SpecOptions* spec_opts) {
-  long long int input_int = 0;
-  long long int absolute_input = 0;
-  if (spec_opts->length_h)  // обрабатываем short
-  {
-    input_int = va_arg(*args, int);
-    absolute_input = TO_ABS(input_int);
-    if (absolute_input > SHRT_MAX) {
-      input_int = (short)+(input_int);
-    }
-  } else if (spec_opts->length_l)  // обрабатываем long
-  {
-    absolute_input = TO_ABS(input_int);
-    input_int = va_arg(*args, long int);
-    if (absolute_input > LONG_MAX) {
-      input_int = (long)+(input_int);
-    }
-  } else  // обрабатываем простой int
-  {
-    input_int = va_arg(*args, int);
-    absolute_input = TO_ABS(input_int);
-    if (absolute_input > INT_MAX) {
-      input_int = (int)+(input_int);
-    }
-  }
-  return input_int;
-}
-
-long long unsigned ingest_unsinged(va_list* args, SpecOptions* spec_opts) {
-  long long unsigned input_unsingned = 0;
-
-  if (spec_opts->length_h)  // обрабатываем short
-  {
-    input_unsingned = va_arg(*args, unsigned);
-    if (input_unsingned > USHRT_MAX) {
-      input_unsingned = (short unsigned)+(input_unsingned);
-    }
-  } else if (spec_opts->length_l)  // обрабатываем long
-  {
-    input_unsingned = va_arg(*args, long unsigned);
-  } else {
-    input_unsingned = va_arg(*args, unsigned);
-    if (input_unsingned > UINT_MAX) {
-      input_unsingned = (unsigned)+(input_unsingned);
-    }
-  }
-  return input_unsingned;
+void parse_format(const char** format, SpecOptions* spec_opts) {
+  parse_flags(format, spec_opts);
+  parse_width(format, spec_opts);
+  parse_precision(format, spec_opts);
+  parse_length(format, spec_opts);
+  parse_specifier(format, spec_opts);
 }
 
 int is_flag(char ch) {
@@ -437,6 +324,149 @@ void parse_specifier(const char** format, SpecOptions* spec_opts) {
   }
 }
 
+void process_chars(va_list* args, DestStr* dest, SpecOptions* spec_opts) {
+  if (spec_opts->length_l == false) {
+    process_narrow_char(args, dest, spec_opts);
+  } else {
+    process_wide_char(args, dest);
+  }
+}
+
+void process_narrow_char(va_list* args, DestStr* dest, SpecOptions* spec_opts) {
+  char input_char = va_arg(*args, int);
+  int num_len = get_num_length(input_char, spec_opts);
+  // Если ширина больше длины числа, добавляем пробелы в начало
+  apply_width(dest, num_len, spec_opts);
+  // Обрабатываем флаги
+  apply_flags(dest, spec_opts);
+  dest->str[dest->curr_ind++] = input_char;
+  apply_minus_width(dest, spec_opts);
+}
+
+void process_wide_char(va_list* args, DestStr* dest) {
+  wchar_t input_char = va_arg(*args, wchar_t);
+  char temp[MB_CUR_MAX];
+  int len = wctomb(temp, input_char);
+  if (len > 0) {
+    for (int i = 0; i < len; i++) {
+      dest->str[dest->curr_ind++] = temp[i];
+    }
+  }
+}
+
+void process_int(va_list* args, DestStr* dest, SpecOptions* spec_opts) {
+  long long int input_int = ingest_int(args, spec_opts);
+  is_negative(input_int, spec_opts);
+  whole_to_str(dest, input_int, spec_opts);
+}
+
+void process_floating_point_number(va_list* args, DestStr* dest,
+                                   SpecOptions* spec_opts) {
+  long double input_floating_point_number =
+      ingest_floating_point_number(args, spec_opts);
+
+  is_negative(input_floating_point_number, spec_opts);
+  floating_point_number_to_str(dest, input_floating_point_number, spec_opts);
+}
+
+void process_unsigned(va_list* args, DestStr* dest, SpecOptions* spec_opts) {
+  unsigned long input_unsingned = 0;
+  input_unsingned = ingest_unsinged(args, spec_opts);
+  whole_to_str(dest, input_unsingned, spec_opts);
+}
+
+void process_strings(va_list* args, DestStr* dest, SpecOptions* spec_opts) {
+  if (spec_opts->length_l == false) {
+    process_narrow_string(args, dest, spec_opts);
+  } else {
+    process_wide_string(args, dest);
+  }
+}
+
+void process_narrow_string(va_list* args, DestStr* dest,
+                           SpecOptions* spec_opts) {
+  char* input_string = va_arg(*args, char*);
+  apply_width(dest, s21_strlen(input_string), spec_opts);
+  apply_flags(dest, spec_opts);
+  s21_strcpy(dest->str + dest->curr_ind, input_string);
+  dest->curr_ind += s21_strlen(input_string);
+  apply_minus_width(dest, spec_opts);
+}
+
+void process_wide_string(va_list* args, DestStr* dest) {
+  wchar_t* input_string = va_arg(*args, wchar_t*);
+  size_t len = wcstombs(NULL, input_string, 0);
+  if (len != (size_t)-1) {
+    char* temp_str = (char*)malloc(len + 1);
+    if (temp_str) {
+      wcstombs(temp_str, input_string, len + 1);
+      s21_strcpy(dest->str + dest->curr_ind, temp_str);
+      dest->str += len;
+      free(temp_str);
+    }
+  }
+}
+
+long long int ingest_int(va_list* args, SpecOptions* spec_opts) {
+  long long int input_int = 0;
+  long long int absolute_input = 0;
+  if (spec_opts->length_h)  // обрабатываем short
+  {
+    input_int = va_arg(*args, int);
+    absolute_input = TO_ABS(input_int);
+    if (absolute_input > SHRT_MAX) {
+      input_int = (short)+(input_int);
+    }
+  } else if (spec_opts->length_l)  // обрабатываем long
+  {
+    absolute_input = TO_ABS(input_int);
+    input_int = va_arg(*args, long int);
+    if (absolute_input > LONG_MAX) {
+      input_int = (long)+(input_int);
+    }
+  } else  // обрабатываем простой int
+  {
+    input_int = va_arg(*args, int);
+    absolute_input = TO_ABS(input_int);
+    if (absolute_input > INT_MAX) {
+      input_int = (int)+(input_int);
+    }
+  }
+  return input_int;
+}
+
+long double ingest_floating_point_number(va_list* args,
+                                         SpecOptions* spec_opts) {
+  long double input_floating_point_number = 0;
+  if (spec_opts->length_big_l) {
+    input_floating_point_number = va_arg(*args, long double);
+  } else {
+    input_floating_point_number = va_arg(*args, double);
+  }
+  return input_floating_point_number;
+}
+
+long long unsigned ingest_unsinged(va_list* args, SpecOptions* spec_opts) {
+  long long unsigned input_unsingned = 0;
+
+  if (spec_opts->length_h)  // обрабатываем short
+  {
+    input_unsingned = va_arg(*args, unsigned);
+    if (input_unsingned > USHRT_MAX) {
+      input_unsingned = (short unsigned)+(input_unsingned);
+    }
+  } else if (spec_opts->length_l)  // обрабатываем long
+  {
+    input_unsingned = va_arg(*args, long unsigned);
+  } else {
+    input_unsingned = va_arg(*args, unsigned);
+    if (input_unsingned > UINT_MAX) {
+      input_unsingned = (unsigned)+(input_unsingned);
+    }
+  }
+  return input_unsingned;
+}
+
 void set_base(SpecOptions* spec_opts) {
   if (spec_opts->is_octal) {
     spec_opts->base = 8.0;
@@ -453,14 +483,6 @@ void set_padding_char(SpecOptions* spec_opts) {
   } else {
     spec_opts->padding_char = ' ';
   }
-}
-
-void parse_format(const char** format, SpecOptions* spec_opts) {
-  parse_flags(format, spec_opts);
-  parse_width(format, spec_opts);
-  parse_precision(format, spec_opts);
-  parse_length(format, spec_opts);
-  parse_specifier(format, spec_opts);
 }
 
 void is_negative(long double num, SpecOptions* spec_opts) {
@@ -541,7 +563,6 @@ void reverse_num(DestStr* dest, s21_size_t l_index, s21_size_t r_index) {
 int itoa(DestStr* dest, long double input_num, SpecOptions* spec_opts) {
   int current_int = 0;
   int num_len = 0;
-  // long double base = 10.0;
   const char* digits = "0123456789abcdef";
 
   if (spec_opts->is_hexadecimal_capital) {
@@ -557,7 +578,6 @@ int itoa(DestStr* dest, long double input_num, SpecOptions* spec_opts) {
     while (input_num >= 1) {
       current_int = (int)fmodl(input_num, spec_opts->base);
       dest->str[dest->curr_ind++] = digits[current_int];
-      // dest->str[dest->curr_ind++] = current_int + '0';
       input_num /= spec_opts->base;
       num_len++;
     }
@@ -626,8 +646,8 @@ void divide_number(long double num, int precision, long double* wh,
   *fr = (num - *wh) * mul;
 }
 
-void fract_to_str(DestStr* dest, long double input_num,
-                  SpecOptions* spec_opts) {
+void fraction_to_str(DestStr* dest, long double input_num,
+                     SpecOptions* spec_opts) {
   // Преобразуем целое число в строку и получаем i
   // presicion - i = сколько символов не хватает до нужной точности
 
@@ -646,8 +666,8 @@ void fract_to_str(DestStr* dest, long double input_num,
   dest->str[dest->curr_ind] = '\0';
 }
 
-void float_to_str(DestStr* dest, long double input_num,
-                  SpecOptions* spec_opts) {
+void floating_point_number_to_str(DestStr* dest, long double input_num,
+                                  SpecOptions* spec_opts) {
   input_num = TO_ABS(input_num);
   long double whole_part = 0;     // Целая часть
   long double fraction_part = 0;  // Дробная часть
@@ -661,16 +681,13 @@ void float_to_str(DestStr* dest, long double input_num,
   // Записываем целую часть в строку dest
   whole_to_str(dest, whole_part, spec_opts);
 
-  // if (spec_opts->length_big_l == false) {
   fraction_part = (double)fraction_part;
-  // }
-  // printf("\n\n%Lf\n\n", fraction_part);
 
   // Если не спарсили .0 - выводим дробную часть
   if (!(spec_opts->precision_set && !spec_opts->precision)) {
     dest->str[dest->curr_ind++] = '.';
 
-    fract_to_str(dest, fraction_part, spec_opts);
+    fraction_to_str(dest, fraction_part, spec_opts);
   }
 }
 
@@ -710,17 +727,17 @@ void specE(DestStr* dest, double input_num, SpecOptions* spec_opts,
     dest->str[dest->curr_ind++] = '-';
   }
 
-  // Используем float_to_str для форматирования мантиссы
+  // Используем floating_point_number_to_str для форматирования мантиссы
   if (*format == 'g' || *format == 'G') {
     divide_number(input_num, MANTISSA_DIGITS, &whole_part, &fraction_part);
 
     fraction_part /= pow(10, MANTISSA_DIGITS);
     input_num = whole_part + fraction_part;
 
-    float_to_str(dest, input_num, spec_opts);
+    floating_point_number_to_str(dest, input_num, spec_opts);
     dest->str[dest->curr_ind--] = '\0';
   } else {
-    float_to_str(dest, input_num, spec_opts);
+    floating_point_number_to_str(dest, input_num, spec_opts);
   }
 
   dest->str[dest->curr_ind++] =
@@ -738,29 +755,6 @@ void specE(DestStr* dest, double input_num, SpecOptions* spec_opts,
     dest->str[dest->curr_ind++] = '0';
   }
   itoa(dest, exponent, spec_opts);
-}
-
-void wide_char(DestStr* dest, wchar_t input_char) {
-  char temp[MB_CUR_MAX];
-  int len = wctomb(temp, input_char);
-  if (len > 0) {
-    for (int i = 0; i < len; i++) {
-      dest->str[dest->curr_ind++] = temp[i];
-    }
-  }
-}
-
-void wide_str(DestStr* dest, wchar_t* input_string) {
-  size_t len = wcstombs(NULL, input_string, 0);
-  if (len != (size_t)-1) {
-    char* temp_str = (char*)malloc(len + 1);
-    if (temp_str) {
-      wcstombs(temp_str, input_string, len + 1);
-      s21_strcpy(dest->str + dest->curr_ind, temp_str);
-      dest->str += len;
-      free(temp_str);
-    }
-  }
 }
 
 void spec_G(DestStr* dest, double double_input, SpecOptions* spec_opts,
