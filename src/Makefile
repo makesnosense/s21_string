@@ -32,8 +32,11 @@ gcov_report: clean build_tests test
 	rm -f *.gcda *.gcno *.gcov
 
 
+# build_tests: $(STRING_LIB) $(TESTS_SRC_FILES)
+# 	$(CC) $(CFLAGS) $^ -o run_tests $(STRING_LIB) $(TESTFLAGS)
+
 build_tests: $(STRING_LIB) $(TESTS_SRC_FILES)
-	$(CC) $(CFLAGS) $^ -o run_tests $(STRING_LIB) $(TESTFLAGS)
+	$(CC) $(CFLAGS) $^ -o run_tests $(TESTFLAGS)
 
 
 $(STRING_LIB): $(STRING_OBJ_FILES)
