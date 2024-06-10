@@ -115,8 +115,6 @@ void specE(DestStr* dest, double input_num, SpecOptions* spec_opts,
 void spec_G(DestStr* dest, double double_input, SpecOptions* spec_opts,
             const char* format);
 
-// double my_round(double x, unsigned int digits);
-
 int s21_sprintf(char* str, const char* format, ...) {
   setlocale(LC_ALL, "en_US.UTF-8");
   DestStr dest = {str, 0};
