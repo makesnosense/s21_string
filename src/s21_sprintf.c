@@ -87,18 +87,17 @@ void apply_flags(DestStr* dest, SpecOptions* spec_opts);
 void process_chars(va_list* args, DestStr* dest, SpecOptions* spec_opts);
 void process_narrow_char(va_list* args, DestStr* dest, SpecOptions* spec_opts);
 void process_wide_char(va_list* args, DestStr* dest);
-
-void process_int(va_list* args, DestStr* dest, SpecOptions* spec_opts);
-void process_floating_point_number(va_list* args, DestStr* dest,
-                                   SpecOptions* spec_opts);
-
 void process_strings(va_list* args, DestStr* dest, SpecOptions* spec_opts);
 void process_narrow_string(va_list* args, DestStr* dest, SpecOptions* spc_opts);
 void process_wide_string(va_list* args, DestStr* dest);
+void process_int(va_list* args, DestStr* dest, SpecOptions* spec_opts);
+void process_unsigned(va_list* args, DestStr* dest, SpecOptions* spec_opts);
+void process_floating_point_number(va_list* args, DestStr* dest,
+                                   SpecOptions* spec_opts);
 
 long long int ingest_int(va_list* args, SpecOptions* spec_opts);
-long double ingest_floating_point_number(va_list* args, SpecOptions* spec_opts);
 long long unsigned ingest_unsinged(va_list* args, SpecOptions* spec_opts);
+long double ingest_floating_point_number(va_list* args, SpecOptions* spec_opts);
 
 // Функция записывает целое число в строку dest
 int itoa(DestStr* dest, long double input_num, SpecOptions* spec_opts);
@@ -144,26 +143,20 @@ int s21_sprintf(char* str, const char* format, ...) {
           process_chars(&args, &dest, &spec_opts);
           break;
         }
+        case 's': {
+          process_strings(&args, &dest, &spec_opts);
+          break;
+        }
         case 'i':
         case 'd': {
           process_int(&args, &dest, &spec_opts);
-          break;
-        }
-        case 'f': {
-          process_floating_point_number(&args, &dest, &spec_opts);
-          break;
-        }
-        case 's': {
-          process_strings(&args, &dest, &spec_opts);
           break;
         }
         case 'x':
         case 'X':
         case 'o':
         case 'u': {
-          unsigned long input_unsingned = 0;
-          input_unsingned = ingest_unsinged(&args, &spec_opts);
-          whole_to_str(&dest, input_unsingned, &spec_opts);
+          process_unsigned(&args, &dest, &spec_opts);
           break;
         }
         case 'e':
@@ -188,6 +181,10 @@ int s21_sprintf(char* str, const char* format, ...) {
         case 'p': {
           void* pointer_str_input = va_arg(args, void*);
           pointer_to_str(&dest, pointer_str_input, &spec_opts);
+          break;
+        }
+        case 'f': {
+          process_floating_point_number(&args, &dest, &spec_opts);
           break;
         }
         case '%': {
@@ -370,6 +367,12 @@ void process_floating_point_number(va_list* args, DestStr* dest,
 
   is_negative(input_floating_point_number, spec_opts);
   floating_point_number_to_str(dest, input_floating_point_number, spec_opts);
+}
+
+void process_unsigned(va_list* args, DestStr* dest, SpecOptions* spec_opts) {
+  unsigned long input_unsingned = 0;
+  input_unsingned = ingest_unsinged(args, spec_opts);
+  whole_to_str(dest, input_unsingned, spec_opts);
 }
 
 void process_strings(va_list* args, DestStr* dest, SpecOptions* spec_opts) {
