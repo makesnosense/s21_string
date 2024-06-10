@@ -60,10 +60,10 @@ int is_specifier(char ch);
 int is_length(char ch);
 
 void parse_flags(const char** format, SpecOptions* spec_opts);
-void parse_width(const char** format, SpecOptions* spec_opts);
-void parse_precision(const char** format, SpecOptions* spec_opts);
+void parse_width(const char** format, va_list args, SpecOptions* spec_opts);
+void parse_precision(const char** format, va_list args, SpecOptions* spec_opts);
 void parse_length(const char** format, SpecOptions* spec_opts);
-void parse_format(const char** format, SpecOptions* spec_opts);
+void parse_format(const char** format, va_list args, SpecOptions* spec_opts);
 void parse_specifier(const char** format, SpecOptions* spec_opts);
 
 void set_needed_precision(SpecOptions* spec_opts);
@@ -125,7 +125,7 @@ int s21_sprintf(char* str, const char* format, ...) {
     if (*format == '%') {
       format++;
       s21_memset(&spec_opts, 0, sizeof(spec_opts));
-      parse_format(&format, &spec_opts);
+      parse_format(&format, args, &spec_opts);
       set_base(&spec_opts);
       set_padding_char(&spec_opts);
 
@@ -196,10 +196,10 @@ int s21_sprintf(char* str, const char* format, ...) {
   return fin_result;
 }
 
-void parse_format(const char** format, SpecOptions* spec_opts) {
+void parse_format(const char** format, va_list args, SpecOptions* spec_opts) {
   parse_flags(format, spec_opts);
-  parse_width(format, spec_opts);
-  parse_precision(format, spec_opts);
+  parse_width(format, args, spec_opts);
+  parse_precision(format, args, spec_opts);
   parse_length(format, spec_opts);
   parse_specifier(format, spec_opts);
 }
@@ -245,20 +245,25 @@ void parse_flags(const char** format, SpecOptions* spec_opts) {
   }
 }
 
-void parse_width(const char** format, SpecOptions* spec_opts) {
-  spec_opts->width = 0;
+void parse_width(const char** format, va_list args, SpecOptions* spec_opts) {
   while (**format != '.' && !is_specifier(**format) && !is_length(**format)) {
     if (isdigit(**format)) {
       spec_opts->width = spec_opts->width * 10 + (**format - '0');
+    } else if (**format == '*') {
+      spec_opts->width = va_arg(args, int);
     }
     (*format)++;
   }
 }
 
-void parse_precision(const char** format, SpecOptions* spec_opts) {
+void parse_precision(const char** format, va_list args,
+                     SpecOptions* spec_opts) {
   while (!is_specifier(**format) && !is_length(**format)) {
     if (isdigit(**format)) {
       spec_opts->precision = spec_opts->precision * 10 + (**format - '0');
+      spec_opts->precision_set = 1;
+    } else if (**format == '*') {
+      spec_opts->precision = va_arg(args, int);
       spec_opts->precision_set = 1;
     }
     (*format)++;
