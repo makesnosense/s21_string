@@ -6,9 +6,8 @@ src/run_tests
 
 .DS_Store
 
-src/s21_sprintf_dir/*.out
-src/s21_sprintf_dir/s21_sprintf
-src/s21_sprintf_dir/test.c
+// Папка для разработки s21_sprintf
+src/s21_sprintf_dir/
 
 // Файл с настройками формата
 CPPLINT.cfg
