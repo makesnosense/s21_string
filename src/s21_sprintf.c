@@ -114,7 +114,7 @@ void spec_G(DestStr* dest, double double_input, SpecOptions* spec_opts,
             const char* format);
 
 int s21_sprintf(char* str, const char* format, ...) {
-  setlocale(LC_ALL, "en_US.UTF-8");
+  setlocale(LC_ALL, "C.UTF-8");
   DestStr dest = {str, 0};
   SpecOptions spec_opts = {0};
   int fin_result = 0;  // Результат работы функции, пока не используется нигде
