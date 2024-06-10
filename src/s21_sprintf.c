@@ -40,7 +40,7 @@ typedef struct SpecifierOptions {
   bool length_big_l;   // Длина L
   bool precision_set;  // Есть ли precision у спецификатора
   bool is_negative;    // Является ли отр. числом
-  bool is_float;       // Является ли float/double
+  bool is_floating_point_number;  // Является ли float/double
   bool is_char;
   bool is_octal;
   bool is_hexadecimal;
@@ -310,7 +310,7 @@ void parse_specifier(const char** format, SpecOptions* spec_opts) {
       case 'G':
       case 'e':
       case 'E': {
-        spec_opts->is_float = true;
+        spec_opts->is_floating_point_number = true;
         break;
       }
     }
@@ -507,7 +507,7 @@ void apply_width(DestStr* dest, int num_len, SpecOptions* spec_opts) {
     prec_corr =
         spec_opts->precision > num_len ? spec_opts->precision - num_len : 0;
 
-    if (spec_opts->is_float) {
+    if (spec_opts->is_floating_point_number) {
       spec_opts->padding =
           spec_opts->width - num_len - spec_opts->precision - flag_corr - 1;
     } else {
@@ -606,7 +606,7 @@ void whole_to_str(DestStr* dest, long double num, SpecOptions* spec_opts) {
     apply_flags(dest, spec_opts);
   }
 
-  if (!spec_opts->is_float) {
+  if (!spec_opts->is_floating_point_number) {
     for (int i = 0; i < spec_opts->precision - num_len; i++)
       dest->str[dest->curr_ind++] = '0';
   }
@@ -615,7 +615,7 @@ void whole_to_str(DestStr* dest, long double num, SpecOptions* spec_opts) {
   itoa(dest, num, spec_opts);
 
   // Если ширина больше длины числа, добавляем пробелы в конец
-  if (!spec_opts->is_float) apply_minus_width(dest, spec_opts);
+  if (!spec_opts->is_floating_point_number) apply_minus_width(dest, spec_opts);
 
   // Добавляем нуль-терминатор
   dest->str[dest->curr_ind] = '\0';
