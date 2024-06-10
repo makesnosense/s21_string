@@ -57,13 +57,8 @@ typedef struct DestinationString {
 // %[flags][width][.precision][length][specifier]
 int s21_sprintf(char* str, const char* format, ...);
 
-// Функция возвращает 1, если ch - это флаг
 int is_flag(char ch);
-
-// Функция возвращает 1, если ch - это спецификатор
 int is_specifier(char ch);
-
-// Функция возвращает 1, если ch - это длина
 int is_length(char ch);
 
 void parse_flags(const char** format, SpecOptions* spec_opts);
