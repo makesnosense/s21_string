@@ -401,22 +401,19 @@ void process_wide_string(va_list* args, DestStr* dest) {
 long long int ingest_int(va_list* args, SpecOptions* spec_opts) {
   long long int input_int = 0;
   long long int absolute_input = 0;
-  if (spec_opts->length_h)  // обрабатываем short
-  {
+  if (spec_opts->length_h) {  // обрабатываем short
     input_int = va_arg(*args, int);
     absolute_input = TO_ABS(input_int);
     if (absolute_input > SHRT_MAX) {
       input_int = (short)+(input_int);
     }
-  } else if (spec_opts->length_l)  // обрабатываем long
-  {
+  } else if (spec_opts->length_l) {  // обрабатываем long
     absolute_input = TO_ABS(input_int);
     input_int = va_arg(*args, long int);
     if (absolute_input > LONG_MAX) {
       input_int = (long)+(input_int);
     }
-  } else  // обрабатываем простой int
-  {
+  } else {  // обрабатываем простой int
     input_int = va_arg(*args, int);
     absolute_input = TO_ABS(input_int);
     if (absolute_input > INT_MAX) {
@@ -440,14 +437,12 @@ long double ingest_floating_point_number(va_list* args,
 long long unsigned ingest_unsinged(va_list* args, SpecOptions* spec_opts) {
   long long unsigned input_unsingned = 0;
 
-  if (spec_opts->length_h)  // обрабатываем short
-  {
+  if (spec_opts->length_h) {  // обрабатываем short
     input_unsingned = va_arg(*args, unsigned);
     if (input_unsingned > USHRT_MAX) {
       input_unsingned = (short unsigned)+(input_unsingned);
     }
-  } else if (spec_opts->length_l)  // обрабатываем long
-  {
+  } else if (spec_opts->length_l) {  // обрабатываем long
     input_unsingned = va_arg(*args, long unsigned);
   } else {
     input_unsingned = va_arg(*args, unsigned);
