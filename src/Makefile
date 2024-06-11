@@ -35,7 +35,7 @@ gcov_report: clean build_tests test
 # build_tests: $(STRING_LIB) $(TESTS_SRC_FILES)
 # 	$(CC) $(CFLAGS) $^ -o run_tests $(STRING_LIB) $(TESTFLAGS)
 
-build_tests: $(STRING_LIB) $(TESTS_SRC_FILES)
+build_tests: $(TESTS_SRC_FILES) $(STRING_LIB)
 	$(CC) $(CFLAGS) $^ -o run_tests $(TESTFLAGS)
 
 
