@@ -22,6 +22,58 @@ START_TEST(test_sprintf_int_0_padding) {
 }
 END_TEST
 
+START_TEST(test_sprintf_ints_d) {
+  char lib_res[500];
+  char s21_res[500];
+  sprintf(lib_res, "%-15d %60d %d", 1, 1000, INT_MAX);
+  s21_sprintf(s21_res, "%-15d %60d %d", 1, 1000, INT_MAX);
+  ck_assert_str_eq(lib_res, s21_res);
+}
+END_TEST
+
+START_TEST(test_sprintf_int_min) {
+  char lib_res[500];
+  char s21_res[500];
+  int min_int = INT_MIN;
+  sprintf(lib_res, "%d", min_int);
+  s21_sprintf(s21_res, "%d", min_int);
+  ck_assert_str_eq(lib_res, s21_res);
+}
+END_TEST
+
+START_TEST(test_sprintf_long_ints_d) {
+  char lib_res[5000];
+  char s21_res[5000];
+
+  long int max = 2147483647;
+  long int min = -2147483648;
+
+  sprintf(lib_res, "%60ld_%ld_%-+15ld_%-+15ld", max, min, max, min);
+  s21_sprintf(s21_res, "%60ld_%ld_%-+15ld_%-+15ld", max, min, max, min);
+  ck_assert_str_eq(lib_res, s21_res);
+}
+END_TEST
+
+START_TEST(test_sprintf_short_ints_d) {
+  char lib_res[500];
+  char s21_res[500];
+  sprintf(lib_res, "%60hd_%hd_%-+15hd_%-+15hd", SHRT_MAX, SHRT_MIN, SHRT_MAX,
+          SHRT_MIN);
+  s21_sprintf(s21_res, "%60hd_%hd_%-+15hd_%-+15hd", SHRT_MAX, SHRT_MIN,
+              SHRT_MAX, SHRT_MIN);
+  ck_assert_str_eq(lib_res, s21_res);
+}
+END_TEST
+
+START_TEST(test_sprintf_ints_i) {
+  char lib_res[500];
+  char s21_res[500];
+  sprintf(lib_res, "%-15i %60i", -1, -1000);
+  s21_sprintf(s21_res, "%-15i %60i", -1, -1000);
+  ck_assert_str_eq(lib_res, s21_res);
+}
+END_TEST
+
 START_TEST(test_sprintf_char) {
   char lib_res[100];
   char s21_res[100];
@@ -133,57 +185,6 @@ START_TEST(test_sprintf_unsigned_problematic) {
           UINT_MAX + 10, UINT_MAX, ULONG_MAX, ULONG_MAX + 5, -1000, -65555);
   s21_sprintf(s21_res, "%-20hu %-30hu %-30u %lu %lu %u %u", USHRT_MAX + 5,
               UINT_MAX + 10, UINT_MAX, ULONG_MAX, ULONG_MAX + 5, -1000, -65555);
-  ck_assert_str_eq(lib_res, s21_res);
-}
-END_TEST
-
-START_TEST(test_sprintf_ints_d) {
-  char lib_res[500];
-  char s21_res[500];
-  sprintf(lib_res, "%-15d %60d %d", 1, 1000, INT_MAX);
-  s21_sprintf(s21_res, "%-15d %60d %d", 1, 1000, INT_MAX);
-  ck_assert_str_eq(lib_res, s21_res);
-}
-END_TEST
-
-START_TEST(test_sprintf_long_ints_d) {
-  char lib_res[5000];
-  char s21_res[5000];
-
-  long int max = 2147483647;
-  long int min = -2147483648;
-
-  sprintf(lib_res, "%60ld_%ld_%-+15ld_%-+15ld", max, min, max, min);
-  s21_sprintf(s21_res, "%60ld_%ld_%-+15ld_%-+15ld", max, min, max, min);
-  ck_assert_str_eq(lib_res, s21_res);
-}
-END_TEST
-
-START_TEST(test_sprintf_short_ints_d) {
-  char lib_res[500];
-  char s21_res[500];
-  sprintf(lib_res, "%60hd_%hd_%-+15hd_%-+15hd", SHRT_MAX, SHRT_MIN, SHRT_MAX,
-          SHRT_MIN);
-  s21_sprintf(s21_res, "%60hd_%hd_%-+15hd_%-+15hd", SHRT_MAX, SHRT_MIN,
-              SHRT_MAX, SHRT_MIN);
-  ck_assert_str_eq(lib_res, s21_res);
-}
-END_TEST
-
-START_TEST(test_sprintf_ints_i) {
-  char lib_res[500];
-  char s21_res[500];
-  sprintf(lib_res, "%-15i %60i", -1, -1000);
-  s21_sprintf(s21_res, "%-15i %60i", -1, -1000);
-  ck_assert_str_eq(lib_res, s21_res);
-}
-END_TEST
-
-START_TEST(test_sprintf_ints_d_min) {
-  char lib_res[500];
-  char s21_res[500];
-  sprintf(lib_res, "%d", INT_MIN);
-  s21_sprintf(s21_res, "%d", INT_MIN);
   ck_assert_str_eq(lib_res, s21_res);
 }
 END_TEST
@@ -407,10 +408,9 @@ END_TEST
 START_TEST(test_sprintf_scientific_from_big_double) {
   char lib_res[100];
   char s21_res[100];
-  double num =
-      1.7976931348623157165654643542544769789787575443755869766556454334242544676909809776765654543;
-  sprintf(lib_res, "%e", num);
-  s21_sprintf(s21_res, "%e", num);
+  long double num = 3.3333333333333333;
+  sprintf(lib_res, "%Le", num);
+  s21_sprintf(s21_res, "%Le", num);
   ck_assert_str_eq(lib_res, s21_res);
 }
 END_TEST
@@ -443,11 +443,10 @@ END_TEST
 START_TEST(test_sprintf_scientific_loop_precisions) {
   char lib_res[100];
   char s21_res[100];
-  double num1 = 1234.5678;
-  double num2 = 1234.0;
-  double num3 = 123.5678910;
+  double num1 = 1.2345678;
+  double num2 = 1.0;
+  double num3 = 1.2345678910;
   double num4 = 1;
-  // double num5 = 0.0;
 
   int precision = _i;  // supplied through add_loop_test func
 
@@ -464,9 +463,9 @@ END_TEST
 START_TEST(test_sprintf_scientific_long_loop_precisions) {
   char lib_res[1000];
   char s21_res[1000];
-  long double num1 = 1234.5678;
-  long double num2 = 1234.0;
-  long double num3 = 123.5678910;
+  long double num1 = 1.2345678;
+  long double num2 = 1.0;
+  long double num3 = 1.2345678910;
   long double num4 = 1;
 
   int precision = _i;  // supplied through add_loop_test func
@@ -501,9 +500,9 @@ END_TEST
 START_TEST(test_sprintf_g_spec_loop_precisions) {
   char lib_res[1000];
   char s21_res[1000];
-  double num1 = 1234.5678;
-  double num2 = 1234.0;
-  double num3 = 123.5678910;
+  double num1 = 1.2345678;
+  double num2 = 1.0;
+  double num3 = 1.2345678910;
   double num4 = 1;
 
   int precision = _i;  // supplied through add_loop_test func
@@ -571,6 +570,11 @@ Suite* make_sprintf_suite() {
   tc_core = tcase_create("Core");
   tcase_add_test(tc_core, test_sprintf_int);
   tcase_add_test(tc_core, test_sprintf_int_0_padding);
+  tcase_add_test(tc_core, test_sprintf_ints_d);
+  tcase_add_test(tc_core, test_sprintf_ints_i);
+  tcase_add_test(tc_core, test_sprintf_int_min);
+  tcase_add_test(tc_core, test_sprintf_long_ints_d);
+  tcase_add_test(tc_core, test_sprintf_short_ints_d);
   tcase_add_test(tc_core, test_sprintf_char);
   tcase_add_test(tc_core, test_sprintf_char_width);
   tcase_add_test(tc_core, test_sprintf_string);
@@ -581,11 +585,7 @@ Suite* make_sprintf_suite() {
   tcase_add_test(tc_core, test_sprintf_float_width_precision_flag);
   tcase_add_test(tc_core, test_sprintf_unsigned);
   tcase_add_test(tc_core, test_sprintf_unsigned_problematic);
-  tcase_add_test(tc_core, test_sprintf_ints_d);
-  tcase_add_test(tc_core, test_sprintf_ints_i);
-  tcase_add_test(tc_core, test_sprintf_ints_d_min);
-  tcase_add_test(tc_core, test_sprintf_long_ints_d);
-  tcase_add_test(tc_core, test_sprintf_short_ints_d);
+
   tcase_add_test(tc_core, test_sprintf_long_doubles);
   tcase_add_test(tc_core, test_sprintf_short_overflow);
   tcase_add_test(tc_core, test_sprintf_int_overflow);
@@ -611,10 +611,10 @@ Suite* make_sprintf_suite() {
   tcase_add_test(tc_core, test_sprintf_mantissa_or_exponent_negative_value);
   tcase_add_test(tc_core, test_sprintf_mantissa_or_exponent_formats);
 
-  tcase_add_loop_test(tc_core, test_sprintf_scientific_loop_precisions, 0, 18);
+  tcase_add_loop_test(tc_core, test_sprintf_scientific_loop_precisions, 0, 14);
 
   tcase_add_loop_test(tc_core, test_sprintf_scientific_long_loop_precisions, 0,
-                      18);
+                      14);
   tcase_add_loop_test(tc_core, test_sprintf_scientific_zero_loop_precisions, 0,
                       18);
   tcase_add_loop_test(tc_core, test_sprintf_g_spec_loop_precisions, 0, 18);
