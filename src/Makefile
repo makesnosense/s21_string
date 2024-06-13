@@ -6,7 +6,7 @@ TESTFLAGS:= -lcheck
 ifeq ($(shell uname),Darwin)
 	GCOVR_THEME = --html-theme github.dark-green
 else
-    TESTFLAGS += -lm
+    TESTFLAGS += $(shell pkg-config --libs check) -lm
 endif
 
 TESTS_DIR = tests
