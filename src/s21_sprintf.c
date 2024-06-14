@@ -366,12 +366,10 @@ void process_floating_point_number(va_list* args, DestStr* dest,
   if (isnan(input_floating_point_number)) {
     spec_opts->is_floating_point_number = false;
     process_narrow_string("nan", dest, spec_opts);
-
   } else if (isinf(input_floating_point_number)) {
     spec_opts->is_floating_point_number = false;
     is_negative(input_floating_point_number, spec_opts);
     process_narrow_string("inf", dest, spec_opts);
-
   } else {
     is_negative(input_floating_point_number, spec_opts);
     floating_point_number_to_str(dest, input_floating_point_number, spec_opts);
@@ -575,62 +573,41 @@ void apply_flags(DestStr* dest, SpecOptions* spec_opts) {
 void floating_point_number_to_str(DestStr* dest, long double input_num,
                                   SpecOptions* spec_opts) {
   input_num = TO_ABS(input_num);
+
   long double whole_part = 0;     // Целая часть
   long double fraction_part = 0;  // Дробная часть
+
   s21_size_t zeros_to_insert = 0;
 
-  // Если спарсили precision, то присваиваем его значение
+  // Set default precision if we didn't parse one
   set_needed_precision(spec_opts);
 
-  // printf("\nHERE LongDouble: %.18Lf\n", input_num);
-  // Делим число на целую и дробную часть
-
   fraction_part = modfl(input_num, &whole_part);
-
-  // divide_number(input_num, (spec_opts->precision), &whole_part,
-  // &fraction_part);
   // printf("\nWHOLE LongDouble: %.18Lf\n", whole_part);
-
   // printf("\nFRACT LongDouble: %.18Lf\n", fraction_part);
 
   // Записываем целую часть в строку dest
   whole_to_str(dest, whole_part, spec_opts);
-
-  // fraction_part = (double)fraction_part;
-
   // Если не спарсили .0 - выводим дробную часть
   if (!(spec_opts->precision_set && !spec_opts->precision)) {
     dest->str[dest->curr_ind++] = '.';
 
     fraction_part =
         multiply_by_power_of_10(fraction_part, spec_opts->precision);
-
     // this is where we round rubbish
     fraction_part = roundl(fraction_part);
-
     // printf("\nPrec: %d\n", spec_opts->precision);
-
     // printf("\nAfter_FRACT LongDouble: %.18Lf\n", fraction_part);
-
     zeros_to_insert =
         spec_opts->precision - get_num_length(fraction_part, spec_opts);
 
-    // printf("\nZeros to insert: %lu\n", zeros_to_insert);
-
     add_zeros_to_destination(dest, zeros_to_insert);
-
-    // fraction_to_str(dest, fraction_part, spec_opts);
 
     int fraction_digits_written = itoa(dest, fraction_part, spec_opts);
 
     s21_size_t zeros_to_add_on_the_right =
         spec_opts->precision - (zeros_to_insert + fraction_digits_written);
 
-    // // Доводим число до нужной точности
-    // while (i < spec_opts->precision) {
-    //   dest->str[dest->curr_ind++] = '0';
-    //   i++;
-    // }
     add_zeros_to_destination(dest, zeros_to_add_on_the_right);
 
     // Добавляем пробелы в конец, если флаг '-'
