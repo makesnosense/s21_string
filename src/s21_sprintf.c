@@ -363,18 +363,18 @@ void process_floating_point_number(va_list* args, DestStr* dest,
   long double input_floating_point_number =
       ingest_floating_point_number(args, spec_opts);
 
+  is_negative(input_floating_point_number, spec_opts);
+
   if (isnan(input_floating_point_number)) {
     spec_opts->is_floating_point_number = false;
-    // is_negative(input_floating_point_number, spec_opts);
-    // printf("\n\n\n\n %d\n\n", spec_opts->is_negative);
+#if defined(__linux__)
     spec_opts->is_negative = signbit(input_floating_point_number);
+#endif
     process_narrow_string("nan", dest, spec_opts);
   } else if (isinf(input_floating_point_number)) {
     spec_opts->is_floating_point_number = false;
-    is_negative(input_floating_point_number, spec_opts);
     process_narrow_string("inf", dest, spec_opts);
   } else {
-    is_negative(input_floating_point_number, spec_opts);
     floating_point_number_to_str(dest, input_floating_point_number, spec_opts);
   }
 }
