@@ -35,6 +35,7 @@ typedef struct SpecifierOptions {
   int padding;      // Количество пробелов для width
   long double base;
   int padding_char;
+  int exponent_char;
   bool length_l;       // Длина l
   bool length_h;       // Длина h
   bool length_big_l;   // Длина L
@@ -74,6 +75,7 @@ void parse_specifier(const char** format, SpecOptions* spec_opts);
 void set_needed_precision(SpecOptions* spec_opts);
 void set_base(SpecOptions* spec_opts);
 void set_padding_char(SpecOptions* spec_opts);
+void set_exponent_char(SpecOptions* spec_opts);
 
 void is_negative(long double num, SpecOptions* spec_opts);
 s21_size_t get_num_length(long double num, SpecOptions* spec_opts);
@@ -135,6 +137,7 @@ int s21_sprintf(char* str, const char* format, ...) {
       parse_format(&format, args, &spec_opts);
       set_base(&spec_opts);
       set_padding_char(&spec_opts);
+      set_exponent_char(&spec_opts);
 
       switch (*format) {
         case 'c': {
@@ -506,6 +509,14 @@ void set_padding_char(SpecOptions* spec_opts) {
   }
 }
 
+void set_exponent_char(SpecOptions* spec_opts) {
+  if (spec_opts->is_scientific || spec_opts->is_spec_g) {
+    spec_opts->exponent_char = 'e';
+  } else if (spec_opts->is_scientific_capital || spec_opts->is_spec_g_capital) {
+    spec_opts->exponent_char = 'E';
+  }
+}
+
 void is_negative(long double num, SpecOptions* spec_opts) {
   spec_opts->is_negative = num < 0.0 ? 1 : 0;
 }
@@ -765,10 +776,8 @@ void process_scientific_zero_input(DestStr* dest, SpecOptions* spec_opts) {
   for (int i = 0; i < 6; i++) {  // По умолчанию точность 6
     dest->str[dest->curr_ind++] = '0';
   }
-  // dest->str[dest->curr_ind++] =
-  //     ((*format == 'e') || (*format == 'g')) ? 'e' : 'E';
-  dest->str[dest->curr_ind++] =
-      (spec_opts->is_scientific || spec_opts->is_spec_g) ? 'e' : 'E';
+
+  dest->str[dest->curr_ind++] = spec_opts->exponent_char;
 
   dest->str[dest->curr_ind++] = '+';
   dest->str[dest->curr_ind++] = '0';
