@@ -25,14 +25,14 @@
 
 // Опции функции s21_sprintf
 typedef struct SpecifierOptions {
-  bool flag_plus;   // Флаг '+'
-  bool flag_minus;  // Флаг '-'
-  bool flag_space;  // Флаг ' '
-  bool flag_zero;   // флаг '0'
-  bool flag_sharp;  // флаг '#'
-  int width;        // Ширина *.
-  int precision;    // Точность .*
-  int padding;      // Количество пробелов для width
+  bool flag_plus;      // Флаг '+'
+  bool flag_minus;     // Флаг '-'
+  bool flag_space;     // Флаг ' '
+  bool flag_zero;      // флаг '0'
+  bool flag_sharp;     // флаг '#'
+  int width;           // Ширина *.
+  int precision;       // Точность .*
+  s21_size_t padding;  // Количество пробелов для width
   long double base;
   int padding_char;
   int exponent_char;
@@ -580,7 +580,7 @@ void apply_width(DestStr* dest, int num_len, SpecOptions* spec_opts) {
 
     // Если флаг '-' == 0
     if (!spec_opts->flag_minus) {
-      for (int i = 0; i < spec_opts->padding; i++)
+      for (s21_size_t i = 0; i < spec_opts->padding; i++)
         dest->str[dest->curr_ind++] = spec_opts->padding_char;
     }
   }
@@ -704,7 +704,7 @@ int itoa(DestStr* dest, long double input_num, SpecOptions* spec_opts) {
 void apply_minus_width(DestStr* dest, SpecOptions* spec_opts) {
   // Если ширина > длины числа и флаг '-' == 1
   if (spec_opts->flag_minus) {
-    for (int i = 0; i < spec_opts->padding; i++) {
+    for (s21_size_t i = 0; i < spec_opts->padding; i++) {
       dest->str[dest->curr_ind++] = ' ';
     }
   }
