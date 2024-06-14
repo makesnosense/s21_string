@@ -104,10 +104,10 @@ END_TEST
 START_TEST(test_sprintf_string) {
   char lib_res[500];
   char s21_res[500];
-  sprintf(lib_res, "%s %40s %-40s %d", "JOMA", "}l{u3Hb – 3TO 6oJlb",
-          "}l{u3Hb – 3TO 6oJlb", 42);
-  s21_sprintf(s21_res, "%s %40s %-40s %d", "JOMA", "}l{u3Hb – 3TO 6oJlb",
-              "}l{u3Hb – 3TO 6oJlb", 42);
+  sprintf(lib_res, "%s %40s %-40s %d %20s", "JOMA", "}l{u3Hb – 3TO 6oJlb",
+          "}l{u3Hb – 3TO 6oJlb", 42, "nan");
+  s21_sprintf(s21_res, "%s %40s %-40s %d %20s", "JOMA", "}l{u3Hb – 3TO 6oJlb",
+              "}l{u3Hb – 3TO 6oJlb", 42, "nan");
   ck_assert_str_eq(lib_res, s21_res);
 }
 END_TEST
@@ -550,24 +550,51 @@ END_TEST
 // }
 // END_TEST
 
-// START_TEST(test_sprintf_scientific_tiny) {
-//   char lib_res[200];
-//   char s21_res[200];
+START_TEST(test_sprintf_double_nan_inf) {
+  char lib_res[50];
+  char s21_res[50];
 
-//   long double ld_value = 1.0e+4932L;
-//   double d_value = (double)ld_value;
+  long double ld_value = 1.0e+4932L;
+  double inf_value = (double)ld_value;
+  double nan_value = sqrt(-1.0);
 
-//   sprintf(lib_res, "%Le %e", ld_value, d_value);
-//   // s21_sprintf(s21_res, "%Le %e", ld_value, d_value);
-//   ck_assert_str_eq(lib_res, s21_res);
-// }
-// END_TEST
+  sprintf(lib_res, "%-4f %f", nan_value, inf_value);
+  s21_sprintf(s21_res, "%-4f %f", nan_value, inf_value);
+
+  ck_assert_str_eq(lib_res, s21_res);
+}
+END_TEST
+
+START_TEST(test_sprintf_double_and_long_double) {
+  char lib_res[100];
+  char s21_res[100];
+
+  long double ld_value = 1.000000000000000003L;
+  long double ld_value_2 = 1.04L;
+  long double ld_value_3 = 1.000000501L;
+  long double ld_value_4 = 1.00000000000501001L;
+  // long double ld_value = 1.01L;
+
+  // Casting the same value to double to demonstrate loss of precision
+  // double d_value = (double)ld_value;
+
+  sprintf(lib_res, "%.18Lf %.18Lf %.18Lf %.18Lf", ld_value, ld_value_2,
+          ld_value_3, ld_value_4);
+  s21_sprintf(s21_res, "%.18Lf %.18Lf %.18Lf %.18Lf", ld_value, ld_value_2,
+              ld_value_3, ld_value_4);
+
+  ck_assert_str_eq(lib_res, s21_res);
+}
+END_TEST
 
 Suite* make_sprintf_suite() {
   Suite* sprintf_suite = suite_create("sprintf");
   TCase* tc_core;
+  TCase* tc_problematic;
 
   tc_core = tcase_create("Core");
+  tc_problematic = tcase_create("Problematic");
+
   tcase_add_test(tc_core, test_sprintf_int);
   tcase_add_test(tc_core, test_sprintf_int_0_padding);
   tcase_add_test(tc_core, test_sprintf_ints_d);
@@ -611,6 +638,9 @@ Suite* make_sprintf_suite() {
 
   tcase_add_loop_test(tc_core, test_sprintf_scientific_loop_precisions, 0, 14);
 
+  tcase_add_test(tc_core, test_sprintf_double_nan_inf);
+  tcase_add_test(tc_core, test_sprintf_double_and_long_double);
+
   // FAILING:
 
   // tcase_add_test(tc_core, test_sprintf_scientific_from_big_double);
@@ -627,5 +657,6 @@ Suite* make_sprintf_suite() {
   // tcase_add_test(tc_core, test_sprintf_scientific_tiny);
 
   suite_add_tcase(sprintf_suite, tc_core);
+  suite_add_tcase(sprintf_suite, tc_problematic);
   return sprintf_suite;
 }
