@@ -894,7 +894,7 @@ void spec_G(DestStr* dest, double double_input, SpecOptions* spec_opts) {
   long double whole_part = 0;
   long double fraction_part = 0;
 
-  printf("%ld", dest->curr_ind);
+  // printf("%ld", dest->curr_ind);
 
   s21_size_t needed_precision = 0;
 
@@ -908,15 +908,15 @@ void spec_G(DestStr* dest, double double_input, SpecOptions* spec_opts) {
     }
   }
 
-  printf("\nbeforeWHOLE: %.18f\n", double_input);
+  // printf("\nbeforeWHOLE: %.18f\n", double_input);
 
   fraction_part = modfl(double_input, &whole_part);
   // printf("\nbeforeFRACT: %.18Lf\n", fraction_part);
 
-  printf("\nNEEDED_PRECISION: %ld\n", needed_precision);
+  // printf("\nNEEDED_PRECISION: %ld\n", needed_precision);
 
-  printf("\nWHOLE: %.18Lf\n", whole_part);
-  printf("\nFRACT: %.18Lf\n", fraction_part);
+  // printf("\nWHOLE: %.18Lf\n", whole_part);
+  // printf("\nFRACT: %.18Lf\n", fraction_part);
 
   fraction_part = multiply_by_10_n_times(fraction_part, needed_precision);
 
@@ -926,7 +926,7 @@ void spec_G(DestStr* dest, double double_input, SpecOptions* spec_opts) {
 
   // divide_number(double_input, needed_precison, &whole_part,
   // &fraction_part);
-  printf("\nFRACT_after: %.18Lf\n", fraction_part);
+  // printf("\nFRACT_after: %.18Lf\n", fraction_part);
 
   // long long num_len = get_num_length(whole_part, spec_opts);
 
