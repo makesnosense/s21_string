@@ -365,6 +365,9 @@ void process_floating_point_number(va_list* args, DestStr* dest,
 
   if (isnan(input_floating_point_number)) {
     spec_opts->is_floating_point_number = false;
+    // is_negative(input_floating_point_number, spec_opts);
+    // printf("\n\n\n\n %d\n\n", spec_opts->is_negative);
+    spec_opts->is_negative = signbit(input_floating_point_number);
     process_narrow_string("nan", dest, spec_opts);
   } else if (isinf(input_floating_point_number)) {
     spec_opts->is_floating_point_number = false;
@@ -774,15 +777,32 @@ void specE(DestStr* dest, double input_num, SpecOptions* spec_opts,
 
   // Используем floating_point_number_to_str для форматирования мантиссы
   if (*format == 'g' || *format == 'G') {
-    divide_number(input_num, MANTISSA_DIGITS, &whole_part, &fraction_part);
+    if (spec_opts->precision_set == false) {
+      divide_number(input_num, MANTISSA_DIGITS, &whole_part, &fraction_part);
 
-    fraction_part /= pow(10, MANTISSA_DIGITS);
-    input_num = whole_part + fraction_part;
+      fraction_part /= pow(10, MANTISSA_DIGITS);
+      input_num = whole_part + fraction_part;
 
-    floating_point_number_to_str(dest, input_num, spec_opts);
+      floating_point_number_to_str(dest, input_num, spec_opts);
 
-    if (!spec_opts->precision_set) dest->str[dest->curr_ind--] = '\0';
+      dest->str[dest->curr_ind--] = '\0';
 
+    } else if (spec_opts->precision_set) {
+      divide_number(input_num, MANTISSA_DIGITS - 1, &whole_part,
+                    &fraction_part);
+
+      fraction_part /= pow(10, MANTISSA_DIGITS);
+      input_num = whole_part + fraction_part;
+
+      floating_point_number_to_str(dest, input_num, spec_opts);
+      spec_opts->precision -= 1;
+      if (dest->str[dest->curr_ind - 1] == '0') {
+        dest->str[dest->curr_ind--] = '\0';
+      }
+      if (!(spec_opts->flag_sharp) && dest->str[dest->curr_ind - 1] == '.') {
+        dest->str[dest->curr_ind--] = '\0';
+      }
+    }
   } else {
     floating_point_number_to_str(dest, input_num, spec_opts);
   }
@@ -804,27 +824,107 @@ void specE(DestStr* dest, double input_num, SpecOptions* spec_opts,
   itoa(dest, exponent, spec_opts);
 }
 
+long long calculate_exponent(long double input_num) {
+  long long exponent = 0;
+
+  while (input_num >= 10.0) {
+    input_num /= 10.0;
+    exponent++;
+  }
+  while (input_num < 1.0) {
+    input_num *= 10.0;
+    exponent--;
+  }
+
+  return exponent;
+}
+
 void spec_G(DestStr* dest, double double_input, SpecOptions* spec_opts,
             const char* format) {
   double_input = TO_ABS(double_input);
   long double whole_part = 0;
   long double fraction_part = 0;
 
-  divide_number(
-      double_input,
-      F_PRECISION - get_num_length((long long)double_input, spec_opts),
-      &whole_part, &fraction_part);
+  long double pres =
+      ((long long)double_input != 0)
+          ? F_PRECISION - get_num_length((long long)double_input, spec_opts)
+          : F_PRECISION;
+
+  divide_number(double_input, pres, &whole_part, &fraction_part);
 
   long long num_len = get_num_length(whole_part, spec_opts);
+
   if ((num_len <= F_PRECISION) && (spec_opts->precision_set == false)) {
     apply_width(dest, num_len, spec_opts);
     apply_flags(dest, spec_opts);
-    itoa(dest, double_input, spec_opts);
+    itoa(dest, whole_part, spec_opts);
     if (num_len != F_PRECISION) {
       dest->str[dest->curr_ind++] = '.';
-      itoa(dest, lround(fraction_part), spec_opts);
+      itoa(dest, llround(fraction_part), spec_opts);
+
+      if (dest->str[dest->curr_ind - 2] == '.' &&
+          dest->str[dest->curr_ind - 1] == '0') {
+        dest->str[dest->curr_ind--] = '\0';
+        dest->str[dest->curr_ind--] = '\0';
+      }
+      for (int i = 0; i < 6; i++) {
+        if (dest->str[dest->curr_ind - 1] == '0' && double_input != 0) {
+          dest->str[dest->curr_ind--] = '\0';
+        }
+      }
     }
 
+  } else if (spec_opts->precision_set && spec_opts->precision <= F_PRECISION &&
+             spec_opts->precision >= num_len) {
+    apply_width(dest, num_len, spec_opts);
+    apply_flags(dest, spec_opts);
+    itoa(dest, whole_part, spec_opts);
+
+    dest->str[dest->curr_ind++] = '.';
+
+    fraction_part /= pow(10, F_PRECISION - spec_opts->precision);
+
+    if ((int)fraction_part && spec_opts != 0 &&
+        spec_opts->flag_sharp == false) {
+      itoa(dest, llround(fraction_part), spec_opts);
+    } else {
+      for (int i = 0; i < spec_opts->precision - num_len; i++) {
+        dest->str[dest->curr_ind++] = '0';
+      }
+    }
+
+    if (dest->str[dest->curr_ind - 2] == '.' &&
+        dest->str[dest->curr_ind - 1] == '0') {
+      dest->str[dest->curr_ind--] = '\0';
+    }
+    if (spec_opts->flag_sharp == false &&
+        dest->str[dest->curr_ind - 1] == '.') {
+      dest->str[dest->curr_ind--] = '\0';
+    }
+
+    for (int i = 0; i < 6; i++) {
+      if (dest->str[dest->curr_ind - 1] == '0' && double_input != 0) {
+        dest->str[dest->curr_ind--] = '\0';
+      }
+    }
+
+  } else if (double_input < 10) {
+    apply_width(dest, num_len, spec_opts);
+    apply_flags(dest, spec_opts);
+
+    itoa(dest, whole_part, spec_opts);
+
+    if (fraction_part != 0) {
+      dest->str[dest->curr_ind++] = '.';
+
+      if (spec_opts->precision == 0) {
+        fraction_part /= pow(10, F_PRECISION - spec_opts->precision - 1);
+      }
+
+      itoa(dest, llround(fraction_part), spec_opts);
+    } else if (spec_opts->precision == 0 && spec_opts->flag_sharp) {
+      dest->str[dest->curr_ind++] = '.';
+    }
   } else {
     specE(dest, double_input, spec_opts, format);
   }

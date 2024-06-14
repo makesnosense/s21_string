@@ -18,8 +18,7 @@ STRING_OBJ_DIR = object_files
 STRING_OBJ_FILES = $(patsubst %.c,$(STRING_OBJ_DIR)/%.o,$(STRING_SRC_FILES))
 STRING_LIB = s21_string.a
 
-# run: clean build_tests
-run: build_tests
+run: clean build_tests
 	./run_tests
 
 test: clean build_tests
