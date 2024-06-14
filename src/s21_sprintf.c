@@ -25,14 +25,14 @@
 
 // Опции функции s21_sprintf
 typedef struct SpecifierOptions {
-  bool flag_plus;      // Флаг '+'
-  bool flag_minus;     // Флаг '-'
-  bool flag_space;     // Флаг ' '
-  bool flag_zero;      // флаг '0'
-  bool flag_sharp;     // флаг '#'
-  s21_size_t width;    // Ширина *.
-  int precision;       // Точность .*
-  s21_size_t padding;  // Количество пробелов для width
+  bool flag_plus;        // Флаг '+'
+  bool flag_minus;       // Флаг '-'
+  bool flag_space;       // Флаг ' '
+  bool flag_zero;        // флаг '0'
+  bool flag_sharp;       // флаг '#'
+  s21_size_t width;      // Ширина *.
+  s21_size_t precision;  // Точность .*
+  s21_size_t padding;    // Количество пробелов для width
   long double base;
   int padding_char;
   int exponent_char;
@@ -714,7 +714,7 @@ void apply_minus_width(DestStr* dest, SpecOptions* spec_opts) {
 void whole_to_str(DestStr* dest, long double num, SpecOptions* spec_opts) {
   num = TO_ABS(num);
 
-  int num_len = get_num_length(num, spec_opts);
+  s21_size_t num_len = get_num_length(num, spec_opts);
 
   if (spec_opts->flag_zero) {
     apply_flags(dest, spec_opts);
@@ -726,8 +726,9 @@ void whole_to_str(DestStr* dest, long double num, SpecOptions* spec_opts) {
     apply_flags(dest, spec_opts);
   }
 
-  if (!spec_opts->is_floating_point_number) {
-    for (int i = 0; i < spec_opts->precision - num_len; i++)
+  if (!spec_opts->is_floating_point_number && spec_opts->precision >= num_len) {
+    // printf("\n\n%lu\n\n", (spec_opts->precision - num_len));
+    for (s21_size_t i = 0; i < (spec_opts->precision - num_len); i++)
       dest->str[dest->curr_ind++] = '0';
   }
 
@@ -786,7 +787,7 @@ void process_scientific_zero_input(DestStr* dest, SpecOptions* spec_opts) {
 
   if (!(spec_opts->precision_set == true && spec_opts->precision == 0)) {
     dest->str[dest->curr_ind++] = '.';
-    for (int i = 0; i < spec_opts->precision; i++) {
+    for (s21_size_t i = 0; i < spec_opts->precision; i++) {
       dest->str[dest->curr_ind++] = '0';
     }
   }
@@ -953,7 +954,7 @@ void spec_G(DestStr* dest, double double_input, SpecOptions* spec_opts) {
     }
 
   } else if (spec_opts->precision_set && spec_opts->precision <= F_PRECISION &&
-             spec_opts->precision >= (int)whole_part_length) {
+             spec_opts->precision >= whole_part_length) {
     apply_width(dest, whole_part_length, spec_opts);
     apply_flags(dest, spec_opts);
     itoa(dest, whole_part, spec_opts);
