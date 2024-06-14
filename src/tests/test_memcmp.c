@@ -1,5 +1,6 @@
-#include "run_tests.h"
 #include <stdio.h>
+
+#include "run_tests.h"
 START_TEST(memcmp_first) {
   unsigned char block1[] = {1, 2, 3};
   unsigned char block2[] = {1, 2, 3};
@@ -19,7 +20,6 @@ START_TEST(memcmp_diff_start) {
   int s21_result = s21_memcmp(block1, block2, sizeof(block1));
   int lib_result = memcmp(block1, block2, sizeof(block1));
 
-  printf("\n%ld\n", sizeof(block1));
   ck_assert_int_eq(s21_result > 0, lib_result > 0);
 }
 END_TEST
