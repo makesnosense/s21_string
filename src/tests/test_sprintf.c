@@ -565,24 +565,34 @@ START_TEST(test_sprintf_double_nan_inf) {
 }
 END_TEST
 
-START_TEST(test_sprintf_double_and_long_double) {
+START_TEST(test_sprintf_long_double) {
   char lib_res[100];
   char s21_res[100];
 
   long double ld_value = 1.000000000000000003L;
-  long double ld_value_2 = 1.04L;
-  long double ld_value_3 = 1.000000501L;
-  long double ld_value_4 = 1.00000000000501001L;
-  // long double ld_value = 1.01L;
-
-  // Casting the same value to double to demonstrate loss of precision
-  // double d_value = (double)ld_value;
+  long double ld_value_2 = 1123123.04L;
+  long double ld_value_3 = 333.000000501L;
+  long double ld_value_4 = 9.00000000000501001L;
 
   sprintf(lib_res, "%.18Lf %.18Lf %.18Lf %.18Lf", ld_value, ld_value_2,
           ld_value_3, ld_value_4);
   s21_sprintf(s21_res, "%.18Lf %.18Lf %.18Lf %.18Lf", ld_value, ld_value_2,
               ld_value_3, ld_value_4);
 
+  ck_assert_str_eq(lib_res, s21_res);
+}
+END_TEST
+
+START_TEST(test_sprintf_double_long_double) {
+  char lib_res[100];
+  char s21_res[100];
+
+  long double ld_value = 1.000000000000000003L;
+  // Casting the same value to double to demonstrate loss of precision
+  double d_value = (double)ld_value;
+
+  sprintf(lib_res, "%.18Lf %.18f", ld_value, d_value);
+  s21_sprintf(s21_res, "%.18Lf %.18f", ld_value, d_value);
   ck_assert_str_eq(lib_res, s21_res);
 }
 END_TEST
@@ -639,7 +649,8 @@ Suite* make_sprintf_suite() {
   tcase_add_loop_test(tc_core, test_sprintf_scientific_loop_precisions, 0, 14);
 
   tcase_add_test(tc_core, test_sprintf_double_nan_inf);
-  tcase_add_test(tc_core, test_sprintf_double_and_long_double);
+  tcase_add_test(tc_core, test_sprintf_long_double);
+  tcase_add_test(tc_core, test_sprintf_double_long_double);
 
   // FAILING:
 
