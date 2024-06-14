@@ -30,7 +30,7 @@ typedef struct SpecifierOptions {
   bool flag_space;     // Флаг ' '
   bool flag_zero;      // флаг '0'
   bool flag_sharp;     // флаг '#'
-  int width;           // Ширина *.
+  s21_size_t width;    // Ширина *.
   int precision;       // Точность .*
   s21_size_t padding;  // Количество пробелов для width
   long double base;
@@ -80,7 +80,7 @@ void set_exponent_char(SpecOptions* spec_opts);
 void is_negative(long double num, SpecOptions* spec_opts);
 s21_size_t get_num_length(long double num, SpecOptions* spec_opts);
 
-void apply_width(DestStr* dest, int num_len, SpecOptions* spec_opts);
+void apply_width(DestStr* dest, s21_size_t num_len, SpecOptions* spec_opts);
 void apply_minus_width(DestStr* dest, SpecOptions* spec_opts);
 void apply_flags(DestStr* dest, SpecOptions* spec_opts);
 
@@ -560,7 +560,7 @@ void add_zeros_to_destination(DestStr* dest, s21_size_t n_zeros_to_add) {
   dest->str[dest->curr_ind] = '\0';
 }
 
-void apply_width(DestStr* dest, int num_len, SpecOptions* spec_opts) {
+void apply_width(DestStr* dest, s21_size_t num_len, SpecOptions* spec_opts) {
   int flag_corr;  // Коррекция кол-ва пробелов
   int prec_corr;  // Коррекция кол-ва пробелов
 
@@ -568,8 +568,9 @@ void apply_width(DestStr* dest, int num_len, SpecOptions* spec_opts) {
   if (spec_opts->width > num_len) {
     flag_corr =
         spec_opts->flag_plus || spec_opts->flag_space || spec_opts->is_negative;
-    prec_corr =
-        spec_opts->precision > num_len ? spec_opts->precision - num_len : 0;
+    prec_corr = (s21_size_t)spec_opts->precision > num_len
+                    ? spec_opts->precision - num_len
+                    : 0;
 
     if (spec_opts->is_floating_point_number) {
       spec_opts->padding =
