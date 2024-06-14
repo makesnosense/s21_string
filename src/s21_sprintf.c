@@ -45,6 +45,11 @@ typedef struct SpecifierOptions {
   bool is_octal;
   bool is_hexadecimal;
   bool is_hexadecimal_capital;
+  bool is_scientific;
+  bool is_scientific_capital;
+  bool is_spec_g;
+  bool is_spec_g_capital;
+
 } SpecOptions;
 
 typedef struct DestinationString {
@@ -107,8 +112,8 @@ void divide_number(long double num, int precision, long double* wh,
 long double multiply_by_power_of_10(long double input_num, s21_size_t n);
 void add_zeros_to_destination(DestStr* dest, s21_size_t n_zeros_to_add);
 
-void specE(DestStr* dest, double input_num, SpecOptions* spec_opts,
-           const char* format);
+void process_scientific(DestStr* dest, long double input_num,
+                        SpecOptions* spec_opts, const char* format);
 void spec_G(DestStr* dest, double double_input, SpecOptions* spec_opts,
             const char* format);
 
@@ -156,7 +161,7 @@ int s21_sprintf(char* str, const char* format, ...) {
         case 'E': {
           double double_string = va_arg(args, double);
           is_negative(double_string, &spec_opts);
-          specE(&dest, double_string, &spec_opts, format);
+          process_scientific(&dest, double_string, &spec_opts, format);
           break;
         }
         case 'n': {
@@ -316,6 +321,15 @@ void parse_specifier(const char** format, SpecOptions* spec_opts) {
       case 'e':
       case 'E': {
         spec_opts->is_floating_point_number = true;
+        if (**format == 'g') {
+          spec_opts->is_spec_g = true;
+        } else if (**format == 'G') {
+          spec_opts->is_spec_g_capital = true;
+        } else if (**format == 'e') {
+          spec_opts->is_scientific = true;
+        } else if (**format == 'E') {
+          spec_opts->is_scientific_capital = true;
+        }
         break;
       }
     }
@@ -744,84 +758,89 @@ void divide_number(long double num, int precision, long double* wh,
 //   dest->str[dest->curr_ind] = '\0';
 // }
 
-void specE(DestStr* dest, double input_num, SpecOptions* spec_opts,
-           const char* format) {
+void process_scientific_zero_input(DestStr* dest, SpecOptions* spec_opts) {
+  // Обработка нулевого случая
+  dest->str[dest->curr_ind++] = '0';
+  dest->str[dest->curr_ind++] = '.';
+  for (int i = 0; i < 6; i++) {  // По умолчанию точность 6
+    dest->str[dest->curr_ind++] = '0';
+  }
+  // dest->str[dest->curr_ind++] =
+  //     ((*format == 'e') || (*format == 'g')) ? 'e' : 'E';
+  dest->str[dest->curr_ind++] =
+      (spec_opts->is_scientific || spec_opts->is_spec_g) ? 'e' : 'E';
+
+  dest->str[dest->curr_ind++] = '+';
+  dest->str[dest->curr_ind++] = '0';
+  dest->str[dest->curr_ind++] = '0';
+}
+
+void process_scientific(DestStr* dest, long double input_num,
+                        SpecOptions* spec_opts, const char* format) {
   input_num = TO_ABS(input_num);
   long double whole_part = 0;
   long double fraction_part = 0;
   int exponent = 0;
-
-  // Обработка нулевого случая
   if (input_num == 0.0) {
-    dest->str[dest->curr_ind++] = '0';
-    dest->str[dest->curr_ind++] = '.';
-    for (int i = 0; i < 6; i++) {  // По умолчанию точность 6
-      dest->str[dest->curr_ind++] = '0';
+    process_scientific_zero_input(dest, spec_opts);
+  } else {
+    while (input_num >= 10.0) {
+      input_num /= 10.0;
+      exponent++;
     }
+    while (input_num < 1.0) {
+      input_num *= 10.0;
+      exponent--;
+    }
+
+    // Используем floating_point_number_to_str для форматирования мантиссы
+    if (*format == 'g' || *format == 'G') {
+      if (spec_opts->precision_set == false) {
+        divide_number(input_num, MANTISSA_DIGITS, &whole_part, &fraction_part);
+
+        fraction_part /= pow(10, MANTISSA_DIGITS);
+        input_num = whole_part + fraction_part;
+
+        floating_point_number_to_str(dest, input_num, spec_opts);
+
+        dest->str[dest->curr_ind--] = '\0';
+
+      } else if (spec_opts->precision_set) {
+        divide_number(input_num, MANTISSA_DIGITS - 1, &whole_part,
+                      &fraction_part);
+
+        fraction_part /= pow(10, MANTISSA_DIGITS);
+        input_num = whole_part + fraction_part;
+
+        floating_point_number_to_str(dest, input_num, spec_opts);
+        spec_opts->precision -= 1;
+        if (dest->str[dest->curr_ind - 1] == '0') {
+          dest->str[dest->curr_ind--] = '\0';
+        }
+        if (!(spec_opts->flag_sharp) && dest->str[dest->curr_ind - 1] == '.') {
+          dest->str[dest->curr_ind--] = '\0';
+        }
+      }
+    } else {
+      floating_point_number_to_str(dest, input_num, spec_opts);
+    }
+
     dest->str[dest->curr_ind++] =
         ((*format == 'e') || (*format == 'g')) ? 'e' : 'E';
-    dest->str[dest->curr_ind++] = '+';
-    dest->str[dest->curr_ind++] = '0';
-    dest->str[dest->curr_ind++] = '0';
-    return;
-  }
 
-  while (input_num >= 10.0) {
-    input_num /= 10.0;
-    exponent++;
-  }
-  while (input_num < 1.0) {
-    input_num *= 10.0;
-    exponent--;
-  }
-
-  // Используем floating_point_number_to_str для форматирования мантиссы
-  if (*format == 'g' || *format == 'G') {
-    if (spec_opts->precision_set == false) {
-      divide_number(input_num, MANTISSA_DIGITS, &whole_part, &fraction_part);
-
-      fraction_part /= pow(10, MANTISSA_DIGITS);
-      input_num = whole_part + fraction_part;
-
-      floating_point_number_to_str(dest, input_num, spec_opts);
-
-      dest->str[dest->curr_ind--] = '\0';
-
-    } else if (spec_opts->precision_set) {
-      divide_number(input_num, MANTISSA_DIGITS - 1, &whole_part,
-                    &fraction_part);
-
-      fraction_part /= pow(10, MANTISSA_DIGITS);
-      input_num = whole_part + fraction_part;
-
-      floating_point_number_to_str(dest, input_num, spec_opts);
-      spec_opts->precision -= 1;
-      if (dest->str[dest->curr_ind - 1] == '0') {
-        dest->str[dest->curr_ind--] = '\0';
-      }
-      if (!(spec_opts->flag_sharp) && dest->str[dest->curr_ind - 1] == '.') {
-        dest->str[dest->curr_ind--] = '\0';
-      }
+    if (exponent < 0) {
+      dest->str[dest->curr_ind++] = '-';
+      exponent *= -1;
+    } else {
+      dest->str[dest->curr_ind++] = '+';
     }
-  } else {
-    floating_point_number_to_str(dest, input_num, spec_opts);
-  }
 
-  dest->str[dest->curr_ind++] =
-      ((*format == 'e') || (*format == 'g')) ? 'e' : 'E';
-
-  if (exponent < 0) {
-    dest->str[dest->curr_ind++] = '-';
-    exponent *= -1;
-  } else {
-    dest->str[dest->curr_ind++] = '+';
+    // Убедитесь, что экспонента имеет как минимум два знака
+    if (exponent < 10) {
+      dest->str[dest->curr_ind++] = '0';
+    }
+    itoa(dest, exponent, spec_opts);
   }
-
-  // Убедитесь, что экспонента имеет как минимум два знака
-  if (exponent < 10) {
-    dest->str[dest->curr_ind++] = '0';
-  }
-  itoa(dest, exponent, spec_opts);
 }
 
 long long calculate_exponent(long double input_num) {
@@ -926,7 +945,7 @@ void spec_G(DestStr* dest, double double_input, SpecOptions* spec_opts,
       dest->str[dest->curr_ind++] = '.';
     }
   } else {
-    specE(dest, double_input, spec_opts, format);
+    process_scientific(dest, double_input, spec_opts, format);
   }
 }
 
