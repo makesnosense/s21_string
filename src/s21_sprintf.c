@@ -660,6 +660,8 @@ void process_scientific_zero_input(DestStr* dest, SpecOptions* spec_opts) {
 
 void process_scientific_for_g_spec(long double input_num, DestStr* dest,
                                    SpecOptions* spec_opts) {
+  int exponent = 0;
+  exponent = scale_input_and_calculate_exponent(&input_num);
   long double whole_part = 0;
   long double fraction_part = 0;
   if (spec_opts->precision_set == false) {
@@ -687,38 +689,45 @@ void process_scientific_for_g_spec(long double input_num, DestStr* dest,
       dest->str[dest->curr_ind--] = '\0';
     }
   }
+  add_scientific_e_part(exponent, dest, spec_opts);
 };
+
+void process_scientific_standard(DestStr* dest, long double input_num,
+                                 SpecOptions* spec_opts) {
+  int exponent = 0;
+  exponent = scale_input_and_calculate_exponent(&input_num);
+  floating_point_number_to_str(dest, input_num, spec_opts);
+  add_scientific_e_part(exponent, dest, spec_opts);
+}
 
 void process_scientific(DestStr* dest, long double input_num,
                         SpecOptions* spec_opts) {
   input_num = TO_ABS(input_num);
   set_needed_precision(spec_opts);
-  int exponent = 0;
   if (input_num == 0.0) {
     process_scientific_zero_input(dest, spec_opts);
+  } else if (spec_opts->is_spec_g || spec_opts->is_spec_g_capital) {
+    process_scientific_for_g_spec(input_num, dest, spec_opts);
   } else {
-    exponent = scale_input_and_calculate_exponent(&input_num);
-    // Используем floating_point_number_to_str для форматирования мантиссы
-    if (spec_opts->is_spec_g || spec_opts->is_spec_g_capital) {
-      process_scientific_for_g_spec(input_num, dest, spec_opts);
-    } else {
-      floating_point_number_to_str(dest, input_num, spec_opts);
-    }
-
-    dest->str[dest->curr_ind++] = spec_opts->exponent_char;
-
-    if (exponent < 0) {
-      dest->str[dest->curr_ind++] = '-';
-      exponent *= -1;
-    } else {
-      dest->str[dest->curr_ind++] = '+';
-    }
-    // Убедитесь, что экспонента имеет как минимум два знака
-    if (exponent < 10) {
-      dest->str[dest->curr_ind++] = '0';
-    }
-    itoa(dest, exponent, spec_opts);
+    process_scientific_standard(dest, input_num, spec_opts);
   }
+}
+
+void add_scientific_e_part(long long exponent, DestStr* dest,
+                           SpecOptions* spec_opts) {
+  dest->str[dest->curr_ind++] = spec_opts->exponent_char;
+
+  if (exponent < 0) {
+    dest->str[dest->curr_ind++] = '-';
+    exponent *= -1;
+  } else {
+    dest->str[dest->curr_ind++] = '+';
+  }
+  // Убедитесь, что экспонента имеет как минимум два знака
+  if (exponent < 10) {
+    dest->str[dest->curr_ind++] = '0';
+  }
+  itoa(dest, exponent, spec_opts);
 }
 
 // long long calculate_exponent(long double input_num) {
