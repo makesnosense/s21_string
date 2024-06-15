@@ -96,9 +96,14 @@ void process_floating_point_number(va_list* args, DestStr* dest,
                                    SpecOptions* spec_opts);
 void process_scientific(DestStr* dest, long double input_num,
                         SpecOptions* spec_opts);
+void process_scientific_standard(DestStr* dest, long double input_num,
+                                 SpecOptions* spec_opts);
 void process_scientific_zero_input(DestStr* dest, SpecOptions* spec_opts);
 void process_scientific_for_g_spec(long double input_num, DestStr* dest,
                                    SpecOptions* spec_opts);
+void add_scientific_e_part(long long exponent, DestStr* dest,
+                           SpecOptions* spec_opts);
+
 void spec_G(DestStr* dest, double double_input, SpecOptions* spec_opts);
 
 long long int ingest_int(va_list* args, SpecOptions* spec_opts);
