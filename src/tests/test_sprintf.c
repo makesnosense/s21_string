@@ -514,7 +514,7 @@ START_TEST(test_sprintf_g_spec_loop_precisions) {
   s21_sprintf(format_string, "%%.%dg %%.%dg %%.%dg %%.%dg", precision,
               precision, precision, precision);
 
-  printf("\n%s\n", format_string);
+  // printf("\n%s\n", format_string);
   sprintf(lib_res, format_string, num1, num2, num3, num4);
   s21_sprintf(s21_res, format_string, num1, num2, num3, num4);
   ck_assert_str_eq(lib_res, s21_res);
