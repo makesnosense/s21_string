@@ -746,7 +746,7 @@ void spec_G(DestStr* dest, double double_input, SpecOptions* spec_opts) {
 
   fraction_part = modfl(double_input, &whole_part);
   fraction_part = multiply_by_10_n_times(fraction_part, needed_precision);
-  fraction_part = llround(fraction_part);
+  fraction_part = roundl(fraction_part);
 
   if ((whole_part_length <= F_PRECISION) &&
       (spec_opts->precision_set == false)) {
