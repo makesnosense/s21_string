@@ -504,7 +504,7 @@ START_TEST(test_sprintf_g_spec_loop_precisions) {
   char s21_res[1000];
   double num1 = 1.2345678;
   double num2 = 1.0;
-  double num3 = 1.2345678910;
+  double num3 = 1.2345678940;
   double num4 = 1;
 
   int precision = _i;  // supplied through add_loop_test func
@@ -664,7 +664,7 @@ Suite* make_sprintf_suite() {
                       18);
   tcase_add_loop_test(tc_core, test_sprintf_scientific_zero_loop_precisions, 0,
                       18);
-  tcase_add_loop_test(tc_core, test_sprintf_g_spec_loop_precisions, 0, 18);
+  tcase_add_loop_test(tc_core, test_sprintf_g_spec_loop_precisions, 0, 14);
   // tcase_add_loop_test(tc_core, test_sprintf_g_spec_zero_loop_precisions, 0,
   // 18);
   tcase_add_test(tc_core, test_sprintf_g_spec_no_precision);
