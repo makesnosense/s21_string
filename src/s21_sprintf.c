@@ -663,7 +663,7 @@ void process_scientific_for_g_spec(long double input_num, DestStr* dest,
     input_num = round_to_n_digits(input_num, MANTISSA_DIGITS - 1);
 
     floating_point_number_to_str(dest, input_num, spec_opts);
-    spec_opts->precision -= 1;
+    // spec_opts->precision -= 1;
     if (dest->str[dest->curr_ind - 1] == '0') {
       dest->str[dest->curr_ind--] = '\0';
     }

@@ -524,10 +524,10 @@ END_TEST
 START_TEST(test_sprintf_g_spec_long_loop_precisions) {
   char lib_res[1000];
   char s21_res[1000];
-  long double num1 = 1.2345678L;
-  long double num2 = 1.0L;
-  long double num3 = 1.2345678910L;
-  long double num4 = 1.1L;
+  long double num1 = 33.2345678L;
+  long double num2 = 333.0L;
+  long double num3 = 33.2345678910L;
+  long double num4 = 555555.1L;
 
   int precision = _i;  // supplied through add_loop_test func
 
@@ -689,7 +689,7 @@ Suite* make_sprintf_suite() {
   tcase_add_loop_test(tc_core, test_sprintf_g_spec_loop_precisions, 0, 14);
   tcase_add_loop_test(tc_core, test_sprintf_g_spec_long_loop_precisions, 0, 17);
   // tcase_add_loop_test(tc_core, test_sprintf_g_spec_zero_loop_precisions, 0,
-  // 18);
+  // 14);
   tcase_add_test(tc_core, test_sprintf_g_spec_no_precision);
 
   suite_add_tcase(sprintf_suite, tc_core);
