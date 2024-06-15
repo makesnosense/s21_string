@@ -56,7 +56,7 @@ int s21_sprintf(char* str, const char* format, ...) {
           long double input_floating_point_number =
               ingest_floating_point_number(&args, &spec_opts);
           is_negative(input_floating_point_number, &spec_opts);
-          spec_G(&dest, input_floating_point_number, &spec_opts);
+          g_spec(&dest, input_floating_point_number, &spec_opts);
           break;
         }
         case 'p': {
@@ -406,7 +406,7 @@ void is_negative(long double num, SpecOptions* spec_opts) {
 s21_size_t get_num_length(long double num, SpecOptions* spec_opts) {
   int num_len = 0;
 
-  if (num == 0 || spec_opts->is_char) {
+  if (num == 0.0 || spec_opts->is_char) {
     num_len++;
   } else {
     while (num >= 1) {
@@ -511,8 +511,10 @@ void floating_point_number_to_str(DestStr* dest, long double input_num,
     fraction_part = multiply_by_10_n_times(fraction_part, spec_opts->precision);
     // this is where we round rubbish
     fraction_part = roundl(fraction_part);
-    zeros_to_insert =
-        spec_opts->precision - get_num_length(fraction_part, spec_opts);
+    if (spec_opts->precision > get_num_length(fraction_part, spec_opts)) {
+      zeros_to_insert =
+          spec_opts->precision - get_num_length(fraction_part, spec_opts);
+    }
 
     add_zeros_to_destination(dest, zeros_to_insert);
 
@@ -662,6 +664,9 @@ void process_scientific_for_g_spec(long double input_num, DestStr* dest,
   } else if (spec_opts->precision_set) {
     input_num = round_to_n_digits(input_num, MANTISSA_DIGITS - 1);
 
+    if (spec_opts->precision_set && spec_opts->precision == 0) {
+      input_num = roundl(input_num);
+    }
     floating_point_number_to_str(dest, input_num, spec_opts);
     // spec_opts->precision -= 1;
     if (dest->str[dest->curr_ind - 1] == '0') {
@@ -730,26 +735,66 @@ long long scale_input_and_calculate_exponent(long double* input_num) {
   return exponent;
 }
 
-void spec_G(DestStr* dest, double double_input, SpecOptions* spec_opts) {
-  double_input = TO_ABS(double_input);
+void g_spec_not_set_precision(DestStr* dest, long double input_num,
+                              SpecOptions* spec_opts) {
   long double whole_part = 0;
   long double fraction_part = 0;
+  fraction_part = modfl(input_num, &whole_part);
+
+  s21_size_t needed_decimal_places = 0;
+
+  s21_size_t whole_part_length = get_num_length(whole_part, spec_opts);
+
+  if (whole_part == 0.0) {
+    whole_part_length = 0;
+  }
+
+  needed_decimal_places = F_PRECISION - whole_part_length;
+
+  if (whole_part_length <= F_PRECISION) {
+    fraction_part =
+        multiply_by_10_n_times(fraction_part, needed_decimal_places);
+    fraction_part = roundl(fraction_part);
+
+    whole_to_str(dest, whole_part, spec_opts);
+
+    dest->str[dest->curr_ind++] = '.';
+    itoa(dest, llround(fraction_part), spec_opts);
+
+    if (dest->str[dest->curr_ind - 2] == '.' &&
+        dest->str[dest->curr_ind - 1] == '0') {
+      dest->str[dest->curr_ind--] = '\0';
+      dest->str[dest->curr_ind--] = '\0';
+    }
+    for (int i = 0; i < F_PRECISION; i++) {
+      if (dest->str[dest->curr_ind - 1] == '0' && input_num != 0) {
+        dest->str[dest->curr_ind--] = '\0';
+      }
+    }
+
+  } else {
+    process_scientific(dest, input_num, spec_opts);
+  }
+}
+
+void g_spec_precision_set(DestStr* dest, long double input_num,
+                          SpecOptions* spec_opts) {
+  long double whole_part = 0;
+  long double fraction_part = 0;
+  fraction_part = modfl(input_num, &whole_part);
 
   s21_size_t needed_precision = 0;
-
-  s21_size_t whole_part_length = get_num_length(ceill(double_input), spec_opts);
+  s21_size_t whole_part_length = get_num_length(whole_part, spec_opts);
 
   if (whole_part_length <= F_PRECISION) {
     if (spec_opts->precision > F_PRECISION) {
       needed_precision = spec_opts->precision - 1;
-    } else if (ceill(double_input) == 0) {
+    } else if (ceill(input_num) == 0) {
       needed_precision = F_PRECISION;
-    } else {
-      needed_precision = F_PRECISION - whole_part_length;
     }
   }
 
-  fraction_part = modfl(double_input, &whole_part);
+  fraction_part = modfl(input_num, &whole_part);
   fraction_part = multiply_by_10_n_times(fraction_part, needed_precision);
   fraction_part = roundl(fraction_part);
 
@@ -766,12 +811,11 @@ void spec_G(DestStr* dest, double double_input, SpecOptions* spec_opts) {
         dest->str[dest->curr_ind--] = '\0';
       }
       for (int i = 0; i < 6; i++) {
-        if (dest->str[dest->curr_ind - 1] == '0' && double_input != 0) {
+        if (dest->str[dest->curr_ind - 1] == '0' && input_num != 0) {
           dest->str[dest->curr_ind--] = '\0';
         }
       }
     }
-
   } else if (spec_opts->precision_set && spec_opts->precision <= F_PRECISION &&
              spec_opts->precision >= whole_part_length) {
     whole_to_str(dest, whole_part, spec_opts);
@@ -802,12 +846,11 @@ void spec_G(DestStr* dest, double double_input, SpecOptions* spec_opts) {
     }
 
     for (int i = 0; i < 6; i++) {
-      if (dest->str[dest->curr_ind - 1] == '0' && double_input != 0) {
+      if (dest->str[dest->curr_ind - 1] == '0' && input_num != 0) {
         dest->str[dest->curr_ind--] = '\0';
       }
     }
-
-  } else if (double_input < 10) {
+  } else if (input_num < 10) {
     whole_to_str(dest, whole_part, spec_opts);
 
     if (fraction_part != 0 && spec_opts->precision != 0) {
@@ -821,18 +864,45 @@ void spec_G(DestStr* dest, double double_input, SpecOptions* spec_opts) {
     }
 
     for (int i = 0; i < 18; i++) {
-      if (dest->str[dest->curr_ind - 1] == '0' && double_input != 0) {
+      if (dest->str[dest->curr_ind - 1] == '0' && input_num != 0) {
         dest->str[dest->curr_ind--] = '\0';
       }
     }
   } else {
-    process_scientific(dest, double_input, spec_opts);
+    process_scientific(dest, input_num, spec_opts);
+  }
+}
+
+void g_spec(DestStr* dest, long double input_num, SpecOptions* spec_opts) {
+  input_num = TO_ABS(input_num);
+
+  // long double whole_part = 0;
+  // long double fraction_part = 0;
+
+  // fraction_part = modfl(input_num, &whole_part);
+
+  // s21_size_t needed_precision = 0;
+
+  // s21_size_t whole_part_length = get_num_length(floorl(input_num),
+  // spec_opts); printf("\nwhole part length %ld\n", whole_part_length);
+  // s21_size_t needed_digits = 0;
+
+  // if (whole_part_length <= F_PRECISION) {
+  //   needed_digits = F_PRECISION - whole_part_length;
+  // } else {
+  //   needed_digits = spec_opts->precision;
+  // }
+
+  if (spec_opts->precision_set == false) {
+    g_spec_not_set_precision(dest, input_num, spec_opts);
+  } else {
+    g_spec_precision_set(dest, input_num, spec_opts);
   }
 }
 
 void pointer_to_str(DestStr* dest, void* ptr, SpecOptions* spec_opts) {
-  uintptr_t addres = (uintptr_t)ptr;
-  long long num_len = get_num_length(addres, spec_opts);
+  uintptr_t address = (uintptr_t)ptr;
+  long long num_len = get_num_length(address, spec_opts);
 
   apply_width(dest, num_len + 2,
               spec_opts);  // мы добовляем двойку что бы покрыть два
@@ -841,7 +911,7 @@ void pointer_to_str(DestStr* dest, void* ptr, SpecOptions* spec_opts) {
   dest->str[dest->curr_ind++] = '0';
   dest->str[dest->curr_ind++] = 'x';
 
-  itoa(dest, addres, spec_opts);
+  itoa(dest, address, spec_opts);
 }
 
 void set_locale_for_wide_chars() {
