@@ -97,6 +97,8 @@ void process_floating_point_number(va_list* args, DestStr* dest,
 void process_scientific(DestStr* dest, long double input_num,
                         SpecOptions* spec_opts);
 void process_scientific_zero_input(DestStr* dest, SpecOptions* spec_opts);
+void process_scientific_for_g_spec(long double input_num, DestStr* dest,
+                                   SpecOptions* spec_opts);
 void spec_G(DestStr* dest, double double_input, SpecOptions* spec_opts);
 
 long long int ingest_int(va_list* args, SpecOptions* spec_opts);
@@ -117,7 +119,7 @@ void divide_number(long double num, int precision, long double* wh,
                    long double* fr);
 long double multiply_by_10_n_times(long double input_num, s21_size_t n);
 long double divide_by_10_n_times(long double input_num, s21_size_t n);
-long long calculate_exponent(long double input_num);
+long long scale_input_and_calculate_exponent(long double* input_num);
 void add_zeros_to_destination(DestStr* dest, s21_size_t n_zeros_to_add);
 
 // Функция устанавливает локаль в зависимости от ОС
