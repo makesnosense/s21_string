@@ -738,7 +738,7 @@ void spec_G(DestStr* dest, double double_input, SpecOptions* spec_opts) {
 
   if (whole_part_length <= F_PRECISION) {
     if (spec_opts->precision > F_PRECISION) {
-      needed_precision = spec_opts->precision;
+      needed_precision = spec_opts->precision - 1;
     } else if (ceill(double_input) == 0) {
       needed_precision = F_PRECISION;
     } else {
