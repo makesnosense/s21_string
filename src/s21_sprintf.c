@@ -1,119 +1,4 @@
-#include <ctype.h>
-#include <limits.h>
-#include <locale.h>
-#include <math.h>
-#include <stdarg.h>
-#include <stdbool.h>
-#include <stdint.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <wchar.h>
-
-#include "s21_string.h"
-
-// Точность для %f по умолчанию
-#define F_PRECISION 6
-#define MANTISSA_DIGITS 5
-
-// Валидные флаги и спецификаторы
-#define VALID_FLAGS "+- 0#"
-#define VALID_SPECIFIERS "cdefginsopuxEGX%"
-#define VALID_LENGTHS "Llh"
-
-// Макрос для смены знака числа
-#define TO_ABS(x) (x) < 0 ? (-x) : (x)
-
-// Опции функции s21_sprintf
-typedef struct SpecifierOptions {
-  bool flag_plus;   // Флаг '+'
-  bool flag_minus;  // Флаг '-'
-  bool flag_space;  // Флаг ' '
-  bool flag_zero;   // флаг '0'
-  bool flag_sharp;  // флаг '#'
-  int width;        // Ширина *.
-  int precision;    // Точность .*
-  int padding;      // Количество пробелов для width
-  long double base;
-  int padding_char;
-  bool length_l;       // Длина l
-  bool length_h;       // Длина h
-  bool length_big_l;   // Длина L
-  bool precision_set;  // Есть ли precision у спецификатора
-  bool is_negative;    // Является ли отр. числом
-  bool is_floating_point_number;  // Является ли float/double
-  bool is_char;
-  bool is_octal;
-  bool is_hexadecimal;
-  bool is_hexadecimal_capital;
-} SpecOptions;
-
-typedef struct DestinationString {
-  char* str;
-  s21_size_t curr_ind;
-} DestStr;
-
-// %[flags][width][.precision][length][specifier]
-int s21_sprintf(char* str, const char* format, ...);
-
-int is_flag(char ch);
-int is_specifier(char ch);
-int is_length(char ch);
-
-void parse_flags(const char** format, SpecOptions* spec_opts);
-void parse_width(const char** format, va_list args, SpecOptions* spec_opts);
-void parse_precision(const char** format, va_list args, SpecOptions* spec_opts);
-void parse_length(const char** format, SpecOptions* spec_opts);
-void parse_format(const char** format, va_list args, SpecOptions* spec_opts);
-void parse_specifier(const char** format, SpecOptions* spec_opts);
-
-void set_needed_precision(SpecOptions* spec_opts);
-void set_base(SpecOptions* spec_opts);
-void set_padding_char(SpecOptions* spec_opts);
-
-void is_negative(long double num, SpecOptions* spec_opts);
-s21_size_t get_num_length(long double num, SpecOptions* spec_opts);
-
-void apply_width(DestStr* dest, int num_len, SpecOptions* spec_opts);
-void apply_minus_width(DestStr* dest, SpecOptions* spec_opts);
-void apply_flags(DestStr* dest, SpecOptions* spec_opts);
-
-void process_chars(va_list* args, DestStr* dest, SpecOptions* spec_opts);
-void process_narrow_char(va_list* args, DestStr* dest, SpecOptions* spec_opts);
-void process_wide_char(va_list* args, DestStr* dest);
-void process_strings(va_list* args, DestStr* dest, SpecOptions* spec_opts);
-void process_narrow_string(char* string, DestStr* dest, SpecOptions* spc_opts);
-void process_wide_string(va_list* args, DestStr* dest);
-void process_int(va_list* args, DestStr* dest, SpecOptions* spec_opts);
-void process_unsigned(va_list* args, DestStr* dest, SpecOptions* spec_opts);
-void process_floating_point_number(va_list* args, DestStr* dest,
-                                   SpecOptions* spec_opts);
-
-long long int ingest_int(va_list* args, SpecOptions* spec_opts);
-long long unsigned ingest_unsinged(va_list* args, SpecOptions* spec_opts);
-long double ingest_floating_point_number(va_list* args, SpecOptions* spec_opts);
-
-// Функция записывает целое число в строку dest
-int itoa(DestStr* dest, long double input_num, SpecOptions* spec_opts);
-void reverse_num(DestStr* dest, s21_size_t l_index, s21_size_t r_index);
-
-void floating_point_number_to_str(DestStr* dest, long double input_num,
-                                  SpecOptions* spec_opts);
-void whole_to_str(DestStr* dest, long double num, SpecOptions* spec_opts);
-void fraction_to_str(DestStr* dest, long double num, SpecOptions* spec_opts);
-void pointer_to_str(DestStr* dest, void* ptr, SpecOptions* spec_opts);
-
-void divide_number(long double num, int precision, long double* wh,
-                   long double* fr);
-long double multiply_by_power_of_10(long double input_num, s21_size_t n);
-void add_zeros_to_destination(DestStr* dest, s21_size_t n_zeros_to_add);
-
-void specE(DestStr* dest, double input_num, SpecOptions* spec_opts,
-           const char* format);
-void spec_G(DestStr* dest, double double_input, SpecOptions* spec_opts,
-            const char* format);
-
-// Функция устанавливает локаль в зависимости от ОС
-void set_locale_for_wide_chars();
+#include "s21_sprintf.h"
 
 int s21_sprintf(char* str, const char* format, ...) {
   set_locale_for_wide_chars();
@@ -130,6 +15,7 @@ int s21_sprintf(char* str, const char* format, ...) {
       parse_format(&format, args, &spec_opts);
       set_base(&spec_opts);
       set_padding_char(&spec_opts);
+      set_exponent_char(&spec_opts);
 
       switch (*format) {
         case 'c': {
@@ -154,9 +40,10 @@ int s21_sprintf(char* str, const char* format, ...) {
         }
         case 'e':
         case 'E': {
-          double double_string = va_arg(args, double);
-          is_negative(double_string, &spec_opts);
-          specE(&dest, double_string, &spec_opts, format);
+          long double input_floating_point_number =
+              ingest_floating_point_number(&args, &spec_opts);
+          is_negative(input_floating_point_number, &spec_opts);
+          process_scientific(&dest, input_floating_point_number, &spec_opts);
           break;
         }
         case 'n': {
@@ -166,9 +53,10 @@ int s21_sprintf(char* str, const char* format, ...) {
         }
         case 'g':
         case 'G': {
-          double double_input = va_arg(args, double);
-          is_negative(double_input, &spec_opts);
-          spec_G(&dest, double_input, &spec_opts, format);
+          long double input_floating_point_number =
+              ingest_floating_point_number(&args, &spec_opts);
+          is_negative(input_floating_point_number, &spec_opts);
+          spec_G(&dest, input_floating_point_number, &spec_opts);
           break;
         }
         case 'p': {
@@ -267,6 +155,8 @@ void parse_precision(const char** format, va_list args,
     } else if (**format == '*') {
       spec_opts->precision = va_arg(args, int);
       spec_opts->precision_set = 1;
+    } else if (**format == '.') {
+      spec_opts->precision_set = 1;
     }
     (*format)++;
   }
@@ -316,6 +206,15 @@ void parse_specifier(const char** format, SpecOptions* spec_opts) {
       case 'e':
       case 'E': {
         spec_opts->is_floating_point_number = true;
+        if (**format == 'g') {
+          spec_opts->is_spec_g = true;
+        } else if (**format == 'G') {
+          spec_opts->is_spec_g_capital = true;
+        } else if (**format == 'e') {
+          spec_opts->is_scientific = true;
+        } else if (**format == 'E') {
+          spec_opts->is_scientific_capital = true;
+        }
         break;
       }
     }
@@ -492,6 +391,14 @@ void set_padding_char(SpecOptions* spec_opts) {
   }
 }
 
+void set_exponent_char(SpecOptions* spec_opts) {
+  if (spec_opts->is_scientific || spec_opts->is_spec_g) {
+    spec_opts->exponent_char = 'e';
+  } else if (spec_opts->is_scientific_capital || spec_opts->is_spec_g_capital) {
+    spec_opts->exponent_char = 'E';
+  }
+}
+
 void is_negative(long double num, SpecOptions* spec_opts) {
   spec_opts->is_negative = num < 0.0 ? 1 : 0;
 }
@@ -510,9 +417,16 @@ s21_size_t get_num_length(long double num, SpecOptions* spec_opts) {
   return num_len;
 }
 
-long double multiply_by_power_of_10(long double input_num, s21_size_t n) {
+long double multiply_by_10_n_times(long double input_num, s21_size_t n) {
   for (s21_size_t i = 0; i < n; i++) {
     input_num *= 10;
+  }
+  return input_num;
+}
+
+long double divide_by_10_n_times(long double input_num, s21_size_t n) {
+  for (s21_size_t i = 0; i < n; i++) {
+    input_num /= 10;
   }
   return input_num;
 }
@@ -524,7 +438,7 @@ void add_zeros_to_destination(DestStr* dest, s21_size_t n_zeros_to_add) {
   dest->str[dest->curr_ind] = '\0';
 }
 
-void apply_width(DestStr* dest, int num_len, SpecOptions* spec_opts) {
+void apply_width(DestStr* dest, s21_size_t num_len, SpecOptions* spec_opts) {
   int flag_corr;  // Коррекция кол-ва пробелов
   int prec_corr;  // Коррекция кол-ва пробелов
 
@@ -532,8 +446,9 @@ void apply_width(DestStr* dest, int num_len, SpecOptions* spec_opts) {
   if (spec_opts->width > num_len) {
     flag_corr =
         spec_opts->flag_plus || spec_opts->flag_space || spec_opts->is_negative;
-    prec_corr =
-        spec_opts->precision > num_len ? spec_opts->precision - num_len : 0;
+    prec_corr = (s21_size_t)spec_opts->precision > num_len
+                    ? spec_opts->precision - num_len
+                    : 0;
 
     if (spec_opts->is_floating_point_number) {
       spec_opts->padding =
@@ -544,7 +459,7 @@ void apply_width(DestStr* dest, int num_len, SpecOptions* spec_opts) {
 
     // Если флаг '-' == 0
     if (!spec_opts->flag_minus) {
-      for (int i = 0; i < spec_opts->padding; i++)
+      for (s21_size_t i = 0; i < spec_opts->padding; i++)
         dest->str[dest->curr_ind++] = spec_opts->padding_char;
     }
   }
@@ -595,8 +510,7 @@ void floating_point_number_to_str(DestStr* dest, long double input_num,
   if (!(spec_opts->precision_set && !spec_opts->precision)) {
     dest->str[dest->curr_ind++] = '.';
 
-    fraction_part =
-        multiply_by_power_of_10(fraction_part, spec_opts->precision);
+    fraction_part = multiply_by_10_n_times(fraction_part, spec_opts->precision);
     // this is where we round rubbish
     fraction_part = roundl(fraction_part);
     // printf("\nPrec: %d\n", spec_opts->precision);
@@ -669,7 +583,7 @@ int itoa(DestStr* dest, long double input_num, SpecOptions* spec_opts) {
 void apply_minus_width(DestStr* dest, SpecOptions* spec_opts) {
   // Если ширина > длины числа и флаг '-' == 1
   if (spec_opts->flag_minus) {
-    for (int i = 0; i < spec_opts->padding; i++) {
+    for (s21_size_t i = 0; i < spec_opts->padding; i++) {
       dest->str[dest->curr_ind++] = ' ';
     }
   }
@@ -678,7 +592,7 @@ void apply_minus_width(DestStr* dest, SpecOptions* spec_opts) {
 void whole_to_str(DestStr* dest, long double num, SpecOptions* spec_opts) {
   num = TO_ABS(num);
 
-  int num_len = get_num_length(num, spec_opts);
+  s21_size_t num_len = get_num_length(num, spec_opts);
 
   if (spec_opts->flag_zero) {
     apply_flags(dest, spec_opts);
@@ -690,10 +604,12 @@ void whole_to_str(DestStr* dest, long double num, SpecOptions* spec_opts) {
     apply_flags(dest, spec_opts);
   }
 
-  if (!spec_opts->is_floating_point_number) {
-    for (int i = 0; i < spec_opts->precision - num_len; i++)
-      dest->str[dest->curr_ind++] = '0';
-  }
+  // if (!spec_opts->is_floating_point_number && spec_opts->precision >=
+  // num_len) {
+  //   // printf("\n\n%lu\n\n", (spec_opts->precision - num_len));
+  //   for (s21_size_t i = 0; i < (spec_opts->precision - num_len); i++)
+  //     dest->str[dest->curr_ind++] = '0';
+  // }
 
   // Преобразуем целое число в строку
   itoa(dest, num, spec_opts);
@@ -724,91 +640,82 @@ void divide_number(long double num, int precision, long double* wh,
   *fr = (num - *wh) * mul;
 }
 
-// void fraction_to_str(DestStr* dest, long double input_num,
-//                      SpecOptions* spec_opts) {
-//   // Преобразуем целое число в строку и получаем i
-//   // presicion - i = сколько символов не хватает до нужной точности
-
-//   int i = itoa(dest, input_num, spec_opts);
-
-//   // Доводим число до нужной точности
-//   while (i < spec_opts->precision) {
-//     dest->str[dest->curr_ind++] = '0';
-//     i++;
-//   }
-
-//   // Добавляем пробелы в конец, если флаг '-'
-//   apply_minus_width(dest, spec_opts);
-
-//   // Добавляем нуль-терминатор
-//   dest->str[dest->curr_ind] = '\0';
-// }
-
-void specE(DestStr* dest, double input_num, SpecOptions* spec_opts,
-           const char* format) {
-  input_num = TO_ABS(input_num);
-  long double whole_part = 0;
-  long double fraction_part = 0;
-  int exponent = 0;
-
+void process_scientific_zero_input(DestStr* dest, SpecOptions* spec_opts) {
   // Обработка нулевого случая
-  if (input_num == 0.0) {
-    dest->str[dest->curr_ind++] = '0';
+  dest->str[dest->curr_ind++] = '0';
+
+  if (!(spec_opts->precision_set == true && spec_opts->precision == 0)) {
     dest->str[dest->curr_ind++] = '.';
-    for (int i = 0; i < 6; i++) {  // По умолчанию точность 6
+    for (s21_size_t i = 0; i < spec_opts->precision; i++) {
       dest->str[dest->curr_ind++] = '0';
     }
-    dest->str[dest->curr_ind++] =
-        ((*format == 'e') || (*format == 'g')) ? 'e' : 'E';
-    dest->str[dest->curr_ind++] = '+';
-    dest->str[dest->curr_ind++] = '0';
-    dest->str[dest->curr_ind++] = '0';
-    return;
   }
 
-  while (input_num >= 10.0) {
-    input_num /= 10.0;
-    exponent++;
-  }
-  while (input_num < 1.0) {
-    input_num *= 10.0;
-    exponent--;
-  }
+  dest->str[dest->curr_ind++] = spec_opts->exponent_char;
 
-  // Используем floating_point_number_to_str для форматирования мантиссы
-  if (*format == 'g' || *format == 'G') {
-    if (spec_opts->precision_set == false) {
-      divide_number(input_num, MANTISSA_DIGITS, &whole_part, &fraction_part);
+  dest->str[dest->curr_ind++] = '+';
+  dest->str[dest->curr_ind++] = '0';
+  dest->str[dest->curr_ind++] = '0';
+}
 
-      fraction_part /= pow(10, MANTISSA_DIGITS);
-      input_num = whole_part + fraction_part;
+void process_scientific_for_g_spec(long double input_num, DestStr* dest,
+                                   SpecOptions* spec_opts) {
+  int exponent = 0;
+  exponent = scale_input_and_calculate_exponent(&input_num);
+  long double whole_part = 0;
+  long double fraction_part = 0;
+  if (spec_opts->precision_set == false) {
+    divide_number(input_num, MANTISSA_DIGITS, &whole_part, &fraction_part);
 
-      floating_point_number_to_str(dest, input_num, spec_opts);
+    fraction_part /= pow(10, MANTISSA_DIGITS);
+    input_num = whole_part + fraction_part;
 
-      dest->str[dest->curr_ind--] = '\0';
-
-    } else if (spec_opts->precision_set) {
-      divide_number(input_num, MANTISSA_DIGITS - 1, &whole_part,
-                    &fraction_part);
-
-      fraction_part /= pow(10, MANTISSA_DIGITS);
-      input_num = whole_part + fraction_part;
-
-      floating_point_number_to_str(dest, input_num, spec_opts);
-      spec_opts->precision -= 1;
-      if (dest->str[dest->curr_ind - 1] == '0') {
-        dest->str[dest->curr_ind--] = '\0';
-      }
-      if (!(spec_opts->flag_sharp) && dest->str[dest->curr_ind - 1] == '.') {
-        dest->str[dest->curr_ind--] = '\0';
-      }
-    }
-  } else {
     floating_point_number_to_str(dest, input_num, spec_opts);
-  }
 
-  dest->str[dest->curr_ind++] =
-      ((*format == 'e') || (*format == 'g')) ? 'e' : 'E';
+    dest->str[dest->curr_ind--] = '\0';
+
+  } else if (spec_opts->precision_set) {
+    divide_number(input_num, MANTISSA_DIGITS - 1, &whole_part, &fraction_part);
+
+    fraction_part /= pow(10, MANTISSA_DIGITS);
+    input_num = whole_part + fraction_part;
+
+    floating_point_number_to_str(dest, input_num, spec_opts);
+    spec_opts->precision -= 1;
+    if (dest->str[dest->curr_ind - 1] == '0') {
+      dest->str[dest->curr_ind--] = '\0';
+    }
+    if (!(spec_opts->flag_sharp) && dest->str[dest->curr_ind - 1] == '.') {
+      dest->str[dest->curr_ind--] = '\0';
+    }
+  }
+  add_scientific_e_part(exponent, dest, spec_opts);
+};
+
+void process_scientific_standard(DestStr* dest, long double input_num,
+                                 SpecOptions* spec_opts) {
+  int exponent = 0;
+  exponent = scale_input_and_calculate_exponent(&input_num);
+  floating_point_number_to_str(dest, input_num, spec_opts);
+  add_scientific_e_part(exponent, dest, spec_opts);
+}
+
+void process_scientific(DestStr* dest, long double input_num,
+                        SpecOptions* spec_opts) {
+  input_num = TO_ABS(input_num);
+  set_needed_precision(spec_opts);
+  if (input_num == 0.0) {
+    process_scientific_zero_input(dest, spec_opts);
+  } else if (spec_opts->is_spec_g || spec_opts->is_spec_g_capital) {
+    process_scientific_for_g_spec(input_num, dest, spec_opts);
+  } else {
+    process_scientific_standard(dest, input_num, spec_opts);
+  }
+}
+
+void add_scientific_e_part(long long exponent, DestStr* dest,
+                           SpecOptions* spec_opts) {
+  dest->str[dest->curr_ind++] = spec_opts->exponent_char;
 
   if (exponent < 0) {
     dest->str[dest->curr_ind++] = '-';
@@ -816,7 +723,6 @@ void specE(DestStr* dest, double input_num, SpecOptions* spec_opts,
   } else {
     dest->str[dest->curr_ind++] = '+';
   }
-
   // Убедитесь, что экспонента имеет как минимум два знака
   if (exponent < 10) {
     dest->str[dest->curr_ind++] = '0';
@@ -824,41 +730,84 @@ void specE(DestStr* dest, double input_num, SpecOptions* spec_opts,
   itoa(dest, exponent, spec_opts);
 }
 
-long long calculate_exponent(long double input_num) {
+// long long calculate_exponent(long double input_num) {
+//   long long exponent = 0;
+
+//   if (input_num >= 10) {
+//     while (input_num >= 10.0) {
+//       input_num /= 10.0;
+//       exponent++;
+//     };
+//   } else {
+//     while (input_num < 1.0) {
+//       input_num *= 10.0;
+//       exponent--;
+//     };
+//   }
+//   return exponent;
+// }
+long long scale_input_and_calculate_exponent(long double* input_num) {
   long long exponent = 0;
 
-  while (input_num >= 10.0) {
-    input_num /= 10.0;
-    exponent++;
+  while (*input_num >= 10.0 || *input_num < 1.0) {
+    if (*input_num >= 10.0) {
+      *input_num /= 10.0;
+      exponent++;
+    } else {
+      *input_num *= 10.0;
+      exponent--;
+    }
   }
-  while (input_num < 1.0) {
-    input_num *= 10.0;
-    exponent--;
-  }
-
   return exponent;
 }
 
-void spec_G(DestStr* dest, double double_input, SpecOptions* spec_opts,
-            const char* format) {
+void spec_G(DestStr* dest, double double_input, SpecOptions* spec_opts) {
   double_input = TO_ABS(double_input);
   long double whole_part = 0;
   long double fraction_part = 0;
 
-  long double pres =
-      ((long long)double_input != 0)
-          ? F_PRECISION - get_num_length((long long)double_input, spec_opts)
-          : F_PRECISION;
+  // printf("%ld", dest->curr_ind);
 
-  divide_number(double_input, pres, &whole_part, &fraction_part);
+  s21_size_t needed_precision = 0;
 
-  long long num_len = get_num_length(whole_part, spec_opts);
+  s21_size_t whole_part_length = get_num_length(ceill(double_input), spec_opts);
 
-  if ((num_len <= F_PRECISION) && (spec_opts->precision_set == false)) {
-    apply_width(dest, num_len, spec_opts);
+  if (whole_part_length <= F_PRECISION) {
+    if (ceill(double_input) == 0) {
+      needed_precision = F_PRECISION;
+    } else {
+      needed_precision = F_PRECISION - whole_part_length;
+    }
+  }
+
+  // printf("\nbeforeWHOLE: %.18f\n", double_input);
+
+  fraction_part = modfl(double_input, &whole_part);
+  // printf("\nbeforeFRACT: %.18Lf\n", fraction_part);
+
+  // printf("\nNEEDED_PRECISION: %ld\n", needed_precision);
+
+  // printf("\nWHOLE: %.18Lf\n", whole_part);
+  // printf("\nFRACT: %.18Lf\n", fraction_part);
+
+  fraction_part = multiply_by_10_n_times(fraction_part, needed_precision);
+
+  fraction_part = roundl(fraction_part);
+
+  // fraction_part = divide_by_10_n_times(fraction_part, needed_precison);
+
+  // divide_number(double_input, needed_precison, &whole_part,
+  // &fraction_part);
+  // printf("\nFRACT_after: %.18Lf\n", fraction_part);
+
+  // long long num_len = get_num_length(whole_part, spec_opts);
+
+  if ((whole_part_length <= F_PRECISION) &&
+      (spec_opts->precision_set == false)) {
+    apply_width(dest, whole_part_length, spec_opts);
     apply_flags(dest, spec_opts);
     itoa(dest, whole_part, spec_opts);
-    if (num_len != F_PRECISION) {
+    if (whole_part_length != F_PRECISION) {
       dest->str[dest->curr_ind++] = '.';
       itoa(dest, llround(fraction_part), spec_opts);
 
@@ -875,8 +824,8 @@ void spec_G(DestStr* dest, double double_input, SpecOptions* spec_opts,
     }
 
   } else if (spec_opts->precision_set && spec_opts->precision <= F_PRECISION &&
-             spec_opts->precision >= num_len) {
-    apply_width(dest, num_len, spec_opts);
+             spec_opts->precision >= whole_part_length) {
+    apply_width(dest, whole_part_length, spec_opts);
     apply_flags(dest, spec_opts);
     itoa(dest, whole_part, spec_opts);
 
@@ -888,7 +837,8 @@ void spec_G(DestStr* dest, double double_input, SpecOptions* spec_opts,
         spec_opts->flag_sharp == false) {
       itoa(dest, llround(fraction_part), spec_opts);
     } else {
-      for (int i = 0; i < spec_opts->precision - num_len; i++) {
+      for (s21_size_t i = 0; i < spec_opts->precision - whole_part_length;
+           i++) {
         dest->str[dest->curr_ind++] = '0';
       }
     }
@@ -909,7 +859,7 @@ void spec_G(DestStr* dest, double double_input, SpecOptions* spec_opts,
     }
 
   } else if (double_input < 10) {
-    apply_width(dest, num_len, spec_opts);
+    apply_width(dest, whole_part_length, spec_opts);
     apply_flags(dest, spec_opts);
 
     itoa(dest, whole_part, spec_opts);
@@ -926,7 +876,7 @@ void spec_G(DestStr* dest, double double_input, SpecOptions* spec_opts,
       dest->str[dest->curr_ind++] = '.';
     }
   } else {
-    specE(dest, double_input, spec_opts, format);
+    process_scientific(dest, double_input, spec_opts);
   }
 }
 
@@ -953,3 +903,23 @@ void set_locale_for_wide_chars() {
 
 #endif
 }
+
+// void fraction_to_str(DestStr* dest, long double input_num,
+//                      SpecOptions* spec_opts) {
+//   // Преобразуем целое число в строку и получаем i
+//   // presicion - i = сколько символов не хватает до нужной точности
+
+//   int i = itoa(dest, input_num, spec_opts);
+
+//   // Доводим число до нужной точности
+//   while (i < spec_opts->precision) {
+//     dest->str[dest->curr_ind++] = '0';
+//     i++;
+//   }
+
+//   // Добавляем пробелы в конец, если флаг '-'
+//   apply_minus_width(dest, spec_opts);
+
+//   // Добавляем нуль-терминатор
+//   dest->str[dest->curr_ind] = '\0';
+// }
