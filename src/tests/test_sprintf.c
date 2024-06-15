@@ -467,15 +467,23 @@ START_TEST(test_sprintf_scientific_long_loop_precisions) {
   long double num2 = 1.0;
   long double num3 = 1.2345678910;
   long double num4 = 1;
+  long double num5 = 33.2345678L;
+  long double num6 = 333.0L;
+  long double num7 = 33.2345678910L;
+  long double num8 = 555555.1L;
 
   int precision = _i;  // supplied through add_loop_test func
 
   char format_string[70];
 
-  s21_sprintf(format_string, "%%.%dLe %%.%dLe %%.%dLe %%.%dLe", precision,
-              precision, precision, precision);
-  sprintf(lib_res, format_string, num1, num2, num3, num4);
-  s21_sprintf(s21_res, format_string, num1, num2, num3, num4);
+  s21_sprintf(format_string,
+              "%%.%dLe %%.%dLe %%.%dLe %%.%dLe %%.%dLe %%.%dLe %%.%dLe %%.%dLe",
+              precision, precision, precision, precision, precision, precision,
+              precision, precision);
+  sprintf(lib_res, format_string, num1, num2, num3, num4, num5, num6, num7,
+          num8);
+  s21_sprintf(s21_res, format_string, num1, num2, num3, num4, num5, num6, num7,
+              num8);
   ck_assert_str_eq(lib_res, s21_res);
 }
 END_TEST
