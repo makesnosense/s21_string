@@ -651,23 +651,16 @@ void process_scientific_for_g_spec(long double input_num, DestStr* dest,
                                    SpecOptions* spec_opts) {
   int exponent = 0;
   exponent = scale_input_and_calculate_exponent(&input_num);
-  long double whole_part = 0;
-  long double fraction_part = 0;
-  if (spec_opts->precision_set == false) {
-    divide_number(input_num, MANTISSA_DIGITS, &whole_part, &fraction_part);
 
-    fraction_part /= pow(10, MANTISSA_DIGITS);
-    input_num = whole_part + fraction_part;
+  if (spec_opts->precision_set == false) {
+    input_num = round_to_n_digits(input_num, MANTISSA_DIGITS);
 
     floating_point_number_to_str(dest, input_num, spec_opts);
 
     dest->str[dest->curr_ind--] = '\0';
 
   } else if (spec_opts->precision_set) {
-    divide_number(input_num, MANTISSA_DIGITS - 1, &whole_part, &fraction_part);
-
-    fraction_part /= pow(10, MANTISSA_DIGITS);
-    input_num = whole_part + fraction_part;
+    input_num = round_to_n_digits(input_num, MANTISSA_DIGITS - 1);
 
     floating_point_number_to_str(dest, input_num, spec_opts);
     spec_opts->precision -= 1;
@@ -856,4 +849,17 @@ void set_locale_for_wide_chars() {
   setlocale(LC_ALL, "C.UTF-8");
 
 #endif
+}
+
+long double round_to_n_digits(long double input_num, s21_size_t n_digits) {
+  long double whole_part = 0;
+  long double fraction_part = 0;
+  fraction_part = modfl(input_num, &whole_part);
+
+  fraction_part = multiply_by_10_n_times(fraction_part, n_digits);
+  fraction_part = roundl(fraction_part);
+  fraction_part = divide_by_10_n_times(fraction_part, n_digits);
+
+  input_num = whole_part + fraction_part;
+  return input_num;
 }
