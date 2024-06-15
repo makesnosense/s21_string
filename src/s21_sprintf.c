@@ -651,15 +651,6 @@ void process_scientific_zero_input(DestStr* dest, SpecOptions* spec_opts) {
     }
   }
 
-  // if (spec_opts->precision_set == true && spec_opts->precision > 0) {
-  //   dest->str[dest->curr_ind++] = '.';
-  //   for (int i = 0; i < spec_opts->precision; i++) {  // По умолчанию
-  //   точность 6
-  //     dest->str[dest->curr_ind++] = '0';
-  //   }
-  // }
-  // else if (spec_opts->precision_set == false) {
-  // }
   dest->str[dest->curr_ind++] = spec_opts->exponent_char;
 
   dest->str[dest->curr_ind++] = '+';
@@ -667,53 +658,49 @@ void process_scientific_zero_input(DestStr* dest, SpecOptions* spec_opts) {
   dest->str[dest->curr_ind++] = '0';
 }
 
+void process_scientific_for_g_spec(long double input_num, DestStr* dest,
+                                   SpecOptions* spec_opts) {
+  long double whole_part = 0;
+  long double fraction_part = 0;
+  if (spec_opts->precision_set == false) {
+    divide_number(input_num, MANTISSA_DIGITS, &whole_part, &fraction_part);
+
+    fraction_part /= pow(10, MANTISSA_DIGITS);
+    input_num = whole_part + fraction_part;
+
+    floating_point_number_to_str(dest, input_num, spec_opts);
+
+    dest->str[dest->curr_ind--] = '\0';
+
+  } else if (spec_opts->precision_set) {
+    divide_number(input_num, MANTISSA_DIGITS - 1, &whole_part, &fraction_part);
+
+    fraction_part /= pow(10, MANTISSA_DIGITS);
+    input_num = whole_part + fraction_part;
+
+    floating_point_number_to_str(dest, input_num, spec_opts);
+    spec_opts->precision -= 1;
+    if (dest->str[dest->curr_ind - 1] == '0') {
+      dest->str[dest->curr_ind--] = '\0';
+    }
+    if (!(spec_opts->flag_sharp) && dest->str[dest->curr_ind - 1] == '.') {
+      dest->str[dest->curr_ind--] = '\0';
+    }
+  }
+};
+
 void process_scientific(DestStr* dest, long double input_num,
                         SpecOptions* spec_opts) {
   input_num = TO_ABS(input_num);
   set_needed_precision(spec_opts);
-  long double whole_part = 0;
-  long double fraction_part = 0;
   int exponent = 0;
   if (input_num == 0.0) {
     process_scientific_zero_input(dest, spec_opts);
   } else {
-    while (input_num >= 10.0) {
-      input_num /= 10.0;
-      exponent++;
-    }
-    while (input_num < 1.0) {
-      input_num *= 10.0;
-      exponent--;
-    }
-
+    exponent = scale_input_and_calculate_exponent(&input_num);
     // Используем floating_point_number_to_str для форматирования мантиссы
     if (spec_opts->is_spec_g || spec_opts->is_spec_g_capital) {
-      if (spec_opts->precision_set == false) {
-        divide_number(input_num, MANTISSA_DIGITS, &whole_part, &fraction_part);
-
-        fraction_part /= pow(10, MANTISSA_DIGITS);
-        input_num = whole_part + fraction_part;
-
-        floating_point_number_to_str(dest, input_num, spec_opts);
-
-        dest->str[dest->curr_ind--] = '\0';
-
-      } else if (spec_opts->precision_set) {
-        divide_number(input_num, MANTISSA_DIGITS - 1, &whole_part,
-                      &fraction_part);
-
-        fraction_part /= pow(10, MANTISSA_DIGITS);
-        input_num = whole_part + fraction_part;
-
-        floating_point_number_to_str(dest, input_num, spec_opts);
-        spec_opts->precision -= 1;
-        if (dest->str[dest->curr_ind - 1] == '0') {
-          dest->str[dest->curr_ind--] = '\0';
-        }
-        if (!(spec_opts->flag_sharp) && dest->str[dest->curr_ind - 1] == '.') {
-          dest->str[dest->curr_ind--] = '\0';
-        }
-      }
+      process_scientific_for_g_spec(input_num, dest, spec_opts);
     } else {
       floating_point_number_to_str(dest, input_num, spec_opts);
     }
@@ -726,7 +713,6 @@ void process_scientific(DestStr* dest, long double input_num,
     } else {
       dest->str[dest->curr_ind++] = '+';
     }
-
     // Убедитесь, что экспонента имеет как минимум два знака
     if (exponent < 10) {
       dest->str[dest->curr_ind++] = '0';
@@ -735,18 +721,34 @@ void process_scientific(DestStr* dest, long double input_num,
   }
 }
 
-long long calculate_exponent(long double input_num) {
+// long long calculate_exponent(long double input_num) {
+//   long long exponent = 0;
+
+//   if (input_num >= 10) {
+//     while (input_num >= 10.0) {
+//       input_num /= 10.0;
+//       exponent++;
+//     };
+//   } else {
+//     while (input_num < 1.0) {
+//       input_num *= 10.0;
+//       exponent--;
+//     };
+//   }
+//   return exponent;
+// }
+long long scale_input_and_calculate_exponent(long double* input_num) {
   long long exponent = 0;
 
-  while (input_num >= 10.0) {
-    input_num /= 10.0;
-    exponent++;
+  while (*input_num >= 10.0 || *input_num < 1.0) {
+    if (*input_num >= 10.0) {
+      *input_num /= 10.0;
+      exponent++;
+    } else {
+      *input_num *= 10.0;
+      exponent--;
+    }
   }
-  while (input_num < 1.0) {
-    input_num *= 10.0;
-    exponent--;
-  }
-
   return exponent;
 }
 
