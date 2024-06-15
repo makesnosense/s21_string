@@ -678,6 +678,9 @@ void process_scientific_standard(DestStr* dest, long double input_num,
                                  SpecOptions* spec_opts) {
   int exponent = 0;
   exponent = scale_input_and_calculate_exponent(&input_num);
+  if (spec_opts->precision_set && spec_opts->precision == 0) {
+    input_num = roundl(input_num);
+  }
   floating_point_number_to_str(dest, input_num, spec_opts);
   add_scientific_e_part(exponent, dest, spec_opts);
 }
