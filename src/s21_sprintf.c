@@ -821,7 +821,7 @@ void g_spec_nonzero_precision(DestStr* dest, long double input_num,
       fraction_part *= pow(10, spec_opts->precision - whole_part_length);
       itoa(dest, roundl(fraction_part), spec_opts);
 
-      for (s21_size_t i = 0; i < 15; i++) {
+      for (s21_size_t i = 0; i < LDBL_DIG; i++) {
         if (dest->str[dest->curr_ind - 1] == '0') {
           dest->str[dest->curr_ind--] = '\0';
         }
@@ -836,23 +836,6 @@ void g_spec_nonzero_precision(DestStr* dest, long double input_num,
 
 void g_spec(DestStr* dest, long double input_num, SpecOptions* spec_opts) {
   input_num = TO_ABS(input_num);
-
-  // long double whole_part = 0;
-  // long double fraction_part = 0;
-
-  // fraction_part = modfl(input_num, &whole_part);
-
-  // s21_size_t needed_precision = 0;
-
-  // s21_size_t whole_part_length = get_num_length(floorl(input_num),
-  // spec_opts); printf("\nwhole part length %ld\n", whole_part_length);
-  // s21_size_t needed_digits = 0;
-
-  // if (whole_part_length <= F_PRECISION) {
-  //   needed_digits = F_PRECISION - whole_part_length;
-  // } else {
-  //   needed_digits = spec_opts->precision;
-  // }
 
   if (spec_opts->precision_set == false) {
     g_spec_not_set_precision(dest, input_num, spec_opts);
