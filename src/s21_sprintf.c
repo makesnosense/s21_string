@@ -664,10 +664,11 @@ void process_scientific_for_g_spec(long double input_num, DestStr* dest,
   } else if (spec_opts->precision_set) {
     input_num = round_to_n_digits(input_num, MANTISSA_DIGITS - 1);
 
-    if (spec_opts->precision_set && spec_opts->precision == 0) {
+    if ((spec_opts->precision_set && spec_opts->precision == 0)) {
       input_num = roundl(input_num);
     }
-    floating_point_number_to_str(dest, input_num, spec_opts);
+    // floating_point_number_to_str(dest, input_num, spec_opts);
+    g_spec_precision_set(dest, input_num, spec_opts);
     // spec_opts->precision -= 1;
     if (dest->str[dest->curr_ind - 1] == '0') {
       dest->str[dest->curr_ind--] = '\0';
