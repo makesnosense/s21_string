@@ -737,13 +737,7 @@ void spec_G(DestStr* dest, double double_input, SpecOptions* spec_opts) {
   s21_size_t whole_part_length = get_num_length(ceill(double_input), spec_opts);
 
   if (whole_part_length <= F_PRECISION) {
-    if (spec_opts->precision > F_PRECISION) {
-      needed_precision = spec_opts->precision - 1;
-    } else if (ceill(double_input) == 0) {
-      needed_precision = F_PRECISION;
-    } else {
-      needed_precision = F_PRECISION - whole_part_length;
-    }
+    needed_precision = F_PRECISION - whole_part_length;
   }
 
   fraction_part = modfl(double_input, &whole_part);
@@ -769,60 +763,62 @@ void spec_G(DestStr* dest, double double_input, SpecOptions* spec_opts) {
       }
     }
 
-  } else if (spec_opts->precision_set && spec_opts->precision <= F_PRECISION &&
-             spec_opts->precision >= whole_part_length) {
-    whole_to_str(dest, whole_part, spec_opts);
+  }
+  // else if (spec_opts->precision_set && spec_opts->precision <= F_PRECISION &&
+  //            spec_opts->precision >= whole_part_length) {
+  //   whole_to_str(dest, whole_part, spec_opts);
 
-    if (fraction_part != 0) {
-      dest->str[dest->curr_ind++] = '.';
+  //   if (fraction_part != 0) {
+  //     dest->str[dest->curr_ind++] = '.';
 
-      fraction_part /= pow(10, F_PRECISION - spec_opts->precision);
+  //     fraction_part /= pow(10, F_PRECISION - spec_opts->precision);
 
-      if ((int)fraction_part != 0 && spec_opts->precision != 0 &&
-          spec_opts->flag_sharp == false) {
-        itoa(dest, llround(fraction_part), spec_opts);
-      } else {
-        for (s21_size_t i = 0; i < spec_opts->precision - whole_part_length;
-             i++) {
-          dest->str[dest->curr_ind++] = '0';
-        }
-      }
-    }
+  //     if ((int)fraction_part != 0 && spec_opts->precision != 0 &&
+  //         spec_opts->flag_sharp == false) {
+  //       itoa(dest, llround(fraction_part), spec_opts);
+  //     } else {
+  //       for (s21_size_t i = 0; i < spec_opts->precision - whole_part_length;
+  //            i++) {
+  //         dest->str[dest->curr_ind++] = '0';
+  //       }
+  //     }
+  //   }
 
-    if (dest->str[dest->curr_ind - 2] == '.' &&
-        dest->str[dest->curr_ind - 1] == '0') {
-      dest->str[dest->curr_ind--] = '\0';
-    }
-    if (spec_opts->flag_sharp == false &&
-        dest->str[dest->curr_ind - 1] == '.') {
-      dest->str[dest->curr_ind--] = '\0';
-    }
+  //   if (dest->str[dest->curr_ind - 2] == '.' &&
+  //       dest->str[dest->curr_ind - 1] == '0') {
+  //     dest->str[dest->curr_ind--] = '\0';
+  //   }
+  //   if (spec_opts->flag_sharp == false &&
+  //       dest->str[dest->curr_ind - 1] == '.') {
+  //     dest->str[dest->curr_ind--] = '\0';
+  //   }
 
-    for (int i = 0; i < 6; i++) {
-      if (dest->str[dest->curr_ind - 1] == '0' && double_input != 0) {
-        dest->str[dest->curr_ind--] = '\0';
-      }
-    }
+  //   for (int i = 0; i < 6; i++) {
+  //     if (dest->str[dest->curr_ind - 1] == '0' && double_input != 0) {
+  //       dest->str[dest->curr_ind--] = '\0';
+  //     }
+  //   }
 
-  } else if (double_input < 10) {
-    whole_to_str(dest, whole_part, spec_opts);
+  // } else if (double_input < 10) {
+  //   whole_to_str(dest, whole_part, spec_opts);
 
-    if (fraction_part != 0 && spec_opts->precision != 0) {
-      dest->str[dest->curr_ind++] = '.';
+  //   if (fraction_part != 0 && spec_opts->precision != 0) {
+  //     dest->str[dest->curr_ind++] = '.';
 
-      if (spec_opts->precision == 0) {
-        fraction_part /= pow(10, F_PRECISION - spec_opts->precision - 1);
-      }
+  //     if (spec_opts->precision == 0) {
+  //       fraction_part /= pow(10, F_PRECISION - spec_opts->precision - 1);
+  //     }
 
-      itoa(dest, fraction_part, spec_opts);
-    }
+  //     itoa(dest, fraction_part, spec_opts);
+  //   }
 
-    for (int i = 0; i < 18; i++) {
-      if (dest->str[dest->curr_ind - 1] == '0' && double_input != 0) {
-        dest->str[dest->curr_ind--] = '\0';
-      }
-    }
-  } else {
+  //   for (int i = 0; i < 18; i++) {
+  //     if (dest->str[dest->curr_ind - 1] == '0' && double_input != 0) {
+  //       dest->str[dest->curr_ind--] = '\0';
+  //     }
+  //   }
+  // }
+  else {
     process_scientific(dest, double_input, spec_opts);
   }
 }
