@@ -108,6 +108,8 @@ void g_spec_not_set_precision(DestStr* dest, long double input_num,
                               SpecOptions* spec_opts);
 void g_spec_precision_set(DestStr* dest, long double input_num,
                           SpecOptions* spec_opts);
+void g_spec_nonzero_precision(DestStr* dest, long double input_num,
+                              SpecOptions* spec_opts);
 
 long long int ingest_int(va_list* args, SpecOptions* spec_opts);
 long long unsigned ingest_unsinged(va_list* args, SpecOptions* spec_opts);
