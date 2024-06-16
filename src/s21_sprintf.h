@@ -104,7 +104,11 @@ void process_scientific_for_g_spec(long double input_num, DestStr* dest,
 void add_scientific_e_part(long long exponent, DestStr* dest,
                            SpecOptions* spec_opts);
 
-void spec_G(DestStr* dest, double double_input, SpecOptions* spec_opts);
+void g_spec(DestStr* dest, long double input_num, SpecOptions* spec_opts);
+void g_spec_not_set_precision(DestStr* dest, long double input_num,
+                              SpecOptions* spec_opts);
+void g_spec_precision_set(DestStr* dest, long double input_num,
+                          SpecOptions* spec_opts);
 
 long long int ingest_int(va_list* args, SpecOptions* spec_opts);
 long long unsigned ingest_unsinged(va_list* args, SpecOptions* spec_opts);
