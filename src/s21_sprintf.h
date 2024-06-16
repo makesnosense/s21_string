@@ -50,7 +50,6 @@ typedef struct SpecifierOptions {
   bool is_scientific_capital;
   bool is_spec_g;
   bool is_spec_g_capital;
-
 } SpecOptions;
 
 typedef struct DestinationString {
@@ -132,6 +131,7 @@ long double multiply_by_10_n_times(long double input_num, s21_size_t n);
 long double divide_by_10_n_times(long double input_num, s21_size_t n);
 long long scale_input_and_calculate_exponent(long double* input_num);
 void add_zeros_to_destination(DestStr* dest, s21_size_t n_zeros_to_add);
+long double scale_to_one_digit_significand(long double input_num);
 
 // Функция устанавливает локаль в зависимости от ОС
 void set_locale_for_wide_chars();
