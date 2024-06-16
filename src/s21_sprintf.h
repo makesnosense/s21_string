@@ -1,4 +1,5 @@
 #include <ctype.h>
+#include <float.h>
 #include <limits.h>
 #include <locale.h>
 #include <math.h>
