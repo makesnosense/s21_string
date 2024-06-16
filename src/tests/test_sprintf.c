@@ -508,26 +508,26 @@ END_TEST
 // }
 // END_TEST
 
-// START_TEST(test_sprintf_g_spec_loop_precisions) {
-//   char lib_res[1000];
-//   char s21_res[1000];
-//   double num1 = 1.2345678;
-//   double num2 = 1.0;
-//   double num3 = 1.2345678940;
-//   double num4 = 1;
+START_TEST(test_sprintf_g_spec_loop_precisions) {
+  char lib_res[1000];
+  char s21_res[1000];
+  double num1 = 1.2345678;
+  double num2 = 1.0;
+  double num3 = 1.2345678940;
+  double num4 = 1;
 
-//   int precision = _i;  // supplied through add_loop_test func
+  int precision = _i;  // supplied through add_loop_test func
 
-//   char format_string[70];
+  char format_string[70];
 
-//   s21_sprintf(format_string, "%%.%dg %%.%dg %%.%dg %%.%dg", precision,
-//               precision, precision, precision);
+  s21_sprintf(format_string, "%%.%dg %%.%dg %%.%dg %%.%dg", precision,
+              precision, precision, precision);
 
-//   // printf("\n%s\n", format_string);
-//   sprintf(lib_res, format_string, num1, num2, num3, num4);
-//   s21_sprintf(s21_res, format_string, num1, num2, num3, num4);
-//   ck_assert_str_eq(lib_res, s21_res);
-// }
+  // printf("\n%s\n", format_string);
+  sprintf(lib_res, format_string, num1, num2, num3, num4);
+  s21_sprintf(s21_res, format_string, num1, num2, num3, num4);
+  ck_assert_str_eq(lib_res, s21_res);
+}
 // END_TEST
 
 // START_TEST(test_sprintf_g_spec_long_loop_precisions) {
@@ -711,7 +711,7 @@ Suite* make_sprintf_suite() {
   // tcase_add_loop_test(tc_core, test_sprintf_scientific_zero_loop_precisions,
   // 0,
   //                     18);
-  // tcase_add_loop_test(tc_core, test_sprintf_g_spec_loop_precisions, 0, 14);
+  tcase_add_loop_test(tc_core, test_sprintf_g_spec_loop_precisions, 0, 14);
   // tcase_add_loop_test(tc_core, test_sprintf_g_spec_long_loop_precisions, 0,
   // 17); tcase_add_loop_test(tc_core, test_sprintf_g_spec_zero_loop_precisions,
   // 0, 14);
