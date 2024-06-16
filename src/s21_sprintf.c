@@ -723,14 +723,15 @@ void add_scientific_e_part(long long exponent, DestStr* dest,
 
 long long scale_input_and_calculate_exponent(long double* input_num) {
   long long exponent = 0;
-
-  while (*input_num >= 10.0 || *input_num < 1.0) {
-    if (*input_num >= 10.0) {
-      *input_num /= 10.0;
-      exponent++;
-    } else {
-      *input_num *= 10.0;
-      exponent--;
+  if (*input_num != 0.0) {
+    while (*input_num >= 10.0 || *input_num < 1.0) {
+      if (*input_num >= 10.0) {
+        *input_num /= 10.0;
+        exponent++;
+      } else {
+        *input_num *= 10.0;
+        exponent--;
+      }
     }
   }
   return exponent;
@@ -778,8 +779,29 @@ void g_spec_not_set_precision(DestStr* dest, long double input_num,
   }
 }
 
-void g_spec_precision_set(DestStr* dest, long double input_num,
-                          SpecOptions* spec_opts) {
+void g_spec_zero_precision(DestStr* dest, long double input_num,
+                           SpecOptions* spec_opts) {
+  s21_size_t whole_part_length = get_num_length(roundl(input_num), spec_opts);
+
+  if (whole_part_length > 1) {
+    process_scientific(dest, input_num, spec_opts);
+  } else {
+    input_num = scale_to_one_digit_significand(input_num);
+
+    s21_size_t decimal_digits_to_round_to = 0;
+
+    if (roundl(input_num) == 0) {
+      decimal_digits_to_round_to = 1;
+    }
+
+    input_num = round_to_n_digits(input_num, decimal_digits_to_round_to);
+
+    g_spec_not_set_precision(dest, input_num, spec_opts);
+  }
+}
+
+void g_spec_nonzero_precision(DestStr* dest, long double input_num,
+                              SpecOptions* spec_opts) {
   long double whole_part = 0;
   long double fraction_part = 0;
 
@@ -834,8 +856,10 @@ void g_spec(DestStr* dest, long double input_num, SpecOptions* spec_opts) {
 
   if (spec_opts->precision_set == false) {
     g_spec_not_set_precision(dest, input_num, spec_opts);
+  } else if (spec_opts->precision == 0) {
+    g_spec_zero_precision(dest, input_num, spec_opts);
   } else {
-    g_spec_precision_set(dest, input_num, spec_opts);
+    g_spec_nonzero_precision(dest, input_num, spec_opts);
   }
 }
 
@@ -874,4 +898,15 @@ long double round_to_n_digits(long double input_num, s21_size_t n_digits) {
 
   input_num = whole_part + fraction_part;
   return input_num;
+}
+
+long double scale_to_one_digit_significand(long double input_num) {
+  long double result = 0;
+  if (input_num < 10) {
+    result = input_num;
+  } else {
+    int exponent = (int)floor(log10(input_num));
+    result = input_num / pow(10, exponent);
+  }
+  return result;
 }
