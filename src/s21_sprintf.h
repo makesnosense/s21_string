@@ -106,8 +106,8 @@ void add_scientific_e_part(long long exponent, DestStr* dest,
 void g_spec(DestStr* dest, long double input_num, SpecOptions* spec_opts);
 void g_spec_not_set_precision(DestStr* dest, long double input_num,
                               SpecOptions* spec_opts);
-void g_spec_precision_set(DestStr* dest, long double input_num,
-                          SpecOptions* spec_opts);
+void g_spec_zero_precision(DestStr* dest, long double input_num,
+                           SpecOptions* spec_opts);
 void g_spec_nonzero_precision(DestStr* dest, long double input_num,
                               SpecOptions* spec_opts);
 
