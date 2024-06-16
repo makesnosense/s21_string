@@ -768,10 +768,9 @@ void g_spec_not_set_precision(DestStr* dest, long double input_num,
       dest->str[dest->curr_ind--] = '\0';
       dest->str[dest->curr_ind--] = '\0';
     }
-    for (int i = 0; i < F_PRECISION; i++) {
-      if (dest->str[dest->curr_ind - 1] == '0' && input_num != 0) {
-        dest->str[dest->curr_ind--] = '\0';
-      }
+
+    if (input_num != 0.0) {
+      remove_trailing_zeros(dest);
     }
 
   } else {
@@ -821,10 +820,8 @@ void g_spec_nonzero_precision(DestStr* dest, long double input_num,
       fraction_part *= pow(10, spec_opts->precision - whole_part_length);
       itoa(dest, roundl(fraction_part), spec_opts);
 
-      for (s21_size_t i = 0; i < LDBL_DIG; i++) {
-        if (dest->str[dest->curr_ind - 1] == '0') {
-          dest->str[dest->curr_ind--] = '\0';
-        }
+      if (input_num != 0.0) {
+        remove_trailing_zeros(dest);
       }
     }
   } else if (whole_part_length == 1 && spec_opts->precision == 0) {
@@ -892,4 +889,11 @@ long double scale_to_one_digit_significand(long double input_num) {
     result = input_num / pow(10, exponent);
   }
   return result;
+}
+
+void remove_trailing_zeros(DestStr* dest) {
+  while (dest->curr_ind > 0 && dest->str[dest->curr_ind - 1] == '0') {
+    dest->str[dest->curr_ind - 1] = '\0';
+    dest->curr_ind--;
+  }
 }
