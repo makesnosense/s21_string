@@ -511,7 +511,7 @@ END_TEST
 START_TEST(test_sprintf_g_spec_loop_precisions) {
   char lib_res[1000];
   char s21_res[1000];
-  double num1 = 1.2345678;
+  double num1 = 11.2345678;
   double num2 = 1.0;
   double num3 = 1.2345678940;
   double num4 = 1;

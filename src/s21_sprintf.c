@@ -781,31 +781,31 @@ void g_spec_precision_set(DestStr* dest, long double input_num,
                           SpecOptions* spec_opts) {
   long double whole_part = 0;
   long double fraction_part = 0;
+
   fraction_part = modfl(input_num, &whole_part);
 
-  s21_size_t needed_precision = 0;
   s21_size_t whole_part_length = get_num_length(whole_part, spec_opts);
 
-  if (whole_part_length <= F_PRECISION) {
-    if (spec_opts->precision > F_PRECISION) {
-      needed_precision = spec_opts->precision;
-    } else if (ceill(input_num) == 0) {
-      needed_precision = F_PRECISION;
-    }
-  }
-
   fraction_part = modfl(input_num, &whole_part);
-  fraction_part = multiply_by_10_n_times(fraction_part, needed_precision);
-  fraction_part = roundl(fraction_part);
 
-  if (whole_part_length <= F_PRECISION) {
+  if (whole_part_length <= F_PRECISION &&
+      whole_part_length <= spec_opts->precision) {
     whole_to_str(dest, whole_part, spec_opts);
 
-    if (spec_opts->precision > 0) {
+    if (spec_opts->precision > 1 && fraction_part != 0 &&
+        spec_opts->precision != whole_part_length) {
       dest->str[dest->curr_ind++] = '.';
-      itoa(dest, fraction_part, spec_opts);
-    }
+      fraction_part *= pow(10, spec_opts->precision - whole_part_length);
+      itoa(dest, roundl(fraction_part), spec_opts);
 
+      for (s21_size_t i = 0; i < 15; i++) {
+        if (dest->str[dest->curr_ind - 1] == '0') {
+          dest->str[dest->curr_ind--] = '\0';
+        }
+      }
+    }
+  } else if (whole_part_length == 1 && spec_opts->precision == 0) {
+    whole_to_str(dest, whole_part, spec_opts);
   } else {
     process_scientific(dest, input_num, spec_opts);
   }
