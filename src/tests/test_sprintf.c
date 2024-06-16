@@ -999,7 +999,7 @@ Suite* make_sprintf_suite() {
   // 0, 14);
   tcase_add_test(tc_core, test_sprintf_g_spec_no_precision_many_p1);
   tcase_add_test(tc_core, test_sprintf_g_spec_no_precision_many_p2);
-  tcase_add_test(tc_core, test_sprintf_g_spec_precision_0_many_p1);
+  tcase_add_test(tc_problematic, test_sprintf_g_spec_precision_0_many_p1);
   tcase_add_test(tc_core, test_sprintf_g_spec_precision_0_many_p2);
 
   tcase_add_test(tc_core, test_sprintf_g_spec_no_precision_interesting);
