@@ -185,15 +185,14 @@ void parse_specifier(const char** format, SpecOptions* spec_opts) {
     switch (current_specifier) {
       case 'c': {
         spec_opts->specificator = c;
-        spec_opts->is_char = true;
         break;
       }
       case 'X':
       case 'p':
       case 'x': {
-        if (**format == 'X') {
+        if (current_specifier == 'X') {
           spec_opts->specificator = X;
-        } else if (**format == 'x') {
+        } else if (current_specifier == 'x') {
           spec_opts->specificator = x;
         } else {
           spec_opts->specificator = p;
@@ -202,7 +201,6 @@ void parse_specifier(const char** format, SpecOptions* spec_opts) {
         break;
       }
       case 'o': {
-        spec_opts->is_octal = true;
         spec_opts->specificator = o;
         break;
       }
@@ -212,18 +210,14 @@ void parse_specifier(const char** format, SpecOptions* spec_opts) {
       case 'e':
       case 'E': {
         spec_opts->is_floating_point_number = true;
-        if (**format == 'g') {
+        if (current_specifier == 'g') {
           spec_opts->specificator = g;
-          spec_opts->is_spec_g = true;
-        } else if (**format == 'G') {
+        } else if (current_specifier == 'G') {
           spec_opts->specificator = G;
-          spec_opts->is_spec_g_capital = true;
-        } else if (**format == 'e') {
+        } else if (current_specifier == 'e') {
           spec_opts->specificator = e;
-          spec_opts->is_scientific = true;
-        } else if (**format == 'E') {
+        } else if (current_specifier == 'E') {
           spec_opts->specificator = E;
-          spec_opts->is_scientific_capital = true;
         }
         break;
       }
@@ -384,7 +378,7 @@ long long unsigned ingest_unsinged(va_list* args, SpecOptions* spec_opts) {
 }
 
 void set_base(SpecOptions* spec_opts) {
-  if (spec_opts->is_octal) {
+  if (spec_opts->specificator == o) {
     spec_opts->base = 8.0;
   } else if (spec_opts->is_hexadecimal) {
     spec_opts->base = 16.0;
@@ -402,9 +396,9 @@ void set_padding_char(SpecOptions* spec_opts) {
 }
 
 void set_exponent_char(SpecOptions* spec_opts) {
-  if (spec_opts->is_scientific || spec_opts->is_spec_g) {
+  if (spec_opts->specificator == e || spec_opts->specificator == g) {
     spec_opts->exponent_char = 'e';
-  } else if (spec_opts->is_scientific_capital || spec_opts->is_spec_g_capital) {
+  } else if (spec_opts->specificator == E || spec_opts->specificator == G) {
     spec_opts->exponent_char = 'E';
   }
 }
@@ -416,7 +410,7 @@ void is_negative(long double num, SpecOptions* spec_opts) {
 s21_size_t get_num_length(long double num, SpecOptions* spec_opts) {
   int num_len = 0;
 
-  if (num == 0.0 || spec_opts->is_char) {
+  if (num == 0.0 || spec_opts->specificator == c) {
     num_len++;
   } else {
     while (num >= 1) {
@@ -490,7 +484,7 @@ void apply_flags(DestStr* dest, SpecOptions* spec_opts) {
   } else if (spec_opts->flag_space) {
     dest->str[dest->curr_ind++] = ' ';
   } else if (spec_opts->flag_sharp) {
-    if (spec_opts->is_octal) {
+    if (spec_opts->specificator == o) {
       dest->str[dest->curr_ind++] = '0';
     } else if (spec_opts->specificator == x) {
       dest->str[dest->curr_ind++] = '0';
