@@ -237,6 +237,7 @@ void process_narrow_char(va_list* args, DestStr* dest, SpecOptions* spec_opts) {
   char input_char = va_arg(*args, int);
   int num_len = get_num_length(input_char, spec_opts);
   // Если ширина больше длины числа, добавляем пробелы в начало
+  calculate_padding(num_len, spec_opts);
   apply_width(dest, num_len, spec_opts);
   // Обрабатываем флаги
   apply_flags(dest, spec_opts);
@@ -299,7 +300,9 @@ void process_strings(va_list* args, DestStr* dest, SpecOptions* spec_opts) {
 
 void process_narrow_string(char* input_string, DestStr* dest,
                            SpecOptions* spec_opts) {
-  apply_width(dest, s21_strlen(input_string), spec_opts);
+  s21_size_t string_length = s21_strlen(input_string);
+  calculate_padding(string_length, spec_opts);
+  apply_width(dest, string_length, spec_opts);
   apply_flags(dest, spec_opts);
   s21_strcpy(dest->str + dest->curr_ind, input_string);
   dest->curr_ind += s21_strlen(input_string);
@@ -465,7 +468,7 @@ void calculate_padding(s21_size_t num_len, SpecOptions* spec_opts) {
 }
 
 void apply_width(DestStr* dest, s21_size_t num_len, SpecOptions* spec_opts) {
-  calculate_padding(num_len, spec_opts);
+  // calculate_padding(num_len, spec_opts);
 
   if (spec_opts->width > num_len) {
     // Если флаг '-' == 0
@@ -606,6 +609,7 @@ void whole_to_str(DestStr* dest, long double num, SpecOptions* spec_opts) {
   if (spec_opts->flag_zero) {
     apply_flags(dest, spec_opts);
   }
+  calculate_padding(num_len, spec_opts);
   // Если ширина больше длины числа, добавляем пробелы в начало
   apply_width(dest, num_len, spec_opts);
 
@@ -855,6 +859,7 @@ void pointer_to_str(DestStr* dest, void* ptr, SpecOptions* spec_opts) {
   uintptr_t address = (uintptr_t)ptr;
   long long num_len = get_num_length(address, spec_opts);
 
+  calculate_padding(num_len + 2, spec_opts);
   apply_width(dest, num_len + 2,
               spec_opts);  // мы добовляем двойку что бы покрыть два
                            // дополнительных символа

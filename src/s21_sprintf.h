@@ -94,9 +94,10 @@ void set_exponent_char(SpecOptions* spec_opts);
 void is_negative(long double num, SpecOptions* spec_opts);
 s21_size_t get_num_length(long double num, SpecOptions* spec_opts);
 
+void apply_flags(DestStr* dest, SpecOptions* spec_opts);
+void calculate_padding(s21_size_t num_len, SpecOptions* spec_opts);
 void apply_width(DestStr* dest, s21_size_t num_len, SpecOptions* spec_opts);
 void apply_minus_width(DestStr* dest, SpecOptions* spec_opts);
-void apply_flags(DestStr* dest, SpecOptions* spec_opts);
 
 void process_chars(va_list* args, DestStr* dest, SpecOptions* spec_opts);
 void process_narrow_char(va_list* args, DestStr* dest, SpecOptions* spec_opts);
