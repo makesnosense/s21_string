@@ -650,13 +650,15 @@ void divide_number(long double num, int precision, long double* wh,
 }
 
 void process_scientific_zero_input(DestStr* dest, SpecOptions* spec_opts) {
-  // Обработка нулевого случая
+  // when input is 0
 
   dest->str[dest->curr_ind++] = '0';
 
   s21_size_t zeros_to_print = 0;
 
-  if (!spec_opts->precision_set) {
+  if (spec_opts->precision_set) {
+    zeros_to_print = spec_opts->precision;
+  } else {
     zeros_to_print = F_PRECISION;
   }
 
