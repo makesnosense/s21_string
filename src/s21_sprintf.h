@@ -61,15 +61,10 @@ typedef struct SpecifierOptions {
   bool precision_set;  // Есть ли precision у спецификатора
   bool is_negative;    // Является ли отр. числом
   bool is_floating_point_number;  // Является ли float/double
-  bool is_char;
-  bool is_octal;
   bool is_hexadecimal;
-  // bool is_hexadecimal_capital;
-  bool is_scientific;
-  bool is_scientific_capital;
-  bool is_spec_g;
-  bool is_spec_g_capital;
   Specificator specificator;
+  // bool is_scientific;
+  // bool is_spec_g;
 } SpecOptions;
 
 typedef struct DestinationString {
