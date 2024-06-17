@@ -460,53 +460,52 @@ END_TEST
 // }
 // END_TEST
 
-// START_TEST(test_sprintf_scientific_long_loop_precisions) {
-//   char lib_res[1000];
-//   char s21_res[1000];
-//   long double num1 = 1.2345678;
-//   long double num2 = 1.0;
-//   long double num3 = 1.2345678910;
-//   long double num4 = 1;
-//   long double num5 = 33.2345678L;
-//   long double num6 = 333.0L;
-//   long double num7 = 33.2345678910L;
-//   long double num8 = 555555.1L;
+START_TEST(test_sprintf_scientific_long_loop_precisions) {
+  char lib_res[1000];
+  char s21_res[1000];
+  long double num1 = 1.2345678L;
+  long double num2 = 1.0L;
+  long double num3 = 1.2345678910L;
+  long double num4 = 1L;
+  long double num5 = 33.2345678L;
+  long double num6 = 333.0L;
+  long double num7 = 33.2345678910L;
+  long double num8 = 555555.1L;
 
-//   //   int precision = _i;  // supplied through add_loop_test func
+  int precision = _i;  // supplied through add_loop_test func
 
-//   //   char format_string[70];
+  char format_string[70];
 
-//   s21_sprintf(format_string,
-//               "%%.%dLe %%.%dLe %%.%dLe %%.%dLe %%.%dLe %%.%dLe %%.%dLe
-//               %%.%dLe", precision, precision, precision, precision,
-//               precision, precision, precision, precision);
-//   sprintf(lib_res, format_string, num1, num2, num3, num4, num5, num6, num7,
-//           num8);
-//   s21_sprintf(s21_res, format_string, num1, num2, num3, num4, num5, num6,
-//   num7,
-//               num8);
-//   ck_assert_str_eq(lib_res, s21_res);
-// }
-// END_TEST
+  s21_sprintf(format_string,
+              "%%.%dLe %%.%dLe %%.%dLe %%.%dLe %%.%dLe %%.%dLe %%.%dLe %%.%dLe",
+              precision, precision, precision, precision, precision, precision,
+              precision, precision);
+  sprintf(lib_res, format_string, num1, num2, num3, num4, num5, num6, num7,
+          num8);
+  s21_sprintf(s21_res, format_string, num1, num2, num3, num4, num5, num6, num7,
+              num8);
+  ck_assert_str_eq(lib_res, s21_res);
+}
+END_TEST
 
-// START_TEST(test_sprintf_scientific_zero_loop_precisions) {
-//   char lib_res[100];
-//   char s21_res[100];
+START_TEST(test_sprintf_scientific_zero_loop_precisions) {
+  char lib_res[100];
+  char s21_res[100];
 
-//   double zero = 0.0;
+  double zero = 0.0;
 
-//   int precision = _i;  // supplied through add_loop_test func
+  int precision = _i;  // supplied through add_loop_test func
 
-//   char format_string[70];
+  char format_string[70];
 
-//   s21_sprintf(format_string, "%%.%de %%e %%.e", precision);
+  s21_sprintf(format_string, "%%.%de %%e %%.e", precision);
 
-//   sprintf(lib_res, format_string, zero, zero, zero);
+  sprintf(lib_res, format_string, zero, zero, zero);
 
-//   s21_sprintf(s21_res, format_string, zero, zero, zero);
-//   ck_assert_str_eq(lib_res, s21_res);
-// }
-// END_TEST
+  s21_sprintf(s21_res, format_string, zero, zero, zero);
+  ck_assert_str_eq(lib_res, s21_res);
+}
+END_TEST
 
 START_TEST(test_sprintf_g_spec_loop_precisions) {
   char lib_res[1000];
@@ -987,12 +986,10 @@ Suite* make_sprintf_suite() {
 
   // tcase_add_test(tc_core, test_sprintf_scientific_from_big_double);
 
-  // tcase_add_loop_test(tc_core, test_sprintf_scientific_long_loop_precisions,
-  // 0,
-  //                     18);
-  // tcase_add_loop_test(tc_core, test_sprintf_scientific_zero_loop_precisions,
-  // 0,
-  //                     18);
+  tcase_add_loop_test(tc_core, test_sprintf_scientific_long_loop_precisions, 0,
+                      18);
+  tcase_add_loop_test(tc_core, test_sprintf_scientific_zero_loop_precisions, 0,
+                      18);
   tcase_add_loop_test(tc_core, test_sprintf_g_spec_loop_precisions, 0, 14);
   tcase_add_loop_test(tc_core, test_sprintf_g_spec_long_loop_precisions, 0, 17);
   // tcase_add_loop_test(tc_core, test_sprintf_g_spec_zero_loop_precisions, 0,
