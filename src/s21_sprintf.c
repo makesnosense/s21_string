@@ -438,25 +438,32 @@ void add_zeros_to_destination(DestStr* dest, s21_size_t n_zeros_to_add) {
   dest->str[dest->curr_ind] = '\0';
 }
 
+void calculate_padding(s21_size_t num_len, SpecOptions* spec_opts) {
+  int flag_corr = 0;  // Коррекция кол-ва пробелов
+  int prec_corr = 0;  // Коррекция кол-ва пробелов
+
+  flag_corr =
+      spec_opts->flag_plus || spec_opts->flag_space || spec_opts->is_negative;
+
+  if ((s21_size_t)spec_opts->precision > num_len) {
+    prec_corr = spec_opts->precision - num_len;
+  } else {
+    prec_corr = 0;
+  }
+
+  if (spec_opts->is_floating_point_number) {
+    spec_opts->padding =
+        spec_opts->width - num_len - spec_opts->precision - flag_corr - 1;
+  } else {
+    spec_opts->padding = spec_opts->width - num_len - flag_corr - prec_corr;
+  }
+  // }
+}
+
 void apply_width(DestStr* dest, s21_size_t num_len, SpecOptions* spec_opts) {
-  int flag_corr;  // Коррекция кол-ва пробелов
-  int prec_corr;  // Коррекция кол-ва пробелов
+  calculate_padding(num_len, spec_opts);
 
-  // Если ширина > длины числа
   if (spec_opts->width > num_len) {
-    flag_corr =
-        spec_opts->flag_plus || spec_opts->flag_space || spec_opts->is_negative;
-    prec_corr = (s21_size_t)spec_opts->precision > num_len
-                    ? spec_opts->precision - num_len
-                    : 0;
-
-    if (spec_opts->is_floating_point_number) {
-      spec_opts->padding =
-          spec_opts->width - num_len - spec_opts->precision - flag_corr - 1;
-    } else {
-      spec_opts->padding = spec_opts->width - num_len - flag_corr - prec_corr;
-    }
-
     // Если флаг '-' == 0
     if (!spec_opts->flag_minus) {
       for (s21_size_t i = 0; i < spec_opts->padding; i++)
@@ -737,6 +744,18 @@ long long scale_input_and_calculate_exponent(long double* input_num) {
   return exponent;
 }
 
+void g_spec(DestStr* dest, long double input_num, SpecOptions* spec_opts) {
+  input_num = TO_ABS(input_num);
+
+  if (spec_opts->precision_set == true && spec_opts->precision == 0) {
+    g_spec_zero_precision(dest, input_num, spec_opts);
+  } else if (spec_opts->precision_set == false) {
+    g_spec_not_set_precision(dest, input_num, spec_opts);
+  } else {
+    g_spec_nonzero_precision(dest, input_num, spec_opts);
+  }
+}
+
 void g_spec_zero_precision(DestStr* dest, long double input_num,
                            SpecOptions* spec_opts) {
   s21_size_t whole_part_length = get_num_length(roundl(input_num), spec_opts);
@@ -823,19 +842,8 @@ void g_spec_nonzero_precision(DestStr* dest, long double input_num,
       }
     }
   } else {
+    // process_scientific_for_g_spec(input_num, dest, spec_opts);
     process_scientific(dest, input_num, spec_opts);
-  }
-}
-
-void g_spec(DestStr* dest, long double input_num, SpecOptions* spec_opts) {
-  input_num = TO_ABS(input_num);
-
-  if (spec_opts->precision_set == true && spec_opts->precision == 0) {
-    g_spec_zero_precision(dest, input_num, spec_opts);
-  } else if (spec_opts->precision_set == false) {
-    g_spec_not_set_precision(dest, input_num, spec_opts);
-  } else {
-    g_spec_nonzero_precision(dest, input_num, spec_opts);
   }
 }
 
