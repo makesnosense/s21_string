@@ -533,7 +533,7 @@ START_TEST(test_sprintf_g_spec_loop_precisions) {
 START_TEST(test_sprintf_g_spec_long_loop_precisions) {
   char lib_res[1000];
   char s21_res[1000];
-  long double num1 = 33.2345678L;
+  long double num1 = 0.2345678L;
   long double num2 = 333.0L;
   long double num3 = 33.2345678910L;
   long double num4 = 555555.1L;

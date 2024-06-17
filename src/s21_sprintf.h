@@ -62,9 +62,10 @@ typedef struct SpecifierOptions {
   bool is_negative;    // Является ли отр. числом
   bool is_floating_point_number;  // Является ли float/double
   bool is_hexadecimal;
+  bool is_g_spec;
   Specificator specificator;
   // bool is_scientific;
-  // bool is_spec_g;
+
 } SpecOptions;
 
 typedef struct DestinationString {

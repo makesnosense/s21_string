@@ -212,8 +212,10 @@ void parse_specifier(const char** format, SpecOptions* spec_opts) {
         spec_opts->is_floating_point_number = true;
         if (current_specifier == 'g') {
           spec_opts->specificator = g;
+          spec_opts->is_g_spec = true;
         } else if (current_specifier == 'G') {
           spec_opts->specificator = G;
+          spec_opts->is_g_spec = true;
         } else if (current_specifier == 'e') {
           spec_opts->specificator = e;
         } else if (current_specifier == 'E') {
@@ -458,18 +460,18 @@ void calculate_padding(s21_size_t num_len, SpecOptions* spec_opts) {
     prec_corr = 0;
   }
 
-  if (spec_opts->is_floating_point_number) {
+  if (spec_opts->is_g_spec &&
+      (spec_opts->precision_set == false || spec_opts->precision == 0)) {
+    spec_opts->padding = spec_opts->width - num_len - flag_corr - prec_corr;
+  } else if (spec_opts->is_floating_point_number) {
     spec_opts->padding =
         spec_opts->width - num_len - spec_opts->precision - flag_corr - 1;
   } else {
     spec_opts->padding = spec_opts->width - num_len - flag_corr - prec_corr;
   }
-  // }
 }
 
 void apply_width(DestStr* dest, s21_size_t num_len, SpecOptions* spec_opts) {
-  // calculate_padding(num_len, spec_opts);
-
   if (spec_opts->width > num_len) {
     // Если флаг '-' == 0
     if (!spec_opts->flag_minus) {
