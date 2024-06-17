@@ -875,8 +875,8 @@ START_TEST(test_sprintf_g_spec_no_precision_interesting) {
   // Casting the same value to double to demonstrate loss of precision
   double d_value = (double)ld_value;
 
-  sprintf(lib_res, "%g %g %20g %Lg", num5, num6, d_value, ld_value);
-  s21_sprintf(s21_res, "%g %g %g %20Lg", num5, num6, d_value, ld_value);
+  sprintf(lib_res, "%-5g %g %g %20Lg", num5, num6, d_value, ld_value);
+  s21_sprintf(s21_res, "%-5g %g %g %20Lg", num5, num6, d_value, ld_value);
   ck_assert_str_eq(lib_res, s21_res);
 }
 END_TEST
