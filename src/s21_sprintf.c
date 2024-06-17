@@ -845,7 +845,6 @@ void process_g_spec_zero_wholepart_nonzero_precision(DestStr* dest,
   // long double whole_part = 0;
   // long double fraction_part = 0;
   // fraction_part = modfl(input_num, &whole_part);
-
   input_num = round_to_n_digits(input_num, spec_opts->precision);
   floating_point_number_to_str(dest, input_num, spec_opts);
 
@@ -862,7 +861,7 @@ void g_spec_nonzero_precision(DestStr* dest, long double input_num,
   fraction_part = modfl(input_num, &whole_part);
 
   s21_size_t whole_part_length = get_num_length(whole_part, spec_opts);
-  if (whole_part == 0) {
+  if (whole_part == 0 && fraction_part != 0) {
     process_g_spec_zero_wholepart_nonzero_precision(dest, input_num, spec_opts);
   } else if (whole_part_length <= F_PRECISION &&
              whole_part_length <= spec_opts->precision) {
