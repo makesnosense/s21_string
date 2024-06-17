@@ -530,27 +530,27 @@ START_TEST(test_sprintf_g_spec_loop_precisions) {
 }
 // END_TEST
 
-// START_TEST(test_sprintf_g_spec_long_loop_precisions) {
-//   char lib_res[1000];
-//   char s21_res[1000];
-//   long double num1 = 33.2345678L;
-//   long double num2 = 333.0L;
-//   long double num3 = 33.2345678910L;
-//   long double num4 = 555555.1L;
+START_TEST(test_sprintf_g_spec_long_loop_precisions) {
+  char lib_res[1000];
+  char s21_res[1000];
+  long double num1 = 33.2345678L;
+  long double num2 = 333.0L;
+  long double num3 = 33.2345678910L;
+  long double num4 = 555555.1L;
 
-//   int precision = _i;  // supplied through add_loop_test func
+  int precision = _i;  // supplied through add_loop_test func
 
-//   char format_string[70];
+  char format_string[70];
 
-//   s21_sprintf(format_string, "%%.%dLg %%.%dLg %%.%dLg %%.%dLg", precision,
-//               precision, precision, precision);
+  s21_sprintf(format_string, "%%.%dLg %%.%dLg %%.%dLg %%.%dLg", precision,
+              precision, precision, precision);
 
-//   // printf("\n%s\n", format_string);
-//   sprintf(lib_res, format_string, num1, num2, num3, num4);
-//   s21_sprintf(s21_res, format_string, num1, num2, num3, num4);
-//   ck_assert_str_eq(lib_res, s21_res);
-// }
-// END_TEST
+  // printf("\n%s\n", format_string);
+  sprintf(lib_res, format_string, num1, num2, num3, num4);
+  s21_sprintf(s21_res, format_string, num1, num2, num3, num4);
+  ck_assert_str_eq(lib_res, s21_res);
+}
+END_TEST
 
 // START_TEST(test_sprintf_g_spec_zero_loop_precisions) {
 //   char lib_res[1000];
@@ -994,9 +994,9 @@ Suite* make_sprintf_suite() {
   // 0,
   //                     18);
   tcase_add_loop_test(tc_core, test_sprintf_g_spec_loop_precisions, 0, 14);
-  // tcase_add_loop_test(tc_core, test_sprintf_g_spec_long_loop_precisions, 0,
-  // 17); tcase_add_loop_test(tc_core, test_sprintf_g_spec_zero_loop_precisions,
-  // 0, 14);
+  tcase_add_loop_test(tc_core, test_sprintf_g_spec_long_loop_precisions, 0, 17);
+  // tcase_add_loop_test(tc_core, test_sprintf_g_spec_zero_loop_precisions, 0,
+  // 14);
   tcase_add_test(tc_core, test_sprintf_g_spec_no_precision_many_p1);
   tcase_add_test(tc_core, test_sprintf_g_spec_no_precision_many_p2);
   tcase_add_test(tc_problematic, test_sprintf_g_spec_precision_0_many_p1);

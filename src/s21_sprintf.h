@@ -23,6 +23,25 @@
 // Макрос для смены знака числа
 #define TO_ABS(x) (x) < 0 ? (-x) : (x)
 
+typedef enum Specificator {
+  NOT_SET,
+  c,
+  d,
+  e,
+  E,
+  f,
+  g,
+  G,
+  i,
+  n,
+  s,
+  o,
+  p,
+  u,
+  x,
+  X
+} Specificator;
+
 // Опции функции s21_sprintf
 typedef struct SpecifierOptions {
   bool flag_plus;        // Флаг '+'
@@ -45,11 +64,12 @@ typedef struct SpecifierOptions {
   bool is_char;
   bool is_octal;
   bool is_hexadecimal;
-  bool is_hexadecimal_capital;
+  // bool is_hexadecimal_capital;
   bool is_scientific;
   bool is_scientific_capital;
   bool is_spec_g;
   bool is_spec_g_capital;
+  Specificator specificator;
 } SpecOptions;
 
 typedef struct DestinationString {

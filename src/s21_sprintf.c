@@ -184,20 +184,26 @@ void parse_specifier(const char** format, SpecOptions* spec_opts) {
     int current_specifier = **format;
     switch (current_specifier) {
       case 'c': {
+        spec_opts->specificator = c;
         spec_opts->is_char = true;
         break;
       }
-      case 'X': {
-        spec_opts->is_hexadecimal_capital = true;
-        break;
-      }
+      case 'X':
       case 'p':
       case 'x': {
+        if (**format == 'X') {
+          spec_opts->specificator = X;
+        } else if (**format == 'x') {
+          spec_opts->specificator = x;
+        } else {
+          spec_opts->specificator = p;
+        }
         spec_opts->is_hexadecimal = true;
         break;
       }
       case 'o': {
         spec_opts->is_octal = true;
+        spec_opts->specificator = o;
         break;
       }
       case 'f':
@@ -207,12 +213,16 @@ void parse_specifier(const char** format, SpecOptions* spec_opts) {
       case 'E': {
         spec_opts->is_floating_point_number = true;
         if (**format == 'g') {
+          spec_opts->specificator = g;
           spec_opts->is_spec_g = true;
         } else if (**format == 'G') {
+          spec_opts->specificator = G;
           spec_opts->is_spec_g_capital = true;
         } else if (**format == 'e') {
+          spec_opts->specificator = e;
           spec_opts->is_scientific = true;
         } else if (**format == 'E') {
+          spec_opts->specificator = E;
           spec_opts->is_scientific_capital = true;
         }
         break;
@@ -376,7 +386,7 @@ long long unsigned ingest_unsinged(va_list* args, SpecOptions* spec_opts) {
 void set_base(SpecOptions* spec_opts) {
   if (spec_opts->is_octal) {
     spec_opts->base = 8.0;
-  } else if (spec_opts->is_hexadecimal || spec_opts->is_hexadecimal_capital) {
+  } else if (spec_opts->is_hexadecimal) {
     spec_opts->base = 16.0;
   } else {
     spec_opts->base = 10.0;
@@ -482,10 +492,10 @@ void apply_flags(DestStr* dest, SpecOptions* spec_opts) {
   } else if (spec_opts->flag_sharp) {
     if (spec_opts->is_octal) {
       dest->str[dest->curr_ind++] = '0';
-    } else if (spec_opts->is_hexadecimal) {
+    } else if (spec_opts->specificator == x) {
       dest->str[dest->curr_ind++] = '0';
       dest->str[dest->curr_ind++] = 'x';
-    } else if (spec_opts->is_hexadecimal_capital) {
+    } else if (spec_opts->specificator == X) {
       dest->str[dest->curr_ind++] = '0';
       dest->str[dest->curr_ind++] = 'X';
     } else if (spec_opts->is_floating_point_number &&
@@ -561,7 +571,7 @@ int itoa(DestStr* dest, long double input_num, SpecOptions* spec_opts) {
   int num_len = 0;
   const char* digits = "0123456789abcdef";
 
-  if (spec_opts->is_hexadecimal_capital) {
+  if (spec_opts->specificator == X) {
     digits = "0123456789ABCDEF";
   }
 
@@ -704,8 +714,6 @@ void process_scientific(DestStr* dest, long double input_num,
   set_needed_precision(spec_opts);
   if (input_num == 0.0) {
     process_scientific_zero_input(dest, spec_opts);
-  } else if (spec_opts->is_spec_g || spec_opts->is_spec_g_capital) {
-    process_scientific_for_g_spec(input_num, dest, spec_opts);
   } else {
     process_scientific_standard(dest, input_num, spec_opts);
   }
@@ -761,7 +769,8 @@ void g_spec_zero_precision(DestStr* dest, long double input_num,
   s21_size_t whole_part_length = get_num_length(roundl(input_num), spec_opts);
 
   if (whole_part_length > 1) {
-    process_scientific(dest, input_num, spec_opts);
+    process_scientific_for_g_spec(input_num, dest, spec_opts);
+    // process_scientific(dest, input_num, spec_opts);
   } else {
     input_num = scale_to_one_digit_significand(input_num);
 
@@ -814,7 +823,8 @@ void g_spec_not_set_precision(DestStr* dest, long double input_num,
     }
 
   } else {
-    process_scientific(dest, input_num, spec_opts);
+    process_scientific_for_g_spec(input_num, dest, spec_opts);
+    // process_scientific(dest, input_num, spec_opts);
   }
 }
 
@@ -842,8 +852,8 @@ void g_spec_nonzero_precision(DestStr* dest, long double input_num,
       }
     }
   } else {
-    // process_scientific_for_g_spec(input_num, dest, spec_opts);
-    process_scientific(dest, input_num, spec_opts);
+    process_scientific_for_g_spec(input_num, dest, spec_opts);
+    // process_scientific(dest, input_num, spec_opts);
   }
 }
 
