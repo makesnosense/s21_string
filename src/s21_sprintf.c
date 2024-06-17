@@ -865,7 +865,12 @@ void g_spec_nonzero_precision(DestStr* dest, long double input_num,
     process_g_spec_zero_wholepart_nonzero_precision(dest, input_num, spec_opts);
   } else if (whole_part_length <= F_PRECISION &&
              whole_part_length <= spec_opts->precision) {
-    whole_to_str(dest, whole_part, spec_opts);
+    if (spec_opts->precision <= whole_part_length) {
+      input_num = roundl(input_num);
+      whole_to_str(dest, input_num, spec_opts);
+    } else {
+      whole_to_str(dest, whole_part, spec_opts);
+    }
 
     if (spec_opts->precision > 1 && fraction_part != 0 &&
         spec_opts->precision != whole_part_length) {
