@@ -23,6 +23,25 @@
 // Макрос для смены знака числа
 #define TO_ABS(x) (x) < 0 ? (-x) : (x)
 
+typedef enum Specificator {
+  NOT_SET,
+  c,
+  d,
+  e,
+  E,
+  f,
+  g,
+  G,
+  i,
+  n,
+  s,
+  o,
+  p,
+  u,
+  x,
+  X
+} Specificator;
+
 // Опции функции s21_sprintf
 typedef struct SpecifierOptions {
   bool flag_plus;        // Флаг '+'
@@ -42,14 +61,11 @@ typedef struct SpecifierOptions {
   bool precision_set;  // Есть ли precision у спецификатора
   bool is_negative;    // Является ли отр. числом
   bool is_floating_point_number;  // Является ли float/double
-  bool is_char;
-  bool is_octal;
   bool is_hexadecimal;
-  bool is_hexadecimal_capital;
-  bool is_scientific;
-  bool is_scientific_capital;
-  bool is_spec_g;
-  bool is_spec_g_capital;
+  bool is_g_spec;
+  Specificator specificator;
+  // bool is_scientific;
+
 } SpecOptions;
 
 typedef struct DestinationString {
@@ -79,9 +95,10 @@ void set_exponent_char(SpecOptions* spec_opts);
 void is_negative(long double num, SpecOptions* spec_opts);
 s21_size_t get_num_length(long double num, SpecOptions* spec_opts);
 
+void apply_flags(DestStr* dest, SpecOptions* spec_opts);
+void calculate_padding(s21_size_t num_len, SpecOptions* spec_opts);
 void apply_width(DestStr* dest, s21_size_t num_len, SpecOptions* spec_opts);
 void apply_minus_width(DestStr* dest, SpecOptions* spec_opts);
-void apply_flags(DestStr* dest, SpecOptions* spec_opts);
 
 void process_chars(va_list* args, DestStr* dest, SpecOptions* spec_opts);
 void process_narrow_char(va_list* args, DestStr* dest, SpecOptions* spec_opts);
