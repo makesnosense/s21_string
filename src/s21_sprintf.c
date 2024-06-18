@@ -636,19 +636,6 @@ void set_needed_precision(SpecOptions* spec_opts) {
   }
 }
 
-void divide_number(long double num, int precision, long double* wh,
-                   long double* fr) {
-  // Округляем дробную часть до нужного числа
-  // long double mul = (double)pow(10.0, precision);
-  long double mul = powl(10.0, precision);
-
-  num = llround(num * mul) / mul;
-
-  // Отделяем целую и дробную часть
-  *wh = (long long)num;
-  *fr = (num - *wh) * mul;
-}
-
 void process_scientific_zero_input(DestStr* dest, SpecOptions* spec_opts) {
   // when input is 0
 
