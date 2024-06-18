@@ -162,6 +162,8 @@ long double round_to_n_digits(long double input_num, s21_size_t n_digits);
 long double multiply_by_10_n_times(long double input_num, s21_size_t n);
 long double divide_by_10_n_times(long double input_num, s21_size_t n);
 long long scale_input_and_calculate_exponent(long double* input_num);
+long long calculate_exponent(long double input_num);
+long double scale_input_to_one_digit(long double input_num);
 void add_zeros_to_destination(DestStr* dest, s21_size_t n_zeros_to_add);
 long double scale_to_one_digit_significand(long double input_num);
 void remove_trailing_zeros(DestStr* dest);
