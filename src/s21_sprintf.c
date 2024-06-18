@@ -724,6 +724,7 @@ bool g_spec_scientific_needed(long double input_num, SpecOptions* spec_opts) {
   long double whole_part = 0;
   long double fraction_part = 0;
   fraction_part = modfl(input_num, &whole_part);
+  fraction_part = fraction_part - 0;
 
   s21_size_t whole_part_length = get_num_length(whole_part, spec_opts);
 
@@ -738,9 +739,10 @@ bool g_spec_scientific_needed(long double input_num, SpecOptions* spec_opts) {
     result = true;
     // precision set and it's nonzero0
   } else if ((spec_opts->precision_set == true && spec_opts->precision != 0) &&
-             (whole_part_length > F_PRECISION ||
-              whole_part_length > spec_opts->precision ||
-              (whole_part == 0 && fraction_part != 0))) {
+             (/*whole_part_length > F_PRECISION || */  // этого условия тоже тут
+                                                       // не как не может быть
+              whole_part_length > spec_opts->precision)) {
+    /*|| (whole_part == 0 && fraction_part != 0)*/  // тут не правильно
     result = true;
   }
   return result;
@@ -767,7 +769,8 @@ void process_g_spec_zero_precision(DestStr* dest, long double input_num,
 
   s21_size_t decimal_digits_to_round_to = 0;
 
-  if (roundl(input_num) == 0) {
+  if (floorl(input_num) == 0) {  //  я заменил roundl на floorl. в этом условии
+                                 //  не нужен правильно округлённый input_num
     decimal_digits_to_round_to = 1;
   }
 
@@ -884,7 +887,16 @@ void process_scientific_for_g_spec_precision_set(long double input_num,
                                                  DestStr* dest,
                                                  SpecOptions* spec_opts) {
   int exponent = 0;
-  exponent = scale_input_and_calculate_exponent(&input_num);
+
+  long double temp_input_num = roundl(input_num);
+  // добавил округлени, таким образом если
+  // чило из 99.9 превратилось в 100.0 и экспонента считается правильно. это
+  // хорошо при подщёте экспоненты, но input_num не всегда надо округлять так
+  // рано
+
+  exponent = scale_input_and_calculate_exponent(&temp_input_num);
+  scale_input_and_calculate_exponent(&input_num);
+
   input_num = round_to_n_digits(input_num, MANTISSA_DIGITS - 1);
 
   if ((spec_opts->precision_set && spec_opts->precision == 0)) {
