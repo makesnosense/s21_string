@@ -142,9 +142,6 @@ void whole_to_str(DestStr* dest, long double num, SpecOptions* spec_opts);
 void fraction_to_str(DestStr* dest, long double num, SpecOptions* spec_opts);
 void pointer_to_str(DestStr* dest, void* ptr, SpecOptions* spec_opts);
 
-void divide_number(long double num, int precision, long double* wh,
-                   long double* fr);
-
 long double round_to_n_digits(long double input_num, s21_size_t n_digits);
 long double multiply_by_10_n_times(long double input_num, s21_size_t n);
 long double divide_by_10_n_times(long double input_num, s21_size_t n);
