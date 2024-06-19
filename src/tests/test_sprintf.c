@@ -1237,10 +1237,10 @@ START_TEST(test_sprintf_g_spec_set_precision_many_p4) {
   char format_string[500];
 
   s21_sprintf(format_string,
-              "%%.%dg %%.%dg %%.%dg %%.%dg %%.%dg %%.%dg %%.%dg %%.%dg %%.%dg"
-              "%%.%dg %%.%dg %%.%dg %%.%dg %%.%dg %%.%dg %%.%dg %%.%dg %%.%dg"
-              "%%.%dg %%.%dg %%.%dg %%.%dg %%.%dg %%.%dg %%.%dg %%.%dg %%.%dg"
-              "%%.%dg %%.%dg %%.%dg %%.%dg %%.%dg %%.%dg %%.%dg %%.%dg %%.%dg"
+              "%%.%dg %%.%dg %%.%dg %%.%dg %%.%dg %%.%dg %%.%dg %%.%dg %%.%dg "
+              "%%.%dg %%.%dg %%.%dg %%.%dg %%.%dg %%.%dg %%.%dg %%.%dg %%.%dg "
+              "%%.%dg %%.%dg %%.%dg %%.%dg %%.%dg %%.%dg %%.%dg %%.%dg %%.%dg "
+              "%%.%dg %%.%dg %%.%dg %%.%dg %%.%dg %%.%dg %%.%dg %%.%dg %%.%dg "
               "%%.%dg %%.%dg %%.%dg %%.%dg %%.%dg %%.%dg %%.%dg",
               pr, pr, pr, pr, pr, pr, pr, pr, pr, pr, pr, pr, pr, pr, pr, pr,
               pr, pr, pr, pr, pr, pr, pr, pr, pr, pr, pr, pr, pr, pr, pr, pr,
@@ -1320,10 +1320,10 @@ START_TEST(test_sprintf_g_spec_long_double_set_precision_many_p1) {
 
   s21_sprintf(
       format_string,
-      "%%.%dLg %%.%dLg %%.%dLg %%.%dLg %%.%dLg %%.%dLg %%.%dLg %%.%dLg %%.%dLg"
-      "%%.%dLg %%.%dLg %%.%dLg %%.%dLg %%.%dLg %%.%dLg %%.%dLg %%.%dLg %%.%dLg"
-      "%%.%dLg %%.%dLg %%.%dLg %%.%dLg %%.%dLg %%.%dLg %%.%dLg %%.%dLg %%.%dLg"
-      "%%.%dLg %%.%dLg %%.%dLg %%.%dLg %%.%dLg %%.%dLg %%.%dLg %%.%dLg %%.%dLg"
+      "%%.%dLg %%.%dLg %%.%dLg %%.%dLg %%.%dLg %%.%dLg %%.%dLg %%.%dLg %%.%dLg "
+      "%%.%dLg %%.%dLg %%.%dLg %%.%dLg %%.%dLg %%.%dLg %%.%dLg %%.%dLg %%.%dLg "
+      "%%.%dLg %%.%dLg %%.%dLg %%.%dLg %%.%dLg %%.%dLg %%.%dLg %%.%dLg %%.%dLg "
+      "%%.%dLg %%.%dLg %%.%dLg %%.%dLg %%.%dLg %%.%dLg %%.%dLg %%.%dLg %%.%dLg "
       "%%.%dLg %%.%dLg %%.%dLg %%.%dLg %%.%dLg %%.%dLg %%.%dLg",
       pr, pr, pr, pr, pr, pr, pr, pr, pr, pr, pr, pr, pr, pr, pr, pr, pr, pr,
       pr, pr, pr, pr, pr, pr, pr, pr, pr, pr, pr, pr, pr, pr, pr, pr, pr, pr,
