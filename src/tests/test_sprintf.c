@@ -1185,15 +1185,15 @@ START_TEST(test_sprintf_g_spec_set_precision_many_p4) {
   char lib_res[1000];
   char s21_res[1000];
   double num4 = 9994;
-  double num4_1 = 9234.9;
-  double num4_2 = 9234.9;
-  double num4_3 = 9234.93;
-  double num4_4 = 9234.934;
-  double num4_5 = 9234.9345;
-  double num4_6 = 9234.93456;
-  double num4_7 = 9234.934567;
-  double num4_8 = 9234.9345678;
-  double num4_9 = 9234.93456789;
+  double num4_1 = 9934.9;
+  double num4_2 = 9934.9;
+  double num4_3 = 9934.93;
+  double num4_4 = 9934.934;
+  double num4_5 = 9934.9345;
+  double num4_6 = 9934.93456;
+  double num4_7 = 9934.934567;
+  double num4_8 = 9934.9345678;
+  double num4_9 = 9934.93456789;
   double num4_10 = 9234.9345678910;
 
   double num5 = 92345;
@@ -1266,7 +1266,7 @@ END_TEST
 START_TEST(test_sprintf_g_spec_long_double_set_precision_many_p1) {
   char lib_res[1000];
   char s21_res[1000];
-  long double num4 = 9994L;
+  long double num4 = 9994.0L;
   long double num4_1 = 9234.9L;
   long double num4_2 = 9234.9L;
   long double num4_3 = 9234.93L;
@@ -1342,6 +1342,30 @@ START_TEST(test_sprintf_g_spec_long_double_set_precision_many_p1) {
               num5_10, num6, num6_1, num6_2, num6_3, num6_4, num6_5, num6_6,
               num6_7, num6_8, num6_9, num6_10, num7, num7_1, num7_2, num7_3,
               num7_4, num7_5, num7_6, num7_7, num7_8, num7_9, num7_10);
+  ck_assert_str_eq(lib_res, s21_res);
+}
+END_TEST
+
+START_TEST(test_sprintf_g_spec_long_double_set_precision_many_p2) {
+  char lib_res[1000];
+  char s21_res[1000];
+
+  long double num5 = 12345L;
+  long double num5_1 = 12345.0L;
+  long double num5_2 = 12345.2L;
+  long double num5_3 = 12345.23L;
+  long double num5_4 = 12345.234L;
+
+  int pr = _i;  // supplied through add_loop_test func
+
+  char format_string[500];
+
+  s21_sprintf(format_string, "%%.%dLg %%.%dLg %%.%dLg %%.%dLg %%.%dLg", pr, pr,
+              pr, pr, pr);
+
+  sprintf(lib_res, format_string, num5, num5_1, num5_2, num5_3, num5_4);
+
+  s21_sprintf(s21_res, format_string, num5, num5_1, num5_2, num5_3, num5_4);
   ck_assert_str_eq(lib_res, s21_res);
 }
 END_TEST
@@ -1428,6 +1452,10 @@ Suite* make_sprintf_suite() {
 
   tcase_add_loop_test(
       tc_core, test_sprintf_g_spec_long_double_set_precision_many_p1, 0, 18);
+
+  tcase_add_loop_test(tc_problematic,
+                      test_sprintf_g_spec_long_double_set_precision_many_p2, 4,
+                      5);
 
   suite_add_tcase(sprintf_suite, tc_core);
   suite_add_tcase(sprintf_suite, tc_problematic);
