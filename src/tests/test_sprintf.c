@@ -539,7 +539,7 @@ START_TEST(test_sprintf_g_spec_long_loop_precisions) {
   long double num5 = 4444.7L;
   long double num6 = 4444.4L;
   long double num7 = 0.923423L;
-  long double num8 = 9999999999999.92L;
+  long double num8 = 99999999999999.92L;
   int precision = _i;  // supplied through add_loop_test func
 
   char format_string[70];
