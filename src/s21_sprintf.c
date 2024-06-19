@@ -667,7 +667,11 @@ void process_scientific_standard(DestStr* dest, long double input_num,
                                  SpecOptions* spec_opts) {
   int exponent = 0;
   // exponent = scale_input_and_calculate_exponent(&input_num);
-  exponent = calculate_exponent(input_num);
+  if (input_num > 1) {
+    exponent = calculate_exponent(roundl(input_num));
+  } else {
+    exponent = calculate_exponent(input_num);
+  }
   input_num = scale_input_to_one_digit(input_num);
   if (spec_opts->precision_set && spec_opts->precision == 0) {
     input_num = roundl(input_num);
@@ -889,14 +893,20 @@ void process_scientific_for_g_spec_not_set_precision(long double input_num,
                                                      SpecOptions* spec_opts) {
   int exponent = 0;
   // exponent = scale_input_and_calculate_exponent(&input_num);
-  exponent = calculate_exponent(input_num);
-  input_num = scale_input_to_one_digit(input_num);
+  if (input_num > 1) {
+    exponent = calculate_exponent(roundl(input_num));
+  } else {
+    exponent = calculate_exponent(input_num);
+  }
+  input_num = scale_input_to_one_digit(roundl(input_num));
 
   input_num = round_to_n_digits(input_num, MANTISSA_DIGITS);
 
   floating_point_number_to_str(dest, input_num, spec_opts);
 
   dest->str[dest->curr_ind--] = '\0';
+
+  remove_trailing_zeros(dest);
 
   add_scientific_e_part(exponent, dest, spec_opts);
 }
@@ -906,8 +916,11 @@ void process_scientific_for_g_spec_precision_set(long double input_num,
                                                  SpecOptions* spec_opts) {
   int exponent = 0;
 
-  long double temp_input_num = roundl(input_num);
-  exponent = calculate_exponent(temp_input_num);
+  if (input_num > 1) {
+    exponent = calculate_exponent(roundl(input_num));
+  } else {
+    exponent = calculate_exponent(input_num);
+  }
 
   input_num = scale_input_to_one_digit(input_num);
 
@@ -983,6 +996,10 @@ long double scale_to_one_digit_significand(long double input_num) {
 
 void remove_trailing_zeros(DestStr* dest) {
   while (dest->curr_ind > 0 && dest->str[dest->curr_ind - 1] == '0') {
+    dest->str[dest->curr_ind - 1] = '\0';
+    dest->curr_ind--;
+  }
+  if (dest->str[dest->curr_ind - 1] == '.') {  // ВРЕМЕННО !!!
     dest->str[dest->curr_ind - 1] = '\0';
     dest->curr_ind--;
   }
