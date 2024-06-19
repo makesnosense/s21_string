@@ -1090,3 +1090,23 @@ void remove_trailing_zeros(DestStr* dest) {
     dest->curr_ind--;
   }
 }
+
+long double bank_roundl(long double input_num) {
+  long double result;
+  long double whole_part;
+  long double fraction_part = modfl(input_num, &whole_part);
+  if (fmodl(whole_part, 2.0) == 0) {
+    if (fraction_part <= 0.5L) {
+      result = floor(input_num);
+    } else {
+      result = ceil(input_num);
+    }
+  } else {
+    if (fraction_part >= 0.5L) {
+      result = ceil(input_num);
+    } else {
+      result = floor(input_num);
+    }
+  }
+  return result;
+}
