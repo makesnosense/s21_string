@@ -94,6 +94,7 @@ void set_exponent_char(SpecOptions* spec_opts);
 
 void is_negative(long double num, SpecOptions* spec_opts);
 s21_size_t get_num_length(long double num, SpecOptions* spec_opts);
+s21_size_t get_num_length_simple(long double num);
 
 void apply_flags(DestStr* dest, SpecOptions* spec_opts);
 void calculate_padding(s21_size_t num_len, SpecOptions* spec_opts);
@@ -134,14 +135,14 @@ void process_g_spec_zero_wholepart_nonzero_precision(DestStr* dest,
                                                      long double input_num,
                                                      SpecOptions* spec_opts);
 
-void process_scientific_for_g_spec(long double input_num, DestStr* dest,
+void process_scientific_for_g_spec(DestStr* dest, long double input_num,
                                    SpecOptions* spec_opts);
 
-void process_scientific_for_g_spec_not_set_precision(long double input_num,
-                                                     DestStr* dest,
+void process_scientific_for_g_spec_not_set_precision(DestStr* dest,
+                                                     long double input_num,
                                                      SpecOptions* spec_opts);
-void process_scientific_for_g_spec_precision_set(long double input_num,
-                                                 DestStr* dest,
+void process_scientific_for_g_spec_precision_set(DestStr* dest,
+                                                 long double input_num,
                                                  SpecOptions* spec_opts);
 
 long long int ingest_int(va_list* args, SpecOptions* spec_opts);
@@ -164,9 +165,11 @@ long double divide_by_10_n_times(long double input_num, s21_size_t n);
 long long scale_input_and_calculate_exponent(long double* input_num);
 long long calculate_exponent(long double input_num);
 long double scale_input_to_one_digit(long double input_num);
+long double scale_input_to_n_digits(long double input_num, s21_size_t n);
 void add_zeros_to_destination(DestStr* dest, s21_size_t n_zeros_to_add);
 long double scale_to_one_digit_significand(long double input_num);
 void remove_trailing_zeros(DestStr* dest);
+long double bank_roundl(long double input_num);
 
 // Функция устанавливает локаль в зависимости от ОС
 void set_locale_for_wide_chars();

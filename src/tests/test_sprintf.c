@@ -1000,23 +1000,18 @@ START_TEST(test_sprintf_g_spec_set_precision_many_p1) {
               pr, pr, pr, pr, pr, pr, pr, pr, pr, pr, pr, pr, pr, pr, pr, pr,
               pr, pr, pr, pr, pr, pr, pr, pr, pr, pr, pr, pr);
 
-  sprintf(lib_res,
-          "%g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g "
-          "%g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g",
-          num0, num0_1, num0_2, num0_3, num0_4, num0_5, num0_6, num0_7, num0_8,
-          num0_9, num0_10, num1, num1_1, num1_2, num1_3, num1_4, num1_5, num1_6,
-          num1_7, num1_8, num1_9, num1_10, num2, num2_1, num2_2, num2_3, num2_4,
-          num2_5, num2_6, num2_7, num2_8, num2_9, num2_10, num3, num3_1, num3_2,
-          num3_3, num3_4, num3_5, num3_6, num3_7, num3_8, num3_9, num3_10);
-  s21_sprintf(
-      s21_res,
-      "%g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g "
-      "%g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g",
-      num0, num0_1, num0_2, num0_3, num0_4, num0_5, num0_6, num0_7, num0_8,
-      num0_9, num0_10, num1, num1_1, num1_2, num1_3, num1_4, num1_5, num1_6,
-      num1_7, num1_8, num1_9, num1_10, num2, num2_1, num2_2, num2_3, num2_4,
-      num2_5, num2_6, num2_7, num2_8, num2_9, num2_10, num3, num3_1, num3_2,
-      num3_3, num3_4, num3_5, num3_6, num3_7, num3_8, num3_9, num3_10);
+  sprintf(lib_res, format_string, num0, num0_1, num0_2, num0_3, num0_4, num0_5,
+          num0_6, num0_7, num0_8, num0_9, num0_10, num1, num1_1, num1_2, num1_3,
+          num1_4, num1_5, num1_6, num1_7, num1_8, num1_9, num1_10, num2, num2_1,
+          num2_2, num2_3, num2_4, num2_5, num2_6, num2_7, num2_8, num2_9,
+          num2_10, num3, num3_1, num3_2, num3_3, num3_4, num3_5, num3_6, num3_7,
+          num3_8, num3_9, num3_10);
+  s21_sprintf(s21_res, format_string, num0, num0_1, num0_2, num0_3, num0_4,
+              num0_5, num0_6, num0_7, num0_8, num0_9, num0_10, num1, num1_1,
+              num1_2, num1_3, num1_4, num1_5, num1_6, num1_7, num1_8, num1_9,
+              num1_10, num2, num2_1, num2_2, num2_3, num2_4, num2_5, num2_6,
+              num2_7, num2_8, num2_9, num2_10, num3, num3_1, num3_2, num3_3,
+              num3_4, num3_5, num3_6, num3_7, num3_8, num3_9, num3_10);
 
   ck_assert_str_eq(lib_res, s21_res);
 }
@@ -1087,24 +1082,19 @@ START_TEST(test_sprintf_g_spec_set_precision_many_p2) {
               pr, pr, pr, pr, pr, pr, pr, pr, pr, pr, pr, pr, pr, pr, pr, pr,
               pr, pr, pr, pr, pr, pr, pr, pr, pr, pr, pr, pr);
 
-  sprintf(lib_res,
-          "%g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g"
-          "%g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g",
-          num4, num4_1, num4_2, num4_3, num4_4, num4_5, num4_6, num4_7, num4_8,
-          num4_9, num4_10, num5, num5_1, num5_2, num5_3, num5_4, num5_5, num5_6,
-          num5_7, num5_8, num5_9, num5_10, num6, num6_1, num6_2, num6_3, num6_4,
-          num6_5, num6_6, num6_7, num6_8, num6_9, num6_10, num7, num7_1, num7_2,
-          num7_3, num7_4, num7_5, num7_6, num7_7, num7_8, num7_9, num7_10);
+  sprintf(lib_res, format_string, num4, num4_1, num4_2, num4_3, num4_4, num4_5,
+          num4_6, num4_7, num4_8, num4_9, num4_10, num5, num5_1, num5_2, num5_3,
+          num5_4, num5_5, num5_6, num5_7, num5_8, num5_9, num5_10, num6, num6_1,
+          num6_2, num6_3, num6_4, num6_5, num6_6, num6_7, num6_8, num6_9,
+          num6_10, num7, num7_1, num7_2, num7_3, num7_4, num7_5, num7_6, num7_7,
+          num7_8, num7_9, num7_10);
 
-  s21_sprintf(
-      s21_res,
-      "%g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g"
-      "%g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g",
-      num4, num4_1, num4_2, num4_3, num4_4, num4_5, num4_6, num4_7, num4_8,
-      num4_9, num4_10, num5, num5_1, num5_2, num5_3, num5_4, num5_5, num5_6,
-      num5_7, num5_8, num5_9, num5_10, num6, num6_1, num6_2, num6_3, num6_4,
-      num6_5, num6_6, num6_7, num6_8, num6_9, num6_10, num7, num7_1, num7_2,
-      num7_3, num7_4, num7_5, num7_6, num7_7, num7_8, num7_9, num7_10);
+  s21_sprintf(s21_res, format_string, num4, num4_1, num4_2, num4_3, num4_4,
+              num4_5, num4_6, num4_7, num4_8, num4_9, num4_10, num5, num5_1,
+              num5_2, num5_3, num5_4, num5_5, num5_6, num5_7, num5_8, num5_9,
+              num5_10, num6, num6_1, num6_2, num6_3, num6_4, num6_5, num6_6,
+              num6_7, num6_8, num6_9, num6_10, num7, num7_1, num7_2, num7_3,
+              num7_4, num7_5, num7_6, num7_7, num7_8, num7_9, num7_10);
   ck_assert_str_eq(lib_res, s21_res);
 }
 END_TEST
@@ -1113,7 +1103,7 @@ START_TEST(test_sprintf_g_spec_set_precision_many_p3) {
   char lib_res[1000];
   char s21_res[1000];
   double num0 = 0;
-  double num0_1 = 0.9;
+  double num0_1 = 0.1;
   double num0_2 = 0.9;
   double num0_3 = 0.93;
   double num0_4 = 0.934;
@@ -1127,9 +1117,9 @@ START_TEST(test_sprintf_g_spec_set_precision_many_p3) {
   double num1 = 9;
   double num1_1 = 9.0;
   double num1_2 = 9.9;
-  double num1_3 = 9.93;
-  double num1_4 = 9.934;
-  double num1_5 = 9.9345;
+  double num1_3 = 9.49;
+  double num1_4 = 9.500;
+  double num1_5 = 9.5001;
   double num1_6 = 9.93456;
   double num1_7 = 9.934567;
   double num1_8 = 9.9945678;
@@ -1174,23 +1164,18 @@ START_TEST(test_sprintf_g_spec_set_precision_many_p3) {
               pr, pr, pr, pr, pr, pr, pr, pr, pr, pr, pr, pr, pr, pr, pr, pr,
               pr, pr, pr, pr, pr, pr, pr, pr, pr, pr, pr, pr);
 
-  sprintf(lib_res,
-          "%g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g"
-          "%g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g",
-          num0, num0_1, num0_2, num0_3, num0_4, num0_5, num0_6, num0_7, num0_8,
-          num0_9, num0_10, num1, num1_1, num1_2, num1_3, num1_4, num1_5, num1_6,
-          num1_7, num1_8, num1_9, num1_10, num2, num2_1, num2_2, num2_3, num2_4,
-          num2_5, num2_6, num2_7, num2_8, num2_9, num2_10, num3, num3_1, num3_2,
-          num3_3, num3_4, num3_5, num3_6, num3_7, num3_8, num3_9, num3_10);
-  s21_sprintf(
-      s21_res,
-      "%g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g"
-      "%g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g",
-      num0, num0_1, num0_2, num0_3, num0_4, num0_5, num0_6, num0_7, num0_8,
-      num0_9, num0_10, num1, num1_1, num1_2, num1_3, num1_4, num1_5, num1_6,
-      num1_7, num1_8, num1_9, num1_10, num2, num2_1, num2_2, num2_3, num2_4,
-      num2_5, num2_6, num2_7, num2_8, num2_9, num2_10, num3, num3_1, num3_2,
-      num3_3, num3_4, num3_5, num3_6, num3_7, num3_8, num3_9, num3_10);
+  sprintf(lib_res, format_string, num0, num0_1, num0_2, num0_3, num0_4, num0_5,
+          num0_6, num0_7, num0_8, num0_9, num0_10, num1, num1_1, num1_2, num1_3,
+          num1_4, num1_5, num1_6, num1_7, num1_8, num1_9, num1_10, num2, num2_1,
+          num2_2, num2_3, num2_4, num2_5, num2_6, num2_7, num2_8, num2_9,
+          num2_10, num3, num3_1, num3_2, num3_3, num3_4, num3_5, num3_6, num3_7,
+          num3_8, num3_9, num3_10);
+  s21_sprintf(s21_res, format_string, num0, num0_1, num0_2, num0_3, num0_4,
+              num0_5, num0_6, num0_7, num0_8, num0_9, num0_10, num1, num1_1,
+              num1_2, num1_3, num1_4, num1_5, num1_6, num1_7, num1_8, num1_9,
+              num1_10, num2, num2_1, num2_2, num2_3, num2_4, num2_5, num2_6,
+              num2_7, num2_8, num2_9, num2_10, num3, num3_1, num3_2, num3_3,
+              num3_4, num3_5, num3_6, num3_7, num3_8, num3_9, num3_10);
 
   ck_assert_str_eq(lib_res, s21_res);
 }
@@ -1200,15 +1185,15 @@ START_TEST(test_sprintf_g_spec_set_precision_many_p4) {
   char lib_res[1000];
   char s21_res[1000];
   double num4 = 9994;
-  double num4_1 = 9234.9;
-  double num4_2 = 9234.9;
-  double num4_3 = 9234.93;
-  double num4_4 = 9234.934;
-  double num4_5 = 9234.9345;
-  double num4_6 = 9234.93456;
-  double num4_7 = 9234.934567;
-  double num4_8 = 9234.9345678;
-  double num4_9 = 9234.93456789;
+  double num4_1 = 9934.9;
+  double num4_2 = 9934.9;
+  double num4_3 = 9934.93;
+  double num4_4 = 9934.934;
+  double num4_5 = 9934.9345;
+  double num4_6 = 9934.93456;
+  double num4_7 = 9934.934567;
+  double num4_8 = 9934.9345678;
+  double num4_9 = 9934.93456789;
   double num4_10 = 9234.9345678910;
 
   double num5 = 92345;
@@ -1252,33 +1237,145 @@ START_TEST(test_sprintf_g_spec_set_precision_many_p4) {
   char format_string[500];
 
   s21_sprintf(format_string,
-              "%%.%dg %%.%dg %%.%dg %%.%dg %%.%dg %%.%dg %%.%dg %%.%dg %%.%dg"
-              "%%.%dg %%.%dg %%.%dg %%.%dg %%.%dg %%.%dg %%.%dg %%.%dg %%.%dg"
-              "%%.%dg %%.%dg %%.%dg %%.%dg %%.%dg %%.%dg %%.%dg %%.%dg %%.%dg"
-              "%%.%dg %%.%dg %%.%dg %%.%dg %%.%dg %%.%dg %%.%dg %%.%dg %%.%dg"
+              "%%.%dg %%.%dg %%.%dg %%.%dg %%.%dg %%.%dg %%.%dg %%.%dg %%.%dg "
+              "%%.%dg %%.%dg %%.%dg %%.%dg %%.%dg %%.%dg %%.%dg %%.%dg %%.%dg "
+              "%%.%dg %%.%dg %%.%dg %%.%dg %%.%dg %%.%dg %%.%dg %%.%dg %%.%dg "
+              "%%.%dg %%.%dg %%.%dg %%.%dg %%.%dg %%.%dg %%.%dg %%.%dg %%.%dg "
               "%%.%dg %%.%dg %%.%dg %%.%dg %%.%dg %%.%dg %%.%dg",
               pr, pr, pr, pr, pr, pr, pr, pr, pr, pr, pr, pr, pr, pr, pr, pr,
               pr, pr, pr, pr, pr, pr, pr, pr, pr, pr, pr, pr, pr, pr, pr, pr,
               pr, pr, pr, pr, pr, pr, pr, pr, pr, pr, pr, pr);
 
-  sprintf(lib_res,
-          "%g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g"
-          "%g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g",
-          num4, num4_1, num4_2, num4_3, num4_4, num4_5, num4_6, num4_7, num4_8,
-          num4_9, num4_10, num5, num5_1, num5_2, num5_3, num5_4, num5_5, num5_6,
-          num5_7, num5_8, num5_9, num5_10, num6, num6_1, num6_2, num6_3, num6_4,
-          num6_5, num6_6, num6_7, num6_8, num6_9, num6_10, num7, num7_1, num7_2,
-          num7_3, num7_4, num7_5, num7_6, num7_7, num7_8, num7_9, num7_10);
+  sprintf(lib_res, format_string, num4, num4_1, num4_2, num4_3, num4_4, num4_5,
+          num4_6, num4_7, num4_8, num4_9, num4_10, num5, num5_1, num5_2, num5_3,
+          num5_4, num5_5, num5_6, num5_7, num5_8, num5_9, num5_10, num6, num6_1,
+          num6_2, num6_3, num6_4, num6_5, num6_6, num6_7, num6_8, num6_9,
+          num6_10, num7, num7_1, num7_2, num7_3, num7_4, num7_5, num7_6, num7_7,
+          num7_8, num7_9, num7_10);
+
+  s21_sprintf(s21_res, format_string, num4, num4_1, num4_2, num4_3, num4_4,
+              num4_5, num4_6, num4_7, num4_8, num4_9, num4_10, num5, num5_1,
+              num5_2, num5_3, num5_4, num5_5, num5_6, num5_7, num5_8, num5_9,
+              num5_10, num6, num6_1, num6_2, num6_3, num6_4, num6_5, num6_6,
+              num6_7, num6_8, num6_9, num6_10, num7, num7_1, num7_2, num7_3,
+              num7_4, num7_5, num7_6, num7_7, num7_8, num7_9, num7_10);
+  ck_assert_str_eq(lib_res, s21_res);
+}
+END_TEST
+
+START_TEST(test_sprintf_g_spec_long_double_set_precision_many_p1) {
+  char lib_res[1000];
+  char s21_res[1000];
+  long double num4 = 9994.0L;
+  long double num4_1 = 9234.9L;
+  long double num4_2 = 9234.9L;
+  long double num4_3 = 9234.93L;
+  long double num4_4 = 9234.934L;
+  long double num4_5 = 9234.9345L;
+  long double num4_6 = 9234.93456L;
+  long double num4_7 = 9234.934567L;
+  long double num4_8 = 9234.9345678L;
+  long double num4_9 = 9234.93456789L;
+  long double num4_10 = 9234.9345678910L;
+
+  long double num5 = 92345L;
+  long double num5_1 = 99999.0L;
+  long double num5_2 = 99999.9L;
+  long double num5_3 = 99999.93L;
+  long double num5_4 = 99999.934L;
+  long double num5_5 = 99999.9345L;
+  long double num5_6 = 99999.93456L;
+  long double num5_7 = 99999.934567L;
+  long double num5_8 = 99999.9345678L;
+  long double num5_9 = 99999.93456789L;
+  long double num5_10 = 99999.9345678910L;
+
+  long double num6 = 999999L;
+  long double num6_1 = 999999.0L;
+  long double num6_2 = 999999.2L;
+  long double num6_3 = 999999.23L;
+  long double num6_4 = 999999.234L;
+  long double num6_5 = 999999.2345L;
+  long double num6_6 = 999999.23456L;
+  long double num6_7 = 999999.234567L;
+  long double num6_8 = 999999.2345678L;
+  long double num6_9 = 999999.23456789L;
+  long double num6_10 = 999999.2345678910L;
+
+  long double num7 = 9999999L;
+  long double num7_1 = 9999999.0L;
+  long double num7_2 = 9999999.9L;
+  long double num7_3 = 9999999.93L;
+  long double num7_4 = 9999999.934L;
+  long double num7_5 = 9999999.9345L;
+  long double num7_6 = 9999999.93456L;
+  long double num7_7 = 9999999.934567L;
+  long double num7_8 = 9999999.9345678L;
+  long double num7_9 = 9999999.93456789L;
+  long double num7_10 = 9999999.9345678910L;
+
+  int pr = _i;  // supplied through add_loop_test func
+
+  char format_string[500];
 
   s21_sprintf(
-      s21_res,
-      "%g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g"
-      "%g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g",
-      num4, num4_1, num4_2, num4_3, num4_4, num4_5, num4_6, num4_7, num4_8,
-      num4_9, num4_10, num5, num5_1, num5_2, num5_3, num5_4, num5_5, num5_6,
-      num5_7, num5_8, num5_9, num5_10, num6, num6_1, num6_2, num6_3, num6_4,
-      num6_5, num6_6, num6_7, num6_8, num6_9, num6_10, num7, num7_1, num7_2,
-      num7_3, num7_4, num7_5, num7_6, num7_7, num7_8, num7_9, num7_10);
+      format_string,
+      "%%.%dLg %%.%dLg %%.%dLg %%.%dLg %%.%dLg %%.%dLg %%.%dLg %%.%dLg %%.%dLg "
+      "%%.%dLg %%.%dLg %%.%dLg %%.%dLg %%.%dLg %%.%dLg %%.%dLg %%.%dLg %%.%dLg "
+      "%%.%dLg %%.%dLg %%.%dLg %%.%dLg %%.%dLg %%.%dLg %%.%dLg %%.%dLg %%.%dLg "
+      "%%.%dLg %%.%dLg %%.%dLg %%.%dLg %%.%dLg %%.%dLg %%.%dLg %%.%dLg %%.%dLg "
+      "%%.%dLg %%.%dLg %%.%dLg %%.%dLg %%.%dLg %%.%dLg %%.%dLg",
+      pr, pr, pr, pr, pr, pr, pr, pr, pr, pr, pr, pr, pr, pr, pr, pr, pr, pr,
+      pr, pr, pr, pr, pr, pr, pr, pr, pr, pr, pr, pr, pr, pr, pr, pr, pr, pr,
+      pr, pr, pr, pr, pr, pr, pr, pr);
+
+  sprintf(lib_res, format_string, num4, num4_1, num4_2, num4_3, num4_4, num4_5,
+          num4_6, num4_7, num4_8, num4_9, num4_10, num5, num5_1, num5_2, num5_3,
+          num5_4, num5_5, num5_6, num5_7, num5_8, num5_9, num5_10, num6, num6_1,
+          num6_2, num6_3, num6_4, num6_5, num6_6, num6_7, num6_8, num6_9,
+          num6_10, num7, num7_1, num7_2, num7_3, num7_4, num7_5, num7_6, num7_7,
+          num7_8, num7_9, num7_10);
+
+  s21_sprintf(s21_res, format_string, num4, num4_1, num4_2, num4_3, num4_4,
+              num4_5, num4_6, num4_7, num4_8, num4_9, num4_10, num5, num5_1,
+              num5_2, num5_3, num5_4, num5_5, num5_6, num5_7, num5_8, num5_9,
+              num5_10, num6, num6_1, num6_2, num6_3, num6_4, num6_5, num6_6,
+              num6_7, num6_8, num6_9, num6_10, num7, num7_1, num7_2, num7_3,
+              num7_4, num7_5, num7_6, num7_7, num7_8, num7_9, num7_10);
+  ck_assert_str_eq(lib_res, s21_res);
+}
+END_TEST
+
+START_TEST(test_sprintf_g_spec_long_double_set_precision_many_p2) {
+  char lib_res[1000];
+  char s21_res[1000];
+
+  double num7 = 1234567;
+  double num7_1 = 1234567.0;
+  double num7_2 = 1234567.2;
+  double num7_3 = 1234567.23;
+  double num7_4 = 1234567.234;
+  double num7_5 = 1234567.2345;
+  double num7_6 = 1234567.23456;
+  double num7_7 = 1234567.234567;
+  double num7_8 = 1234567.2345678;
+  double num7_9 = 1234567.23456789;
+  double num7_10 = 1234567.2345678910;
+
+  int pr = _i;  // supplied through add_loop_test func
+
+  char format_string[500];
+
+  s21_sprintf(format_string,
+              "%%.%dg %%.%dg %%.%dg %%.%dg %%.%dg %%.%dg %%.%dg %%.%dg %%.%dg "
+              "%%.%dg %%.%dg",
+              pr, pr, pr, pr, pr, pr, pr, pr, pr, pr, pr);
+
+  sprintf(lib_res, format_string, num7, num7_1, num7_2, num7_3, num7_4, num7_5,
+          num7_6, num7_7, num7_8, num7_9, num7_10);
+
+  s21_sprintf(s21_res, format_string, num7, num7_1, num7_2, num7_3, num7_4,
+              num7_5, num7_6, num7_7, num7_8, num7_9, num7_10);
   ck_assert_str_eq(lib_res, s21_res);
 }
 END_TEST
@@ -1362,6 +1459,13 @@ Suite* make_sprintf_suite() {
                       14);
   tcase_add_loop_test(tc_core, test_sprintf_g_spec_set_precision_many_p4, 0,
                       14);
+
+  tcase_add_loop_test(
+      tc_core, test_sprintf_g_spec_long_double_set_precision_many_p1, 0, 18);
+
+  tcase_add_loop_test(tc_problematic,
+                      test_sprintf_g_spec_long_double_set_precision_many_p2, 6,
+                      7);
 
   suite_add_tcase(sprintf_suite, tc_core);
   suite_add_tcase(sprintf_suite, tc_problematic);
