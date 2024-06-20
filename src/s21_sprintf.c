@@ -668,13 +668,13 @@ void process_scientific_standard(DestStr* dest, long double input_num,
   int exponent = 0;
   // exponent = scale_input_and_calculate_exponent(&input_num);
   if (input_num > 1) {
-    exponent = calculate_exponent(roundl(input_num));
+    exponent = calculate_exponent(bank_roundl(input_num));
   } else {
     exponent = calculate_exponent(input_num);
   }
   input_num = scale_input_to_one_digit(input_num);
   if (spec_opts->precision_set && spec_opts->precision == 0) {
-    input_num = roundl(input_num);
+    input_num = bank_roundl(input_num);
   }
   floating_point_number_to_str(dest, input_num, spec_opts);
   add_scientific_e_part(exponent, dest, spec_opts);
@@ -748,7 +748,7 @@ bool g_spec_scientific_needed(long double input_num, SpecOptions* spec_opts) {
   // s21_size_t whole_part_length = get_num_length(whole_part, spec_opts);
 
   s21_size_t whole_part_length_after_rounding =
-      get_num_length(roundl(input_num), spec_opts);
+      get_num_length(bank_roundl(input_num), spec_opts);
 
   /// set zero precision
   if (spec_opts->precision_set == true && spec_opts->precision == 0 &&
@@ -824,7 +824,7 @@ void process_g_spec_not_set_precision(DestStr* dest, long double input_num,
 
   // whole_part_length always <= F_PRECISION
   fraction_part = multiply_by_10_n_times(fraction_part, needed_decimal_places);
-  fraction_part = roundl(fraction_part);
+  fraction_part = bank_roundl(fraction_part);
 
   whole_to_str(dest, whole_part, spec_opts);
 
@@ -862,7 +862,7 @@ void process_g_spec_nonzero_precision(DestStr* dest, long double input_num,
 
   s21_size_t whole_part_length = get_num_length(whole_part, spec_opts);
   if (spec_opts->precision <= whole_part_length) {
-    input_num = roundl(input_num);
+    input_num = bank_roundl(input_num);
     whole_to_str(dest, input_num, spec_opts);
   } else {
     whole_to_str(dest, whole_part, spec_opts);
@@ -871,7 +871,7 @@ void process_g_spec_nonzero_precision(DestStr* dest, long double input_num,
       spec_opts->precision != whole_part_length) {
     dest->str[dest->curr_ind++] = '.';
     fraction_part *= pow(10, spec_opts->precision - whole_part_length);
-    itoa(dest, roundl(fraction_part), spec_opts);
+    itoa(dest, bank_roundl(fraction_part), spec_opts);
 
     if (input_num != 0.0) {
       remove_trailing_zeros(dest);
@@ -894,11 +894,11 @@ void process_scientific_for_g_spec_not_set_precision(DestStr* dest,
   int exponent = 0;
 
   if (input_num > 1) {
-    exponent = calculate_exponent(roundl(input_num));
+    exponent = calculate_exponent(bank_roundl(input_num));
   } else {
     exponent = calculate_exponent(input_num);
   }
-  input_num = scale_input_to_one_digit(roundl(input_num));
+  input_num = scale_input_to_one_digit(bank_roundl(input_num));
 
   input_num = round_to_n_digits(input_num, MANTISSA_DIGITS);
 
@@ -923,7 +923,7 @@ bool g_spec_exponent_increment_check(long double input_num,
 
   long double initial_input_num = input_num;
   // printf("Initial 2\n%Lf\n", initial_input_num);
-  input_num = roundl(input_num);
+  input_num = bank_roundl(input_num);
   if (get_num_length_simple(initial_input_num) !=
       get_num_length_simple(input_num)) {
     result = true;
@@ -941,23 +941,25 @@ void process_g_spec_significand_part_nonzero_precision(DestStr* dest,
   long double fraction_part = 0;
 
   if (g_spec_exponent_increment_check(input_num, spec_opts)) {
-    input_num = scale_input_to_one_digit(roundl(input_num));
+    input_num = scale_input_to_one_digit(bank_roundl(input_num));
   }
+
   fraction_part = modfl(input_num, &whole_part);
 
   s21_size_t whole_part_length = get_num_length(whole_part, spec_opts);
   if (spec_opts->precision <= whole_part_length) {
-    input_num = roundl(input_num);
+    input_num = bank_roundl(input_num);
     whole_to_str(dest, input_num, spec_opts);
   } else {
     whole_to_str(dest, whole_part, spec_opts);
-    // printf("\n\n\n%Lf\n\n\n", whole_part);
   }
   if (spec_opts->precision > 1 && fraction_part != 0 &&
       spec_opts->precision != whole_part_length) {
     dest->str[dest->curr_ind++] = '.';
+
     fraction_part *= pow(10, spec_opts->precision - whole_part_length);
-    itoa(dest, roundl(fraction_part), spec_opts);
+    // printf("\n\n\n%Lf\n\n\n", fraction_part);
+    itoa(dest, bank_roundl(fraction_part), spec_opts);
 
     if (input_num != 0.0) {
       remove_trailing_zeros(dest);
@@ -976,12 +978,18 @@ void process_scientific_for_g_spec_precision_set(DestStr* dest,
     exponent++;
   }
 
+  if (spec_opts->precision < get_num_length_simple(input_num)) {
+    input_num = scale_input_to_n_digits(input_num, spec_opts->precision);
+  }
+
+  printf("\n\n\n%Lf\n\n\n", input_num);
+  input_num = bank_roundl(input_num);
   input_num = scale_input_to_one_digit(input_num);
 
   input_num = round_to_n_digits(input_num, MANTISSA_DIGITS - 1);
 
   if ((spec_opts->precision_set && spec_opts->precision == 0)) {
-    input_num = roundl(input_num);
+    input_num = bank_roundl(input_num);
   }
 
   if (spec_opts->precision == 0) {

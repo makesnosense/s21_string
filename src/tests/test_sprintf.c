@@ -1453,9 +1453,8 @@ Suite* make_sprintf_suite() {
   tcase_add_loop_test(
       tc_core, test_sprintf_g_spec_long_double_set_precision_many_p1, 0, 18);
 
-  tcase_add_loop_test(tc_problematic,
-                      test_sprintf_g_spec_long_double_set_precision_many_p2, 4,
-                      5);
+  tcase_add_loop_test(
+      tc_core, test_sprintf_g_spec_long_double_set_precision_many_p2, 4, 5);
 
   suite_add_tcase(sprintf_suite, tc_core);
   suite_add_tcase(sprintf_suite, tc_problematic);
