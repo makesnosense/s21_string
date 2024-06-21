@@ -1380,6 +1380,30 @@ START_TEST(test_sprintf_g_spec_long_double_set_precision_many_p2) {
 }
 END_TEST
 
+START_TEST(test_sprintf_loop_star) {
+  char lib_res[1000];
+  char s21_res[1000];
+
+  long double long_double_num = 9234.93456L;
+  long long_num = 9234;
+  unsigned unsinged_num = 1234567;
+
+  int pr = _i;  // supplied through add_loop_test func
+
+  char format_string[500];
+
+  s21_sprintf(format_string, "%%*.*Lf %%*.*ld %%*.*u");
+
+  sprintf(lib_res, format_string, pr, pr, long_double_num, pr, pr, long_num, pr,
+          pr, unsinged_num);
+
+  sprintf(s21_res, format_string, pr, pr, long_double_num, pr, pr, long_num, pr,
+          pr, unsinged_num);
+
+  ck_assert_str_eq(lib_res, s21_res);
+}
+END_TEST
+
 Suite* make_sprintf_suite() {
   Suite* sprintf_suite = suite_create("sprintf");
   TCase* tc_core;
@@ -1463,9 +1487,10 @@ Suite* make_sprintf_suite() {
   tcase_add_loop_test(
       tc_core, test_sprintf_g_spec_long_double_set_precision_many_p1, 0, 18);
 
-  tcase_add_loop_test(tc_problematic,
-                      test_sprintf_g_spec_long_double_set_precision_many_p2, 6,
-                      7);
+  tcase_add_loop_test(
+      tc_core, test_sprintf_g_spec_long_double_set_precision_many_p2, 0, 18);
+
+  tcase_add_loop_test(tc_core, test_sprintf_loop_star, 0, 14);
 
   suite_add_tcase(sprintf_suite, tc_core);
   suite_add_tcase(sprintf_suite, tc_problematic);
