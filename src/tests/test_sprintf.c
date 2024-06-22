@@ -2327,6 +2327,113 @@ START_TEST(test_sprintf_sharp_loop_star) {
 }
 END_TEST
 
+/////////
+
+START_TEST(test_sprintf_sharp_very_float) {
+  char lib_res[100];
+  char s21_res[100];
+  sprintf(lib_res, "% #.5f %+#.0f %#f %+#020f", 33.0, 33.33, 3.33, 3.33);
+  s21_sprintf(s21_res, "% #.5f %+#.0f %#f %+#020f", 33.0, 33.33, 3.33, 3.33);
+  ck_assert_str_eq(lib_res, s21_res);
+}
+END_TEST
+
+START_TEST(test_sprintf_sharp_a_bit_float) {
+  char lib_res[100];
+  char s21_res[100];
+  sprintf(lib_res, "%+#.0f % #.5f % #.5f", 33.0, 33.0, 3.0);
+  s21_sprintf(s21_res, "%+#.0f % #.5f % #.5f", 33.0, 33.0, 3.0);
+  ck_assert_str_eq(lib_res, s21_res);
+}
+END_TEST
+
+START_TEST(test_sprintf_sharp_float_width_precision_flag) {
+  char lib_res[100];
+  char s21_res[100];
+  float sd = -3;
+  float sd2 = 3.123456;
+  float sd3 = 3.333;
+  float sd4 = 3;
+
+  sprintf(lib_res, "%-#15f %+-#20.1f % -#10f % #f", sd, sd2, sd3, sd4);
+  s21_sprintf(s21_res, "%-#15f %+-#20.1f % -#10f % #f", sd, sd2, sd3, sd4);
+  ck_assert_str_eq(lib_res, s21_res);
+}
+END_TEST
+
+//////
+
+START_TEST(test_sprintf_sharp_hex_lower_with_modifiers) {
+  char lib_res[1000];
+  char s21_res[1000];
+
+  unsigned short us_value = 255;
+  unsigned long ul_value = 4294967295;  // Максимум для unsigned long
+
+  sprintf(lib_res, "%#x %#hx %#lx %#20lx %-#20lx %-#40hx", -33, us_value,
+          ul_value, ul_value, ul_value, us_value);
+  s21_sprintf(s21_res, "%#x %#hx %#lx %#20lx %-#20lx %-#40hx", -33, us_value,
+              ul_value, ul_value, ul_value, us_value);
+  // sprintf(lib_res, "%20hx", us_value);
+  // s21_sprintf(s21_res, "%20hx", us_value);
+  ck_assert_str_eq(lib_res, s21_res);
+}
+END_TEST
+
+START_TEST(test_sprintf_sharp_hex_upper_with_modifiers) {
+  char lib_res[100];
+  char s21_res[100];
+
+  unsigned short us_value = 255;
+  unsigned long ul_value = 4294967295UL + 5;  // Максимум для unsigned long
+
+  sprintf(lib_res, "%#hX %#lX %-#20hX %#20lX", us_value, ul_value, us_value,
+          ul_value);
+  s21_sprintf(s21_res, "%#hX %#lX %-#20hX %#20lX", us_value, ul_value, us_value,
+              ul_value);
+  ck_assert_str_eq(lib_res, s21_res);
+}
+END_TEST
+
+START_TEST(test_sprintf_sharp_octal_with_modifiers) {
+  char lib_res[500];
+  char s21_res[500];
+
+  unsigned short us_value = 0377;  // 255 в десятичной системе
+  unsigned long ul_value =
+      037777777777;  // Максимум для unsigned long в восьмеричной системе
+  long int min_long_int = LONG_MIN;
+  sprintf(lib_res, "%#ho %#lo %#lo", us_value, ul_value, min_long_int);
+  s21_sprintf(s21_res, "%#ho %#lo %#lo", us_value, ul_value, min_long_int);
+  ck_assert_str_eq(lib_res, s21_res);
+}
+END_TEST
+
+START_TEST(test_sprintf_sharp_octal_negative_long) {
+  char lib_res[300];
+  char s21_res[300];
+
+  long int min_long_int = LONG_MIN;
+
+  sprintf(lib_res, "%#lo", min_long_int);
+  s21_sprintf(s21_res, "%#lo", min_long_int);
+  ck_assert_str_eq(lib_res, s21_res);
+}
+END_TEST
+
+START_TEST(test_sprintf_sharp_octal_width) {
+  char lib_res[300];
+  char s21_res[300];
+
+  int first_test_int = -33;
+  int second_test_int = INT_MAX;
+
+  sprintf(lib_res, "%#20o %-#20o", first_test_int, second_test_int);
+  s21_sprintf(s21_res, "%#20o %-#20o", first_test_int, second_test_int);
+  ck_assert_str_eq(lib_res, s21_res);
+}
+END_TEST
+
 Suite* make_sprintf_suite() {
   Suite* sprintf_suite = suite_create("sprintf");
   TCase* tc_core;
@@ -2416,8 +2523,6 @@ Suite* make_sprintf_suite() {
 
   tcase_add_loop_test(tc_core, test_sprintf_loop_star, 0, 14);
 
-  /////
-
   tcase_add_loop_test(tc_core, test_sprintf_sharp_g_spec_loop_precisions, 0,
                       14);
   tcase_add_loop_test(tc_core, test_sprintf_sharp_g_spec_long_loop_precisions,
@@ -2453,6 +2558,16 @@ Suite* make_sprintf_suite() {
       18);
 
   tcase_add_loop_test(tc_core, test_sprintf_sharp_loop_star, 0, 14);
+
+  tcase_add_test(tc_core, test_sprintf_sharp_very_float);
+  tcase_add_test(tc_core, test_sprintf_sharp_a_bit_float);
+  tcase_add_test(tc_core, test_sprintf_sharp_float_width_precision_flag);
+
+  tcase_add_test(tc_core, test_sprintf_sharp_hex_lower_with_modifiers);
+  tcase_add_test(tc_core, test_sprintf_sharp_hex_upper_with_modifiers);
+  tcase_add_test(tc_core, test_sprintf_sharp_octal_with_modifiers);
+  tcase_add_test(tc_core, test_sprintf_sharp_octal_negative_long);
+  tcase_add_test(tc_core, test_sprintf_sharp_octal_width);
 
   suite_add_tcase(sprintf_suite, tc_core);
   suite_add_tcase(sprintf_suite, tc_problematic);
