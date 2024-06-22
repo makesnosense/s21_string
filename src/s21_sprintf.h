@@ -145,6 +145,10 @@ void process_scientific_for_g_spec_precision_set(DestStr* dest,
                                                  long double input_num,
                                                  SpecOptions* spec_opts);
 
+void process_g_spec_not_precision_set_sharp_on(DestStr* dest,
+                                               long double input_num,
+                                               SpecOptions* spec_opts);
+
 long long int ingest_int(va_list* args, SpecOptions* spec_opts);
 long long unsigned ingest_unsinged(va_list* args, SpecOptions* spec_opts);
 long double ingest_floating_point_number(va_list* args, SpecOptions* spec_opts);
@@ -168,7 +172,7 @@ long double scale_input_to_one_digit(long double input_num);
 long double scale_input_to_n_digits(long double input_num, s21_size_t n);
 void add_zeros_to_destination(DestStr* dest, s21_size_t n_zeros_to_add);
 long double scale_to_one_digit_significand(long double input_num);
-void remove_trailing_zeros(DestStr* dest);
+void remove_trailing_zeros(DestStr* dest, SpecOptions* spec_opts);
 long double bank_roundl(long double input_num);
 
 // Функция устанавливает локаль в зависимости от ОС
