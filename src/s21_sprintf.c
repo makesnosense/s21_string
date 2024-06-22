@@ -654,6 +654,9 @@ void process_scientific_zero_input(DestStr* dest, SpecOptions* spec_opts) {
     for (s21_size_t i = 0; i < zeros_to_print; i++) {
       dest->str[dest->curr_ind++] = '0';
     }
+  } else if (spec_opts->precision_set && spec_opts->precision == 0 &&
+             spec_opts->flag_sharp) {
+    dest->str[dest->curr_ind++] = '.';
   }
 
   dest->str[dest->curr_ind++] = spec_opts->exponent_char;
@@ -870,7 +873,7 @@ void process_g_spec_not_set_precision(DestStr* dest, long double input_num,
     if (dest->str[dest->curr_ind - 2] == '.' &&
         dest->str[dest->curr_ind - 1] == '0') {
       dest->str[dest->curr_ind--] = '\0';
-      dest->str[dest->curr_ind--] = '\0';
+      if (!spec_opts->flag_sharp) dest->str[dest->curr_ind--] = '\0';
     }
 
     if (input_num != 0.0) {
@@ -882,7 +885,8 @@ void process_g_spec_not_set_precision(DestStr* dest, long double input_num,
       whole_part_length = 1;
     }
     // if (fraction_part == 0)
-    // add_zeros_to_destination(dest, F_PRECISION - whole_part_length - 1);
+    // add_zeros_to_destination(dest, F_PRECISION - whole_part_length);
+    remove_trailing_zeros(dest, spec_opts);
   } else if (spec_opts->flag_sharp == true &&
              spec_opts->precision_set == true) {
     if (dest->str[dest->curr_ind - 2] == '.' &&
@@ -1091,6 +1095,7 @@ void process_scientific_for_g_spec_precision_set(DestStr* dest,
   if (!(spec_opts->flag_sharp) && dest->str[dest->curr_ind - 1] == '.') {
     dest->str[dest->curr_ind--] = '\0';
   }
+
   add_scientific_e_part(exponent, dest, spec_opts);
 }
 
