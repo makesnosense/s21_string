@@ -905,27 +905,16 @@ void process_g_spec_zero_wholepart_nonzero_precision(DestStr* dest,
   input_num = round_to_n_digits(input_num, spec_opts->precision);
   floating_point_number_to_str(dest, input_num, spec_opts);
 
-  if (input_num != 0.0) {
+  if (input_num != 0.0 && spec_opts->flag_sharp == false) {
     remove_trailing_zeros(dest, spec_opts);
   }
 }
 
 void process_g_spec_nonzero_precision(DestStr* dest, long double input_num,
                                       SpecOptions* spec_opts) {
-  // printf("\n%Lf\n", input_num);
   long double whole_part = 0;
   long double fraction_part = 0;
   bool print_fraction = true;
-
-  // long double num1_7 = 9.994567;
-  // long double num1_8 = 9.9945678;
-  // long double num1_9 = 9.99456789;
-  // if (spec_opts->precision == (get_num_length_simple(input_num) + 1)) {
-  //   if (get_num_length_simple(bank_roundl(input_num) >
-  //                             get_num_length_simple(input_num))) {
-  //     input_num = bank_roundl(input_num);
-  //   }
-  // }
 
   fraction_part = modfl(input_num, &whole_part);
   s21_size_t whole_part_length = get_num_length_simple(whole_part);
@@ -940,10 +929,6 @@ void process_g_spec_nonzero_precision(DestStr* dest, long double input_num,
     whole_part++;
     print_fraction = false;
   }
-  // fraction_part = divide_by_10_n_times()
-
-  // if (fraction_part >= 1) {
-  // }
 
   if (spec_opts->precision <= whole_part_length) {
     input_num = bank_roundl(input_num);
