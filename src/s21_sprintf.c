@@ -881,12 +881,15 @@ void process_g_spec_not_set_precision(DestStr* dest, long double input_num,
     }
   } else if (spec_opts->flag_sharp == true &&
              spec_opts->precision_set == false) {
-    if (whole_part == 0.0) {
-      whole_part_length = 1;
-    }
+    // if (whole_part == 0.0) {
+    //   whole_part_length = 1;
+    // }
     // if (fraction_part == 0)
-    // add_zeros_to_destination(dest, F_PRECISION - whole_part_length);
-    remove_trailing_zeros(dest, spec_opts);
+    s21_size_t fraction_part_length = get_num_length(fraction_part, spec_opts);
+    if ((int)(F_PRECISION - whole_part_length - fraction_part_length) >= 0)
+      add_zeros_to_destination(
+          dest, F_PRECISION - whole_part_length - fraction_part_length);
+    // remove_trailing_zeros(dest, spec_opts);
   } else if (spec_opts->flag_sharp == true &&
              spec_opts->precision_set == true) {
     if (dest->str[dest->curr_ind - 2] == '.' &&
@@ -1072,6 +1075,8 @@ void process_scientific_for_g_spec_precision_set(DestStr* dest,
   } else {
     process_g_spec_significand_part_nonzero_precision(dest, input_num,
                                                       spec_opts);
+
+    // remove_trailing_zeros(dest, spec_opts);
   }
 
   if (dest->str[dest->curr_ind - 1] == '0') {
