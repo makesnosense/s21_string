@@ -469,10 +469,7 @@ void calculate_padding_not_g_spec(s21_size_t num_len, SpecOptions* spec_opts) {
     prec_corr = 0;
   }
 
-  if (spec_opts->is_g_spec &&
-      (spec_opts->precision_set == false || spec_opts->precision == 0)) {
-    spec_opts->padding = spec_opts->width - num_len - flag_corr - prec_corr;
-  } else if (spec_opts->is_floating_point_number) {
+  if (spec_opts->is_floating_point_number) {
     spec_opts->padding =
         spec_opts->width - num_len - spec_opts->precision - flag_corr - 1;
   } else {
@@ -484,6 +481,8 @@ void calculate_padding_g_spec(s21_size_t num_len, SpecOptions* spec_opts) {
   int flag_corr = 0;  // Коррекция кол-ва пробелов
   int prec_corr = 0;  // Коррекция кол-ва пробелов
 
+  int padding_to_add = 0;
+
   flag_corr =
       spec_opts->flag_plus || spec_opts->flag_space || spec_opts->is_negative;
 
@@ -493,15 +492,14 @@ void calculate_padding_g_spec(s21_size_t num_len, SpecOptions* spec_opts) {
     prec_corr = 0;
   }
 
-  if (spec_opts->is_g_spec &&
-      (spec_opts->precision_set == false || spec_opts->precision == 0)) {
-    spec_opts->padding = spec_opts->width - num_len - flag_corr - prec_corr;
-  } else if (spec_opts->is_floating_point_number) {
-    spec_opts->padding =
-        spec_opts->width - num_len - spec_opts->precision - flag_corr - 1;
+  if (spec_opts->precision_set == false || spec_opts->precision == 0) {
+    padding_to_add = spec_opts->width - num_len - flag_corr - prec_corr;
   } else {
-    spec_opts->padding = spec_opts->width - num_len - flag_corr - prec_corr;
+    padding_to_add =
+        spec_opts->width - num_len - spec_opts->precision - flag_corr - 1;
   }
+
+  spec_opts->padding = (padding_to_add > 0) ? (s21_size_t)padding_to_add : 0;
 }
 
 void apply_width(DestStr* dest, s21_size_t num_len, SpecOptions* spec_opts) {
