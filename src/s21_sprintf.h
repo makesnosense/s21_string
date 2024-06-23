@@ -127,6 +127,15 @@ bool g_spec_scientific_needed(long double input_num, SpecOptions* spec_opts);
 
 void process_g_spec_not_set_precision(DestStr* dest, long double input_num,
                                       SpecOptions* spec_opts);
+
+void process_g_spec_not_set_precision_sharp_on(DestStr* dest,
+                                               long double input_num,
+                                               SpecOptions* spec_opts);
+
+void process_g_spec_not_set_precision_sharp_off(DestStr* dest,
+                                                long double input_num,
+                                                SpecOptions* spec_opts);
+
 void process_g_spec_zero_precision(DestStr* dest, long double input_num,
                                    SpecOptions* spec_opts);
 void process_g_spec_nonzero_precision(DestStr* dest, long double input_num,
@@ -144,10 +153,6 @@ void process_scientific_for_g_spec_not_set_precision(DestStr* dest,
 void process_scientific_for_g_spec_precision_set(DestStr* dest,
                                                  long double input_num,
                                                  SpecOptions* spec_opts);
-
-void process_g_spec_not_precision_set_sharp_on(DestStr* dest,
-                                               long double input_num,
-                                               SpecOptions* spec_opts);
 
 long long int ingest_int(va_list* args, SpecOptions* spec_opts);
 long long unsigned ingest_unsinged(va_list* args, SpecOptions* spec_opts);
