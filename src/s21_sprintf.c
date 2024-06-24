@@ -463,10 +463,13 @@ void calculate_padding_not_g_spec(s21_size_t num_len, SpecOptions* spec_opts) {
   int prec_corr = 0;  // Коррекция кол-ва пробелов
   int sharp_corr = 0;
 
-  if (spec_opts->is_hexadecimal && spec_opts->is_zero == false) {
-    sharp_corr = 2;
-  } else if (spec_opts->specificator == o && spec_opts->is_zero == false) {
-    sharp_corr = 1;
+  // sharp correction
+  if (spec_opts->flag_sharp) {
+    if (spec_opts->is_hexadecimal && spec_opts->is_zero == false) {
+      sharp_corr = 2;
+    } else if (spec_opts->specificator == o && spec_opts->is_zero == false) {
+      sharp_corr = 1;
+    }
   }
 
   flag_corr =
