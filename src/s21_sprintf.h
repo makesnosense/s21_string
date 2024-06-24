@@ -98,6 +98,9 @@ s21_size_t get_num_length_simple(long double num);
 
 void apply_flags(DestStr* dest, SpecOptions* spec_opts);
 void calculate_padding(s21_size_t num_len, SpecOptions* spec_opts);
+void calculate_padding_not_g_spec(s21_size_t num_len, SpecOptions* spec_opts);
+void calculate_padding_g_spec(s21_size_t num_len, SpecOptions* spec_opts);
+
 void apply_width(DestStr* dest, s21_size_t num_len, SpecOptions* spec_opts);
 void apply_minus_width(DestStr* dest, SpecOptions* spec_opts);
 
