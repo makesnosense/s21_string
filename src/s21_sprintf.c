@@ -461,9 +461,13 @@ void calculate_padding(s21_size_t num_len, SpecOptions* spec_opts) {
 void calculate_padding_not_g_spec(s21_size_t num_len, SpecOptions* spec_opts) {
   int flag_corr = 0;  // Коррекция кол-ва пробелов
   int prec_corr = 0;  // Коррекция кол-ва пробелов
-  // int sharp_corr = 0;
+  int sharp_corr = 0;
 
-  // if (spec_opts->is_hexadecimal &&
+  if (spec_opts->is_hexadecimal && spec_opts->is_zero == false) {
+    sharp_corr = 2;
+  } else if (spec_opts->specificator == o && spec_opts->is_zero == false) {
+    sharp_corr = 1;
+  }
 
   flag_corr =
       spec_opts->flag_plus || spec_opts->flag_space || spec_opts->is_negative;
@@ -478,7 +482,8 @@ void calculate_padding_not_g_spec(s21_size_t num_len, SpecOptions* spec_opts) {
     spec_opts->padding =
         spec_opts->width - num_len - spec_opts->precision - flag_corr - 1;
   } else {
-    spec_opts->padding = spec_opts->width - num_len - flag_corr - prec_corr;
+    spec_opts->padding =
+        spec_opts->width - num_len - flag_corr - prec_corr - sharp_corr;
   }
 }
 
