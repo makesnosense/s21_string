@@ -140,10 +140,10 @@ START_TEST(test_sprintf_very_float) {
 END_TEST
 
 START_TEST(test_sprintf_a_bit_float) {
-  char lib_res[100];
-  char s21_res[100];
-  sprintf(lib_res, "%+.0f % .5f % .5f", 33.0, 33.0, 3.0);
-  s21_sprintf(s21_res, "%+.0f % .5f % .5f", 33.0, 33.0, 3.0);
+  char lib_res[200];
+  char s21_res[200];
+  sprintf(lib_res, "%+.0f % .5f % .5f %f", 33.0, 33.0, 3.0, 0.0);
+  s21_sprintf(s21_res, "%+.0f % .5f % .5f %f", 33.0, 33.0, 3.0, 0.0);
   ck_assert_str_eq(lib_res, s21_res);
 }
 END_TEST
@@ -167,12 +167,12 @@ START_TEST(test_sprintf_unsigned) {
   char s21_res[1000];
   long int min_long_int = LONG_MIN;
 
-  sprintf(lib_res, "%-15u %60u %u %lu %lu %lu %u %lu %hu %u", 1, 1000, UINT_MAX,
-          ULONG_MAX, ULONG_MAX - 333, ULONG_MAX + 1, (UINT_MAX + 500),
-          min_long_int, USHRT_MAX, UINT_MAX);
-  s21_sprintf(s21_res, "%-15u %60u %u %lu %lu %lu %u %lu %hu %u", 1, 1000,
+  sprintf(lib_res, "%-15u %60u %u %lu %lu %lu %u %lu %hu %u %u", 1, 1000,
+          UINT_MAX, ULONG_MAX, ULONG_MAX - 333, ULONG_MAX + 1, (UINT_MAX + 500),
+          min_long_int, USHRT_MAX, UINT_MAX, 0);
+  s21_sprintf(s21_res, "%-15u %60u %u %lu %lu %lu %u %lu %hu %u %u", 1, 1000,
               UINT_MAX, ULONG_MAX, ULONG_MAX - 333, ULONG_MAX + 1,
-              (UINT_MAX + 500), min_long_int, USHRT_MAX, UINT_MAX);
+              (UINT_MAX + 500), min_long_int, USHRT_MAX, UINT_MAX, 0);
   ck_assert_str_eq(lib_res, s21_res);
 }
 END_TEST
