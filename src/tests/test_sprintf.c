@@ -4392,64 +4392,74 @@ Suite* make_sprintf_suite() {
       tc_core, test_sprintf_sharp_scientific_zero_loop_precisions, 0, 18);
 
   //////new
-  tcase_add_loop_test(tc_core, test_sprintf_g_spec_loop_precisions_width_4, 0,
-                      14);
-  tcase_add_loop_test(tc_core, test_sprintf_g_spec_long_loop_precisions_width_4,
-                      0, 17);
+  tcase_add_loop_test(tc_problematic,
+                      test_sprintf_g_spec_loop_precisions_width_4, 0, 14);
+  tcase_add_loop_test(tc_problematic,
+                      test_sprintf_g_spec_long_loop_precisions_width_4, 0, 17);
 
-  tcase_add_loop_test(tc_core, test_sprintf_g_spec_zero_loop_precisions_width_4,
-                      0, 14);
-  tcase_add_test(tc_core, test_sprintf_g_spec_no_precision_many_width_4_p1);
-  tcase_add_test(tc_core, test_sprintf_g_spec_no_precision_many_width_4_p2);
-  tcase_add_test(tc_core, test_sprintf_g_spec_precision_0_many_width_4_p1);
-  tcase_add_test(tc_core, test_sprintf_g_spec_precision_0_many_width_4_p2);
+  tcase_add_loop_test(tc_problematic,
+                      test_sprintf_g_spec_zero_loop_precisions_width_4, 0, 14);
+  tcase_add_test(tc_problematic,
+                 test_sprintf_g_spec_no_precision_many_width_4_p1);
+  tcase_add_test(tc_problematic,
+                 test_sprintf_g_spec_no_precision_many_width_4_p2);
+  tcase_add_test(tc_problematic,
+                 test_sprintf_g_spec_precision_0_many_width_4_p1);
+  tcase_add_test(tc_problematic,
+                 test_sprintf_g_spec_precision_0_many_width_4_p2);
 
-  tcase_add_loop_test(tc_core,
+  tcase_add_loop_test(tc_problematic,
                       test_sprintf_g_spec_set_precision_many_width_4_p1, 0, 14);
-  tcase_add_loop_test(tc_core,
+  tcase_add_loop_test(tc_problematic,
                       test_sprintf_g_spec_set_precision_many_width_4_p2, 0, 14);
-  tcase_add_loop_test(tc_core,
+  tcase_add_loop_test(tc_problematic,
                       test_sprintf_g_spec_set_precision_many_width_4_p3, 0, 14);
-  tcase_add_loop_test(tc_core,
+  tcase_add_loop_test(tc_problematic,
                       test_sprintf_g_spec_set_precision_many_width_4_p4, 0, 14);
 
   tcase_add_loop_test(
-      tc_core, test_sprintf_g_spec_long_double_set_precision_many_width_4_p1, 0,
-      18);
+      tc_problematic,
+      test_sprintf_g_spec_long_double_set_precision_many_width_4_p1, 0, 18);
   tcase_add_loop_test(
-      tc_core, test_sprintf_g_spec_long_double_set_precision_many_width_4_p2, 0,
-      18);
-  tcase_add_loop_test(tc_core,
+      tc_problematic,
+      test_sprintf_g_spec_long_double_set_precision_many_width_4_p2, 0, 18);
+  tcase_add_loop_test(tc_problematic,
                       test_sprintf_sharp_g_spec_loop_precisions_width_4, 0, 14);
-  tcase_add_loop_test(
-      tc_core, test_sprintf_sharp_g_spec_long_loop_precisions_width_4, 0, 17);
-  tcase_add_loop_test(
-      tc_core, test_sprintf_sharp_g_spec_zero_loop_precisions_width_4, 0, 14);
-  tcase_add_test(tc_core,
+  tcase_add_loop_test(tc_problematic,
+                      test_sprintf_sharp_g_spec_long_loop_precisions_width_4, 0,
+                      17);
+  tcase_add_loop_test(tc_problematic,
+                      test_sprintf_sharp_g_spec_zero_loop_precisions_width_4, 0,
+                      14);
+  tcase_add_test(tc_problematic,
                  test_sprintf_sharp_g_spec_no_precision_many_width_4_p1);
-  tcase_add_test(tc_core,
+  tcase_add_test(tc_problematic,
                  test_sprintf_sharp_g_spec_no_precision_many_width_4_p2);
-  tcase_add_test(tc_core,
+  tcase_add_test(tc_problematic,
                  test_sprintf_sharp_g_spec_precision_0_many_width_4_p1);
-  tcase_add_test(tc_core,
+  tcase_add_test(tc_problematic,
                  test_sprintf_sharp_g_spec_precision_0_many_width_4_p2);
 
-  tcase_add_loop_test(
-      tc_core, test_sprintf_sharp_g_spec_set_precision_many_width_4_p1, 0, 14);
-  tcase_add_loop_test(
-      tc_core, test_sprintf_sharp_g_spec_set_precision_many_width_4_p2, 0, 14);
-  tcase_add_loop_test(
-      tc_core, test_sprintf_sharp_g_spec_set_precision_many_width_4_p3, 0, 14);
-  tcase_add_loop_test(
-      tc_core, test_sprintf_sharp_g_spec_set_precision_many_width_4_p4, 0, 14);
+  tcase_add_loop_test(tc_problematic,
+                      test_sprintf_sharp_g_spec_set_precision_many_width_4_p1,
+                      0, 14);
+  tcase_add_loop_test(tc_problematic,
+                      test_sprintf_sharp_g_spec_set_precision_many_width_4_p2,
+                      0, 14);
+  tcase_add_loop_test(tc_problematic,
+                      test_sprintf_sharp_g_spec_set_precision_many_width_4_p3,
+                      0, 14);
+  tcase_add_loop_test(tc_problematic,
+                      test_sprintf_sharp_g_spec_set_precision_many_width_4_p4,
+                      0, 14);
 
   tcase_add_loop_test(
-      tc_core,
+      tc_problematic,
       test_sprintf_sharp_g_spec_long_double_set_precision_many_width_4_p1, 0,
       18);
 
   tcase_add_loop_test(
-      tc_core,
+      tc_problematic,
       test_sprintf_sharp_g_spec_long_double_set_precision_many_width_4_p2, 0,
       18);
 
