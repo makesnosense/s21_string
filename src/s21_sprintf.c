@@ -260,6 +260,7 @@ void process_wide_char(va_list* args, DestStr* dest) {
 
 void process_int(va_list* args, DestStr* dest, SpecOptions* spec_opts) {
   long long int input_int = ingest_int(args, spec_opts);
+
   is_negative(input_int, spec_opts);
   whole_to_str(dest, input_int, spec_opts);
 }
@@ -268,7 +269,6 @@ void process_floating_point_number(va_list* args, DestStr* dest,
                                    SpecOptions* spec_opts) {
   long double input_floating_point_number =
       ingest_floating_point_number(args, spec_opts);
-
   is_negative(input_floating_point_number, spec_opts);
 
   if (isnan(input_floating_point_number)) {
@@ -360,6 +360,7 @@ long double ingest_floating_point_number(va_list* args,
     input_floating_point_number = va_arg(*args, double);
     // printf("\nDouble: %.18Lf\n", input_floating_point_number);
   }
+  spec_opts->is_zero = is_zero(input_floating_point_number);
   return input_floating_point_number;
 }
 
@@ -379,6 +380,7 @@ long long unsigned ingest_unsinged(va_list* args, SpecOptions* spec_opts) {
       input_unsingned = (unsigned)+(input_unsingned);
     }
   }
+  spec_opts->is_zero = is_zero(input_unsingned);
   return input_unsingned;
 }
 
@@ -459,6 +461,9 @@ void calculate_padding(s21_size_t num_len, SpecOptions* spec_opts) {
 void calculate_padding_not_g_spec(s21_size_t num_len, SpecOptions* spec_opts) {
   int flag_corr = 0;  // Коррекция кол-ва пробелов
   int prec_corr = 0;  // Коррекция кол-ва пробелов
+  // int sharp_corr = 0;
+
+  // if (spec_opts->is_hexadecimal &&
 
   flag_corr =
       spec_opts->flag_plus || spec_opts->flag_space || spec_opts->is_negative;
@@ -1229,3 +1234,5 @@ long double bank_roundl(long double input_num) {
   }
   return result;
 }
+
+bool is_zero(long double input_num) { return fabsl(input_num) < EPSILON; }
