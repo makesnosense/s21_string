@@ -66,7 +66,7 @@ int s21_sprintf(char* str, const char* format, ...) {
             process_narrow_string("(nil)", &dest, &spec_opts);
           else
             pointer_to_str(&dest, pointer_str_input, &spec_opts);
-#elif
+#else
           pointer_to_str(&dest, pointer_str_input, &spec_opts);
 #endif
           break;
