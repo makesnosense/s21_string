@@ -336,7 +336,6 @@ void process_wide_string(va_list* args, DestStr* dest, SpecOptions* spec_opts) {
       wcstombs(temp_str, input_string, len + 1);
       s21_strcpy(dest->str + dest->curr_ind, temp_str);
       dest->curr_ind += len;
-      // dest->str += len;
       free(temp_str);
     }
   }
