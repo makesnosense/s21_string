@@ -1,4 +1,5 @@
 #include <ctype.h>
+#include <float.h>
 #include <limits.h>
 #include <locale.h>
 #include <math.h>
@@ -14,6 +15,7 @@
 // Точность для %f по умолчанию
 #define F_PRECISION 6
 #define MANTISSA_DIGITS 5
+#define EPSILON (LDBL_EPSILON * 100)
 
 // Валидные флаги и спецификаторы
 #define VALID_FLAGS "+- 0#"
@@ -59,6 +61,7 @@ typedef struct SpecifierOptions {
   bool length_h;       // Длина h
   bool length_big_l;   // Длина L
   bool precision_set;  // Есть ли precision у спецификатора
+  bool is_zero;        // ноль на вход
   bool is_negative;    // Является ли отр. числом
   bool is_floating_point_number;  // Является ли float/double
   bool is_hexadecimal;
@@ -182,6 +185,7 @@ void add_zeros_to_destination(DestStr* dest, s21_size_t n_zeros_to_add);
 long double scale_to_one_digit_significand(long double input_num);
 void remove_trailing_zeros(DestStr* dest, SpecOptions* spec_opts);
 long double bank_roundl(long double input_num);
+bool is_zero(long double input_num);
 
 int calculate_diget(DestStr* dest);
 
