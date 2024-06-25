@@ -2380,8 +2380,6 @@ START_TEST(test_sprintf_sharp_hex_lower_with_modifiers) {
           ul_value, ul_value, ul_value, us_value);
   s21_sprintf(s21_res, "%#x %#hx %#lx %#20lx %-#20lx %-#40hx", -33, us_value,
               ul_value, ul_value, ul_value, us_value);
-  // sprintf(lib_res, "%20hx", us_value);
-  // s21_sprintf(s21_res, "%20hx", us_value);
   ck_assert_str_eq(lib_res, s21_res);
 }
 END_TEST
@@ -2409,8 +2407,8 @@ START_TEST(test_sprintf_sharp_octal_with_modifiers) {
   unsigned long ul_value =
       037777777777;  // Максимум для unsigned long в восьмеричной системе
   long int min_long_int = LONG_MIN;
-  sprintf(lib_res, "%#ho %#lo %#lo", us_value, ul_value, min_long_int);
-  s21_sprintf(s21_res, "%#ho %#lo %#lo", us_value, ul_value, min_long_int);
+  sprintf(lib_res, "%#20ho %#-20lo %#lo", us_value, ul_value, min_long_int);
+  s21_sprintf(s21_res, "%#20ho %#-20lo %#lo", us_value, ul_value, min_long_int);
   ck_assert_str_eq(lib_res, s21_res);
 }
 END_TEST
