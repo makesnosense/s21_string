@@ -464,6 +464,8 @@ void calculate_padding_not_g_spec(s21_size_t num_len, SpecOptions* spec_opts) {
   int prec_corr = 0;  // Коррекция кол-ва пробелов
   int sharp_corr = 0;
 
+  int padding_to_add = 0;
+
   // sharp correction
   if (spec_opts->flag_sharp) {
     if (spec_opts->is_hexadecimal && spec_opts->is_zero == false) {
@@ -471,6 +473,8 @@ void calculate_padding_not_g_spec(s21_size_t num_len, SpecOptions* spec_opts) {
     } else if (spec_opts->specificator == o && spec_opts->is_zero == false) {
       sharp_corr = 1;
     }
+  } else if (spec_opts->specificator == p) {
+    sharp_corr = 2;
   }
 
   flag_corr =
@@ -483,12 +487,14 @@ void calculate_padding_not_g_spec(s21_size_t num_len, SpecOptions* spec_opts) {
   }
 
   if (spec_opts->is_floating_point_number) {
-    spec_opts->padding =
+    padding_to_add =
         spec_opts->width - num_len - spec_opts->precision - flag_corr - 1;
   } else {
-    spec_opts->padding =
+    padding_to_add =
         spec_opts->width - num_len - flag_corr - prec_corr - sharp_corr;
   }
+
+  spec_opts->padding = (padding_to_add > 0) ? (s21_size_t)padding_to_add : 0;
 }
 
 void calculate_padding_g_spec(s21_size_t num_len, SpecOptions* spec_opts) {
@@ -832,16 +838,11 @@ void process_g_spec(DestStr* dest, long double input_num,
 
   calculate_padding(g_spec_temp_dest.curr_ind, spec_opts);
   apply_flags(dest, spec_opts);
-  apply_width(dest, g_spec_temp_dest.curr_ind,
-              spec_opts);  // мы добовляем двойку что бы покрыть
-  // два дополнительных символа apply_flags(dest, spec_opts);
-
+  apply_width(dest, g_spec_temp_dest.curr_ind, spec_opts);
   s21_strcpy(dest->str + dest->curr_ind, g_spec_temp_dest.str);
 
   dest->curr_ind += g_spec_temp_dest.curr_ind;
   apply_minus_width(dest, spec_opts);
-  // printf("\n|%s|\n", dest->str);
-  // printf("\n|%s|\n", g_spec_temp_dest.str);
 }
 
 void process_g_spec_zero_precision(DestStr* dest, long double input_num,
@@ -1146,8 +1147,8 @@ void pointer_to_str(DestStr* dest, void* ptr, SpecOptions* spec_opts) {
   uintptr_t address = (uintptr_t)ptr;
   long long num_len = get_num_length(address, spec_opts);
 
-  calculate_padding(num_len + 2, spec_opts);
-  apply_width(dest, num_len + 2,
+  calculate_padding(num_len, spec_opts);
+  apply_width(dest, num_len,
               spec_opts);  // мы добовляем двойку что бы покрыть два
                            // дополнительных символа
   apply_flags(dest, spec_opts);
@@ -1156,7 +1157,7 @@ void pointer_to_str(DestStr* dest, void* ptr, SpecOptions* spec_opts) {
 
   itoa(dest, address, spec_opts);
 
-  // apply_minus_width(dest, spec_opts);
+  apply_minus_width(dest, spec_opts);
 }
 
 void set_locale_for_wide_chars() {

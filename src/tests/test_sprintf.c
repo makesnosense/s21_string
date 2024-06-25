@@ -355,10 +355,10 @@ START_TEST(test_sprintf_pointer_type) {
 
   char value3 = 'f';
 
-  sprintf(lib_res, "%-4p %-6p %35p", (void*)&value1, (void*)&value2,
-          (void*)&value3);
-  s21_sprintf(s21_res, "%-4p %-6p %35p", (void*)&value1, (void*)&value2,
-              (void*)&value3);
+  sprintf(lib_res, "%-4p %-20p %35p %p", (void*)&value1, (void*)&value2,
+          (void*)&value3, NULL);
+  s21_sprintf(s21_res, "%-4p %-20p %35p %p", (void*)&value1, (void*)&value2,
+              (void*)&value3, NULL);
   ck_assert_str_eq(lib_res, s21_res);
 }
 END_TEST
