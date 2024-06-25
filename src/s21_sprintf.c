@@ -225,8 +225,10 @@ void parse_specifier(const char** format, SpecOptions* spec_opts) {
           spec_opts->is_g_spec = true;
         } else if (current_specifier == 'e') {
           spec_opts->specificator = e;
+          spec_opts->is_scientific = true;
         } else if (current_specifier == 'E') {
           spec_opts->specificator = E;
+          spec_opts->is_scientific = true;
         }
         break;
       }
@@ -467,14 +469,14 @@ void add_zeros_to_destination(DestStr* dest, s21_size_t n_zeros_to_add) {
 }
 
 void calculate_padding(s21_size_t num_len, SpecOptions* spec_opts) {
-  if (spec_opts->is_g_spec) {
-    calculate_padding_g_spec(num_len, spec_opts);
+  if (spec_opts->is_g_spec || spec_opts->is_scientific) {
+    calculate_padding_ge_spec(num_len, spec_opts);
   } else {
-    calculate_padding_not_g_spec(num_len, spec_opts);
+    calculate_padding_not_ge_spec(num_len, spec_opts);
   }
 }
 
-void calculate_padding_not_g_spec(s21_size_t num_len, SpecOptions* spec_opts) {
+void calculate_padding_not_ge_spec(s21_size_t num_len, SpecOptions* spec_opts) {
   int flag_corr = 0;  // Коррекция кол-ва пробелов
   int prec_corr = 0;  // Коррекция кол-ва пробелов
   int sharp_corr = 0;
@@ -512,7 +514,7 @@ void calculate_padding_not_g_spec(s21_size_t num_len, SpecOptions* spec_opts) {
   spec_opts->padding = (padding_to_add > 0) ? (s21_size_t)padding_to_add : 0;
 }
 
-void calculate_padding_g_spec(s21_size_t num_len, SpecOptions* spec_opts) {
+void calculate_padding_ge_spec(s21_size_t num_len, SpecOptions* spec_opts) {
   int flag_corr = 0;  // Коррекция кол-ва пробелов
 
   int padding_to_add = 0;
@@ -596,7 +598,7 @@ void floating_point_number_to_str(DestStr* dest, long double input_num,
     add_zeros_to_destination(dest, zeros_to_add_on_the_right);
 
     // Добавляем пробелы в конец, если флаг '-'
-    if (!spec_opts->is_g_spec) {
+    if (!spec_opts->is_g_spec && !spec_opts->is_scientific) {
       apply_minus_width(dest, spec_opts);
     }
     // Добавляем нуль-терминатор
@@ -663,16 +665,18 @@ void whole_to_str(DestStr* dest, long double num, SpecOptions* spec_opts) {
 
   s21_size_t num_len = get_num_length(num, spec_opts);
 
-  if (spec_opts->flag_zero && !spec_opts->is_g_spec) {
+  if (spec_opts->flag_zero && !spec_opts->is_g_spec &&
+      !spec_opts->is_scientific) {
     apply_flags(dest, spec_opts);
   }
 
-  if (!spec_opts->is_g_spec) {
+  if (!spec_opts->is_g_spec && !spec_opts->is_scientific) {
     calculate_padding(num_len, spec_opts);
     // Если ширина больше длины числа, добавляем пробелы в начало
     apply_width(dest, num_len, spec_opts);
   }
-  if (!spec_opts->flag_zero && !spec_opts->is_g_spec) {
+  if (!spec_opts->flag_zero && !spec_opts->is_g_spec &&
+      !spec_opts->is_scientific) {
     apply_flags(dest, spec_opts);
   }
 
@@ -680,7 +684,8 @@ void whole_to_str(DestStr* dest, long double num, SpecOptions* spec_opts) {
   itoa(dest, num, spec_opts);
 
   // Если ширина больше длины числа, добавляем пробелы в конец
-  if (!spec_opts->is_floating_point_number && !spec_opts->is_g_spec)
+  if (!spec_opts->is_floating_point_number && !spec_opts->is_g_spec &&
+      !spec_opts->is_scientific)
     apply_minus_width(dest, spec_opts);
 
   // Добавляем нуль-терминатор
@@ -742,13 +747,24 @@ void process_scientific_standard(DestStr* dest, long double input_num,
 
 void process_scientific(DestStr* dest, long double input_num,
                         SpecOptions* spec_opts) {
+  char scientific_temp_buffer[100] = {'\0'};
+  DestStr scientific_temp_dest = {scientific_temp_buffer, 0};
+
   input_num = TO_ABS(input_num);
   // set_needed_precision(spec_opts);
-  if (input_num == 0.0) {
-    process_scientific_zero_input(dest, spec_opts);
+  if (spec_opts->is_zero) {
+    process_scientific_zero_input(&scientific_temp_dest, spec_opts);
   } else {
-    process_scientific_standard(dest, input_num, spec_opts);
+    process_scientific_standard(&scientific_temp_dest, input_num, spec_opts);
   }
+
+  calculate_padding(scientific_temp_dest.curr_ind, spec_opts);
+  apply_flags(dest, spec_opts);
+  apply_width(dest, scientific_temp_dest.curr_ind, spec_opts);
+  s21_strcpy(dest->str + dest->curr_ind, scientific_temp_dest.str);
+
+  dest->curr_ind += scientific_temp_dest.curr_ind;
+  apply_minus_width(dest, spec_opts);
 }
 
 void add_scientific_e_part(long long exponent, DestStr* dest,
