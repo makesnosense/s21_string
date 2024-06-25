@@ -61,7 +61,14 @@ int s21_sprintf(char* str, const char* format, ...) {
         }
         case 'p': {
           void* pointer_str_input = va_arg(args, void*);
+#if defined(__linux__)
+          if (pointer_str_input == 0x0)
+            process_narrow_string("(nil)", &dest, &spec_opts);
+          else
+            pointer_to_str(&dest, pointer_str_input, &spec_opts);
+#elif
           pointer_to_str(&dest, pointer_str_input, &spec_opts);
+#endif
           break;
         }
         case 'f': {
