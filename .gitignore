@@ -8,7 +8,6 @@ src/run_tests
 
 // Папки для разработки
 src/s21_sprintf_dir/
-src/s21_sscanf_dir/
 
 // Файл с настройками формата
 CPPLINT.cfg
