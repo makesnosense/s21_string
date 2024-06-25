@@ -254,22 +254,28 @@ END_TEST
 START_TEST(test_sprintf_wide_character) {
   char lib_res[1000];
   char s21_res[1000];
-  wchar_t wide_char = L'あ';
+  wchar_t wide_char1 = L'あ';
+  wchar_t wide_char2 = L'は';
 
-  s21_sprintf(s21_res, "Широкий символ: %lc\n fgtffghghgutf", wide_char);
-  sprintf(lib_res, "Широкий символ: %lc\n fgtffghghgutf", wide_char);
+  s21_sprintf(s21_res, "Широкий символ: %-20lc %6lc fgtffghghgutf", wide_char1,
+              wide_char2);
+  sprintf(lib_res, "Широкий символ: %-20lc %6lc fgtffghghgutf", wide_char1,
+          wide_char2);
 
   ck_assert_str_eq(lib_res, s21_res);
 }
 END_TEST
 
 START_TEST(test_sprintf_wide_character_string) {
-  char lib_res[100];
-  char s21_res[100];
-  wchar_t wide_string[] = L"こんにちは";
+  char lib_res[1000];
+  char s21_res[1000];
+  wchar_t wide_string1[] = L"こんにちは";
+  wchar_t wide_string2[] = L"凛として時雨";
 
-  s21_sprintf(s21_res, "Широкий символ: %ls\n fgtffghghgutf", wide_string);
-  sprintf(lib_res, "Широкий символ: %ls\n fgtffghghgutf", wide_string);
+  s21_sprintf(s21_res, "Широкий символ: %-20ls %10ls fgtffghghgutf",
+              wide_string1, wide_string2);
+  sprintf(lib_res, "Широкий символ: %-20ls %10ls fgtffghghgutf", wide_string1,
+          wide_string2);
   ck_assert_str_eq(lib_res, s21_res);
 }
 END_TEST

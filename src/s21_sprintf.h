@@ -109,10 +109,10 @@ void apply_minus_width(DestStr* dest, SpecOptions* spec_opts);
 
 void process_chars(va_list* args, DestStr* dest, SpecOptions* spec_opts);
 void process_narrow_char(va_list* args, DestStr* dest, SpecOptions* spec_opts);
-void process_wide_char(va_list* args, DestStr* dest);
+void process_wide_char(va_list* args, DestStr* dest, SpecOptions* spec_opts);
 void process_strings(va_list* args, DestStr* dest, SpecOptions* spec_opts);
 void process_narrow_string(char* string, DestStr* dest, SpecOptions* spc_opts);
-void process_wide_string(va_list* args, DestStr* dest);
+void process_wide_string(va_list* args, DestStr* dest, SpecOptions* spec_opts);
 void process_int(va_list* args, DestStr* dest, SpecOptions* spec_opts);
 void process_unsigned(va_list* args, DestStr* dest, SpecOptions* spec_opts);
 void process_floating_point_number(va_list* args, DestStr* dest,

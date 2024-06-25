@@ -238,7 +238,7 @@ void process_chars(va_list* args, DestStr* dest, SpecOptions* spec_opts) {
   if (spec_opts->length_l == false) {
     process_narrow_char(args, dest, spec_opts);
   } else {
-    process_wide_char(args, dest);
+    process_wide_char(args, dest, spec_opts);
   }
 }
 
@@ -254,15 +254,19 @@ void process_narrow_char(va_list* args, DestStr* dest, SpecOptions* spec_opts) {
   apply_minus_width(dest, spec_opts);
 }
 
-void process_wide_char(va_list* args, DestStr* dest) {
+void process_wide_char(va_list* args, DestStr* dest, SpecOptions* spec_opts) {
   wchar_t input_char = va_arg(*args, wchar_t);
   char temp[MB_CUR_MAX];
   int len = wctomb(temp, input_char);
+  calculate_padding(len, spec_opts);
+  apply_width(dest, len, spec_opts);
+  apply_flags(dest, spec_opts);
   if (len > 0) {
     for (int i = 0; i < len; i++) {
       dest->str[dest->curr_ind++] = temp[i];
     }
   }
+  apply_minus_width(dest, spec_opts);
 }
 
 void process_int(va_list* args, DestStr* dest, SpecOptions* spec_opts) {
@@ -303,7 +307,7 @@ void process_strings(va_list* args, DestStr* dest, SpecOptions* spec_opts) {
     char* input_string = va_arg(*args, char*);
     process_narrow_string(input_string, dest, spec_opts);
   } else {
-    process_wide_string(args, dest);
+    process_wide_string(args, dest, spec_opts);
   }
 }
 
@@ -318,9 +322,12 @@ void process_narrow_string(char* input_string, DestStr* dest,
   apply_minus_width(dest, spec_opts);
 }
 
-void process_wide_string(va_list* args, DestStr* dest) {
+void process_wide_string(va_list* args, DestStr* dest, SpecOptions* spec_opts) {
   wchar_t* input_string = va_arg(*args, wchar_t*);
-  size_t len = wcstombs(NULL, input_string, 0);
+  s21_size_t len = wcstombs(NULL, input_string, 0);
+  calculate_padding(len, spec_opts);
+  apply_width(dest, len, spec_opts);
+  apply_flags(dest, spec_opts);
   if (len != (size_t)-1) {
     char* temp_str = (char*)malloc(len + 1);
     if (temp_str) {
@@ -331,6 +338,7 @@ void process_wide_string(va_list* args, DestStr* dest) {
       free(temp_str);
     }
   }
+  apply_minus_width(dest, spec_opts);
 }
 
 long long int ingest_int(va_list* args, SpecOptions* spec_opts) {
