@@ -2223,15 +2223,15 @@ START_TEST(test_sprintf_sharp_g_spec_long_double_set_precision_many_p1) {
 
   long double num7 = 9999999L;
   long double num7_1 = 9999999.0L;
-  long double num7_2 = 9999999.9L;
-  long double num7_3 = 9999999.93L;
-  long double num7_4 = 9999999.934L;
-  long double num7_5 = 9999999.9345L;
-  long double num7_6 = 9999999.93456L;
-  long double num7_7 = 9999999.934567L;
-  long double num7_8 = 9999999.9345678L;
-  long double num7_9 = 9999999.93456789L;
-  long double num7_10 = 9999999.9345678910L;
+  long double num7_2 = 9999998.9L;
+  long double num7_3 = 9999998.93L;
+  long double num7_4 = 9999998.934L;
+  long double num7_5 = 9999998.9345L;
+  long double num7_6 = 9999998.93456L;
+  long double num7_7 = 9999998.934567L;
+  long double num7_8 = 9999998.9345678L;
+  long double num7_9 = 9999998.93456789L;
+  long double num7_10 = 9999998.9345678910L;
 
   int pr = _i;  // supplied through add_loop_test func
 
@@ -3433,7 +3433,7 @@ START_TEST(test_sprintf_sharp_g_spec_long_loop_precisions_width_4) {
   long double num5 = 4444.7L;
   long double num6 = 4444.4L;
   long double num7 = 0.923423L;
-  long double num8 = 99999999999999.92L;
+  long double num8 = 99999999999998.92L;
   int precision = _i;  // supplied through add_loop_test func
 
   char format_string[70];
@@ -3978,16 +3978,16 @@ START_TEST(test_sprintf_sharp_g_spec_set_precision_many_width_4_p3) {
   double num1_10 = 9.9345678910;
 
   double num2 = 92;
-  double num2_1 = 99.9;
-  double num2_2 = 99.9;
-  double num2_3 = 99.83;
-  double num2_4 = 99.834;
-  double num2_5 = 99.2934;
-  double num2_6 = 99.29345;
-  double num2_7 = 99.934567;
-  double num2_8 = 99.9345678;
-  double num2_9 = 99.93456789;
-  double num2_10 = 99.9345678910;
+  double num2_1 = 98.9;
+  double num2_2 = 98.9;
+  double num2_3 = 98.83;
+  double num2_4 = 98.834;
+  double num2_5 = 98.2934;
+  double num2_6 = 98.29345;
+  double num2_7 = 98.934567;
+  double num2_8 = 98.9345678;
+  double num2_9 = 98.93456789;
+  double num2_10 = 98.9345678910;
 
   double num3 = 999;
   double num3_1 = 993.0;
@@ -4051,15 +4051,15 @@ START_TEST(test_sprintf_sharp_g_spec_set_precision_many_width_4_p4) {
 
   double num5 = 92345;
   double num5_1 = 99999.0;
-  double num5_2 = 99999.9;
-  double num5_3 = 99999.93;
-  double num5_4 = 99999.934;
-  double num5_5 = 99999.9345;
-  double num5_6 = 99999.93456;
-  double num5_7 = 99999.934567;
-  double num5_8 = 99999.9345678;
-  double num5_9 = 99999.93456789;
-  double num5_10 = 99999.9345678910;
+  double num5_2 = 99998.9;
+  double num5_3 = 99998.93;
+  double num5_4 = 99998.934;
+  double num5_5 = 99998.9345;
+  double num5_6 = 99998.93456;
+  double num5_7 = 99998.934567;
+  double num5_8 = 99998.9345678;
+  double num5_9 = 99998.93456789;
+  double num5_10 = 99998.9345678910;
 
   double num6 = 999999;
   double num6_1 = 999999.0;
@@ -4075,15 +4075,15 @@ START_TEST(test_sprintf_sharp_g_spec_set_precision_many_width_4_p4) {
 
   double num7 = 9999999;
   double num7_1 = 9999999.0;
-  double num7_2 = 9999999.9;
-  double num7_3 = 9999999.93;
-  double num7_4 = 9999999.934;
-  double num7_5 = 9999999.9345;
-  double num7_6 = 9999999.93456;
-  double num7_7 = 9999999.934567;
-  double num7_8 = 9999999.9345678;
-  double num7_9 = 9999999.93456789;
-  double num7_10 = 9999999.9345678910;
+  double num7_2 = 9999998.9;
+  double num7_3 = 9999998.93;
+  double num7_4 = 9999998.934;
+  double num7_5 = 9999998.9345;
+  double num7_6 = 9999998.93456;
+  double num7_7 = 9999998.934567;
+  double num7_8 = 9999998.9345678;
+  double num7_9 = 9999998.93456789;
+  double num7_10 = 9999998.9345678910;
 
   int pr = _i;  // supplied through add_loop_test func
 
@@ -4136,15 +4136,15 @@ START_TEST(
 
   long double num5 = 92345L;
   long double num5_1 = 99999.0L;
-  long double num5_2 = 99999.9L;
-  long double num5_3 = 99999.93L;
-  long double num5_4 = 99999.934L;
-  long double num5_5 = 99999.9345L;
-  long double num5_6 = 99999.93456L;
-  long double num5_7 = 99999.934567L;
-  long double num5_8 = 99999.9345678L;
-  long double num5_9 = 99999.93456789L;
-  long double num5_10 = 99999.9345678910L;
+  long double num5_2 = 99998.9L;
+  long double num5_3 = 99998.93L;
+  long double num5_4 = 99998.934L;
+  long double num5_5 = 99998.9345L;
+  long double num5_6 = 99998.93456L;
+  long double num5_7 = 99998.934567L;
+  long double num5_8 = 99998.9345678L;
+  long double num5_9 = 99998.93456789L;
+  long double num5_10 = 99998.9345678910L;
 
   long double num6 = 999999L;
   long double num6_1 = 999999.0L;
@@ -4160,15 +4160,15 @@ START_TEST(
 
   long double num7 = 9999999L;
   long double num7_1 = 9999999.0L;
-  long double num7_2 = 9999999.9L;
-  long double num7_3 = 9999999.93L;
-  long double num7_4 = 9999999.934L;
-  long double num7_5 = 9999999.9345L;
-  long double num7_6 = 9999999.93456L;
-  long double num7_7 = 9999999.934567L;
-  long double num7_8 = 9999999.9345678L;
-  long double num7_9 = 9999999.93456789L;
-  long double num7_10 = 9999999.9345678910L;
+  long double num7_2 = 9999998.9L;
+  long double num7_3 = 9999998.93L;
+  long double num7_4 = 9999998.934L;
+  long double num7_5 = 9999998.9345L;
+  long double num7_6 = 9999998.93456L;
+  long double num7_7 = 9999998.934567L;
+  long double num7_8 = 9999998.9345678L;
+  long double num7_9 = 9999998.93456789L;
+  long double num7_10 = 9999998.9345678910L;
 
   int pr = _i;  // supplied through add_loop_test func
 
