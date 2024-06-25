@@ -405,8 +405,8 @@ START_TEST(test_sprintf_scientific_from_negative_double) {
   char lib_res[100];
   char s21_res[100];
   double num = -0.9;
-  sprintf(lib_res, "%e", num);
-  s21_sprintf(s21_res, "%e", num);
+  sprintf(lib_res, "%05e", num);
+  s21_sprintf(s21_res, "%05e", num);
   ck_assert_str_eq(lib_res, s21_res);
 }
 END_TEST
@@ -2446,8 +2446,8 @@ START_TEST(test_sprintf_sharp_scientific_zero_double) {
   char lib_res[100];
   char s21_res[100];
   double num = 0;
-  sprintf(lib_res, "%#20e", num);
-  s21_sprintf(s21_res, "%#20e", num);
+  sprintf(lib_res, "%#020e", num);
+  s21_sprintf(s21_res, "%#020e", num);
   ck_assert_str_eq(lib_res, s21_res);
 }
 END_TEST
@@ -4097,7 +4097,8 @@ START_TEST(test_sprintf_sharp_g_spec_set_precision_many_width_4_p4) {
 
   s21_sprintf(
       format_string,
-      "%%#4.%dg %%#4.%dg %%#4.%dg %%#4.%dg %%#4.%dg %%#4.%dg %%#4.%dg %%#4.%dg "
+      "%%#4.%dg %%#04.%dg %%#04.%dg %%#4.%dg %%#4.%dg %%#4.%dg %%#4.%dg "
+      "%%#4.%dg "
       "%%#4.%dg %%#4.%dg %%#4.%dg %%#4.%dg %%#4.%dg %%#4.%dg %%#4.%dg %%#4.%dg "
       "%%#4.%dg %%#4.%dg %%#4.%dg %%#4.%dg %%#4.%dg %%#4.%dg %%#4.%dg %%#4.%dg "
       "%%#4.%dg %%#4.%dg %%#4.%dg %%#4.%dg %%#4.%dg %%#4.%dg %%#4.%dg %%#4.%dg "
