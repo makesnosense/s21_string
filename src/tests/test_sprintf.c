@@ -2446,8 +2446,8 @@ START_TEST(test_sprintf_sharp_scientific_zero_double) {
   char lib_res[100];
   char s21_res[100];
   double num = 0;
-  sprintf(lib_res, "%#e", num);
-  s21_sprintf(s21_res, "%#e", num);
+  sprintf(lib_res, "%#20e", num);
+  s21_sprintf(s21_res, "%#20e", num);
   ck_assert_str_eq(lib_res, s21_res);
 }
 END_TEST
@@ -2456,8 +2456,8 @@ START_TEST(test_sprintf_sharp_scientific_front_double) {
   char lib_res[100];
   char s21_res[100];
   double num = 1234.5678;
-  sprintf(lib_res, "%#e", num);
-  s21_sprintf(s21_res, "%#e", num);
+  sprintf(lib_res, "%-#20e", num);
+  s21_sprintf(s21_res, "%-#20e", num);
   ck_assert_str_eq(lib_res, s21_res);
 }
 END_TEST
@@ -2466,8 +2466,8 @@ START_TEST(test_sprintf_sharp_scientific_from_negative_double) {
   char lib_res[100];
   char s21_res[100];
   double num = -0.9;
-  sprintf(lib_res, "%#e", num);
-  s21_sprintf(s21_res, "%#e", num);
+  sprintf(lib_res, "%-#20E", num);
+  s21_sprintf(s21_res, "%-#20E", num);
   ck_assert_str_eq(lib_res, s21_res);
 }
 END_TEST
@@ -2543,11 +2543,11 @@ START_TEST(test_sprintf_sharp_scientific_long_loop_precisions) {
 
   char format_string[70];
 
-  s21_sprintf(
-      format_string,
-      "%%#.%dLe %%#.%dLe %%#.%dLe %%#.%dLe %%#.%dLe %%#.%dLe %%#.%dLe %%#.%dLe",
-      precision, precision, precision, precision, precision, precision,
-      precision, precision);
+  s21_sprintf(format_string,
+              "%%#.%dLe %%#.%dLe %%#.%dLe %%#4.%dLe %%#.%dLE %%#10.%dLe "
+              "%%#.%dLE %%#.%dLe",
+              precision, precision, precision, precision, precision, precision,
+              precision, precision);
   sprintf(lib_res, format_string, num1, num2, num3, num4, num5, num6, num7,
           num8);
   s21_sprintf(s21_res, format_string, num1, num2, num3, num4, num5, num6, num7,
