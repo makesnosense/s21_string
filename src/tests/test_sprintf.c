@@ -250,8 +250,8 @@ START_TEST(test_sprintf_long_overflow) {
 END_TEST
 
 START_TEST(test_sprintf_number_of_characters) {
-  char lib_res[100];
-  char s21_res[100];
+  char lib_res[100] = {0};
+  char s21_res[100] = {0};
   double num = 1.79769313486231571308;
   int res_or = 0;
   int res_s21 = 0;
