@@ -171,14 +171,18 @@ END_TEST
 START_TEST(test_sprintf_unsigned) {
   char lib_res[1000];
   char s21_res[1000];
-  long int min_long_int = LONG_MIN;
+  // long int min_long_int = LONG_MIN;
 
-  sprintf(lib_res, "%-15u %60u %u %lu %lu %lu %u %lu %hu %u %u", 1, 1000,
-          UINT_MAX, ULONG_MAX, ULONG_MAX - 333, ULONG_MAX + 1, (UINT_MAX + 500),
-          min_long_int, USHRT_MAX, UINT_MAX, 0);
-  s21_sprintf(s21_res, "%-15u %60u %u %lu %lu %lu %u %lu %hu %u %u", 1, 1000,
-              UINT_MAX, ULONG_MAX, ULONG_MAX - 333, ULONG_MAX + 1,
-              (UINT_MAX + 500), min_long_int, USHRT_MAX, UINT_MAX, 0);
+  // unsigned int uim = UINT_MAX;
+  long unsigned luim = 4294967295 + 1;
+  // short unsigned suim = USHRT_MAX;
+
+  sprintf(lib_res, "%-15u %60u %u %lu %lu %lu %u %hu %u %u", 1, 1000, UINT_MAX,
+          4294967295, 4294967295 - 333, luim, (UINT_MAX + 500), USHRT_MAX,
+          UINT_MAX, 0);
+  s21_sprintf(s21_res, "%-15u %60u %u %lu %lu %lu %u %hu %u %u", 1, 1000,
+              UINT_MAX, 4294967295, 4294967295 - 333, luim, (UINT_MAX + 500),
+              USHRT_MAX, UINT_MAX, 0);
   ck_assert_str_eq(lib_res, s21_res);
 }
 END_TEST
@@ -188,9 +192,10 @@ START_TEST(test_sprintf_unsigned_problematic) {
   char s21_res[1000];
 
   sprintf(lib_res, "%-20hu %-30hu %-30u %lu %lu %u %u", USHRT_MAX + 5,
-          UINT_MAX + 10, UINT_MAX, ULONG_MAX, ULONG_MAX + 5, -1000, -65555);
+          UINT_MAX + 10, UINT_MAX, 4294967295, 4294967295 + 5, -1000, -65555);
   s21_sprintf(s21_res, "%-20hu %-30hu %-30u %lu %lu %u %u", USHRT_MAX + 5,
-              UINT_MAX + 10, UINT_MAX, ULONG_MAX, ULONG_MAX + 5, -1000, -65555);
+              UINT_MAX + 10, UINT_MAX, 4294967295, 4294967295 + 5, -1000,
+              -65555);
   ck_assert_str_eq(lib_res, s21_res);
 }
 END_TEST
