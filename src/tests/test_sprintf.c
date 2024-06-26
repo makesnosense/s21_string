@@ -1,6 +1,7 @@
 #include <limits.h>
 #include <locale.h>
 #include <stdio.h>
+#include <valgrind/valgrind.h>
 
 #include "run_tests.h"
 
@@ -890,21 +891,6 @@ START_TEST(test_sprintf_g_spec_no_precision_interesting) {
   ck_assert_str_eq(lib_res, s21_res);
 }
 END_TEST
-
-// START_TEST(test_sprintf_double_nan_inf) {
-//   char lib_res[50];
-//   char s21_res[50];
-
-//   long double ld_value = 1.0e+4932L;
-//   double inf_value = (double)ld_value;
-//   double nan_value = sqrt(-1.0);
-
-//   sprintf(lib_res, "%-4f %f", nan_value, inf_value);
-//   s21_sprintf(s21_res, "%-4f %f", nan_value, inf_value);
-
-//   ck_assert_str_eq(lib_res, s21_res);
-// }
-// END_TEST
 
 START_TEST(test_sprintf_long_double) {
   char lib_res[100];
@@ -1806,20 +1792,36 @@ START_TEST(test_sprintf_sharp_g_spec_no_precision_interesting) {
 }
 END_TEST
 
-// START_TEST(test_sprintf_sharp_double_nan_inf) {
-//   char lib_res[50];
-//   char s21_res[50];
+#ifndef RUNNING_ON_VALGRIND
+START_TEST(test_sprintf_double_nan_inf) {
+  char lib_res[50];
+  char s21_res[50];
 
-//   long double ld_value = 1.0e+4932L;
-//   double inf_value = (double)ld_value;
-//   double nan_value = sqrt(-1.0);
+  long double ld_value = 1.0e+4932L;
+  double inf_value = (double)ld_value;
+  double nan_value = sqrt(-1.0);
 
-//   sprintf(lib_res, "%-#4f %#f", nan_value, inf_value);
-//   s21_sprintf(s21_res, "%-#4f %#f", nan_value, inf_value);
+  sprintf(lib_res, "%-4f %f", nan_value, inf_value);
+  s21_sprintf(s21_res, "%-4f %f", nan_value, inf_value);
 
-//   ck_assert_str_eq(lib_res, s21_res);
-// }
-// END_TEST
+  ck_assert_str_eq(lib_res, s21_res);
+}
+END_TEST
+START_TEST(test_sprintf_sharp_double_nan_inf) {
+  char lib_res[50];
+  char s21_res[50];
+
+  long double ld_value = 1.0e+4932L;
+  double inf_value = (double)ld_value;
+  double nan_value = sqrt(-1.0);
+
+  sprintf(lib_res, "%-#4f %#f", nan_value, inf_value);
+  s21_sprintf(s21_res, "%-#4f %#f", nan_value, inf_value);
+
+  ck_assert_str_eq(lib_res, s21_res);
+}
+END_TEST
+#endif
 
 START_TEST(test_sprintf_sharp_long_double) {
   char lib_res[100];
@@ -4311,8 +4313,10 @@ Suite* make_sprintf_suite() {
   tcase_add_test(tc_core, test_sprintf_g_spec_precision_0_many_p2);
 
   tcase_add_test(tc_problematic, test_sprintf_g_spec_no_precision_interesting);
-
-  // tcase_add_test(tc_core, test_sprintf_double_nan_inf);
+#ifndef RUNNING_ON_VALGRIND
+  tcase_add_test(tc_core, test_sprintf_double_nan_inf);
+  tcase_add_test(tc_core, test_sprintf_sharp_double_nan_inf);
+#endif
   tcase_add_test(tc_core, test_sprintf_long_double);
   tcase_add_test(tc_core, test_sprintf_double_long_double);
 
@@ -4347,7 +4351,6 @@ Suite* make_sprintf_suite() {
   tcase_add_test(tc_problematic,
                  test_sprintf_sharp_g_spec_no_precision_interesting);
 
-  // tcase_add_test(tc_core, test_sprintf_sharp_double_nan_inf);
   tcase_add_test(tc_core, test_sprintf_sharp_long_double);
   tcase_add_test(tc_core, test_sprintf_sharp_double_long_double);
 
