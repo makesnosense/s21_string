@@ -38,6 +38,9 @@ int main() {
   printf("Считано спецификаторов: %d\n\n", res);
 
   // ТЕСТ 3
+  int_num = 0;
+  float_num = 0.0;
+  symbol = '\0';
   printf("-----------------------------------------------------------\n\n");
   s21_strcpy(string, "3213 -32.32 Q %");
   res = s21_sscanf(string, "%*d %*f %*c %% %n", &n);
