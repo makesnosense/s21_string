@@ -1,7 +1,7 @@
 CC = gcc
 CFLAGS = -std=c11 -Wall -Wextra -Werror
 
-OBJ = s21_sscanf.c s21_sscanf_main.c
+OBJ = s21_sscanf.c s21_sscanf_main.c ../s21_strcpy.c
 EXE = s21_sscanf
 
 all: cpplint s21_sscanf

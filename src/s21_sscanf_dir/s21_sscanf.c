@@ -1,96 +1,13 @@
 #include "s21_sscanf.h"
 
-#include <stdarg.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
-#include "../s21_string.h"
-
-int s21_sscanf(const char *str, const char *format, ...) {
-  va_list args;  // Список аргументов
-  va_start(args, format);  // Инициализируем список аргументов
-
-  int result = 0;  // Количество считанных спецификаторов
-  int count = 0;  // Количество считанных символов до %n
-
-  // Чек, что format и str не пустые
-  if (!str || !format) {
-    result = -1;
-  } else {
-    while (*format != '\0') {
-      if (*format == '%') {
-        format++;
-        switch (*format) {
-          case 'c':
-            char *c = va_arg(args, char *);
-            if (read_char(&str, c, &count)) {
-              format++;
-              result++;
-            }
-            break;
-          case 's':
-            char *s = va_arg(args, char *);
-            if (read_string(&str, s, &count)) {
-              format++;
-              result++;
-            }
-            break;
-          case 'd':
-          case 'i':
-            int *d = va_arg(args, int *);
-            if (read_int(&str, d, &count)) {
-              format++;
-              result++;
-            }
-            break;
-          case 'f':
-            float *f = va_arg(args, float *);
-            if (read_float(&str, f, &count)) {
-              format++;
-              result++;
-            }
-            break;
-          case 'u':
-            unsigned int *u = va_arg(args, unsigned int *);
-            if (read_unsigned_int(&str, u, &count)) {
-              format++;
-              result++;
-            }
-            break;
-          case 'x':
-          case 'X':
-            unsigned int *x = va_arg(args, unsigned int *);
-            if (read_hex(&str, x, &count)) {
-              format++;
-              result++;
-            }
-            break;
-          case '%':
-            format++;
-            break;
-          default:
-            break;
-        }
-      } else {
-        format++;
-        str++;
-      }
-    }
-  }
-  va_end(args);
-
-  return result;
-}
-
 // Функция для считывания символа из буфера
-int read_char(const char **str, char *c, int *cnt) {
+int read_char(const char **str, char *c, Opts *opts) {
   int result = 0;
 
   if (**str != '\0') {
-    *c = **str;
+    if (!opts->is_star) *c = **str;
     (*str)++;
-    (*cnt)++;
+    opts->count++;
     result = 1;
   }
 
@@ -98,12 +15,12 @@ int read_char(const char **str, char *c, int *cnt) {
 }
 
 // Функция для считывания строки из буфера
-int read_string(const char **str, char *s, int *cnt) {
+int read_string(const char **str, char *s, Opts *opts) {
   while (**str != ' ' && **str != '\t' && **str != '\n' && **str != '\0') {
-    *s = **str;
+    if (!opts->is_star) *s = **str;
     (*str)++;
     s++;
-    (*cnt)++;
+    opts->count++;
   }
   *s = '\0';
 
@@ -111,80 +28,76 @@ int read_string(const char **str, char *s, int *cnt) {
 }
 
 // Функция для считывания целого числа из буфера
-int read_int(const char **str, int *d, int *cnt) {
+int read_int(const char **str, int *d, Opts *opts) {
   int sign = 1;
   int num = 0;
-  int result = 0;
 
   if (**str == '-') {
     sign = -1;
     (*str)++;
-    (*cnt)++;
+    opts->count++;
   }
 
   while (**str >= '0' && **str <= '9') {
     num = num * 10 + (**str - '0');
     (*str)++;
-    (*cnt)++;
-    result = 1;
+    opts->count++;
   }
-  *d = sign * num;
+  if (!opts->is_star) *d = sign * num;
 
-  return result;
+  return 1;
 }
 
 // Функция для считывания целого беззнакового числа из буфера
-int read_unsigned_int(const char **str, unsigned int *u, int *cnt) {
+int read_unsigned_int(const char **str, unsigned int *u, Opts *opts) {
   unsigned int num = 0;
 
   while (**str >= '0' && **str <= '9') {
     num = num * 10 + (**str - '0');
     (*str)++;
-    (*cnt)++;
+    opts->count++;
   }
-  *u = num;
+  if (!opts->is_star) *u = num;
 
   return 1;
 }
 
 // Функция для считывания числа с плавающей точкой из буфера
-int read_float(const char **str, float *f, int *cnt) {
+int read_float(const char **str, float *f, Opts *opts) {
   int sign = 1;
   int int_part = 0;
   float frac_part = 0.0;
   int frac_div = 1;
-  int res = 0;
 
   if (**str == '-') {
     sign = -1;
     (*str)++;
-    (*cnt)++;
+    opts->count++;
   }
 
   while (**str >= '0' && **str <= '9') {
     int_part = int_part * 10 + (**str - '0');
     (*str)++;
-    (*cnt)++;
-    res = 1;
+    opts->count++;
   }
 
   if (**str == '.') {
     (*str)++;
-    (*cnt)++;
+    opts->count++;
     while (**str >= '0' && **str <= '9') {
       frac_part = frac_part * 10 + (**str - '0');
       frac_div *= 10;
       (*str)++;
-      (*cnt)++;
+      opts->count++;
     }
   }
-  *f = sign * (int_part + frac_part / frac_div);
+  if (!opts->is_star) *f = sign * (int_part + frac_part / frac_div);
 
-  return res;
+  return 1;
 }
 
 // Функция для считывания беззн. целого 16-го числа из буфера
-int read_hex(const char **str, unsigned int *x, int *cnt) {
+int read_hex(const char **str, unsigned int *x, Opts *opts) {
   unsigned int num = 0;
   while ((**str >= '0' && **str <= '9') || (**str >= 'a' && **str <= 'f') ||
          (**str >= 'A' && **str <= 'F')) {
@@ -196,9 +109,91 @@ int read_hex(const char **str, unsigned int *x, int *cnt) {
       num = num * 16 + (**str - 'A' + 10);
     }
     (*str)++;
-    (*cnt)++;
+    opts->count++;
   }
-  *x = num;
+  if (!opts->is_star) *x = num;
 
   return 1;
+}
+
+// Функция для считывания значений из буфера по формату
+int s21_sscanf(const char *str, const char *format, ...) {
+  va_list args;  // Список аргументов
+  va_start(args, format);  // Инициализируем список аргументов
+
+  Opts opts = {0};  // Зануляем структуру с опциями
+  int result = 0;  // Количество считанных спецификаторов
+
+  while (*format != '\0') {
+    if (*format == '%') {
+      format++;
+      if (*format == '*') {
+        opts.is_star = 1;
+        format++;
+      }
+      switch (*format) {
+        case 'c':
+          char *c = va_arg(args, char *);
+          if (read_char(&str, c, &opts)) {
+            if (!opts.is_star) result++;
+            format++;
+          }
+          break;
+        case 's':
+          char *s = va_arg(args, char *);
+          if (read_string(&str, s, &opts)) {
+            if (!opts.is_star) result++;
+            format++;
+          }
+          break;
+        case 'd':
+        case 'i':
+          int *d = va_arg(args, int *);
+          if (read_int(&str, d, &opts)) {
+            if (!opts.is_star) result++;
+            format++;
+          }
+          break;
+        case 'f':
+          float *f = va_arg(args, float *);
+          if (read_float(&str, f, &opts)) {
+            if (!opts.is_star) result++;
+            format++;
+          }
+          break;
+        case 'u':
+          unsigned int *u = va_arg(args, unsigned int *);
+          if (read_unsigned_int(&str, u, &opts)) {
+            if (!opts.is_star) result++;
+            format++;
+          }
+          break;
+        case 'x':
+        case 'X':
+          unsigned int *x = va_arg(args, unsigned int *);
+          if (read_hex(&str, x, &opts)) {
+            if (!opts.is_star) result++;
+            format++;
+          }
+          break;
+        case '%':
+          format++;
+          break;
+        case 'n':
+          unsigned int *n = va_arg(args, unsigned int *);
+          *n = opts.count;
+          format++;
+          break;
+        default:
+          break;
+      }
+    } else {
+      opts.count++;
+      format++;
+      str++;
+    }
+  }
+  va_end(args);
+
+  return result;
 }
