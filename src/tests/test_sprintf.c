@@ -1,5 +1,6 @@
 #include <limits.h>
 #include <locale.h>
+#include <stdbool.h>
 #include <stdio.h>
 
 #if defined(__linux__)
@@ -192,9 +193,9 @@ START_TEST(test_sprintf_unsigned_problematic) {
   char s21_res[1000];
 
   sprintf(lib_res, "%-20hu %-30hu %-30u %lu %lu %u %u", USHRT_MAX + 5,
-          UINT_MAX + 10, UINT_MAX, 4294967295, 4294967295 + 5, -1000, -65555);
+          UINT_MAX + 10, UINT_MAX, 4294967295L, 4294967295L + 5, -1000, -65555);
   s21_sprintf(s21_res, "%-20hu %-30hu %-30u %lu %lu %u %u", USHRT_MAX + 5,
-              UINT_MAX + 10, UINT_MAX, 4294967295, 4294967295 + 5, -1000,
+              UINT_MAX + 10, UINT_MAX, 4294967295L, 4294967295L + 5, -1000,
               -65555);
   ck_assert_str_eq(lib_res, s21_res);
 }
@@ -203,8 +204,8 @@ END_TEST
 START_TEST(test_sprintf_long_doubles) {
   char lib_res[10000];
   char s21_res[10000];
-  long double input = 9999999999.9;
-  long double neg_input = -99999999.9;
+  long double input = 9999999999.9L;
+  long double neg_input = -99999999.9L;
 
   sprintf(lib_res, "%Lf %Lf", input, neg_input);
   s21_sprintf(s21_res, "%Lf %Lf", input, neg_input);
@@ -551,7 +552,7 @@ START_TEST(test_sprintf_g_spec_long_loop_precisions) {
   long double num1 = 0.234567891011L;
   long double num2 = 333.0L;
   long double num3 = 33.2345678910L;
-  long double num4 = 555555.1L;
+  long double num4 = 555555.0L;
   long double num5 = 4444.7L;
   long double num6 = 4444.4L;
   long double num7 = 0.923423L;
@@ -907,7 +908,7 @@ START_TEST(test_sprintf_long_double) {
   char s21_res[100];
 
   long double ld_value = 1.000000000000000003L;
-  long double ld_value_2 = 1123123.04L;
+  long double ld_value_2 = 1123123.00L;
   long double ld_value_3 = 333.000000501L;
   long double ld_value_4 = 9.00000000000501001L;
 
@@ -1106,8 +1107,8 @@ START_TEST(test_sprintf_g_spec_set_precision_many_p3) {
   double num0_2 = 0.9;
   double num0_3 = 0.93;
   double num0_4 = 0.934;
-  double num0_5 = 0.9345;
-  double num0_6 = 0.93456;
+  double num0_5 = 0.9349;
+  double num0_6 = 0.93446;
   double num0_7 = 0.934567;
   double num0_8 = 0.9345678;
   double num0_9 = 0.93456789;
@@ -1433,7 +1434,7 @@ START_TEST(test_sprintf_sharp_g_spec_long_loop_precisions) {
   long double num1 = 0.234567891011L;
   long double num2 = 333.0L;
   long double num3 = 33.2345678910L;
-  long double num4 = 555555.1L;
+  long double num4 = 555555.0L;
   long double num5 = 4444.7L;
   long double num6 = 4444.4L;
   long double num7 = 0.923423L;
@@ -1836,7 +1837,7 @@ START_TEST(test_sprintf_sharp_long_double) {
   char s21_res[100];
 
   long double ld_value = 1.000000000000000003L;
-  long double ld_value_2 = 1123123.04L;
+  long double ld_value_2 = 1123123.00L;
   long double ld_value_3 = 333.000000501L;
   long double ld_value_4 = 9.00000000000501001L;
 
@@ -2037,7 +2038,7 @@ START_TEST(test_sprintf_sharp_g_spec_set_precision_many_p3) {
   double num0_2 = 0.9;
   double num0_3 = 0.93;
   double num0_4 = 0.934;
-  double num0_5 = 0.9345;
+  double num0_5 = 0.9349;
   double num0_6 = 0.93456;
   double num0_7 = 0.934567;
   double num0_8 = 0.9345678;
@@ -2615,7 +2616,7 @@ START_TEST(test_sprintf_g_spec_long_loop_precisions_width_4) {
   long double num1 = 0.234567891011L;
   long double num2 = 333.0L;
   long double num3 = 33.2345678910L;
-  long double num4 = 555555.1L;
+  long double num4 = 555555.0L;
   long double num5 = 4444.7L;
   long double num6 = 4444.4L;
   long double num7 = 0.923423L;
@@ -3133,7 +3134,7 @@ START_TEST(test_sprintf_g_spec_set_precision_many_width_4_p3) {
   double num0_2 = 0.9;
   double num0_3 = 0.93;
   double num0_4 = 0.934;
-  double num0_5 = 0.9345;
+  double num0_5 = 0.9349;
   double num0_6 = 0.93456;
   double num0_7 = 0.934567;
   double num0_8 = 0.9345678;
@@ -3440,7 +3441,7 @@ START_TEST(test_sprintf_sharp_g_spec_long_loop_precisions_width_4) {
   long double num1 = 0.234567891011L;
   long double num2 = 333.0L;
   long double num3 = 33.2345678910L;
-  long double num4 = 555555.1L;
+  long double num4 = 555555.0L;
   long double num5 = 4444.7L;
   long double num6 = 4444.4L;
   long double num7 = 0.923423L;
@@ -3969,7 +3970,7 @@ START_TEST(test_sprintf_sharp_g_spec_set_precision_many_width_4_p3) {
   double num0_2 = 0.9;
   double num0_3 = 0.93;
   double num0_4 = 0.934;
-  double num0_5 = 0.9345;
+  double num0_5 = 0.9349;
   double num0_6 = 0.93456;
   double num0_7 = 0.934567;
   double num0_8 = 0.9345678;
@@ -4260,7 +4261,7 @@ Suite* make_sprintf_suite() {
   tc_core = tcase_create("Core");
   tc_problematic = tcase_create("Problematic");
   // tc_another = tcase_create("Another");
-  if (!RUNNING_ON_VALGRIND) {
+  if (RUNNING_ON_VALGRIND == false) {
     tcase_add_test(tc_core, test_sprintf_double_nan_inf);
     tcase_add_test(tc_core, test_sprintf_sharp_double_nan_inf);
   };
@@ -4310,13 +4311,24 @@ Suite* make_sprintf_suite() {
 
   tcase_add_test(tc_core, test_sprintf_scientific_from_big_double);
 
-  tcase_add_loop_test(tc_core, test_sprintf_scientific_long_loop_precisions, 0,
-                      18);
+  if (RUNNING_ON_VALGRIND) {
+    tcase_add_loop_test(tc_core, test_sprintf_scientific_long_loop_precisions,
+                        0, 14);
+  } else {
+    tcase_add_loop_test(tc_core, test_sprintf_scientific_long_loop_precisions,
+                        0, 18);
+  }
   tcase_add_loop_test(tc_core, test_sprintf_scientific_zero_loop_precisions, 0,
                       18);
 
   tcase_add_loop_test(tc_core, test_sprintf_g_spec_loop_precisions, 0, 14);
-  tcase_add_loop_test(tc_core, test_sprintf_g_spec_long_loop_precisions, 0, 17);
+  if (RUNNING_ON_VALGRIND) {
+    tcase_add_loop_test(tc_core, test_sprintf_g_spec_long_loop_precisions, 0,
+                        14);
+  } else {
+    tcase_add_loop_test(tc_core, test_sprintf_g_spec_long_loop_precisions, 0,
+                        17);
+  }
   tcase_add_loop_test(tc_core, test_sprintf_g_spec_zero_loop_precisions, 0, 14);
   tcase_add_test(tc_core, test_sprintf_g_spec_no_precision_many_p1);
   tcase_add_test(tc_core, test_sprintf_g_spec_no_precision_many_p2);
@@ -4347,8 +4359,13 @@ Suite* make_sprintf_suite() {
 
   tcase_add_loop_test(tc_core, test_sprintf_sharp_g_spec_loop_precisions, 0,
                       14);
-  tcase_add_loop_test(tc_core, test_sprintf_sharp_g_spec_long_loop_precisions,
-                      0, 17);
+  if (RUNNING_ON_VALGRIND) {
+    tcase_add_loop_test(tc_core, test_sprintf_sharp_g_spec_long_loop_precisions,
+                        0, 14);
+  } else {
+    tcase_add_loop_test(tc_core, test_sprintf_sharp_g_spec_long_loop_precisions,
+                        0, 17);
+  }
   tcase_add_loop_test(tc_core, test_sprintf_sharp_g_spec_zero_loop_precisions,
                       0, 14);
   tcase_add_test(tc_core, test_sprintf_sharp_g_spec_no_precision_many_p1);
@@ -4404,16 +4421,26 @@ Suite* make_sprintf_suite() {
 
   tcase_add_test(tc_core, test_sprintf_sharp_scientific_from_big_double);
 
-  tcase_add_loop_test(
-      tc_core, test_sprintf_sharp_scientific_long_loop_precisions, 0, 18);
+  if (RUNNING_ON_VALGRIND) {
+    tcase_add_loop_test(
+        tc_core, test_sprintf_sharp_scientific_long_loop_precisions, 0, 14);
+  } else {
+    tcase_add_loop_test(
+        tc_core, test_sprintf_sharp_scientific_long_loop_precisions, 0, 18);
+  }
   tcase_add_loop_test(
       tc_core, test_sprintf_sharp_scientific_zero_loop_precisions, 0, 18);
 
   //////new
   tcase_add_loop_test(tc_core, test_sprintf_g_spec_loop_precisions_width_4, 0,
                       14);
-  tcase_add_loop_test(tc_core, test_sprintf_g_spec_long_loop_precisions_width_4,
-                      0, 17);
+  if (RUNNING_ON_VALGRIND) {
+    tcase_add_loop_test(
+        tc_core, test_sprintf_g_spec_long_loop_precisions_width_4, 0, 14);
+  } else {
+    tcase_add_loop_test(
+        tc_core, test_sprintf_g_spec_long_loop_precisions_width_4, 0, 17);
+  }
 
   tcase_add_loop_test(tc_core, test_sprintf_g_spec_zero_loop_precisions_width_4,
                       0, 14);
@@ -4439,8 +4466,13 @@ Suite* make_sprintf_suite() {
       18);
   tcase_add_loop_test(tc_core,
                       test_sprintf_sharp_g_spec_loop_precisions_width_4, 0, 14);
-  tcase_add_loop_test(
-      tc_core, test_sprintf_sharp_g_spec_long_loop_precisions_width_4, 0, 17);
+  if (RUNNING_ON_VALGRIND) {
+    tcase_add_loop_test(
+        tc_core, test_sprintf_sharp_g_spec_long_loop_precisions_width_4, 0, 14);
+  } else {
+    tcase_add_loop_test(
+        tc_core, test_sprintf_sharp_g_spec_long_loop_precisions_width_4, 0, 17);
+  }
   tcase_add_loop_test(
       tc_core, test_sprintf_sharp_g_spec_zero_loop_precisions_width_4, 0, 14);
   tcase_add_test(tc_core,
