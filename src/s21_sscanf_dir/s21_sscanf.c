@@ -7,123 +7,6 @@
 
 #include "../s21_string.h"
 
-// Функция для считывания символа из буфера
-int read_char(const char **str, char *c, int *cnt) {
-  int result = 0;
-
-  if (**str != '\0') {
-    *c = **str;
-    (*str)++;
-    (*cnt)++;
-    result = 1;
-  }
-
-  return result;
-}
-
-// Функция для считывания строки из буфера
-int read_string(const char **str, char *s, int *cnt) {
-  while (**str != ' ' && **str != '\t' && **str != '\n' && **str != '\0') {
-    *s = **str;
-    (*str)++;
-    s++;
-    (*cnt)++;
-  }
-  *s = '\0';
-
-  return 1;
-}
-
-// Функция для считывания целого числа из буфера
-int read_int(const char **str, int *d, int *cnt) {
-  int sign = 1;
-  int num = 0;
-
-  if (**str == '-') {
-    sign = -1;
-    (*str)++;
-    (*cnt)++;
-  }
-
-  while (**str >= '0' && **str <= '9') {
-    num = num * 10 + (**str - '0');
-    (*str)++;
-    (*cnt)++;
-  }
-  *d = sign * num;
-
-  return 1;
-}
-
-// Функция для считывания целого беззнакового числа из буфера
-int read_unsigned_int(const char **str, unsigned int *u, int *cnt) {
-  unsigned int num = 0;
-
-  while (**str >= '0' && **str <= '9') {
-    num = num * 10 + (**str - '0');
-    (*str)++;
-    (*cnt)++;
-  }
-  *u = num;
-
-  return 1;
-}
-
-// Функция для считывания числа с плавающей точкой из буфера
-int read_float(const char **str, float *f, int *cnt) {
-  int sign = 1;
-  int int_part = 0;
-  float frac_part = 0.0;
-  int frac_div = 1;
-
-  if (**str == '-') {
-    sign = -1;
-    (*str)++;
-    (*cnt)++;
-  }
-
-  while (**str >= '0' && **str <= '9') {
-    int_part = int_part * 10 + (**str - '0');
-    (*str)++;
-    (*cnt)++;
-  }
-
-  if (**str == '.') {
-    (*str)++;
-    (*cnt)++;
-    while (**str >= '0' && **str <= '9') {
-      frac_part = frac_part * 10 + (**str - '0');
-      frac_div *= 10;
-      (*str)++;
-      (*cnt)++;
-    }
-  }
-  *f = sign * (int_part + frac_part / frac_div);
-
-  return 1;
-}
-
-// Функция для считывания беззн. целого 16-го числа из буфера
-int read_hex(const char **str, unsigned int *x, int *cnt) {
-  unsigned int num = 0;
-  while ((**str >= '0' && **str <= '9') || (**str >= 'a' && **str <= 'f') ||
-         (**str >= 'A' && **str <= 'F')) {
-    if (**str >= '0' && **str <= '9') {
-      num = num * 16 + (**str - '0');
-    } else if (**str >= 'a' && **str <= 'f') {
-      num = num * 16 + (**str - 'a' + 10);
-    } else {
-      num = num * 16 + (**str - 'A' + 10);
-    }
-    (*str)++;
-    (*cnt)++;
-  }
-  *x = num;
-
-  return 1;
-}
-
-// Функция для считывания значений из буфера по формату
 int s21_sscanf(const char *str, const char *format, ...) {
   va_list args;  // Список аргументов
   va_start(args, format);  // Инициализируем список аргументов
@@ -198,4 +81,124 @@ int s21_sscanf(const char *str, const char *format, ...) {
   va_end(args);
 
   return result;
+}
+
+// Функция для считывания символа из буфера
+int read_char(const char **str, char *c, int *cnt) {
+  int result = 0;
+
+  if (**str != '\0') {
+    *c = **str;
+    (*str)++;
+    (*cnt)++;
+    result = 1;
+  }
+
+  return result;
+}
+
+// Функция для считывания строки из буфера
+int read_string(const char **str, char *s, int *cnt) {
+  while (**str != ' ' && **str != '\t' && **str != '\n' && **str != '\0') {
+    *s = **str;
+    (*str)++;
+    s++;
+    (*cnt)++;
+  }
+  *s = '\0';
+
+  return 1;
+}
+
+// Функция для считывания целого числа из буфера
+int read_int(const char **str, int *d, int *cnt) {
+  int sign = 1;
+  int num = 0;
+  int result = 0;
+
+  if (**str == '-') {
+    sign = -1;
+    (*str)++;
+    (*cnt)++;
+  }
+
+  while (**str >= '0' && **str <= '9') {
+    num = num * 10 + (**str - '0');
+    (*str)++;
+    (*cnt)++;
+    result = 1;
+  }
+  *d = sign * num;
+
+  return result;
+}
+
+// Функция для считывания целого беззнакового числа из буфера
+int read_unsigned_int(const char **str, unsigned int *u, int *cnt) {
+  unsigned int num = 0;
+
+  while (**str >= '0' && **str <= '9') {
+    num = num * 10 + (**str - '0');
+    (*str)++;
+    (*cnt)++;
+  }
+  *u = num;
+
+  return 1;
+}
+
+// Функция для считывания числа с плавающей точкой из буфера
+int read_float(const char **str, float *f, int *cnt) {
+  int sign = 1;
+  int int_part = 0;
+  float frac_part = 0.0;
+  int frac_div = 1;
+  int res = 0;
+
+  if (**str == '-') {
+    sign = -1;
+    (*str)++;
+    (*cnt)++;
+  }
+
+  while (**str >= '0' && **str <= '9') {
+    int_part = int_part * 10 + (**str - '0');
+    (*str)++;
+    (*cnt)++;
+    res = 1;
+  }
+
+  if (**str == '.') {
+    (*str)++;
+    (*cnt)++;
+    while (**str >= '0' && **str <= '9') {
+      frac_part = frac_part * 10 + (**str - '0');
+      frac_div *= 10;
+      (*str)++;
+      (*cnt)++;
+    }
+  }
+  *f = sign * (int_part + frac_part / frac_div);
+
+  return res;
+}
+
+// Функция для считывания беззн. целого 16-го числа из буфера
+int read_hex(const char **str, unsigned int *x, int *cnt) {
+  unsigned int num = 0;
+  while ((**str >= '0' && **str <= '9') || (**str >= 'a' && **str <= 'f') ||
+         (**str >= 'A' && **str <= 'F')) {
+    if (**str >= '0' && **str <= '9') {
+      num = num * 16 + (**str - '0');
+    } else if (**str >= 'a' && **str <= 'f') {
+      num = num * 16 + (**str - 'a' + 10);
+    } else {
+      num = num * 16 + (**str - 'A' + 10);
+    }
+    (*str)++;
+    (*cnt)++;
+  }
+  *x = num;
+
+  return 1;
 }
