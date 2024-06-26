@@ -4,7 +4,10 @@
 
 #if defined(__linux__)
 #include <valgrind/valgrind.h>
+#else
+#define RUNNING_ON_VALGRIND 0
 #endif
+
 #include "run_tests.h"
 
 START_TEST(test_sprintf_int) {
