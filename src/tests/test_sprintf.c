@@ -1794,7 +1794,6 @@ START_TEST(test_sprintf_sharp_g_spec_no_precision_interesting) {
 }
 END_TEST
 
-#ifndef RUNNING_ON_VALGRIND
 START_TEST(test_sprintf_double_nan_inf) {
   char lib_res[50];
   char s21_res[50];
@@ -1823,7 +1822,6 @@ START_TEST(test_sprintf_sharp_double_nan_inf) {
   ck_assert_str_eq(lib_res, s21_res);
 }
 END_TEST
-#endif
 
 START_TEST(test_sprintf_sharp_long_double) {
   char lib_res[100];
@@ -4254,7 +4252,10 @@ Suite* make_sprintf_suite() {
   tc_core = tcase_create("Core");
   tc_problematic = tcase_create("Problematic");
   // tc_another = tcase_create("Another");
-
+  if (!RUNNING_ON_VALGRIND) {
+    tcase_add_test(tc_core, test_sprintf_double_nan_inf);
+    tcase_add_test(tc_core, test_sprintf_sharp_double_nan_inf);
+  };
   tcase_add_test(tc_core, test_sprintf_int);
   tcase_add_test(tc_core, test_sprintf_int_0_padding);
   tcase_add_test(tc_core, test_sprintf_ints_d);
@@ -4315,10 +4316,7 @@ Suite* make_sprintf_suite() {
   tcase_add_test(tc_core, test_sprintf_g_spec_precision_0_many_p2);
 
   tcase_add_test(tc_problematic, test_sprintf_g_spec_no_precision_interesting);
-#ifndef RUNNING_ON_VALGRIND
-  tcase_add_test(tc_core, test_sprintf_double_nan_inf);
-  tcase_add_test(tc_core, test_sprintf_sharp_double_nan_inf);
-#endif
+
   tcase_add_test(tc_core, test_sprintf_long_double);
   tcase_add_test(tc_core, test_sprintf_double_long_double);
 
