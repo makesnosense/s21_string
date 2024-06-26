@@ -1,5 +1,32 @@
 #include "s21_sscanf.h"
 
+#include <ctype.h>
+
+int parse_pointer(const char **str, void **value, Opts *opts) {
+  int res = 0;
+
+  (*str) += 2;  // Пропускаем "0x"
+
+  // Преобразуем шестнадцатеричное значение в указатель
+  unsigned long int ptr_value = 0;
+  while (isxdigit(**str)) {
+    ptr_value *= 16;
+    if (isdigit(**str)) {
+      ptr_value += **str - '0';
+    } else if (**str >= 'a' && **str <= 'f') {
+      ptr_value += **str - 'a' + 10;
+    } else if (**str >= 'A' && **str <= 'F') {
+      ptr_value += **str - 'A' + 10;
+    }
+    (*str)++;
+    // opts->count++;
+    res = 1;
+  }
+
+  *value = (void *)ptr_value;
+  return res;  // Успех
+}
+
 // Функция для считывания символа из буфера
 int read_char(const char **str, char *c, Opts *opts) {
   int result = 0;
@@ -175,6 +202,14 @@ int s21_sscanf(const char *str, const char *format, ...) {
             if (!opts.is_star) result++;
             format++;
           }
+          break;
+        case 'p':
+          void **address = va_arg(args, void **);
+          if (parse_pointer(&str, address, &opts)) {
+            if (!opts.is_star) result++;
+            format++;
+          }
+
           break;
         case '%':
           format++;
