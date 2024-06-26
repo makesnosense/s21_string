@@ -595,50 +595,6 @@ START_TEST(test_sprintf_g_spec_no_precision_many_p1) {
   char lib_res[1000];
   char s21_res[1000];
 
-  // double num0_1 = 0.0;
-  // double num0_2 = 0.2;
-  // double num0_3 = 0.23;
-  // double num0_4 = 0.234;
-  // double num0_5 = 0.2345;
-  // double num0_6 = 0.23456;
-  // double num0_7 = 0.234567;
-  // double num0_8 = 0.2345678;
-  // double num0_9 = 0.23456789;
-  // double num0_10 = 0.2345678910;
-
-  // double num1_1 = 1.0;
-  // double num1_2 = 1.2;
-  // double num1_3 = 1.23;
-  // double num1_4 = 1.234;
-  // double num1_5 = 1.2345;
-  // double num1_6 = 1.23456;
-  // double num1_7 = 1.234567;
-  // double num1_8 = 1.2345678;
-  // double num1_9 = 1.23456789;
-  // double num1_10 = 1.2345678910;
-
-  // double num2_1 = 12.0;
-  // double num2_2 = 12.2;
-  // double num2_3 = 12.23;
-  // double num2_4 = 12.234;
-  // double num2_5 = 12.2345;
-  // double num2_6 = 12.23456;
-  // double num2_7 = 12.234567;
-  // double num2_8 = 12.2345678;
-  // double num2_9 = 12.23456789;
-  // double num2_10 = 12.2345678910;
-
-  // double num3_1 = 123.0;
-  // double num3_2 = 123.2;
-  // double num3_3 = 123.23;
-  // double num3_4 = 123.234;
-  // double num3_5 = 123.2345;
-  // double num3_6 = 123.23456;
-  // double num3_7 = 123.234567;
-  // double num3_8 = 123.2345678;
-  // double num3_9 = 123.23456789;
-  // double num3_10 = 123.2345678910;
-
   sprintf(lib_res,
           "%g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g "
           "%g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g",
@@ -658,27 +614,6 @@ START_TEST(test_sprintf_g_spec_no_precision_many_p1) {
               12.2345678910, 123.0, 123.2, 123.23, 123.234, 123.2345, 123.23456,
               123.234567, 123.2345678, 123.23456789, 123.2345678910);
   ck_assert_str_eq(lib_res, s21_res);
-
-  // sprintf(lib_res,
-  //         "%g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g
-  //         "
-  //         "%g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g
-  //         %g", num0, num0_1, num0_2, num0_3, num0_4, num0_5, num0_6, num0_7,
-  //         num0_8, num0_9, num0_10, num1, num1_1, num1_2, num1_3, num1_4,
-  //         num1_5, num1_6, num1_7, num1_8, num1_9, num1_10, num2, num2_1,
-  //         num2_2, num2_3, num2_4, num2_5, num2_6, num2_7, num2_8, num2_9,
-  //         num2_10, num3, num3_1, num3_2, num3_3, num3_4, num3_5, num3_6,
-  //         num3_7, num3_8, num3_9, num3_10);
-  // s21_sprintf(
-  //     s21_res,
-  //     "%g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g "
-  //     "%g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g %g",
-  //     num0, num0_1, num0_2, num0_3, num0_4, num0_5, num0_6, num0_7, num0_8,
-  //     num0_9, num0_10, num1, num1_1, num1_2, num1_3, num1_4, num1_5, num1_6,
-  //     num1_7, num1_8, num1_9, num1_10, num2, num2_1, num2_2, num2_3, num2_4,
-  //     num2_5, num2_6, num2_7, num2_8, num2_9, num2_10, num3, num3_1, num3_2,
-  //     num3_3, num3_4, num3_5, num3_6, num3_7, num3_8, num3_9, num3_10);
-  // ck_assert_str_eq(lib_res, s21_res);
 }
 END_TEST
 
