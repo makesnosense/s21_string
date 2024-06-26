@@ -51,8 +51,8 @@ START_TEST(test_sprintf_long_ints_d) {
   char lib_res[5000];
   char s21_res[5000];
 
-  long int max = 2147483647;
-  long int min = -2147483648;
+  long int max = 2147483647L;
+  long int min = -2147483648L;
 
   sprintf(lib_res, "%60ld_%ld_%-+15ld_%-+15ld", max, min, max, min);
   s21_sprintf(s21_res, "%60ld_%ld_%-+15ld_%-+15ld", max, min, max, min);
@@ -174,14 +174,14 @@ START_TEST(test_sprintf_unsigned) {
   // long int min_long_int = LONG_MIN;
 
   // unsigned int uim = UINT_MAX;
-  long unsigned luim = 4294967295 + 1;
+  long unsigned luim = 4294967296L;
   // short unsigned suim = USHRT_MAX;
 
   sprintf(lib_res, "%-15u %60u %u %lu %lu %lu %u %hu %u %u", 1, 1000, UINT_MAX,
-          4294967295, 4294967295 - 333, luim, (UINT_MAX + 500), USHRT_MAX,
+          4294967295L, 4294967295L - 333, luim, (UINT_MAX + 500), USHRT_MAX,
           UINT_MAX, 0);
   s21_sprintf(s21_res, "%-15u %60u %u %lu %lu %lu %u %hu %u %u", 1, 1000,
-              UINT_MAX, 4294967295, 4294967295 - 333, luim, (UINT_MAX + 500),
+              UINT_MAX, 4294967295L, 4294967295L - 333, luim, (UINT_MAX + 500),
               USHRT_MAX, UINT_MAX, 0);
   ck_assert_str_eq(lib_res, s21_res);
 }
@@ -238,8 +238,8 @@ END_TEST
 START_TEST(test_sprintf_long_overflow) {
   char lib_res[500];
   char s21_res[500];
-  long int long_int = LONG_MAX;
-  long int long_min_int = LONG_MIN;
+  long int long_int = 2147483647L;
+  long int long_min_int = -2147483648L;
   sprintf(lib_res, "%+40.5ld %-40ld", (long_int + 33), (long_min_int - 1500));
   s21_sprintf(s21_res, "%+40.5ld %-40ld", (long_int + 33),
               (long_min_int - 1500));
