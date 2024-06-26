@@ -1,8 +1,10 @@
 #include <limits.h>
 #include <locale.h>
 #include <stdio.h>
-#include <valgrind/valgrind.h>
 
+#if defined(__linux__)
+#include <valgrind/valgrind.h>
+#endif
 #include "run_tests.h"
 
 START_TEST(test_sprintf_int) {
