@@ -528,7 +528,6 @@ START_TEST(test_sprintf_g_spec_loop_precisions) {
   s21_sprintf(format_string, "%%.%dg %%.%dg %%.%dg %%.%dg", precision,
               precision, precision, precision);
 
-  // printf("\n%s\n", format_string);
   sprintf(lib_res, format_string, num1, num2, num3, num4);
   s21_sprintf(s21_res, format_string, num1, num2, num3, num4);
   ck_assert_str_eq(lib_res, s21_res);
@@ -555,7 +554,6 @@ START_TEST(test_sprintf_g_spec_long_loop_precisions) {
               precision, precision, precision, precision, precision, precision,
               precision, precision);
 
-  // printf("\n%s\n", format_string);
   sprintf(lib_res, format_string, num1, num2, num3, num4, num5, num6, num7,
           num8);
   s21_sprintf(s21_res, format_string, num1, num2, num3, num4, num5, num6, num7,
@@ -575,7 +573,6 @@ START_TEST(test_sprintf_g_spec_zero_loop_precisions) {
   char format_string[70];
 
   s21_sprintf(format_string, "%%.%dg %%.g %%.%dg %%.g", precision, precision);
-  // printf("\n\n%s\n", format_string);
   sprintf(lib_res, format_string, num1, num2, num1, num2);
   s21_sprintf(s21_res, format_string, num1, num2, num1, num2);
   ck_assert_str_eq(lib_res, s21_res);
@@ -4465,6 +4462,5 @@ Suite* make_sprintf_suite() {
 
   suite_add_tcase(sprintf_suite, tc_core);
   suite_add_tcase(sprintf_suite, tc_problematic);
-  // suite_add_tcase(sprintf_suite, tc_another);
   return sprintf_suite;
 }
