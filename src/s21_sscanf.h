@@ -1,6 +1,7 @@
 #ifndef S21_SSCANF_H_
 #define S21_SSCANF_H_
 
+#include <ctype.h>
 #include <stdarg.h>
 #include <stdbool.h>
 #include <stdio.h>
