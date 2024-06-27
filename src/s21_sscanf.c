@@ -1,9 +1,10 @@
 #include "s21_sscanf.h"
 
-int s21_sscanf(const char *str, const char *format, ...) {
+int s21_sscanf(const char* str, const char* format, ...) {
   va_list args;  // Список аргументов
   va_start(args, format);  // Инициализируем список аргументов
 
+  InputStr input = {str, 0};
   Opts opts = {0};  // Зануляем структуру с опциями
   int result = 0;  // Количество считанных спецификаторов
 
@@ -23,7 +24,7 @@ int s21_sscanf(const char *str, const char *format, ...) {
       }
       switch (*format) {
         case 'c': {
-          char *c = va_arg(args, char *);
+          char* c = va_arg(args, char*);
           if (read_char(&str, c, &opts)) {
             if (!opts.is_star) result++;
             format++;
@@ -31,7 +32,7 @@ int s21_sscanf(const char *str, const char *format, ...) {
           break;
         }
         case 's': {
-          char *s = va_arg(args, char *);
+          char* s = va_arg(args, char*);
           if (read_string(&str, s, &opts)) {
             if (!opts.is_star) result++;
             format++;
@@ -40,15 +41,15 @@ int s21_sscanf(const char *str, const char *format, ...) {
         }
         case 'd':
         case 'i': {
-          int *d = va_arg(args, int *);
-          if (read_int(&str, d, &opts)) {
+          int* d = va_arg(args, int*);
+          if (read_int(&input, d, &opts)) {
             if (!opts.is_star) result++;
             format++;
           }
           break;
         }
         case 'f': {
-          float *f = va_arg(args, float *);
+          float* f = va_arg(args, float*);
           if (read_float(&str, f, &opts)) {
             if (!opts.is_star) result++;
             format++;
@@ -56,7 +57,7 @@ int s21_sscanf(const char *str, const char *format, ...) {
           break;
         }
         case 'u': {
-          unsigned int *u = va_arg(args, unsigned int *);
+          unsigned int* u = va_arg(args, unsigned int*);
           if (read_unsigned_int(&str, u, &opts)) {
             if (!opts.is_star) result++;
             format++;
@@ -65,7 +66,7 @@ int s21_sscanf(const char *str, const char *format, ...) {
         }
         case 'x':
         case 'X': {
-          unsigned int *x = va_arg(args, unsigned int *);
+          unsigned int* x = va_arg(args, unsigned int*);
           if (read_hex(&str, x, &opts)) {
             if (!opts.is_star) result++;
             format++;
@@ -78,7 +79,7 @@ int s21_sscanf(const char *str, const char *format, ...) {
           break;
         }
         case 'n': {
-          int *n = va_arg(args, int *);
+          int* n = va_arg(args, int*);
           // YA HYU ZNAYET POCHEMU NO TAK RABOTAET
           int temp = opts.count;
           *n = temp;
@@ -107,7 +108,7 @@ int s21_sscanf(const char *str, const char *format, ...) {
 //   }
 // }
 
-int parse_pointer(const char **str, void **value, Opts *opts) {
+int parse_pointer(const char** str, void** value, Opts* opts) {
   int res = 0;
 
   // Skip "0x" and increment count by 2
@@ -129,11 +130,11 @@ int parse_pointer(const char **str, void **value, Opts *opts) {
     res = 1;
   }
 
-  *value = (void *)ptr_value;
+  *value = (void*)ptr_value;
   return res;  // Success
 }
 
-int read_char(const char **str, char *c, Opts *opts) {
+int read_char(const char** str, char* c, Opts* opts) {
   int result = 0;
 
   if (**str != '\0') {
@@ -146,7 +147,7 @@ int read_char(const char **str, char *c, Opts *opts) {
   return result;
 }
 
-int read_string(const char **str, char *s, Opts *opts) {
+int read_string(const char** str, char* s, Opts* opts) {
   int result = 0;
 
   while (**str != ' ' && **str != '\t' && **str != '\n' && **str != '\0') {
@@ -161,20 +162,21 @@ int read_string(const char **str, char *s, Opts *opts) {
   return result;
 }
 
-int read_int(const char **str, int *d, Opts *opts) {
+int read_int(InputStr* input, int* d, Opts* opts) {
   int result = 0;
   int sign = 1;
   int num = 0;
 
-  if (**str == '-') {
+  if (input->str[input->curr_ind] == '-') {
     sign = -1;
-    (*str)++;
+    input->curr_ind++;
     opts->count++;
   }
 
-  while (**str >= '0' && **str <= '9') {
-    num = num * 10 + (**str - '0');
-    (*str)++;
+  while (input->str[input->curr_ind] >= '0' &&
+         input->str[input->curr_ind] <= '9') {
+    num = num * 10 + (input->str[input->curr_ind] - '0');
+    input->curr_ind++;
     opts->count++;
     result = 1;
   }
@@ -183,7 +185,7 @@ int read_int(const char **str, int *d, Opts *opts) {
   return result;
 }
 
-int read_unsigned_int(const char **str, unsigned int *u, Opts *opts) {
+int read_unsigned_int(const char** str, unsigned int** u, Opts* opts) {
   unsigned int num = 0;
   int result = 0;
 
@@ -198,7 +200,7 @@ int read_unsigned_int(const char **str, unsigned int *u, Opts *opts) {
   return result;
 }
 
-int read_float(const char **str, float *f, Opts *opts) {
+int read_float(const char** str, float* f, Opts* opts) {
   int sign = 1;
   int int_part = 0;
   float frac_part = 0.0;
@@ -233,7 +235,7 @@ int read_float(const char **str, float *f, Opts *opts) {
   return result;
 }
 
-int read_hex(const char **str, unsigned int *x, Opts *opts) {
+int read_hex(const char** str, unsigned int* x, Opts* opts) {
   unsigned int num = 0;
   int result = 0;
 
