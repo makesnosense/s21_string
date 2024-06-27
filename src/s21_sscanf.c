@@ -1,5 +1,6 @@
 #include "s21_sscanf.h"
 
+#include <stdarg.h>
 int s21_sscanf(const char *str, const char *format, ...) {
   va_list args;  // Список аргументов
   va_start(args, format);  // Инициализируем список аргументов
@@ -22,64 +23,71 @@ int s21_sscanf(const char *str, const char *format, ...) {
         format++;
       }
       switch (*format) {
-        // case 'c':
-        //   char *c = va_arg(args, char *);
-        //   if (read_char(&str, c, &opts)) {
-        //     if (!opts.is_star) result++;
-        //     format++;
-        //   }
-        //   break;
-        // case 's':
-        //   char *s = va_arg(args, char *);
-        //   if (read_string(&str, s, &opts)) {
-        //     if (!opts.is_star) result++;
-        //     format++;
-        //   }
-        //   break;
-        // case 'd':
-        // case 'i':
-        //   int *d = va_arg(args, int *);
-        //   if (read_int(&str, d, &opts)) {
-        //     if (!opts.is_star) result++;
-        //     format++;
-        //   }
-        //   break;
-        // case 'f':
-        //   float *f = va_arg(args, float *);
-        //   if (read_float(&str, f, &opts)) {
-        //     if (!opts.is_star) result++;
-        //     format++;
-        //   }
-        //   break;
-        // case 'u':
-        //   unsigned int *u = va_arg(args, unsigned int *);
-        //   if (read_unsigned_int(&str, u, &opts)) {
-        //     if (!opts.is_star) result++;
-        //     format++;
-        //   }
-        //   break;
-        // case 'x':
-        // case 'X':
-        //   unsigned int *x = va_arg(args, unsigned int *);
-        //   if (read_hex(&str, x, &opts)) {
-        //     if (!opts.is_star) result++;
-        //     format++;
-        //   }
-        //   break;
-        // case '%':
-        //   format++;
-        //   str++;
-        //   break;
-        // case 'n':
-        //   int *n = va_arg(args, int *);
-        //   // YA HYU ZNAYET POCHEMU NO TAK RABOTAET
-        //   int temp = opts.count;
-        //   *n = temp;
-        //   // *n = opts.count;
-        //   format++;
-        //   break;
+        case 'c': {
+          char *c = va_arg(args, char *);
+          if (read_char(&str, c, &opts)) {
+            if (!opts.is_star) result++;
+            format++;
+          }
+          break;
+        }
+        case 's': {
+          char *s = va_arg(args, char *);
+          if (read_string(&str, s, &opts)) {
+            if (!opts.is_star) result++;
+            format++;
+          }
+          break;
+        }
+        case 'd':
+        case 'i': {
+          int *d = va_arg(args, int *);
+          if (read_int(&str, d, &opts)) {
+            if (!opts.is_star) result++;
+            format++;
+          }
+          break;
+        }
+        case 'f': {
+          float *f = va_arg(args, float *);
+          if (read_float(&str, f, &opts)) {
+            if (!opts.is_star) result++;
+            format++;
+          }
+          break;
+        }
+        case 'u': {
+          unsigned int *u = va_arg(args, unsigned int *);
+          if (read_unsigned_int(&str, u, &opts)) {
+            if (!opts.is_star) result++;
+            format++;
+          }
+          break;
+        }
+        case 'x':
+        case 'X': {
+          unsigned int *x = va_arg(args, unsigned int *);
+          if (read_hex(&str, x, &opts)) {
+            if (!opts.is_star) result++;
+            format++;
+          }
+          break;
+        }
+        case '%': {
+          format++;
+          str++;
+          break;
+        }
+        case 'n': {
+          int *n = va_arg(args, int *);
+          // YA HYU ZNAYET POCHEMU NO TAK RABOTAET
+          int temp = opts.count;
+          *n = temp;
+          // *n = opts.count;
+          format++;
+          break;
+        }
         default:
-          printf("%s", str);
           break;
       }
     } else {

@@ -4,7 +4,6 @@
 
 START_TEST(test_sscanf_int) {
   char* input_string = "77 13";
-
   char* format_string = "%d %i";
 
   int s21_res1 = 0;
