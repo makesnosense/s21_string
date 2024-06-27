@@ -9,11 +9,11 @@
 
 #include "s21_string.h"
 
-typedef struct Options {
+typedef struct SpecifierOptions {
   int count;  // Количество считанных символов для %n
   int width;     // Ширина
   bool is_star;  // Флаг подавления считывания
-} Opts;
+} SpecOptions;
 
 typedef struct InputString {
   const char* str;
@@ -21,22 +21,26 @@ typedef struct InputString {
 } InputStr;
 
 // Функция для чтения символа
-int read_char(const char** str, char* c, Opts* opts);
+int read_char(InputStr* input, char* c, SpecOptions* opts);
 
 // Функция для чтения строки
-int read_string(const char** str, char* s, Opts* opts);
+int read_string(const char** str, char* s, SpecOptions* opts);
 
 // Функция для чтения целого числа
-int read_int(InputStr* input, int* d, Opts* opts);
+int read_int(InputStr* input, int* d, SpecOptions* opts);
 
 // Функция для чтения беззнакового целого числа
-int read_unsigned_int(const char** str, unsigned int* u, Opts* opts);
+int read_unsigned_int(const char** str, unsigned int* u, SpecOptions* opts);
 
 // Функция для чтения вещественного числа
-int read_float(const char** str, float* f, Opts* opts);
+int read_float(InputStr* input, float* f, SpecOptions* opts);
 
 // Функция для чтения шестнадцатеричного числа
-int read_hex(const char** str, unsigned int* x, Opts* opts);
+int read_hex(const char** str, unsigned int* x, SpecOptions* opts);
+
+int parse_pointer(InputStr* input, void** value, SpecOptions* opts);
+
+void skip_space(InputStr* input, SpecOptions* opts);
 
 // // Функция для считывания значений из буфера по формату
 // int s21_sscanf(const char *str, const char *format, ...);
