@@ -10,7 +10,6 @@
 #include "s21_string.h"
 
 typedef struct SpecifierOptions {
-  int count;  // Количество считанных символов для %n
   int width;     // Ширина
   bool is_star;  // Флаг подавления считывания
 } SpecOptions;
@@ -40,7 +39,7 @@ int read_hex(const char** str, unsigned int* x, SpecOptions* opts);
 
 int parse_pointer(InputStr* input, void** value, SpecOptions* opts);
 
-void skip_space(InputStr* input, SpecOptions* opts);
+void skip_space(InputStr* input);
 
 // // Функция для считывания значений из буфера по формату
 // int s21_sscanf(const char *str, const char *format, ...);

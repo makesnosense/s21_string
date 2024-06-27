@@ -5,29 +5,36 @@ int s21_sscanf(const char* str, const char* format, ...) {
   va_start(args, format);  // Инициализируем список аргументов
 
   InputStr input = {str, 0};
-  SpecOptions opts = {0};  // Зануляем структуру с опциями
+  InputStr fmt_input = {format, 0};
+
+  SpecOptions spec_opts = {0};  // Зануляем структуру с опциями
   int result = 0;  // Количество считанных спецификаторов
 
   // Проходимся по формат-строке
-  while (*format != '\0') {
-    skip_space(&input, &opts);
-    if (*format == '%') {
-      format++;
+  while (fmt_input.str[fmt_input.curr_ind] != '\0') {
+    skip_space(&input);
+
+    if (fmt_input.str[fmt_input.curr_ind] == '%') {
+      s21_memset(&spec_opts, 0, sizeof(spec_opts));
+      fmt_input.curr_ind++;
+
       // Считываем * если есть
-      if (*format == '*') {
-        opts.is_star = 1;
-        format++;
+      if (fmt_input.str[fmt_input.curr_ind] == '*') {
+        spec_opts.is_star = true;
+        fmt_input.curr_ind++;
       }
       // Проверяем наличие цифр после %
-      while (*format >= '0' && *format <= '9') {
-        opts.width = opts.width * 10 + (*format - '0');
-        format++;
+      while (fmt_input.str[fmt_input.curr_ind] >= '0' &&
+             fmt_input.str[fmt_input.curr_ind] <= '9') {
+        spec_opts.width =
+            spec_opts.width * 10 + (fmt_input.str[fmt_input.curr_ind] - '0');
+        fmt_input.curr_ind++;
       }
-      switch (*format) {
+      switch (fmt_input.str[fmt_input.curr_ind]) {
         case 'c': {
-          char* c = va_arg(args, char*);
-          if (read_char(&input, c, &opts)) {
-            if (!opts.is_star) result++;
+          char* dest_char_ptr = va_arg(args, char*);
+          if (read_char(&input, dest_char_ptr, &spec_opts)) {
+            if (!spec_opts.is_star) result++;
             format++;
             // input.curr_ind++;
           }
@@ -35,8 +42,8 @@ int s21_sscanf(const char* str, const char* format, ...) {
         }
         case 's': {
           char* s = va_arg(args, char*);
-          if (read_string(&str, s, &opts)) {
-            if (!opts.is_star) result++;
+          if (read_string(&str, s, &spec_opts)) {
+            if (!spec_opts.is_star) result++;
             format++;
           }
           break;
@@ -44,8 +51,8 @@ int s21_sscanf(const char* str, const char* format, ...) {
         case 'd':
         case 'i': {
           int* d = va_arg(args, int*);
-          if (read_int(&input, d, &opts)) {
-            if (!opts.is_star) result++;
+          if (read_int(&input, d, &spec_opts)) {
+            if (!spec_opts.is_star) result++;
             format++;
             // input.curr_ind++;
           }
@@ -53,8 +60,8 @@ int s21_sscanf(const char* str, const char* format, ...) {
         }
         case 'f': {
           float* f = va_arg(args, float*);
-          if (read_float(&input, f, &opts)) {
-            if (!opts.is_star) result++;
+          if (read_float(&input, f, &spec_opts)) {
+            if (!spec_opts.is_star) result++;
             format++;
             // input.curr_ind++;
           }
@@ -62,8 +69,8 @@ int s21_sscanf(const char* str, const char* format, ...) {
         }
         case 'u': {
           unsigned int* u = va_arg(args, unsigned int*);
-          if (read_unsigned_int(&str, u, &opts)) {
-            if (!opts.is_star) result++;
+          if (read_unsigned_int(&str, u, &spec_opts)) {
+            if (!spec_opts.is_star) result++;
             format++;
           }
           break;
@@ -71,16 +78,16 @@ int s21_sscanf(const char* str, const char* format, ...) {
         case 'x':
         case 'X': {
           unsigned int* x = va_arg(args, unsigned int*);
-          if (read_hex(&str, x, &opts)) {
-            if (!opts.is_star) result++;
+          if (read_hex(&str, x, &spec_opts)) {
+            if (!spec_opts.is_star) result++;
             format++;
           }
           break;
         }
         case 'p': {
           void** address = va_arg(args, void**);
-          if (parse_pointer(&input, address, &opts)) {
-            if (!opts.is_star) result++;
+          if (parse_pointer(&input, address, &spec_opts)) {
+            if (!spec_opts.is_star) result++;
             format++;
             // input.curr_ind++;
           }
@@ -97,7 +104,7 @@ int s21_sscanf(const char* str, const char* format, ...) {
             int temp = input.curr_ind;
             *n = temp;
           } else {
-            int temp = opts.count;
+            int temp = spec_opts.count;
             *n = temp;
           }
           // *n = opts.count;
@@ -108,7 +115,7 @@ int s21_sscanf(const char* str, const char* format, ...) {
           break;
       }
     } else {
-      opts.count++;
+      spec_opts.count++;
       format++;
       input.curr_ind++;
     }
@@ -118,10 +125,9 @@ int s21_sscanf(const char* str, const char* format, ...) {
   return result;
 }
 
-void skip_space(InputStr* input, SpecOptions* opts) {
+void skip_space(InputStr* input) {
   while (input->str[input->curr_ind + 1] == ' ') {
     input->curr_ind++;
-    opts->count++;
   }
 }
 
@@ -156,7 +162,8 @@ int parse_pointer(InputStr* input, void** value, SpecOptions* opts) {
 
 int read_char(InputStr* input, char* c, SpecOptions* opts) {
   int result = 0;
-  printf("\n\n%lu\n\n", input->curr_ind);
+  // printf("\n\n%lu\n\n", input->curr_ind);
+  /// here to add \t and n
   if (input->str[input->curr_ind] != '\0') {
     if (!opts->is_star) *c = input->str[input->curr_ind];
     input->curr_ind++;
