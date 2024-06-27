@@ -172,18 +172,15 @@ END_TEST
 START_TEST(test_sprintf_unsigned) {
   char lib_res[1000];
   char s21_res[1000];
-  // long int min_long_int = LONG_MIN;
 
-  // unsigned int uim = UINT_MAX;
-  long unsigned luim = 4294967296L;
-  // short unsigned suim = USHRT_MAX;
+  long unsigned luim = 4294967296UL;
 
   sprintf(lib_res, "%-15u %60u %u %lu %lu %lu %u %hu %u %u", 1, 1000, UINT_MAX,
-          4294967295L, 4294967295L - 333, luim, (UINT_MAX + 500), USHRT_MAX,
+          4294967295UL, 4294967295UL - 333, luim, (UINT_MAX + 500), USHRT_MAX,
           UINT_MAX, 0);
   s21_sprintf(s21_res, "%-15u %60u %u %lu %lu %lu %u %hu %u %u", 1, 1000,
-              UINT_MAX, 4294967295L, 4294967295L - 333, luim, (UINT_MAX + 500),
-              USHRT_MAX, UINT_MAX, 0);
+              UINT_MAX, 4294967295UL, 4294967295UL - 333, luim,
+              (UINT_MAX + 500), USHRT_MAX, UINT_MAX, 0);
   ck_assert_str_eq(lib_res, s21_res);
 }
 END_TEST
@@ -193,9 +190,10 @@ START_TEST(test_sprintf_unsigned_problematic) {
   char s21_res[1000];
 
   sprintf(lib_res, "%-20hu %-30hu %-30u %lu %lu %u %u", USHRT_MAX + 5,
-          UINT_MAX + 10, UINT_MAX, 4294967295L, 4294967295L + 5, -1000, -65555);
+          UINT_MAX + 10, UINT_MAX, 4294967295UL, 4294967295UL + 5, -1000,
+          -65555);
   s21_sprintf(s21_res, "%-20hu %-30hu %-30u %lu %lu %u %u", USHRT_MAX + 5,
-              UINT_MAX + 10, UINT_MAX, 4294967295L, 4294967295L + 5, -1000,
+              UINT_MAX + 10, UINT_MAX, 4294967295UL, 4294967295UL + 5, -1000,
               -65555);
   ck_assert_str_eq(lib_res, s21_res);
 }
@@ -252,7 +250,7 @@ END_TEST
 START_TEST(test_sprintf_number_of_characters) {
   char lib_res[100] = {0};
   char s21_res[100] = {0};
-  double num = 1.79769313486231571308;
+  double num = 1.7976931348623;
   int res_or = 0;
   int res_s21 = 0;
   s21_sprintf(s21_res, "sprintf: %+E %% hdhgd %+d hdkjgh %n %%", num, 555,
@@ -297,7 +295,7 @@ START_TEST(test_sprintf_hex_lower_with_modifiers) {
   char s21_res[1000];
 
   unsigned short us_value = 255;
-  unsigned long ul_value = 4294967295;  // Максимум для unsigned long
+  unsigned long ul_value = 4294967295UL;  // Максимум для unsigned long
 
   sprintf(lib_res, "%x %hx %lx %20lx %-20lx %-40hx", -33, us_value, ul_value,
           ul_value, ul_value, us_value);
