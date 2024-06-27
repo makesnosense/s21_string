@@ -1,6 +1,5 @@
 #include "s21_sscanf.h"
 
-#include <stdarg.h>
 int s21_sscanf(const char *str, const char *format, ...) {
   va_list args;  // Список аргументов
   va_start(args, format);  // Инициализируем список аргументов
