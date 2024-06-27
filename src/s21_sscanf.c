@@ -100,6 +100,39 @@ int s21_sscanf(const char *str, const char *format, ...) {
   return result;
 }
 
+// void skip_space(const char **str, Opts *opts) {
+//     while (**str == ' ') {
+//     (*str)++;
+//     opts->count++;
+//   }
+// }
+
+int parse_pointer(const char **str, void **value, Opts *opts) {
+  int res = 0;
+
+  // Skip "0x" and increment count by 2
+  (*str) += 2;
+
+  // Convert hexadecimal value to pointer
+  unsigned long int ptr_value = 0;
+  while (isxdigit(**str)) {
+    ptr_value *= 16;
+    if (isdigit(**str)) {
+      ptr_value += **str - '0';
+    } else if (**str >= 'a' && **str <= 'f') {
+      ptr_value += **str - 'a' + 10;
+    } else if (**str >= 'A' && **str <= 'F') {
+      ptr_value += **str - 'A' + 10;
+    }
+    (*str)++;
+    opts->count++;
+    res = 1;
+  }
+
+  *value = (void *)ptr_value;
+  return res;  // Success
+}
+
 int read_char(const char **str, char *c, Opts *opts) {
   int result = 0;
 
