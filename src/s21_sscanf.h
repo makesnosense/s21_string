@@ -5,7 +5,6 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 
 #include "s21_string.h"
 
@@ -33,7 +32,7 @@ int read_float(const char **str, float *f, Opts *opts);
 // Функция для чтения шестнадцатеричного числа
 int read_hex(const char **str, unsigned int *x, Opts *opts);
 
-// Функция для считывания значений из буфера по формату
-int s21_sscanf(const char *str, const char *format, ...);
+// // Функция для считывания значений из буфера по формату
+// int s21_sscanf(const char *str, const char *format, ...);
 
 #endif  // S21_SSCANF_H_

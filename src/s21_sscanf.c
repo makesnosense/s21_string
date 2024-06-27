@@ -1,7 +1,5 @@
 #include "s21_sscanf.h"
 
-#include <ctype.h>
-
 int s21_sscanf(const char *str, const char *format, ...) {
   va_list args;  // Список аргументов
   va_start(args, format);  // Инициализируем список аргументов
@@ -11,7 +9,6 @@ int s21_sscanf(const char *str, const char *format, ...) {
 
   // Проходимся по формат-строке
   while (*format != '\0') {
-    // skip_space(&str, &opts);
     if (*format == '%') {
       format++;
       // Считываем * если есть
@@ -25,62 +22,62 @@ int s21_sscanf(const char *str, const char *format, ...) {
         format++;
       }
       switch (*format) {
-        case 'c':
+        case 'c': {
           char *c = va_arg(args, char *);
           if (read_char(&str, c, &opts)) {
             if (!opts.is_star) result++;
             format++;
           }
           break;
-        case 's':
+        }
+        case 's': {
           char *s = va_arg(args, char *);
           if (read_string(&str, s, &opts)) {
             if (!opts.is_star) result++;
             format++;
           }
           break;
+        }
         case 'd':
-        case 'i':
+        case 'i': {
           int *d = va_arg(args, int *);
           if (read_int(&str, d, &opts)) {
             if (!opts.is_star) result++;
             format++;
           }
           break;
-        case 'f':
+        }
+        case 'f': {
           float *f = va_arg(args, float *);
           if (read_float(&str, f, &opts)) {
             if (!opts.is_star) result++;
             format++;
           }
           break;
-        case 'u':
+        }
+        case 'u': {
           unsigned int *u = va_arg(args, unsigned int *);
           if (read_unsigned_int(&str, u, &opts)) {
             if (!opts.is_star) result++;
             format++;
           }
           break;
-        case 'p':
-          void **address = va_arg(args, void **);
-          if (parse_pointer(&str, address, &opts)) {
-            if (!opts.is_star) result++;
-            format++;
-          }
-          break;
+        }
         case 'x':
-        case 'X':
+        case 'X': {
           unsigned int *x = va_arg(args, unsigned int *);
           if (read_hex(&str, x, &opts)) {
             if (!opts.is_star) result++;
             format++;
           }
           break;
-        case '%':
+        }
+        case '%': {
           format++;
           str++;
           break;
-        case 'n':
+        }
+        case 'n': {
           int *n = va_arg(args, int *);
           // YA HYU ZNAYET POCHEMU NO TAK RABOTAET
           int temp = opts.count;
@@ -88,6 +85,7 @@ int s21_sscanf(const char *str, const char *format, ...) {
           // *n = opts.count;
           format++;
           break;
+        }
         default:
           break;
       }
