@@ -76,8 +76,8 @@ typedef struct DestinationString {
   s21_size_t curr_ind;
 } DestStr;
 
-// %[flags][width][.precision][length][specifier]
-int s21_sprintf(char* str, const char* format, ...);
+// // %[flags][width][.precision][length][specifier]
+// int s21_sprintf(char* str, const char* format, ...);
 
 int is_flag(char ch);
 int is_specifier(char ch);
