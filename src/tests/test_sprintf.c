@@ -956,32 +956,31 @@ START_TEST(test_sprintf_g_spec_long_double_set_precision_many_p2) {
   char lib_res[1000];
   char s21_res[1000];
 
-  double num7 = 1234567;
-  double num7_1 = 1234567.0;
-  double num7_2 = 1234567.2;
-  double num7_3 = 1234567.23;
-  double num7_4 = 1234567.234;
-  double num7_5 = 1234567.2345;
-  double num7_6 = 1234567.23456;
-  double num7_7 = 1234567.234567;
-  double num7_8 = 1234567.2345678;
-  double num7_9 = 1234567.23456789;
-  double num7_10 = 1234567.2345678910;
+  long double num7_1 = 1234567.0L;
+  long double num7_2 = 1234567.2L;
+  long double num7_3 = 1234567.23L;
+  long double num7_4 = 1234567.234L;
+  long double num7_5 = 1234567.2345L;
+  long double num7_6 = 1234567.23456L;
+  long double num7_7 = 1234567.234567L;
+  long double num7_8 = 1234567.2345678L;
+  long double num7_9 = 1234567.23456789L;
+  long double num7_10 = 1234567.2345678910L;
 
   int pr = _i;  // supplied through add_loop_test func
 
   char format_string[500];
 
-  s21_sprintf(format_string,
-              "%%.%dg %%.%dg %%.%dg %%.%dg %%.%dg %%.%dg %%.%dg %%.%dg %%.%dg "
-              "%%.%dg %%.%dg",
-              pr, pr, pr, pr, pr, pr, pr, pr, pr, pr, pr);
+  s21_sprintf(
+      format_string,
+      "%%.%dLg %%.%dLg %%.%dLg %%.%dLg %%.%dLg %%.%dLg %%.%dLg %%.%dLg %%.%dLg",
+      pr, pr, pr, pr, pr, pr, pr, pr, pr, pr);
 
-  sprintf(lib_res, format_string, num7, num7_1, num7_2, num7_3, num7_4, num7_5,
+  sprintf(lib_res, format_string, num7_1, num7_2, num7_3, num7_4, num7_5,
           num7_6, num7_7, num7_8, num7_9, num7_10);
 
-  s21_sprintf(s21_res, format_string, num7, num7_1, num7_2, num7_3, num7_4,
-              num7_5, num7_6, num7_7, num7_8, num7_9, num7_10);
+  s21_sprintf(s21_res, format_string, num7_1, num7_2, num7_3, num7_4, num7_5,
+              num7_6, num7_7, num7_8, num7_9, num7_10);
   ck_assert_str_eq(lib_res, s21_res);
 }
 END_TEST
@@ -991,8 +990,8 @@ START_TEST(test_sprintf_loop_star) {
   char s21_res[1000];
 
   long double long_double_num = 9234.93456L;
-  long long_num = 9234;
-  unsigned unsinged_num = 1234567;
+  long long_num = 9234L;
+  unsigned unsinged_num = 1234567U;
 
   int pr = _i;  // supplied through add_loop_test func
 
