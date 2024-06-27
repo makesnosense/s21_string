@@ -5,11 +5,12 @@ int s21_sscanf(const char* str, const char* format, ...) {
   va_start(args, format);  // Инициализируем список аргументов
 
   InputStr input = {str, 0};
-  Opts opts = {0};  // Зануляем структуру с опциями
+  SpecOptions opts = {0};  // Зануляем структуру с опциями
   int result = 0;  // Количество считанных спецификаторов
 
   // Проходимся по формат-строке
   while (*format != '\0') {
+    skip_space(&input, &opts);
     if (*format == '%') {
       format++;
       // Считываем * если есть
@@ -25,9 +26,10 @@ int s21_sscanf(const char* str, const char* format, ...) {
       switch (*format) {
         case 'c': {
           char* c = va_arg(args, char*);
-          if (read_char(&str, c, &opts)) {
+          if (read_char(&input, c, &opts)) {
             if (!opts.is_star) result++;
             format++;
+            // input.curr_ind++;
           }
           break;
         }
@@ -45,14 +47,16 @@ int s21_sscanf(const char* str, const char* format, ...) {
           if (read_int(&input, d, &opts)) {
             if (!opts.is_star) result++;
             format++;
+            // input.curr_ind++;
           }
           break;
         }
         case 'f': {
           float* f = va_arg(args, float*);
-          if (read_float(&str, f, &opts)) {
+          if (read_float(&input, f, &opts)) {
             if (!opts.is_star) result++;
             format++;
+            // input.curr_ind++;
           }
           break;
         }
@@ -73,6 +77,14 @@ int s21_sscanf(const char* str, const char* format, ...) {
           }
           break;
         }
+        case 'p': {
+          void** address = va_arg(args, void**);
+          if (parse_pointer(&input, address, &opts)) {
+            if (!opts.is_star) result++;
+            format++;
+            // input.curr_ind++;
+          }
+        } break;
         case '%': {
           format++;
           str++;
@@ -81,8 +93,13 @@ int s21_sscanf(const char* str, const char* format, ...) {
         case 'n': {
           int* n = va_arg(args, int*);
           // YA HYU ZNAYET POCHEMU NO TAK RABOTAET
-          int temp = opts.count;
-          *n = temp;
+          if (input.str[input.curr_ind - 2] == ' ') {
+            int temp = input.curr_ind;
+            *n = temp;
+          } else {
+            int temp = opts.count;
+            *n = temp;
+          }
           // *n = opts.count;
           format++;
           break;
@@ -93,7 +110,7 @@ int s21_sscanf(const char* str, const char* format, ...) {
     } else {
       opts.count++;
       format++;
-      str++;
+      input.curr_ind++;
     }
   }
   va_end(args);
@@ -101,31 +118,34 @@ int s21_sscanf(const char* str, const char* format, ...) {
   return result;
 }
 
-// void skip_space(const char **str, Opts *opts) {
-//     while (**str == ' ') {
-//     (*str)++;
-//     opts->count++;
-//   }
-// }
+void skip_space(InputStr* input, SpecOptions* opts) {
+  while (input->str[input->curr_ind + 1] == ' ') {
+    input->curr_ind++;
+    opts->count++;
+  }
+}
 
-int parse_pointer(const char** str, void** value, Opts* opts) {
+int parse_pointer(InputStr* input, void** value, SpecOptions* opts) {
   int res = 0;
 
   // Skip "0x" and increment count by 2
-  (*str) += 2;
+  // input->curr_ind += 1;
+  // printf("\n\n.%c.\n\n", input->str[input->curr_ind]);
 
   // Convert hexadecimal value to pointer
   unsigned long int ptr_value = 0;
-  while (isxdigit(**str)) {
+  while (isxdigit(input->str[input->curr_ind])) {
     ptr_value *= 16;
-    if (isdigit(**str)) {
-      ptr_value += **str - '0';
-    } else if (**str >= 'a' && **str <= 'f') {
-      ptr_value += **str - 'a' + 10;
-    } else if (**str >= 'A' && **str <= 'F') {
-      ptr_value += **str - 'A' + 10;
+    if (isdigit(input->str[input->curr_ind])) {
+      ptr_value += input->str[input->curr_ind] - '0';
+    } else if (input->str[input->curr_ind] >= 'a' &&
+               input->str[input->curr_ind] <= 'f') {
+      ptr_value += input->str[input->curr_ind] - 'a' + 10;
+    } else if (input->str[input->curr_ind] >= 'A' &&
+               input->str[input->curr_ind] <= 'F') {
+      ptr_value += input->str[input->curr_ind] - 'A' + 10;
     }
-    (*str)++;
+    input->curr_ind++;
     opts->count++;
     res = 1;
   }
@@ -134,12 +154,12 @@ int parse_pointer(const char** str, void** value, Opts* opts) {
   return res;  // Success
 }
 
-int read_char(const char** str, char* c, Opts* opts) {
+int read_char(InputStr* input, char* c, SpecOptions* opts) {
   int result = 0;
-
-  if (**str != '\0') {
-    if (!opts->is_star) *c = **str;
-    (*str)++;
+  printf("\n\n%lu\n\n", input->curr_ind);
+  if (input->str[input->curr_ind] != '\0') {
+    if (!opts->is_star) *c = input->str[input->curr_ind];
+    input->curr_ind++;
     opts->count++;
     result = 1;
   }
@@ -147,7 +167,7 @@ int read_char(const char** str, char* c, Opts* opts) {
   return result;
 }
 
-int read_string(const char** str, char* s, Opts* opts) {
+int read_string(const char** str, char* s, SpecOptions* opts) {
   int result = 0;
 
   while (**str != ' ' && **str != '\t' && **str != '\n' && **str != '\0') {
@@ -162,7 +182,7 @@ int read_string(const char** str, char* s, Opts* opts) {
   return result;
 }
 
-int read_int(InputStr* input, int* d, Opts* opts) {
+int read_int(InputStr* input, int* d, SpecOptions* opts) {
   int result = 0;
   int sign = 1;
   int num = 0;
@@ -185,7 +205,7 @@ int read_int(InputStr* input, int* d, Opts* opts) {
   return result;
 }
 
-int read_unsigned_int(const char** str, unsigned int** u, Opts* opts) {
+int read_unsigned_int(const char** str, unsigned int* u, SpecOptions* opts) {
   unsigned int num = 0;
   int result = 0;
 
@@ -200,33 +220,35 @@ int read_unsigned_int(const char** str, unsigned int** u, Opts* opts) {
   return result;
 }
 
-int read_float(const char** str, float* f, Opts* opts) {
+int read_float(InputStr* input, float* f, SpecOptions* opts) {
   int sign = 1;
   int int_part = 0;
   float frac_part = 0.0;
   int frac_div = 1;
   int result = 0;
 
-  if (**str == '-') {
+  if (input->str[input->curr_ind] == '-') {
     sign = -1;
-    (*str)++;
+    input->curr_ind++;
     opts->count++;
   }
 
-  while (**str >= '0' && **str <= '9') {
-    int_part = int_part * 10 + (**str - '0');
-    (*str)++;
+  while (input->str[input->curr_ind] >= '0' &&
+         input->str[input->curr_ind] <= '9') {
+    int_part = int_part * 10 + (input->str[input->curr_ind] - '0');
+    input->curr_ind++;
     opts->count++;
     result = 1;
   }
 
-  if (**str == '.') {
-    (*str)++;
+  if (input->str[input->curr_ind] == '.') {
+    input->curr_ind++;
     opts->count++;
-    while (**str >= '0' && **str <= '9') {
-      frac_part = frac_part * 10 + (**str - '0');
+    while (input->str[input->curr_ind] >= '0' &&
+           input->str[input->curr_ind] <= '9') {
+      frac_part = frac_part * 10 + (input->str[input->curr_ind] - '0');
       frac_div *= 10;
-      (*str)++;
+      input->curr_ind++;
       opts->count++;
     }
   }
@@ -235,7 +257,7 @@ int read_float(const char** str, float* f, Opts* opts) {
   return result;
 }
 
-int read_hex(const char** str, unsigned int* x, Opts* opts) {
+int read_hex(const char** str, unsigned int* x, SpecOptions* opts) {
   unsigned int num = 0;
   int result = 0;
 
