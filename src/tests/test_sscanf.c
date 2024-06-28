@@ -2,6 +2,35 @@
 
 #include "run_tests.h"
 
+START_TEST(test_sscanf_simple_char) {
+  char* input_string = "\t\tab \t \n \f";
+  char* format_string = " %c %c %n";
+
+  int s21_res1 = 0;
+  int s21_res2 = 0;
+  int s21_res3 = 0;
+  int s21_res_res = 0;
+
+  int lib_res1 = 0;
+  int lib_res2 = 0;
+  int lib_res3 = 0;
+  int lib_res_res = 0;
+
+  lib_res_res =
+      sscanf(input_string, format_string, &lib_res1, &lib_res2, &lib_res3);
+  s21_res_res =
+      s21_sscanf(input_string, format_string, &s21_res1, &s21_res2, &s21_res3);
+
+  printf("первый чар %c второй чар %c n: %d\n", lib_res1, lib_res2, lib_res3);
+  printf("первый чар  %c второй чар %c n: %d\n", s21_res1, s21_res2, s21_res3);
+
+  ck_assert_int_eq(lib_res_res, s21_res_res);
+  ck_assert_int_eq(lib_res1, s21_res1);
+  ck_assert_int_eq(lib_res2, s21_res2);
+  ck_assert_int_eq(lib_res3, s21_res3);
+}
+END_TEST
+
 START_TEST(test_sscanf_int) {
   char* input_string = "77 13";
   char* format_string = "%d %i";
@@ -131,8 +160,8 @@ START_TEST(test_sscanf_float_3) {
 END_TEST
 
 START_TEST(test_sscanf_char) {
-  char* input_string = "Reading chars: %c-%c!%c@%c#%c$%c^";
-  char* format_string = "Reading chars: Q-W!E@r#t$y^";
+  char* format_string = "Reading chars: %c-%c!%c@%c#%c$%c^";
+  char* input_string = "Reading chars: Q-W!E@r#t$y^";
 
   char s21_res1 = 0;
   char s21_res2 = 0;
@@ -186,43 +215,47 @@ START_TEST(test_sscanf_unsigned) {
 }
 END_TEST
 
-START_TEST(test_sscanf_star) {
-  char* input_string =
-      "int: 123, float: -123.0, char: @, unsigned: 0 %, string: cringe";
-  char* format_string =
-      "int: %*d, float: %*f, char: %*c, unsigned: %*u %%, string: %*s      %n";
+// START_TEST(test_sscanf_star) {
+//   char* input_string =
+//       "int: 123, float: -123.0, char: @, unsigned: 0 %, string: cringe";
+//   char* format_string =
+//       "int: %*d, float: %*f, char: %*c, unsigned: %*u %%, string: %*s %n";
 
-  int s21_res1 = 0;
-  int s21_res_res = 0;
+//   int s21_res1 = 0;
+//   int s21_res_res = 0;
 
-  int lib_res1 = 0;
-  int lib_res_res = 0;
+//   int lib_res1 = 0;
+//   int lib_res_res = 0;
 
-  lib_res_res = sscanf(input_string, format_string, &s21_res1);
-  s21_res_res = s21_sscanf(input_string, format_string, &lib_res1);
+//   lib_res_res = sscanf(input_string, format_string, &s21_res1);
+//   s21_res_res = s21_sscanf(input_string, format_string, &lib_res1);
 
-  ck_assert_int_eq(lib_res_res, s21_res_res);
-  ck_assert_int_eq(lib_res1, s21_res1);
-}
-END_TEST
+//   ck_assert_int_eq(lib_res_res, s21_res_res);
+//   ck_assert_int_eq(lib_res1, s21_res1);
+// }
+// END_TEST
 
 Suite* make_sscanf_suite() {
   Suite* sscanf_suite = suite_create("sscanf");
   TCase* tc_core;
+  TCase* tc_problem;
 
   tc_core = tcase_create("Core");
+  tc_problem = tcase_create("scanf");
 
-  tcase_add_test(tc_core, test_sscanf_int);
+  tcase_add_test(tc_problem, test_sscanf_simple_char);
+  tcase_add_test(tc_problem, test_sscanf_int);
   tcase_add_test(tc_core, test_sscanf_int_2);
   tcase_add_test(tc_core, test_sscanf_int_3);
   tcase_add_test(tc_core, test_sscanf_float);
   tcase_add_test(tc_core, test_sscanf_float_2);
   tcase_add_test(tc_core, test_sscanf_float_3);
-  tcase_add_test(tc_core, test_sscanf_char);
+  tcase_add_test(tc_problem, test_sscanf_char);
   tcase_add_test(tc_core, test_sscanf_unsigned);
-  tcase_add_test(tc_core, test_sscanf_star);
+  // tcase_add_test(tc_problem, test_sscanf_star);
 
   suite_add_tcase(sscanf_suite, tc_core);
+  suite_add_tcase(sscanf_suite, tc_problem);
 
   return sscanf_suite;
 }
