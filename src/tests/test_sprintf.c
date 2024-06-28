@@ -474,7 +474,7 @@ START_TEST(test_sprintf_scientific_from_big_double) {
 }
 END_TEST
 
-START_TEST(test_sprintf_scientific_long_loop_precisions) {
+START_TEST(test_sprintf_sci_long_loop_precisions) {
   char lib_res[1000];
   char s21_res[1000];
   long double num1 = 1.2345678L;
@@ -911,7 +911,7 @@ START_TEST(test_sprintf_g_spec_set_precision_many_p4) {
 }
 END_TEST
 
-START_TEST(test_sprintf_g_spec_long_double_set_precision_many_p1) {
+START_TEST(test_sprintf_g_spec_long_dbl_set_precision_p1) {
   char lib_res[1000];
   char s21_res[1000];
   int pr = _i;  // supplied through add_loop_test func
@@ -953,7 +953,7 @@ START_TEST(test_sprintf_g_spec_long_double_set_precision_many_p1) {
 }
 END_TEST
 
-START_TEST(test_sprintf_g_spec_long_double_set_precision_many_p2) {
+START_TEST(test_sprintf_g_spec_long_dbl_set_precision_p2) {
   char lib_res[1000];
   char s21_res[1000];
 
@@ -1033,7 +1033,7 @@ START_TEST(test_sprintf_sharp_g_spec_loop_precisions) {
 }
 END_TEST
 
-START_TEST(test_sprintf_sharp_g_spec_long_loop_precisions) {
+START_TEST(test_sprintf_sharp_g_long_loop_precisions) {
   char lib_res[1000];
   char s21_res[1000];
   long double num1 = 0.234567891011L;
@@ -1062,7 +1062,7 @@ START_TEST(test_sprintf_sharp_g_spec_long_loop_precisions) {
 }
 END_TEST
 
-START_TEST(test_sprintf_sharp_g_spec_zero_loop_precisions) {
+START_TEST(test_sprintf_sharp_g_zero_loop_precisions) {
   char lib_res[1000];
   char s21_res[1000];
   double num1 = 0;
@@ -1288,7 +1288,7 @@ START_TEST(test_sprintf_sharp_double_long_double) {
 }
 END_TEST
 
-START_TEST(test_sprintf_sharp_g_spec_set_precision_many_p1) {
+START_TEST(test_sprintf_sharp_g_spec_set_precision_p1) {
   char lib_res[1000];
   char s21_res[1000];
 
@@ -1324,7 +1324,7 @@ START_TEST(test_sprintf_sharp_g_spec_set_precision_many_p1) {
 }
 END_TEST
 
-START_TEST(test_sprintf_sharp_g_spec_set_precision_many_p2) {
+START_TEST(test_sprintf_sharp_g_spec_set_precision_p2) {
   char lib_res[1000];
   char s21_res[1000];
 
@@ -1365,7 +1365,7 @@ START_TEST(test_sprintf_sharp_g_spec_set_precision_many_p2) {
 }
 END_TEST
 
-START_TEST(test_sprintf_sharp_g_spec_set_precision_many_p3) {
+START_TEST(test_sprintf_sharp_g_spec_set_precision_p3) {
   char lib_res[1000];
   char s21_res[1000];
 
@@ -1402,7 +1402,7 @@ START_TEST(test_sprintf_sharp_g_spec_set_precision_many_p3) {
 }
 END_TEST
 
-START_TEST(test_sprintf_sharp_g_spec_set_precision_many_p4) {
+START_TEST(test_sprintf_sharp_g_spec_set_precision_p4) {
   char lib_res[1000];
   char s21_res[1000];
 
@@ -1444,7 +1444,7 @@ START_TEST(test_sprintf_sharp_g_spec_set_precision_many_p4) {
 }
 END_TEST
 
-START_TEST(test_sprintf_sharp_g_spec_long_double_set_precision_many_p1) {
+START_TEST(test_sprintf_sharp_g_ldbl_set_precision_p1) {
   char lib_res[1000];
   char s21_res[1000];
 
@@ -1487,7 +1487,7 @@ START_TEST(test_sprintf_sharp_g_spec_long_double_set_precision_many_p1) {
 }
 END_TEST
 
-START_TEST(test_sprintf_sharp_g_spec_long_double_set_precision_many_p2) {
+START_TEST(test_sprintf_sharp_g_ldbl_set_precision_p2) {
   char lib_res[1000];
   char s21_res[1000];
 
@@ -1708,7 +1708,7 @@ START_TEST(test_sprintf_sharp_mantissa_or_exponent_negative_value) {
 }
 END_TEST
 
-START_TEST(test_sprintf_sharp_scientific_loop_precisions) {
+START_TEST(test_sprintf_sharp_sci_loop_precisions) {
   char lib_res[100];
   char s21_res[100];
   double num1 = 1.2345678;
@@ -1738,7 +1738,7 @@ START_TEST(test_sprintf_sharp_scientific_from_big_double) {
 }
 END_TEST
 
-START_TEST(test_sprintf_sharp_scientific_long_loop_precisions) {
+START_TEST(test_sprintf_sharp_sci_long_loop_precisions) {
   char lib_res[1000];
   char s21_res[1000];
   long double num1 = 1.2345678L;
@@ -1767,7 +1767,7 @@ START_TEST(test_sprintf_sharp_scientific_long_loop_precisions) {
 }
 END_TEST
 
-START_TEST(test_sprintf_sharp_scientific_zero_loop_precisions) {
+START_TEST(test_sprintf_sharp_sci_zero_loop_precisions) {
   char lib_res[100];
   char s21_res[100];
 
@@ -1815,7 +1815,7 @@ START_TEST(test_sprintf_g_spec_loop_precisions_width_4) {
 }
 END_TEST
 
-START_TEST(test_sprintf_g_spec_long_loop_precisions_width_4) {
+START_TEST(test_sprintf_g_long_loop_precisions_width_4) {
   char lib_res[1000];
   char s21_res[1000];
   long double num1 = 0.234567891011L;
@@ -1844,7 +1844,7 @@ START_TEST(test_sprintf_g_spec_long_loop_precisions_width_4) {
 }
 END_TEST
 
-START_TEST(test_sprintf_g_spec_zero_loop_precisions_width_4) {
+START_TEST(test_sprintf_g_zero_loop_precisions_width_4) {
   char lib_res[1000];
   char s21_res[1000];
   double num1 = 0;
@@ -1993,7 +1993,7 @@ START_TEST(test_sprintf_g_spec_precision_0_many_width_4_p2) {
 END_TEST
 
 //////hm
-START_TEST(test_sprintf_g_spec_set_precision_many_width_4_p1) {
+START_TEST(test_sprintf_g_spec_set_precision_width_4_p1) {
   char lib_res[1000];
   char s21_res[1000];
 
@@ -2029,7 +2029,7 @@ START_TEST(test_sprintf_g_spec_set_precision_many_width_4_p1) {
 }
 END_TEST
 
-START_TEST(test_sprintf_g_spec_set_precision_many_width_4_p2) {
+START_TEST(test_sprintf_g_spec_set_precision_width_4_p2) {
   char lib_res[1000];
   char s21_res[1000];
 
@@ -2069,7 +2069,7 @@ START_TEST(test_sprintf_g_spec_set_precision_many_width_4_p2) {
 }
 END_TEST
 
-START_TEST(test_sprintf_g_spec_set_precision_many_width_4_p3) {
+START_TEST(test_sprintf_g_spec_set_precision_width_4_p3) {
   char lib_res[1000];
   char s21_res[1000];
 
@@ -2105,7 +2105,7 @@ START_TEST(test_sprintf_g_spec_set_precision_many_width_4_p3) {
 }
 END_TEST
 
-START_TEST(test_sprintf_g_spec_set_precision_many_width_4_p4) {
+START_TEST(test_sprintf_g_spec_set_precision_width_4_p4) {
   char lib_res[1000];
   char s21_res[1000];
 
@@ -2145,7 +2145,7 @@ START_TEST(test_sprintf_g_spec_set_precision_many_width_4_p4) {
 }
 END_TEST
 
-START_TEST(test_sprintf_g_spec_long_double_set_precision_many_width_4_p1) {
+START_TEST(test_sprintf_g_ldbl_set_precision_width_4_p1) {
   char lib_res[1000];
   char s21_res[1000];
   int pr = _i;  // supplied through add_loop_test func
@@ -2187,7 +2187,7 @@ START_TEST(test_sprintf_g_spec_long_double_set_precision_many_width_4_p1) {
 }
 END_TEST
 
-START_TEST(test_sprintf_g_spec_long_double_set_precision_many_width_4_p2) {
+START_TEST(test_sprintf_g_ldbl_set_precision_width_4_p2) {
   char lib_res[1000];
   char s21_res[1000];
 
@@ -2220,7 +2220,7 @@ START_TEST(test_sprintf_g_spec_long_double_set_precision_many_width_4_p2) {
 }
 END_TEST
 
-START_TEST(test_sprintf_sharp_g_spec_loop_precisions_width_4) {
+START_TEST(test_sprintf_sharp_g_loop_precisions_width_4) {
   char lib_res[1000];
   char s21_res[1000];
   double num1 = 1.2345678;
@@ -2241,7 +2241,7 @@ START_TEST(test_sprintf_sharp_g_spec_loop_precisions_width_4) {
 }
 END_TEST
 
-START_TEST(test_sprintf_sharp_g_spec_long_loop_precisions_width_4) {
+START_TEST(test_sprintf_sharp_g_long_loop_precs_wd_4) {
   char lib_res[1000];
   char s21_res[1000];
   long double num1 = 0.234567891011L;
@@ -2271,7 +2271,7 @@ START_TEST(test_sprintf_sharp_g_spec_long_loop_precisions_width_4) {
 }
 END_TEST
 
-START_TEST(test_sprintf_sharp_g_spec_zero_loop_precisions_width_4) {
+START_TEST(test_sprintf_sharp_g_0_loop_precisions_wd_4) {
   char lib_res[1000];
   char s21_res[1000];
   double num1 = 0;
@@ -2422,7 +2422,7 @@ START_TEST(test_sprintf_sharp_g_spec_precision_0_many_width_4_p2) {
 }
 END_TEST
 
-START_TEST(test_sprintf_sharp_g_spec_set_precision_many_width_4_p1) {
+START_TEST(test_sprintf_sharp_g_set_precision_width_4_p1) {
   char lib_res[1000];
   char s21_res[1000];
 
@@ -2459,7 +2459,7 @@ START_TEST(test_sprintf_sharp_g_spec_set_precision_many_width_4_p1) {
 }
 END_TEST
 
-START_TEST(test_sprintf_sharp_g_spec_set_precision_many_width_4_p2) {
+START_TEST(test_sprintf_sharp_g_set_precision_width_4_p2) {
   char lib_res[1000];
   char s21_res[1000];
 
@@ -2501,7 +2501,7 @@ START_TEST(test_sprintf_sharp_g_spec_set_precision_many_width_4_p2) {
 }
 END_TEST
 
-START_TEST(test_sprintf_sharp_g_spec_set_precision_many_width_4_p3) {
+START_TEST(test_sprintf_sharp_g_set_precision_width_4_p3) {
   char lib_res[1000];
   char s21_res[1000];
 
@@ -2538,7 +2538,7 @@ START_TEST(test_sprintf_sharp_g_spec_set_precision_many_width_4_p3) {
 }
 END_TEST
 
-START_TEST(test_sprintf_sharp_g_spec_set_precision_many_width_4_p4) {
+START_TEST(test_sprintf_sharp_g_set_precision_width_4_p4) {
   char lib_res[1000];
   char s21_res[1000];
 
@@ -2580,8 +2580,7 @@ START_TEST(test_sprintf_sharp_g_spec_set_precision_many_width_4_p4) {
 }
 END_TEST
 
-START_TEST(
-    test_sprintf_sharp_g_spec_long_double_set_precision_many_width_4_p1) {
+START_TEST(test_sprintf_sharp_g_ldbl_set_prec_wd_4_p1) {
   char lib_res[1000];
   char s21_res[1000];
 
@@ -2626,8 +2625,7 @@ START_TEST(
 }
 END_TEST
 
-START_TEST(
-    test_sprintf_sharp_g_spec_long_double_set_precision_many_width_4_p2) {
+START_TEST(test_sprintf_sharp_g_ldbl_set_prec_wd_4_p2) {
   char lib_res[1000];
   char s21_res[1000];
 
@@ -2661,6 +2659,158 @@ START_TEST(
 }
 END_TEST
 
+void add_basic_tests(TCase* tc) {
+  tcase_add_test(tc, test_sprintf_int);
+  tcase_add_test(tc, test_sprintf_int_0_padding);
+  tcase_add_test(tc, test_sprintf_ints_d);
+  tcase_add_test(tc, test_sprintf_ints_i);
+  tcase_add_test(tc, test_sprintf_int_min);
+  tcase_add_test(tc, test_sprintf_long_ints_d);
+  tcase_add_test(tc, test_sprintf_short_ints_d);
+  tcase_add_test(tc, test_sprintf_char);
+  tcase_add_test(tc, test_sprintf_char_width);
+  tcase_add_test(tc, test_sprintf_string);
+  tcase_add_test(tc, test_sprintf_empty_string);
+  tcase_add_test(tc, test_sprintf_problematic_float);
+  tcase_add_test(tc, test_sprintf_very_float);
+  tcase_add_test(tc, test_sprintf_a_bit_float);
+  tcase_add_test(tc, test_sprintf_float_width_precision_flag);
+  tcase_add_test(tc, test_sprintf_unsigned);
+  tcase_add_test(tc, test_sprintf_unsigned_problematic);
+  tcase_add_test(tc, test_sprintf_long_doubles);
+  tcase_add_test(tc, test_sprintf_short_overflow);
+  tcase_add_test(tc, test_sprintf_int_overflow);
+  tcase_add_test(tc, test_sprintf_long_overflow);
+  tcase_add_test(tc, test_sprintf_number_of_characters);
+  tcase_add_test(tc, test_sprintf_wide_character);
+  tcase_add_test(tc, test_sprintf_wide_character_string);
+  tcase_add_test(tc, test_sprintf_hex_lower_with_modifiers);
+  tcase_add_test(tc, test_sprintf_hex_upper_with_modifiers);
+  tcase_add_test(tc, test_sprintf_octal_with_modifiers);
+  tcase_add_test(tc, test_sprintf_octal_negative_long);
+  tcase_add_test(tc, test_sprintf_octal_width);
+  tcase_add_test(tc, test_sprintf_char_problematic);
+  tcase_add_test(tc, test_sprintf_pointer_type);
+  tcase_add_test(tc, test_sprintf_flag_sharp_oxX);
+  tcase_add_loop_test(tc, test_sprintf_loop_star, 0, 14);
+  tcase_add_test(tc, test_sprintf_long_double);
+  tcase_add_test(tc, test_sprintf_double_long_double);
+  tcase_add_test(tc, test_sprintf_sharp_long_double);
+  tcase_add_test(tc, test_sprintf_sharp_double_long_double);
+  if (RUNNING_ON_VALGRIND == false) {
+    tcase_add_test(tc, test_sprintf_double_nan_inf);
+    tcase_add_test(tc, test_sprintf_sharp_double_nan_inf);
+  };
+}
+
+void add_basic_sharp_tests(TCase* tc) {
+  tcase_add_loop_test(tc, test_sprintf_sharp_loop_star, 0, 14);
+  tcase_add_test(tc, test_sprintf_sharp_very_float);
+  tcase_add_test(tc, test_sprintf_sharp_a_bit_float);
+  tcase_add_test(tc, test_sprintf_sharp_float_width_precision_flag);
+  tcase_add_test(tc, test_sprintf_sharp_hex_lower_with_modifiers);
+  tcase_add_test(tc, test_sprintf_sharp_hex_upper_with_modifiers);
+  tcase_add_test(tc, test_sprintf_sharp_octal_with_modifiers);
+  tcase_add_test(tc, test_sprintf_sharp_octal_negative_long);
+  tcase_add_test(tc, test_sprintf_sharp_octal_width);
+}
+
+void add_scientific_tests(TCase* tc) {
+  tcase_add_test(tc, test_sprintf_scientific_zero_double);
+  tcase_add_test(tc, test_sprintf_scientific_front_double);
+  tcase_add_test(tc, test_sprintf_scientific_from_negative_double);
+  tcase_add_loop_test(tc, test_sprintf_scientific_loop_precisions, 0, 14);
+  tcase_add_test(tc, test_sprintf_scientific_from_big_double);
+  tcase_add_loop_test(tc, test_sprintf_scientific_zero_loop_precisions, 0, 18);
+  tcase_add_test(tc, test_sprintf_sharp_scientific_zero_double);
+  tcase_add_test(tc, test_sprintf_sharp_scientific_front_double);
+  tcase_add_test(tc, test_sprintf_sharp_scientific_from_negative_double);
+  tcase_add_loop_test(tc, test_sprintf_sharp_sci_loop_precisions, 0, 14);
+  tcase_add_test(tc, test_sprintf_sharp_scientific_from_big_double);
+  tcase_add_loop_test(tc, test_sprintf_sharp_sci_zero_loop_precisions, 0, 18);
+  if (RUNNING_ON_VALGRIND) {
+    tcase_add_loop_test(tc, test_sprintf_sci_long_loop_precisions, 0, 14);
+    tcase_add_loop_test(tc, test_sprintf_sharp_sci_long_loop_precisions, 0, 14);
+  } else {
+    tcase_add_loop_test(tc, test_sprintf_sci_long_loop_precisions, 0, 18);
+    tcase_add_loop_test(tc, test_sprintf_sharp_sci_long_loop_precisions, 0, 18);
+  }
+}
+
+void add_g_spec_tests(TCase* tc) {
+  tcase_add_test(tc, test_sprintf_mantissa_or_exponent_negative_value);
+  tcase_add_test(tc, test_sprintf_mantissa_or_exponent_formats);
+  tcase_add_loop_test(tc, test_sprintf_g_spec_loop_precisions, 0, 14);
+  tcase_add_loop_test(tc, test_sprintf_g_spec_zero_loop_precisions, 0, 14);
+  tcase_add_test(tc, test_sprintf_g_spec_no_precision_many_p1);
+  tcase_add_test(tc, test_sprintf_g_spec_no_precision_many_p2);
+  tcase_add_test(tc, test_sprintf_g_spec_precision_0_many_p1);
+  tcase_add_test(tc, test_sprintf_g_spec_precision_0_many_p2);
+  tcase_add_test(tc, test_sprintf_g_spec_no_precision_interesting);
+  tcase_add_loop_test(tc, test_sprintf_g_spec_set_precision_many_p1, 0, 14);
+  tcase_add_loop_test(tc, test_sprintf_g_spec_set_precision_many_p2, 0, 14);
+  tcase_add_loop_test(tc, test_sprintf_g_spec_set_precision_many_p3, 0, 14);
+  tcase_add_loop_test(tc, test_sprintf_g_spec_set_precision_many_p4, 0, 14);
+  tcase_add_loop_test(tc, test_sprintf_g_spec_long_dbl_set_precision_p1, 0, 18);
+  tcase_add_loop_test(tc, test_sprintf_g_spec_long_dbl_set_precision_p2, 0, 18);
+  tcase_add_loop_test(tc, test_sprintf_sharp_g_spec_loop_precisions, 0, 14);
+  tcase_add_loop_test(tc, test_sprintf_sharp_g_zero_loop_precisions, 0, 14);
+  tcase_add_test(tc, test_sprintf_sharp_g_spec_no_precision_many_p1);
+  tcase_add_test(tc, test_sprintf_sharp_g_spec_no_precision_many_p2);
+  tcase_add_test(tc, test_sprintf_sharp_g_spec_precision_0_many_p1);
+  tcase_add_test(tc, test_sprintf_sharp_g_spec_precision_0_many_p2);
+  tcase_add_test(tc, test_sprintf_sharp_g_spec_no_precision_interesting);
+  tcase_add_loop_test(tc, test_sprintf_sharp_g_spec_set_precision_p1, 0, 14);
+  tcase_add_loop_test(tc, test_sprintf_sharp_g_spec_set_precision_p2, 0, 14);
+  tcase_add_loop_test(tc, test_sprintf_sharp_g_spec_set_precision_p3, 0, 14);
+  tcase_add_loop_test(tc, test_sprintf_sharp_g_spec_set_precision_p4, 0, 14);
+  tcase_add_loop_test(tc, test_sprintf_sharp_g_ldbl_set_precision_p1, 0, 18);
+  tcase_add_loop_test(tc, test_sprintf_sharp_g_ldbl_set_precision_p2, 0, 18);
+  tcase_add_test(tc, test_sprintf_sharp_mantissa_or_exponent_formats);
+  tcase_add_test(tc, test_sprintf_sharp_mantissa_or_exponent_negative_value);
+  if (RUNNING_ON_VALGRIND) {
+    tcase_add_loop_test(tc, test_sprintf_g_spec_long_loop_precisions, 0, 14);
+    tcase_add_loop_test(tc, test_sprintf_sharp_g_long_loop_precisions, 0, 14);
+  } else {
+    tcase_add_loop_test(tc, test_sprintf_g_spec_long_loop_precisions, 0, 17);
+    tcase_add_loop_test(tc, test_sprintf_sharp_g_long_loop_precisions, 0, 17);
+  }
+}
+
+void add_g_spec_width_4_tests(TCase* tc) {
+  tcase_add_loop_test(tc, test_sprintf_g_spec_loop_precisions_width_4, 0, 14);
+  tcase_add_loop_test(tc, test_sprintf_g_zero_loop_precisions_width_4, 0, 14);
+  tcase_add_test(tc, test_sprintf_g_spec_no_precision_many_width_4_p1);
+  tcase_add_test(tc, test_sprintf_g_spec_no_precision_many_width_4_p2);
+  tcase_add_test(tc, test_sprintf_g_spec_precision_0_many_width_4_p1);
+  tcase_add_test(tc, test_sprintf_g_spec_precision_0_many_width_4_p2);
+  tcase_add_loop_test(tc, test_sprintf_g_spec_set_precision_width_4_p1, 0, 14);
+  tcase_add_loop_test(tc, test_sprintf_g_spec_set_precision_width_4_p2, 0, 14);
+  tcase_add_loop_test(tc, test_sprintf_g_spec_set_precision_width_4_p3, 0, 14);
+  tcase_add_loop_test(tc, test_sprintf_g_spec_set_precision_width_4_p4, 0, 14);
+  tcase_add_loop_test(tc, test_sprintf_g_ldbl_set_precision_width_4_p1, 0, 18);
+  tcase_add_loop_test(tc, test_sprintf_g_ldbl_set_precision_width_4_p2, 0, 18);
+  tcase_add_loop_test(tc, test_sprintf_sharp_g_loop_precisions_width_4, 0, 14);
+  tcase_add_loop_test(tc, test_sprintf_sharp_g_0_loop_precisions_wd_4, 0, 14);
+  tcase_add_test(tc, test_sprintf_sharp_g_spec_no_precision_many_width_4_p1);
+  tcase_add_test(tc, test_sprintf_sharp_g_spec_no_precision_many_width_4_p2);
+  tcase_add_test(tc, test_sprintf_sharp_g_spec_precision_0_many_width_4_p1);
+  tcase_add_test(tc, test_sprintf_sharp_g_spec_precision_0_many_width_4_p2);
+  tcase_add_loop_test(tc, test_sprintf_sharp_g_set_precision_width_4_p1, 0, 14);
+  tcase_add_loop_test(tc, test_sprintf_sharp_g_set_precision_width_4_p2, 0, 14);
+  tcase_add_loop_test(tc, test_sprintf_sharp_g_set_precision_width_4_p3, 0, 14);
+  tcase_add_loop_test(tc, test_sprintf_sharp_g_set_precision_width_4_p4, 0, 14);
+  tcase_add_loop_test(tc, test_sprintf_sharp_g_ldbl_set_prec_wd_4_p1, 0, 18);
+  tcase_add_loop_test(tc, test_sprintf_sharp_g_ldbl_set_prec_wd_4_p2, 0, 18);
+  if (RUNNING_ON_VALGRIND) {
+    tcase_add_loop_test(tc, test_sprintf_g_long_loop_precisions_width_4, 0, 14);
+    tcase_add_loop_test(tc, test_sprintf_sharp_g_long_loop_precs_wd_4, 0, 14);
+  } else {
+    tcase_add_loop_test(tc, test_sprintf_g_long_loop_precisions_width_4, 0, 17);
+    tcase_add_loop_test(tc, test_sprintf_sharp_g_long_loop_precs_wd_4, 0, 17);
+  }
+}
+
 Suite* make_sprintf_suite() {
   Suite* sprintf_suite = suite_create("sprintf");
   TCase* tc_core;
@@ -2669,247 +2819,11 @@ Suite* make_sprintf_suite() {
   tc_core = tcase_create("Core");
   tc_problematic = tcase_create("Problematic");
 
-  if (RUNNING_ON_VALGRIND == false) {
-    tcase_add_test(tc_core, test_sprintf_double_nan_inf);
-    tcase_add_test(tc_core, test_sprintf_sharp_double_nan_inf);
-  };
-  tcase_add_test(tc_core, test_sprintf_int);
-  tcase_add_test(tc_core, test_sprintf_int_0_padding);
-  tcase_add_test(tc_core, test_sprintf_ints_d);
-  tcase_add_test(tc_core, test_sprintf_ints_i);
-  tcase_add_test(tc_core, test_sprintf_int_min);
-  tcase_add_test(tc_core, test_sprintf_long_ints_d);
-  tcase_add_test(tc_core, test_sprintf_short_ints_d);
-  tcase_add_test(tc_core, test_sprintf_char);
-  tcase_add_test(tc_core, test_sprintf_char_width);
-  tcase_add_test(tc_core, test_sprintf_string);
-  tcase_add_test(tc_core, test_sprintf_empty_string);
-  tcase_add_test(tc_core, test_sprintf_problematic_float);
-  tcase_add_test(tc_core, test_sprintf_very_float);
-  tcase_add_test(tc_core, test_sprintf_a_bit_float);
-  tcase_add_test(tc_core, test_sprintf_float_width_precision_flag);
-  tcase_add_test(tc_core, test_sprintf_unsigned);
-  tcase_add_test(tc_core, test_sprintf_unsigned_problematic);
-
-  tcase_add_test(tc_core, test_sprintf_long_doubles);
-  tcase_add_test(tc_core, test_sprintf_short_overflow);
-  tcase_add_test(tc_core, test_sprintf_int_overflow);
-  tcase_add_test(tc_core, test_sprintf_long_overflow);
-  tcase_add_test(tc_core, test_sprintf_number_of_characters);
-  tcase_add_test(tc_core, test_sprintf_wide_character);
-  tcase_add_test(tc_core, test_sprintf_wide_character_string);
-  tcase_add_test(tc_core, test_sprintf_hex_lower_with_modifiers);
-  tcase_add_test(tc_core, test_sprintf_hex_upper_with_modifiers);
-  tcase_add_test(tc_core, test_sprintf_octal_with_modifiers);
-  tcase_add_test(tc_core, test_sprintf_octal_negative_long);
-  tcase_add_test(tc_core, test_sprintf_octal_width);
-  tcase_add_test(tc_core, test_sprintf_char_problematic);
-  tcase_add_test(tc_core, test_sprintf_pointer_type);
-  tcase_add_test(tc_core, test_sprintf_flag_sharp_oxX);
-
-  tcase_add_test(tc_core, test_sprintf_scientific_zero_double);
-  tcase_add_test(tc_core, test_sprintf_scientific_front_double);
-  tcase_add_test(tc_core, test_sprintf_scientific_from_negative_double);
-
-  tcase_add_test(tc_problematic,
-                 test_sprintf_mantissa_or_exponent_negative_value);
-  tcase_add_test(tc_core, test_sprintf_mantissa_or_exponent_formats);
-
-  tcase_add_loop_test(tc_core, test_sprintf_scientific_loop_precisions, 0, 14);
-
-  tcase_add_test(tc_core, test_sprintf_scientific_from_big_double);
-
-  if (RUNNING_ON_VALGRIND) {
-    tcase_add_loop_test(tc_core, test_sprintf_scientific_long_loop_precisions,
-                        0, 14);
-  } else {
-    tcase_add_loop_test(tc_core, test_sprintf_scientific_long_loop_precisions,
-                        0, 18);
-  }
-  tcase_add_loop_test(tc_core, test_sprintf_scientific_zero_loop_precisions, 0,
-                      18);
-
-  tcase_add_loop_test(tc_core, test_sprintf_g_spec_loop_precisions, 0, 14);
-  if (RUNNING_ON_VALGRIND) {
-    tcase_add_loop_test(tc_core, test_sprintf_g_spec_long_loop_precisions, 0,
-                        14);
-  } else {
-    tcase_add_loop_test(tc_core, test_sprintf_g_spec_long_loop_precisions, 0,
-                        17);
-  }
-  tcase_add_loop_test(tc_core, test_sprintf_g_spec_zero_loop_precisions, 0, 14);
-  tcase_add_test(tc_core, test_sprintf_g_spec_no_precision_many_p1);
-  tcase_add_test(tc_core, test_sprintf_g_spec_no_precision_many_p2);
-  tcase_add_test(tc_core, test_sprintf_g_spec_precision_0_many_p1);
-  tcase_add_test(tc_core, test_sprintf_g_spec_precision_0_many_p2);
-
-  tcase_add_test(tc_problematic, test_sprintf_g_spec_no_precision_interesting);
-
-  tcase_add_test(tc_core, test_sprintf_long_double);
-  tcase_add_test(tc_core, test_sprintf_double_long_double);
-
-  tcase_add_loop_test(tc_core, test_sprintf_g_spec_set_precision_many_p1, 0,
-                      14);
-  tcase_add_loop_test(tc_core, test_sprintf_g_spec_set_precision_many_p2, 0,
-                      14);
-  tcase_add_loop_test(tc_core, test_sprintf_g_spec_set_precision_many_p3, 0,
-                      14);
-  tcase_add_loop_test(tc_core, test_sprintf_g_spec_set_precision_many_p4, 0,
-                      14);
-
-  tcase_add_loop_test(
-      tc_core, test_sprintf_g_spec_long_double_set_precision_many_p1, 0, 18);
-
-  tcase_add_loop_test(
-      tc_core, test_sprintf_g_spec_long_double_set_precision_many_p2, 0, 18);
-
-  tcase_add_loop_test(tc_core, test_sprintf_loop_star, 0, 14);
-
-  tcase_add_loop_test(tc_core, test_sprintf_sharp_g_spec_loop_precisions, 0,
-                      14);
-  if (RUNNING_ON_VALGRIND) {
-    tcase_add_loop_test(tc_core, test_sprintf_sharp_g_spec_long_loop_precisions,
-                        0, 14);
-  } else {
-    tcase_add_loop_test(tc_core, test_sprintf_sharp_g_spec_long_loop_precisions,
-                        0, 17);
-  }
-  tcase_add_loop_test(tc_core, test_sprintf_sharp_g_spec_zero_loop_precisions,
-                      0, 14);
-  tcase_add_test(tc_core, test_sprintf_sharp_g_spec_no_precision_many_p1);
-  tcase_add_test(tc_core, test_sprintf_sharp_g_spec_no_precision_many_p2);
-  tcase_add_test(tc_core, test_sprintf_sharp_g_spec_precision_0_many_p1);
-  tcase_add_test(tc_core, test_sprintf_sharp_g_spec_precision_0_many_p2);
-
-  tcase_add_test(tc_problematic,
-                 test_sprintf_sharp_g_spec_no_precision_interesting);
-
-  tcase_add_test(tc_core, test_sprintf_sharp_long_double);
-  tcase_add_test(tc_core, test_sprintf_sharp_double_long_double);
-
-  tcase_add_loop_test(tc_core, test_sprintf_sharp_g_spec_set_precision_many_p1,
-                      0, 14);
-  tcase_add_loop_test(tc_core, test_sprintf_sharp_g_spec_set_precision_many_p2,
-                      0, 14);
-  tcase_add_loop_test(tc_core, test_sprintf_sharp_g_spec_set_precision_many_p3,
-                      0, 14);
-  tcase_add_loop_test(tc_core, test_sprintf_sharp_g_spec_set_precision_many_p4,
-                      0, 14);
-
-  tcase_add_loop_test(
-      tc_core, test_sprintf_sharp_g_spec_long_double_set_precision_many_p1, 0,
-      18);
-
-  tcase_add_loop_test(
-      tc_core, test_sprintf_sharp_g_spec_long_double_set_precision_many_p2, 0,
-      18);
-
-  tcase_add_loop_test(tc_core, test_sprintf_sharp_loop_star, 0, 14);
-
-  tcase_add_test(tc_core, test_sprintf_sharp_very_float);
-  tcase_add_test(tc_core, test_sprintf_sharp_a_bit_float);
-  tcase_add_test(tc_core, test_sprintf_sharp_float_width_precision_flag);
-
-  tcase_add_test(tc_core, test_sprintf_sharp_hex_lower_with_modifiers);
-  tcase_add_test(tc_core, test_sprintf_sharp_hex_upper_with_modifiers);
-  tcase_add_test(tc_core, test_sprintf_sharp_octal_with_modifiers);
-  tcase_add_test(tc_core, test_sprintf_sharp_octal_negative_long);
-  tcase_add_test(tc_core, test_sprintf_sharp_octal_width);
-
-  tcase_add_test(tc_core, test_sprintf_sharp_scientific_zero_double);
-  tcase_add_test(tc_core, test_sprintf_sharp_scientific_front_double);
-  tcase_add_test(tc_core, test_sprintf_sharp_scientific_from_negative_double);
-
-  tcase_add_test(tc_core, test_sprintf_sharp_mantissa_or_exponent_formats);
-  tcase_add_test(tc_problematic,
-                 test_sprintf_sharp_mantissa_or_exponent_negative_value);
-
-  tcase_add_loop_test(tc_core, test_sprintf_sharp_scientific_loop_precisions, 0,
-                      14);
-
-  tcase_add_test(tc_core, test_sprintf_sharp_scientific_from_big_double);
-
-  if (RUNNING_ON_VALGRIND) {
-    tcase_add_loop_test(
-        tc_core, test_sprintf_sharp_scientific_long_loop_precisions, 0, 14);
-  } else {
-    tcase_add_loop_test(
-        tc_core, test_sprintf_sharp_scientific_long_loop_precisions, 0, 18);
-  }
-  tcase_add_loop_test(
-      tc_core, test_sprintf_sharp_scientific_zero_loop_precisions, 0, 18);
-
-  //////new
-  tcase_add_loop_test(tc_core, test_sprintf_g_spec_loop_precisions_width_4, 0,
-                      14);
-  if (RUNNING_ON_VALGRIND) {
-    tcase_add_loop_test(
-        tc_core, test_sprintf_g_spec_long_loop_precisions_width_4, 0, 14);
-  } else {
-    tcase_add_loop_test(
-        tc_core, test_sprintf_g_spec_long_loop_precisions_width_4, 0, 17);
-  }
-
-  tcase_add_loop_test(tc_core, test_sprintf_g_spec_zero_loop_precisions_width_4,
-                      0, 14);
-  tcase_add_test(tc_core, test_sprintf_g_spec_no_precision_many_width_4_p1);
-  tcase_add_test(tc_core, test_sprintf_g_spec_no_precision_many_width_4_p2);
-  tcase_add_test(tc_core, test_sprintf_g_spec_precision_0_many_width_4_p1);
-  tcase_add_test(tc_core, test_sprintf_g_spec_precision_0_many_width_4_p2);
-
-  tcase_add_loop_test(tc_core,
-                      test_sprintf_g_spec_set_precision_many_width_4_p1, 0, 14);
-  tcase_add_loop_test(tc_core,
-                      test_sprintf_g_spec_set_precision_many_width_4_p2, 0, 14);
-  tcase_add_loop_test(tc_core,
-                      test_sprintf_g_spec_set_precision_many_width_4_p3, 0, 14);
-  tcase_add_loop_test(tc_core,
-                      test_sprintf_g_spec_set_precision_many_width_4_p4, 0, 14);
-
-  tcase_add_loop_test(
-      tc_core, test_sprintf_g_spec_long_double_set_precision_many_width_4_p1, 0,
-      18);
-  tcase_add_loop_test(
-      tc_core, test_sprintf_g_spec_long_double_set_precision_many_width_4_p2, 0,
-      18);
-  tcase_add_loop_test(tc_core,
-                      test_sprintf_sharp_g_spec_loop_precisions_width_4, 0, 14);
-  if (RUNNING_ON_VALGRIND) {
-    tcase_add_loop_test(
-        tc_core, test_sprintf_sharp_g_spec_long_loop_precisions_width_4, 0, 14);
-  } else {
-    tcase_add_loop_test(
-        tc_core, test_sprintf_sharp_g_spec_long_loop_precisions_width_4, 0, 17);
-  }
-  tcase_add_loop_test(
-      tc_core, test_sprintf_sharp_g_spec_zero_loop_precisions_width_4, 0, 14);
-  tcase_add_test(tc_core,
-                 test_sprintf_sharp_g_spec_no_precision_many_width_4_p1);
-  tcase_add_test(tc_core,
-                 test_sprintf_sharp_g_spec_no_precision_many_width_4_p2);
-  tcase_add_test(tc_core,
-                 test_sprintf_sharp_g_spec_precision_0_many_width_4_p1);
-  tcase_add_test(tc_core,
-                 test_sprintf_sharp_g_spec_precision_0_many_width_4_p2);
-
-  tcase_add_loop_test(
-      tc_core, test_sprintf_sharp_g_spec_set_precision_many_width_4_p1, 0, 14);
-  tcase_add_loop_test(
-      tc_core, test_sprintf_sharp_g_spec_set_precision_many_width_4_p2, 0, 14);
-  tcase_add_loop_test(
-      tc_core, test_sprintf_sharp_g_spec_set_precision_many_width_4_p3, 0, 14);
-  tcase_add_loop_test(
-      tc_core, test_sprintf_sharp_g_spec_set_precision_many_width_4_p4, 0, 14);
-
-  tcase_add_loop_test(
-      tc_core,
-      test_sprintf_sharp_g_spec_long_double_set_precision_many_width_4_p1, 0,
-      18);
-
-  tcase_add_loop_test(
-      tc_core,
-      test_sprintf_sharp_g_spec_long_double_set_precision_many_width_4_p2, 0,
-      18);
+  add_basic_tests(tc_core);
+  add_basic_sharp_tests(tc_core);
+  add_scientific_tests(tc_core);
+  add_g_spec_tests(tc_core);
+  add_g_spec_width_4_tests(tc_core);
 
   suite_add_tcase(sprintf_suite, tc_core);
   suite_add_tcase(sprintf_suite, tc_problematic);
