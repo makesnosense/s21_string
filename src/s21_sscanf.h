@@ -25,15 +25,12 @@ int read_string(const char **str, char *s, Opts *opts);
 int read_int(const char **str, int *d, Opts *opts);
 
 // Функция для чтения беззнакового целого числа
-int read_unsigned_int(const char **str, unsigned int *u, Opts *opts);
+int read_unsigned(const char **str, unsigned int *u, Opts *opts);
 
 // Функция для чтения вещественного числа
 int read_float(const char **str, float *f, Opts *opts);
 
 // Функция для чтения шестнадцатеричного числа
-int read_hex(const char **str, unsigned int *x, Opts *opts);
-
-// // Функция для считывания значений из буфера по формату
-// int s21_sscanf(const char *str, const char *format, ...);
+int read_hex(const char **str, unsigned *x, Opts *opts);
 
 #endif  // S21_SSCANF_H_
