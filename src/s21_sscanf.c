@@ -134,10 +134,12 @@ int s21_sscanf(const char *str, const char *format, ...) {
         default:
           break;
       }
-    } else {
+    } else if (*format == *str) {
       opts.count++;
       format++;
       str++;
+    } else {
+      format++;
     }
   }
   va_end(args);
