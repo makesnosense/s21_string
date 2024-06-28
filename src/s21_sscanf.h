@@ -20,7 +20,7 @@ typedef struct InputString {
 } InputStr;
 
 // Функция для чтения символа
-int read_char(InputStr* input, char* c, SpecOptions* opts);
+// int read_char(InputStr* input, char* c, SpecOptions* opts);
 
 // Функция для чтения строки
 int read_string(const char** str, char* s, SpecOptions* opts);
