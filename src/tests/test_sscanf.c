@@ -244,7 +244,7 @@ Suite* make_sscanf_suite() {
   tc_problem = tcase_create("scanf");
 
   tcase_add_test(tc_problem, test_sscanf_simple_char);
-  tcase_add_test(tc_problem, test_sscanf_int);
+  tcase_add_test(tc_core, test_sscanf_int);
   tcase_add_test(tc_core, test_sscanf_int_2);
   tcase_add_test(tc_core, test_sscanf_int_3);
   tcase_add_test(tc_core, test_sscanf_float);

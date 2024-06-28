@@ -1,8 +1,21 @@
 #include "s21_sscanf.h"
 
-int consume_specifier(va_list* args, InputStr* source, InputStr* fmt_input) {
+int read_char(va_list* args, InputStr* source, SpecOptions* spec_opts) {
+  int reading_result = 0;
+  if (spec_opts->is_star == false) {
+    char* dest_char_ptr = va_arg(*args, char*);
+    *dest_char_ptr = source->str[source->curr_ind];
+    reading_result++;
+  }
+  source->curr_ind++;
+  return reading_result;
+};
+
+int consume_specifier(va_list* args, InputStr* source, InputStr* fmt_input,
+                      bool* matching_failure) {
   int specifier_result = 0;
   SpecOptions spec_opts = {0};
+  *matching_failure = 0;
   // s21_memset(&spec_opts, 0, sizeof(spec_opts));
   fmt_input->curr_ind++;
 
@@ -11,22 +24,16 @@ int consume_specifier(va_list* args, InputStr* source, InputStr* fmt_input) {
 
   switch (fmt_input->str[fmt_input->curr_ind]) {
     case 'c': {
-      if (spec_opts.is_star == false) {
-        char* dest_char_ptr = va_arg(*args, char*);
-        *dest_char_ptr = source->str[source->curr_ind];
-        specifier_result++;
-      }
-      source->curr_ind++;
-      fmt_input->curr_ind++;
-    } break;
+      specifier_result = read_char(args, source, &spec_opts);
+      break;
+    }
     case 'n': {
       int* num = va_arg(*args, int*);
       *num = source->curr_ind;
-
-      fmt_input->curr_ind++;
+      break;
     }
   }
-
+  fmt_input->curr_ind++;
   return specifier_result;
 }
 
@@ -50,11 +57,13 @@ int s21_sscanf(const char* str, const char* format, ...) {
       }
       fmt_input.curr_ind++;
     } else if (fmt_input.str[fmt_input.curr_ind] == '%') {
-      result += consume_specifier(&args, &source, &fmt_input);
+      result +=
+          consume_specifier(&args, &source, &fmt_input, &matching_failure);
     } else {
       if (fmt_input.str[fmt_input.curr_ind] != source.str[source.curr_ind]) {
-        printf("fmt %c \n", fmt_input.str[fmt_input.curr_ind]);
-        printf("src %c \n", source.str[source.curr_ind]);
+        if (result == 0) {
+          result = -1;
+        }
         matching_failure = true;
       } else {
         fmt_input.curr_ind++;
@@ -167,10 +176,40 @@ void parse_suppression(InputStr* fmt_input, SpecOptions* spec_opts) {
   }
 }
 
-// void skip_space(InputStr* input) {
-//   while (input->str[input->curr_ind + 1] == ' ') {
+bool is_space(char input_char) {
+  bool result = false;
+  char* space_chars = "\t\n\v\f\r ";
+  for (s21_size_t i = 0; i < s21_strlen(space_chars); i++) {
+    if (space_chars[i] == input_char) {
+      result = true;
+      break;
+    }
+  }
+  return result;
+}
+
+// int read_int(InputStr* input, int* d, SpecOptions* opts) {
+//   int result = 0;
+//   int sign = 1;
+//   int num = 0;
+//   printf("%d", opts->is_star);
+
+//   if (input->str[input->curr_ind] == '-') {
+//     sign = -1;
 //     input->curr_ind++;
+//     // opts->count++;
 //   }
+
+//   while (input->str[input->curr_ind] >= '0' &&
+//          input->str[input->curr_ind] <= '9') {
+//     num = num * 10 + (input->str[input->curr_ind] - '0');
+//     input->curr_ind++;
+//     // opts->count++;
+//     result = 1;
+//   }
+//   *d = sign * num;
+
+//   return result;
 // }
 
 // int parse_pointer(InputStr* input, void** value) {
@@ -216,18 +255,6 @@ void parse_suppression(InputStr* fmt_input, SpecOptions* spec_opts) {
 
 //   return result;
 // }
-
-bool is_space(char input_char) {
-  bool result = false;
-  char* space_chars = "\t\n\v\f\r ";
-  for (s21_size_t i = 0; i < s21_strlen(space_chars); i++) {
-    if (space_chars[i] == input_char) {
-      result = true;
-      break;
-    }
-  }
-  return result;
-}
 
 // int read_string(const char** str, char* s, SpecOptions* opts) {
 //   int result = 0;
