@@ -187,8 +187,10 @@ START_TEST(test_sscanf_unsigned) {
 END_TEST
 
 START_TEST(test_sscanf_star) {
-  char* input_string = "int: 123, float: -123.0, char: @, unsigned: 0 %";
-  char* format_string = "int: %*d, float: %*f, char: %*c, unsigned: %*u %%%n";
+  char* input_string =
+      "int: 123, float: -123.0, char: @, unsigned: 0 %, string: cringe";
+  char* format_string =
+      "int: %*d, float: %*f, char: %*c, unsigned: %*u %%, string: %*s      %n";
 
   int s21_res1 = 0;
   int s21_res_res = 0;
