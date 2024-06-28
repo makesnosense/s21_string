@@ -186,7 +186,8 @@ int read_string(const char** str, char* s, SpecOptions* opts) {
   int result = 0;
 
   while (**str != ' ' && **str != '\t' && **str != '\n' && **str != '\0') {
-    if (!opts->is_star) *s = **str;
+    // opts->count++;
+    *s = **str;
     (*str)++;
     s++;
     // opts->count++;
@@ -215,7 +216,7 @@ int read_int(InputStr* input, int* d, SpecOptions* opts) {
     // opts->count++;
     result = 1;
   }
-  if (!opts->is_star) *d = sign * num;
+  *d = sign * num;
 
   return result;
 }
@@ -230,7 +231,7 @@ int read_unsigned_int(const char** str, unsigned int* u, SpecOptions* opts) {
     // opts->count++;
     result = 1;
   }
-  if (!opts->is_star) *u = num;
+  *u = num;
 
   return result;
 }
@@ -267,7 +268,7 @@ int read_float(InputStr* input, float* f, SpecOptions* opts) {
       // opts->count++;
     }
   }
-  if (!opts->is_star) *f = sign * (int_part + frac_part / frac_div);
+  *f = sign * (int_part + frac_part / frac_div);
 
   return result;
 }
@@ -289,7 +290,7 @@ int read_hex(const char** str, unsigned int* x, SpecOptions* opts) {
     // opts->count++;
     result = 1;
   }
-  if (!opts->is_star) *x = num;
+  *x = num;
 
   return result;
 }

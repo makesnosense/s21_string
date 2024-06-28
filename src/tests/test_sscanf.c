@@ -186,23 +186,25 @@ START_TEST(test_sscanf_unsigned) {
 }
 END_TEST
 
-// START_TEST(test_sscanf_star) {
-//   char* input_string = "int: 123, float: -123.0, char: @, unsigned: 0";
-//   char* format_string = "int: %*d, float: %*f, char: %*c, unsigned: %*u";
+START_TEST(test_sscanf_star) {
+  char* input_string =
+      "int: 123, float: -123.0, char: @, unsigned: 0 %, string: cringe";
+  char* format_string =
+      "int: %*d, float: %*f, char: %*c, unsigned: %*u %%, string: %*s      %n";
 
-//   int s21_res1 = 0;
-//   int s21_res_res = 0;
+  int s21_res1 = 0;
+  int s21_res_res = 0;
 
-//   int lib_res1 = 0;
-//   int lib_res_res = 0;
+  int lib_res1 = 0;
+  int lib_res_res = 0;
 
-//   lib_res_res = sscanf(input_string, format_string, &lib_res1);
-//   s21_res_res = s21_sscanf(input_string, format_string, &s21_res1);
+  lib_res_res = sscanf(input_string, format_string, &s21_res1);
+  s21_res_res = s21_sscanf(input_string, format_string, &lib_res1);
 
-//   ck_assert_int_eq(lib_res_res, s21_res_res);
-//   ck_assert_int_eq(lib_res1, s21_res1);
-// }
-// END_TEST
+  ck_assert_int_eq(lib_res_res, s21_res_res);
+  ck_assert_int_eq(lib_res1, s21_res1);
+}
+END_TEST
 
 Suite* make_sscanf_suite() {
   Suite* sscanf_suite = suite_create("sscanf");
@@ -218,7 +220,7 @@ Suite* make_sscanf_suite() {
   tcase_add_test(tc_core, test_sscanf_float_3);
   tcase_add_test(tc_core, test_sscanf_char);
   tcase_add_test(tc_core, test_sscanf_unsigned);
-  // tcase_add_test(tc_core, test_sscanf_star);
+  tcase_add_test(tc_core, test_sscanf_star);
 
   suite_add_tcase(sscanf_suite, tc_core);
 
