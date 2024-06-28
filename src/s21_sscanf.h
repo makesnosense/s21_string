@@ -41,9 +41,11 @@ int parse_pointer(InputStr* input, void** value);
 
 void skip_space(InputStr* input);
 
-void parse_width(InputStr* fmt_input, SpecOptions* spec_opts);
+void parse_width_sscanf(InputStr* fmt_input, SpecOptions* spec_opts);
 
 void parse_suppression(InputStr* fmt_input, SpecOptions* spec_opts);
+
+bool is_space(char input_char);
 
 // // Функция для считывания значений из буфера по формату
 // int s21_sscanf(const char *str, const char *format, ...);
