@@ -12,24 +12,16 @@ int s21_sscanf(const char* str, const char* format, ...) {
 
   // Проходимся по формат-строке
   while (fmt_input.str[fmt_input.curr_ind] != '\0') {
-    skip_space(&input);
+    // skip_space(&input);
 
     if (fmt_input.str[fmt_input.curr_ind] == '%') {
       s21_memset(&spec_opts, 0, sizeof(spec_opts));
       fmt_input.curr_ind++;
 
-      // Считываем * если есть
-      if (fmt_input.str[fmt_input.curr_ind] == '*') {
-        spec_opts.is_star = true;
-        fmt_input.curr_ind++;
-      }
-      // Проверяем наличие цифр после %
-      while (fmt_input.str[fmt_input.curr_ind] >= '0' &&
-             fmt_input.str[fmt_input.curr_ind] <= '9') {
-        spec_opts.width =
-            spec_opts.width * 10 + (fmt_input.str[fmt_input.curr_ind] - '0');
-        fmt_input.curr_ind++;
-      }
+      parse_suppression(&fmt_input, &spec_opts);
+
+      parse_width(&fmt_input, &spec_opts);
+
       switch (fmt_input.str[fmt_input.curr_ind]) {
         case 'c': {
           char* dest_char_ptr = va_arg(args, char*);
@@ -44,7 +36,7 @@ int s21_sscanf(const char* str, const char* format, ...) {
           char* s = va_arg(args, char*);
           if (read_string(&str, s, &spec_opts)) {
             if (!spec_opts.is_star) result++;
-            format++;
+            fmt_input.curr_ind++;
           }
           break;
         }
@@ -53,7 +45,7 @@ int s21_sscanf(const char* str, const char* format, ...) {
           int* d = va_arg(args, int*);
           if (read_int(&input, d, &spec_opts)) {
             if (!spec_opts.is_star) result++;
-            format++;
+            fmt_input.curr_ind++;
             // input.curr_ind++;
           }
           break;
@@ -62,7 +54,7 @@ int s21_sscanf(const char* str, const char* format, ...) {
           float* f = va_arg(args, float*);
           if (read_float(&input, f, &spec_opts)) {
             if (!spec_opts.is_star) result++;
-            format++;
+            fmt_input.curr_ind++;
             // input.curr_ind++;
           }
           break;
@@ -71,7 +63,7 @@ int s21_sscanf(const char* str, const char* format, ...) {
           unsigned int* u = va_arg(args, unsigned int*);
           if (read_unsigned_int(&str, u, &spec_opts)) {
             if (!spec_opts.is_star) result++;
-            format++;
+            fmt_input.curr_ind++;
           }
           break;
         }
@@ -80,20 +72,20 @@ int s21_sscanf(const char* str, const char* format, ...) {
           unsigned int* x = va_arg(args, unsigned int*);
           if (read_hex(&str, x, &spec_opts)) {
             if (!spec_opts.is_star) result++;
-            format++;
+            fmt_input.curr_ind++;
           }
           break;
         }
         case 'p': {
           void** address = va_arg(args, void**);
-          if (parse_pointer(&input, address, &spec_opts)) {
+          if (parse_pointer(&input, address)) {
             if (!spec_opts.is_star) result++;
-            format++;
+            fmt_input.curr_ind++;
             // input.curr_ind++;
           }
         } break;
         case '%': {
-          format++;
+          fmt_input.curr_ind++;
           str++;
           break;
         }
@@ -103,26 +95,42 @@ int s21_sscanf(const char* str, const char* format, ...) {
           if (input.str[input.curr_ind - 2] == ' ') {
             int temp = input.curr_ind;
             *n = temp;
-          } else {
-            int temp = spec_opts.count;
-            *n = temp;
           }
+          //  else {
+          //   // int temp = spec_opts.count;
+          //   // *n = temp;
+          // }
           // *n = opts.count;
-          format++;
+          fmt_input.curr_ind++;
           break;
         }
         default:
           break;
       }
     } else {
-      spec_opts.count++;
-      format++;
+      // spec_opts.count++;
+      fmt_input.curr_ind++;
       input.curr_ind++;
     }
   }
   va_end(args);
 
   return result;
+}
+void parse_width(InputStr* fmt_input, SpecOptions* spec_opts) {
+  while (fmt_input->str[fmt_input->curr_ind] >= '0' &&
+         fmt_input->str[fmt_input->curr_ind] <= '9') {
+    spec_opts->width =
+        spec_opts->width * 10 + (fmt_input->str[fmt_input->curr_ind] - '0');
+    fmt_input->curr_ind++;
+  }
+}
+
+void parse_suppression(InputStr* fmt_input, SpecOptions* spec_opts) {
+  if (fmt_input->str[fmt_input->curr_ind] == '*') {
+    spec_opts->is_star = true;
+    fmt_input->curr_ind++;
+  }
 }
 
 void skip_space(InputStr* input) {
@@ -131,7 +139,7 @@ void skip_space(InputStr* input) {
   }
 }
 
-int parse_pointer(InputStr* input, void** value, SpecOptions* opts) {
+int parse_pointer(InputStr* input, void** value) {
   int res = 0;
 
   // Skip "0x" and increment count by 2
@@ -152,7 +160,7 @@ int parse_pointer(InputStr* input, void** value, SpecOptions* opts) {
       ptr_value += input->str[input->curr_ind] - 'A' + 10;
     }
     input->curr_ind++;
-    opts->count++;
+    // opts->count++;
     res = 1;
   }
 
@@ -167,7 +175,7 @@ int read_char(InputStr* input, char* c, SpecOptions* opts) {
   if (input->str[input->curr_ind] != '\0') {
     if (!opts->is_star) *c = input->str[input->curr_ind];
     input->curr_ind++;
-    opts->count++;
+    // opts->count++;
     result = 1;
   }
 
@@ -181,7 +189,7 @@ int read_string(const char** str, char* s, SpecOptions* opts) {
     if (!opts->is_star) *s = **str;
     (*str)++;
     s++;
-    opts->count++;
+    // opts->count++;
     result = 1;
   }
   *s = '\0';
@@ -197,14 +205,14 @@ int read_int(InputStr* input, int* d, SpecOptions* opts) {
   if (input->str[input->curr_ind] == '-') {
     sign = -1;
     input->curr_ind++;
-    opts->count++;
+    // opts->count++;
   }
 
   while (input->str[input->curr_ind] >= '0' &&
          input->str[input->curr_ind] <= '9') {
     num = num * 10 + (input->str[input->curr_ind] - '0');
     input->curr_ind++;
-    opts->count++;
+    // opts->count++;
     result = 1;
   }
   if (!opts->is_star) *d = sign * num;
@@ -219,7 +227,7 @@ int read_unsigned_int(const char** str, unsigned int* u, SpecOptions* opts) {
   while (**str >= '0' && **str <= '9') {
     num = num * 10 + (**str - '0');
     (*str)++;
-    opts->count++;
+    // opts->count++;
     result = 1;
   }
   if (!opts->is_star) *u = num;
@@ -237,26 +245,26 @@ int read_float(InputStr* input, float* f, SpecOptions* opts) {
   if (input->str[input->curr_ind] == '-') {
     sign = -1;
     input->curr_ind++;
-    opts->count++;
+    // opts->count++;
   }
 
   while (input->str[input->curr_ind] >= '0' &&
          input->str[input->curr_ind] <= '9') {
     int_part = int_part * 10 + (input->str[input->curr_ind] - '0');
     input->curr_ind++;
-    opts->count++;
+    // opts->count++;
     result = 1;
   }
 
   if (input->str[input->curr_ind] == '.') {
     input->curr_ind++;
-    opts->count++;
+    // opts->count++;
     while (input->str[input->curr_ind] >= '0' &&
            input->str[input->curr_ind] <= '9') {
       frac_part = frac_part * 10 + (input->str[input->curr_ind] - '0');
       frac_div *= 10;
       input->curr_ind++;
-      opts->count++;
+      // opts->count++;
     }
   }
   if (!opts->is_star) *f = sign * (int_part + frac_part / frac_div);
@@ -278,7 +286,7 @@ int read_hex(const char** str, unsigned int* x, SpecOptions* opts) {
       num = num * 16 + (**str - 'A' + 10);
     }
     (*str)++;
-    opts->count++;
+    // opts->count++;
     result = 1;
   }
   if (!opts->is_star) *x = num;

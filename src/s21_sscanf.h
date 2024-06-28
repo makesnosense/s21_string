@@ -37,9 +37,13 @@ int read_float(InputStr* input, float* f, SpecOptions* opts);
 // Функция для чтения шестнадцатеричного числа
 int read_hex(const char** str, unsigned int* x, SpecOptions* opts);
 
-int parse_pointer(InputStr* input, void** value, SpecOptions* opts);
+int parse_pointer(InputStr* input, void** value);
 
 void skip_space(InputStr* input);
+
+void parse_width(InputStr* fmt_input, SpecOptions* spec_opts);
+
+void parse_suppression(InputStr* fmt_input, SpecOptions* spec_opts);
 
 // // Функция для считывания значений из буфера по формату
 // int s21_sscanf(const char *str, const char *format, ...);
