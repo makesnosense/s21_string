@@ -10,7 +10,7 @@ int s21_sscanf(const char* str, const char* format, ...) {
   InputStr fmt_input = {format, 0};
 
   // Зануляем структуру с опциями
-  int result = 0;
+  int result = validity_check(&matching_failure, &source);
 
   while (fmt_input.str[fmt_input.curr_ind] != '\0' &&
          matching_failure == false) {
@@ -24,9 +24,9 @@ int s21_sscanf(const char* str, const char* format, ...) {
           consume_specifier(&args, &source, &fmt_input, &matching_failure);
     } else {
       if (fmt_input.str[fmt_input.curr_ind] != source.str[source.curr_ind]) {
-        if (result == 0) {
-          result = -1;
-        }
+        // if (result == 0) {
+        //   result = -1;
+        // }
         matching_failure = true;
       } else {
         fmt_input.curr_ind++;
@@ -37,6 +37,25 @@ int s21_sscanf(const char* str, const char* format, ...) {
   va_end(args);
 
   return result;
+}
+
+int validity_check(bool* matching_failure, InputStr* source) {
+  bool finding_char = false;
+  int i = 0;
+
+  while (source->str[i] != '\0') {
+    if (source->str[i] != ' ' || source->str[i] != '\t' ||
+        source->str[i] != '\n' || source->str[i] != '\v' ||
+        source->str[i] != '\r') {
+      finding_char = true;
+    }
+    i++;
+  }
+  if (finding_char == false) {
+    *matching_failure = true;
+  }
+
+  return finding_char ? 0 : -1;
 }
 
 int read_char(va_list* args, InputStr* source, SpecOptions* spec_opts) {
