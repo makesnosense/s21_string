@@ -1,42 +1,5 @@
 #include "s21_sscanf.h"
 
-int read_char(va_list* args, InputStr* source, SpecOptions* spec_opts) {
-  int reading_result = 0;
-  if (spec_opts->is_star == false) {
-    char* dest_char_ptr = va_arg(*args, char*);
-    *dest_char_ptr = source->str[source->curr_ind];
-    reading_result++;
-  }
-  source->curr_ind++;
-  return reading_result;
-};
-
-int consume_specifier(va_list* args, InputStr* source, InputStr* fmt_input,
-                      bool* matching_failure) {
-  int specifier_result = 0;
-  SpecOptions spec_opts = {0};
-  *matching_failure = 0;
-  // s21_memset(&spec_opts, 0, sizeof(spec_opts));
-  fmt_input->curr_ind++;
-
-  parse_suppression(fmt_input, &spec_opts);
-  parse_width_sscanf(fmt_input, &spec_opts);
-
-  switch (fmt_input->str[fmt_input->curr_ind]) {
-    case 'c': {
-      specifier_result = read_char(args, source, &spec_opts);
-      break;
-    }
-    case 'n': {
-      int* num = va_arg(*args, int*);
-      *num = source->curr_ind;
-      break;
-    }
-  }
-  fmt_input->curr_ind++;
-  return specifier_result;
-}
-
 int s21_sscanf(const char* str, const char* format, ...) {
   bool matching_failure = false;
 
@@ -74,6 +37,43 @@ int s21_sscanf(const char* str, const char* format, ...) {
   va_end(args);
 
   return result;
+}
+
+int read_char(va_list* args, InputStr* source, SpecOptions* spec_opts) {
+  int reading_result = 0;
+  if (spec_opts->is_star == false) {
+    char* dest_char_ptr = va_arg(*args, char*);
+    *dest_char_ptr = source->str[source->curr_ind];
+    reading_result++;
+  }
+  source->curr_ind++;
+  return reading_result;
+};
+
+int consume_specifier(va_list* args, InputStr* source, InputStr* fmt_input,
+                      bool* matching_failure) {
+  int specifier_result = 0;
+  SpecOptions spec_opts = {0};
+  *matching_failure = 0;
+  // s21_memset(&spec_opts, 0, sizeof(spec_opts));
+  fmt_input->curr_ind++;
+
+  parse_suppression(fmt_input, &spec_opts);
+  parse_width_sscanf(fmt_input, &spec_opts);
+
+  switch (fmt_input->str[fmt_input->curr_ind]) {
+    case 'c': {
+      specifier_result = read_char(args, source, &spec_opts);
+      break;
+    }
+    case 'n': {
+      int* num = va_arg(*args, int*);
+      *num = source->curr_ind;
+      break;
+    }
+  }
+  fmt_input->curr_ind++;
+  return specifier_result;
 }
 
 // case 's': {
