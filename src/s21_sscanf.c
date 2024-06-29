@@ -1,14 +1,222 @@
 #include "s21_sscanf.h"
 
+bool n_specifier_follows(InputStr* fmt_input, bool* n_star_present) {
+  bool it_follows = false;
+  if (fmt_input->str[fmt_input->curr_ind] == '%' &&
+      fmt_input->str[fmt_input->curr_ind + 1] == 'n') {
+    it_follows = true;
+  } else if (fmt_input->str[fmt_input->curr_ind + 1] != '\0') {
+    if (fmt_input->str[fmt_input->curr_ind] == '%' &&
+        fmt_input->str[fmt_input->curr_ind + 1] == '*' &&
+        fmt_input->str[fmt_input->curr_ind + 2] == 'n') {
+      *n_star_present = true;
+      it_follows = true;
+    }
+  }
+  return it_follows;
+}
+
+// bool format_string_starts_with_char_spec(InputStr* fmt_input) {
+//   bool result = false;
+//   s21_size_t fmt_len = s21_strlen(fmt_input->str);
+
+//   if (fmt_len >= 2) {
+//     if (fmt_input->str[0] == '%' && fmt_input->str[1] == 'c') {
+//       result = true;
+//     }
+//   } else if (fmt_len >= 3) {
+//     if (fmt_input->str[0] == '%' && fmt_input->str[1] == 'l' &&
+//         fmt_input->str[2] == 'c') {
+//       result = true;
+//     } else if (fmt_input->str[0] == '%' && fmt_input->str[1] == '*' &&
+//                fmt_input->str[2] == 'c') {
+//       result = true;
+//     }
+//   } else if (fmt_len >= 4) {
+//     if (fmt_input->str[0] == '%' && fmt_input->str[1] == '*' &&
+//         fmt_input->str[2] == 'l' && fmt_input->str[3] == 'c') {
+//       result = true;
+//     }
+//   }
+//   return result;
+// }
+
+// int source_validity_check(InputStr* source, InputStr* fmt_input,
+//                           bool* matching_failure) {
+//   bool char_found = false;
+//   int i = 0;
+
+//   s21_size_t source_characters_remaining =
+//       s21_strlen(source->str) - source->curr_ind;
+
+//   if (source_characters_remaining == 0) {
+//     while (source->str[i] != '\0') {
+//       if (char_found == false) {
+//         char_found = format_string_starts_with_char_spec(fmt_input);
+//       }
+//     }
+//     if (char_found == false) {
+//       *matching_failure = true;
+//     }
+//     return char_found ? 0 : -1;
+//   }
+
+// bool c_specifier_follows(InputStr* fmt_input) {
+//   bool result = false;
+//   s21_size_t fmt_characters_remaining =
+//       s21_strlen(fmt_input->str) - fmt_input->curr_ind;
+
+//   if (fmt_characters_remaining >= 2) {
+//     if (fmt_input->str[fmt_input->curr_ind] == '%' &&
+//         fmt_input->str[fmt_input->curr_ind + 1] == 'c') {
+//       result = true;
+//     }
+//   } else if (fmt_characters_remaining >= 3) {
+//     if (fmt_input->str[0] == '%' && fmt_input->str[1] == 'l' &&
+//         fmt_input->str[2] == 'c') {
+//       result = true;
+//     } else if (fmt_input->str[0] == '%' && fmt_input->str[1] == '*' &&
+//                fmt_input->str[2] == 'c') {
+//       result = true;
+//     }
+//   } else if (fmt_characters_remaining >= 4) {
+//     if (fmt_input->str[0] == '%' && fmt_input->str[1] == '*' &&
+//         fmt_input->str[2] == 'l' && fmt_input->str[3] == 'c') {
+//       result = true;
+//     }
+//   }
+//   return result;
+// }
+
+bool is_end_of_string(InputStr* string_structure) {
+  return string_structure->str[string_structure->curr_ind] == '\0';
+}
+
+bool c_specifier_follows(InputStr* fmt_input) {
+  bool it_follows = false;
+  s21_size_t fmt_characters_remaining =
+      s21_strlen(fmt_input->str) - fmt_input->curr_ind;
+
+  if (fmt_characters_remaining >= 2) {
+    if (s21_strncmp(&fmt_input->str[fmt_input->curr_ind], "%c", 2) == 0) {
+      it_follows = true;
+    }
+  }
+  if (fmt_characters_remaining >= 3) {
+    if (s21_strncmp(&fmt_input->str[fmt_input->curr_ind], "%lc", 3) == 0 ||
+        s21_strncmp(&fmt_input->str[fmt_input->curr_ind], "%*c", 3) == 0) {
+      it_follows = true;
+    }
+  }
+  if (fmt_characters_remaining >= 4) {
+    if (s21_strncmp(&fmt_input->str[fmt_input->curr_ind], "%*lc", 4) == 0) {
+      it_follows = true;
+    }
+  }
+  return it_follows;
+}
+
+bool we_continue_consuming(InputStr* source, InputStr* fmt_input,
+                           bool* matching_failure) {
+  bool we_continue = false;
+  bool n_star_present = false;
+  if (is_end_of_string(fmt_input) == false && *matching_failure == false) {
+    if (is_end_of_string(source) == false) {
+      we_continue = true;
+    } else {
+      we_continue = n_specifier_follows(fmt_input, &n_star_present) ||
+                    c_specifier_follows(fmt_input);
+    }
+  }
+  return we_continue;
+}
+
+bool is_space_specifier(InputStr* fmt_input) {
+  return is_space(fmt_input->str[fmt_input->curr_ind]);
+}
+
+void consume_space(InputStr* source) {
+  while (is_space(source->str[source->curr_ind])) {
+    source->curr_ind++;
+  }
+}
+
+void process_n(va_list* args, InputStr* source, bool n_star) {
+  if (n_star == false) {
+    int* num = va_arg(*args, int*);
+    *num = source->curr_ind;
+  }
+}
+
+void consume_initial_space_and_n(va_list* args, InputStr* source,
+                                 InputStr* fmt_input) {
+  bool n_star_present = false;
+  while (n_specifier_follows(fmt_input, &n_star_present) ||
+         is_space_specifier(fmt_input)) {
+    if (is_space_specifier(fmt_input)) {
+      consume_space(source);
+      fmt_input->curr_ind++;
+    } else if (n_specifier_follows(fmt_input, &n_star_present)) {
+      process_n(args, source, n_star_present);
+      if (n_star_present) {
+        fmt_input->curr_ind += 3;
+      } else {
+        fmt_input->curr_ind += 2;
+      }
+    }
+  }
+}
+
+int s21_sscanf(const char* str, const char* format, ...) {
+  bool matching_failure = false;
+  int result = 0;
+  va_list args;  // Список аргументов
+  va_start(args, format);  // Инициализируем список аргументов
+
+  InputStr source = {str, 0};
+  InputStr fmt_input = {format, 0};
+  consume_initial_space_and_n(&args, &source, &fmt_input);
+
+  while (we_continue_consuming(&source, &fmt_input, &matching_failure)) {
+    if (is_space(fmt_input.str[fmt_input.curr_ind])) {
+      consume_space(&source);
+      fmt_input.curr_ind++;
+    } else if (fmt_input.str[fmt_input.curr_ind] == '%') {
+      if (n_specifier_follows(&fmt_input, NULL) == false &&
+          is_end_of_string(&source) == true) {
+        result = -1;
+        matching_failure = true;
+      } else if (is_space(source.str[source.curr_ind]) &&
+                 c_specifier_follows(&fmt_input) == false) {
+        result = -1;
+        matching_failure = true;
+      } else {
+        result +=
+            consume_specifier(&args, &source, &fmt_input, &matching_failure);
+      }
+    } else {
+      if (fmt_input.str[fmt_input.curr_ind] != source.str[source.curr_ind]) {
+        matching_failure = true;
+      } else {
+        fmt_input.curr_ind++;
+        source.curr_ind++;
+      }
+    }
+  }
+  va_end(args);
+
+  return result;
+}
+
 int read_char(va_list* args, InputStr* source, SpecOptions* spec_opts) {
-  int reading_result = 0;
+  int read_result = 0;
   if (spec_opts->is_star == false) {
     char* dest_char_ptr = va_arg(*args, char*);
     *dest_char_ptr = source->str[source->curr_ind];
-    reading_result++;
+    read_result++;
   }
   source->curr_ind++;
-  return reading_result;
+  return read_result;
 };
 
 int consume_specifier(va_list* args, InputStr* source, InputStr* fmt_input,
@@ -19,7 +227,7 @@ int consume_specifier(va_list* args, InputStr* source, InputStr* fmt_input,
   // s21_memset(&spec_opts, 0, sizeof(spec_opts));
   fmt_input->curr_ind++;
 
-  parse_suppression(fmt_input, &spec_opts);
+  spec_opts.is_star = parse_suppression(fmt_input);
   parse_width_sscanf(fmt_input, &spec_opts);
 
   switch (fmt_input->str[fmt_input->curr_ind]) {
@@ -35,45 +243,6 @@ int consume_specifier(va_list* args, InputStr* source, InputStr* fmt_input,
   }
   fmt_input->curr_ind++;
   return specifier_result;
-}
-
-int s21_sscanf(const char* str, const char* format, ...) {
-  bool matching_failure = false;
-
-  va_list args;  // Список аргументов
-  va_start(args, format);  // Инициализируем список аргументов
-
-  InputStr source = {str, 0};
-  InputStr fmt_input = {format, 0};
-
-  // Зануляем структуру с опциями
-  int result = 0;
-
-  while (fmt_input.str[fmt_input.curr_ind] != '\0' &&
-         matching_failure == false) {
-    if (is_space(fmt_input.str[fmt_input.curr_ind])) {
-      while (is_space(source.str[source.curr_ind])) {
-        source.curr_ind++;
-      }
-      fmt_input.curr_ind++;
-    } else if (fmt_input.str[fmt_input.curr_ind] == '%') {
-      result +=
-          consume_specifier(&args, &source, &fmt_input, &matching_failure);
-    } else {
-      if (fmt_input.str[fmt_input.curr_ind] != source.str[source.curr_ind]) {
-        if (result == 0) {
-          result = -1;
-        }
-        matching_failure = true;
-      } else {
-        fmt_input.curr_ind++;
-        source.curr_ind++;
-      }
-    }
-  }
-  va_end(args);
-
-  return result;
 }
 
 // case 's': {
@@ -169,11 +338,13 @@ void parse_width_sscanf(InputStr* fmt_input, SpecOptions* spec_opts) {
   }
 }
 
-void parse_suppression(InputStr* fmt_input, SpecOptions* spec_opts) {
+bool parse_suppression(InputStr* fmt_input) {
+  bool star_present = false;
   if (fmt_input->str[fmt_input->curr_ind] == '*') {
-    spec_opts->is_star = true;
+    star_present = true;
     fmt_input->curr_ind++;
   }
+  return star_present;
 }
 
 bool is_space(char input_char) {
