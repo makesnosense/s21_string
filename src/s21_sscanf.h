@@ -47,7 +47,8 @@ void parse_suppression(InputStr* fmt_input, SpecOptions* spec_opts);
 
 bool is_space(char input_char);
 
-int validity_check(bool* matching_failure, InputStr* source);
+int source_validity_check(InputStr* source, InputStr* format_input,
+                          bool* matching_failure);
 
 int consume_specifier(va_list* args, InputStr* source, InputStr* fmt_input,
                       bool* matching_failure);
