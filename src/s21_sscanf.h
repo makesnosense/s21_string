@@ -43,7 +43,7 @@ void skip_space(InputStr* input);
 
 void parse_width_sscanf(InputStr* fmt_input, SpecOptions* spec_opts);
 
-void parse_suppression(InputStr* fmt_input, SpecOptions* spec_opts);
+bool parse_suppression(InputStr* fmt_input);
 
 bool is_space(char input_char);
 
@@ -56,7 +56,7 @@ int consume_specifier(va_list* args, InputStr* source, InputStr* fmt_input,
 bool we_continue_consuming(InputStr* source, InputStr* fmt_input,
                            bool* matching_failure);
 
-bool n_specifier_follows(InputStr* fmt_input);
+bool n_specifier_follows(InputStr* fmt_input, bool* n_star_present);
 
 // // Функция для считывания значений из буфера по формату
 // int s21_sscanf(const char *str, const char *format, ...);

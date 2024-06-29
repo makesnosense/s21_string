@@ -32,6 +32,102 @@ START_TEST(test_sscanf_possible_minus_one_p1) {
 END_TEST
 
 START_TEST(test_sscanf_possible_minus_one_p2) {
+  int s21_a = 0;
+  int s21_b = 0;
+  char s21_c = 0;
+  int s21_res = 0;
+
+  int lib_a = 0;
+  int lib_b = 0;
+  char lib_c = 0;
+  int lib_res = 0;
+
+  s21_res = s21_sscanf(" ", " %n%n%c", &s21_a, &s21_b, &s21_c);
+  lib_res = sscanf(" ", " %n%n%c", &lib_a, &lib_b, &lib_c);
+
+  printf("наша %d %d %c res: %d\n", s21_a, s21_b, s21_c, s21_res);
+  printf("__их %d %d %c res: %d\n", lib_a, lib_b, lib_c, lib_res);
+
+  ck_assert_int_eq(lib_res, s21_res);
+  ck_assert_int_eq(lib_a, s21_a);
+  ck_assert_int_eq(lib_b, s21_b);
+  ck_assert_int_eq(lib_c, s21_c);
+}
+END_TEST
+
+START_TEST(test_sscanf_possible_minus_one_p3) {
+  int s21_a = 0;
+  int s21_b = 0;
+  char s21_c = 0;
+  int s21_res = 0;
+
+  int lib_a = 0;
+  int lib_b = 0;
+  char lib_c = 0;
+  int lib_res = 0;
+
+  s21_res = s21_sscanf("     \t\n", " %n %n %c", &s21_a, &s21_b, &s21_c);
+  lib_res = sscanf("     \t\n", " %n %n %c", &lib_a, &lib_b, &lib_c);
+
+  printf("наша %d %d %c res: %d\n", s21_a, s21_b, s21_c, s21_res);
+  printf("__их %d %d %c res: %d\n", lib_a, lib_b, lib_c, lib_res);
+
+  ck_assert_int_eq(lib_res, s21_res);
+  ck_assert_int_eq(lib_a, s21_a);
+  ck_assert_int_eq(lib_b, s21_b);
+  ck_assert_int_eq(lib_c, s21_c);
+}
+END_TEST
+
+START_TEST(test_sscanf_possible_minus_one_p4) {
+  int s21_a = 0;
+  int s21_b = 0;
+  char s21_c = 0;
+  int s21_res = 0;
+
+  int lib_a = 0;
+  int lib_b = 0;
+  char lib_c = 0;
+  int lib_res = 0;
+
+  s21_res = s21_sscanf("     \t\n", "%n %n %c", &s21_a, &s21_b, &s21_c);
+  lib_res = sscanf("     \t\n", "%n %n %c", &lib_a, &lib_b, &lib_c);
+
+  printf("наша %d %d %c res: %d\n", s21_a, s21_b, s21_c, s21_res);
+  printf("__их %d %d %c res: %d\n", lib_a, lib_b, lib_c, lib_res);
+
+  ck_assert_int_eq(lib_res, s21_res);
+  ck_assert_int_eq(lib_a, s21_a);
+  ck_assert_int_eq(lib_b, s21_b);
+  ck_assert_int_eq(lib_c, s21_c);
+}
+END_TEST
+
+START_TEST(test_sscanf_possible_minus_one_p5) {
+  int s21_a = 0;
+  int s21_b = 0;
+  char s21_c = 0;
+  int s21_res = 0;
+
+  int lib_a = 0;
+  int lib_b = 0;
+  char lib_c = 0;
+  int lib_res = 0;
+
+  s21_res = s21_sscanf("     \t\n", "%n%n%c", &s21_a, &s21_b, &s21_c);
+  lib_res = sscanf("     \t\n", "%n%n%c", &lib_a, &lib_b, &lib_c);
+
+  printf("наша %d %d %c res: %d\n", s21_a, s21_b, s21_c, s21_res);
+  printf("__их %d %d %c res: %d\n", lib_a, lib_b, lib_c, lib_res);
+
+  ck_assert_int_eq(lib_res, s21_res);
+  ck_assert_int_eq(lib_a, s21_a);
+  ck_assert_int_eq(lib_b, s21_b);
+  ck_assert_int_eq(lib_c, s21_c);
+}
+END_TEST
+
+START_TEST(test_sscanf_possible_minus_one_p6) {
   char* input_string = "\t\t\t\n\fz";
   char* format_string = " %c %c %n";
 
@@ -324,6 +420,10 @@ Suite* make_sscanf_suite() {
 
   tcase_add_test(tc_problem, test_sscanf_possible_minus_one_p1);
   tcase_add_test(tc_problem, test_sscanf_possible_minus_one_p2);
+  tcase_add_test(tc_problem, test_sscanf_possible_minus_one_p3);
+  tcase_add_test(tc_problem, test_sscanf_possible_minus_one_p4);
+  tcase_add_test(tc_problem, test_sscanf_possible_minus_one_p5);
+  tcase_add_test(tc_problem, test_sscanf_possible_minus_one_p6);
   tcase_add_test(tc_problem, test_sscanf_simple_char);
   tcase_add_test(tc_core, test_sscanf_int);
   tcase_add_test(tc_core, test_sscanf_int_2);
@@ -331,7 +431,7 @@ Suite* make_sscanf_suite() {
   tcase_add_test(tc_core, test_sscanf_float);
   tcase_add_test(tc_core, test_sscanf_float_2);
   tcase_add_test(tc_core, test_sscanf_float_3);
-  tcase_add_test(tc_problem, test_sscanf_char);
+  tcase_add_test(tc_core, test_sscanf_char);
   tcase_add_test(tc_core, test_sscanf_unsigned);
   // tcase_add_test(tc_problem, test_sscanf_star);
   tcase_add_test(tc_core, test_sscanf_non_valid_string);
