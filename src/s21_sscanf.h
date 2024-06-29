@@ -47,6 +47,11 @@ void parse_suppression(InputStr* fmt_input, SpecOptions* spec_opts);
 
 bool is_space(char input_char);
 
+int validity_check(bool* matching_failure, InputStr* source);
+
+int consume_specifier(va_list* args, InputStr* source, InputStr* fmt_input,
+                      bool* matching_failure);
+
 // // Функция для считывания значений из буфера по формату
 // int s21_sscanf(const char *str, const char *format, ...);
 
