@@ -2,6 +2,64 @@
 
 #include "run_tests.h"
 
+START_TEST(test_sscanf_possible_minus_one_p1) {
+  char* input_string = "\t\t\t\n\f";
+  char* format_string = " %c %c %n";
+
+  int s21_a = 0;
+  int s21_b = 0;
+  int s21_c = 0;
+  int s21_res = 0;
+
+  int lib_a = 0;
+  int lib_b = 0;
+  int lib_c = 0;
+  int lib_res = 0;
+
+  lib_res = sscanf(input_string, format_string, &lib_a, &lib_b, &lib_c);
+  s21_res = s21_sscanf(input_string, format_string, &s21_a, &s21_b, &s21_c);
+
+  printf("первый чар %c второй чар %c n: %d res: %d\n", lib_a, lib_b, lib_c,
+         lib_res);
+  printf("первый чар  %c второй чар %c n: %d res: %d\n", s21_a, s21_b, s21_c,
+         s21_res);
+
+  ck_assert_int_eq(lib_res, s21_res);
+  ck_assert_int_eq(lib_a, s21_a);
+  ck_assert_int_eq(lib_b, s21_b);
+  ck_assert_int_eq(lib_c, s21_c);
+}
+END_TEST
+
+START_TEST(test_sscanf_possible_minus_one_p2) {
+  char* input_string = "\t\t\t\n\fz";
+  char* format_string = " %c %c %n";
+
+  int s21_a = 0;
+  int s21_b = 0;
+  int s21_c = 0;
+  int s21_res = 0;
+
+  int lib_a = 0;
+  int lib_b = 0;
+  int lib_c = 0;
+  int lib_res = 0;
+
+  lib_res = sscanf(input_string, format_string, &lib_a, &lib_b, &lib_c);
+  s21_res = s21_sscanf(input_string, format_string, &s21_a, &s21_b, &s21_c);
+
+  printf("первый чар %c второй чар %c n: %d res: %d\n", lib_a, lib_b, lib_c,
+         lib_res);
+  printf("первый чар  %c второй чар %c n: %d res: %d\n", s21_a, s21_b, s21_c,
+         s21_res);
+
+  ck_assert_int_eq(lib_res, s21_res);
+  ck_assert_int_eq(lib_a, s21_a);
+  ck_assert_int_eq(lib_b, s21_b);
+  ck_assert_int_eq(lib_c, s21_c);
+}
+END_TEST
+
 START_TEST(test_sscanf_simple_char) {
   char* input_string = "\t\tab \t \n \f";
   char* format_string = " %c %c %n";
@@ -22,7 +80,7 @@ START_TEST(test_sscanf_simple_char) {
       s21_sscanf(input_string, format_string, &s21_res1, &s21_res2, &s21_res3);
 
   printf("первый чар %c второй чар %c n: %d\n", lib_res1, lib_res2, lib_res3);
-  printf("первый чар  %c второй чар %c n: %d\n", s21_res1, s21_res2, s21_res3);
+  printf("первый чар %c второй чар %c n: %d\n", s21_res1, s21_res2, s21_res3);
 
   ck_assert_int_eq(lib_res_res, s21_res_res);
   ck_assert_int_eq(lib_res1, s21_res1);
@@ -264,6 +322,8 @@ Suite* make_sscanf_suite() {
   tc_core = tcase_create("Core");
   tc_problem = tcase_create("scanf");
 
+  tcase_add_test(tc_problem, test_sscanf_possible_minus_one_p1);
+  tcase_add_test(tc_problem, test_sscanf_possible_minus_one_p2);
   tcase_add_test(tc_problem, test_sscanf_simple_char);
   tcase_add_test(tc_core, test_sscanf_int);
   tcase_add_test(tc_core, test_sscanf_int_2);

@@ -1,41 +1,32 @@
 #include "s21_sscanf.h"
 
-int s21_sscanf(const char* str, const char* format, ...) {
-  bool matching_failure = false;
-
-  va_list args;  // Список аргументов
-  va_start(args, format);  // Инициализируем список аргументов
-
-  InputStr source = {str, 0};
-  InputStr fmt_input = {format, 0};
-
-  int result = source_validity_check(&source, &fmt_input, &matching_failure);
-
-  while (fmt_input.str[fmt_input.curr_ind] != '\0' &&
-         matching_failure == false) {
-    if (is_space(fmt_input.str[fmt_input.curr_ind])) {
-      while (is_space(source.str[source.curr_ind])) {
-        source.curr_ind++;
-      }
-      fmt_input.curr_ind++;
-    } else if (fmt_input.str[fmt_input.curr_ind] == '%') {
-      result +=
-          consume_specifier(&args, &source, &fmt_input, &matching_failure);
+bool we_continue_consuming(InputStr* source, InputStr* fmt_input,
+                           bool* matching_failure) {
+  bool we_continue = false;
+  if (fmt_input->str[fmt_input->curr_ind] != '\0' &&
+      *matching_failure == false) {
+    if (source->str[source->curr_ind] != '\0') {
+      we_continue = true;
     } else {
-      if (fmt_input.str[fmt_input.curr_ind] != source.str[source.curr_ind]) {
-        // if (result == 0) {
-        //   result = -1;
-        // }
-        matching_failure = true;
-      } else {
-        fmt_input.curr_ind++;
-        source.curr_ind++;
-      }
+      we_continue = n_specifier_follows(fmt_input);
     }
   }
-  va_end(args);
+  return we_continue;
+}
 
-  return result;
+bool n_specifier_follows(InputStr* fmt_input) {
+  bool it_follows = false;
+  if (fmt_input->str[fmt_input->curr_ind] == '%' &&
+      fmt_input->str[fmt_input->curr_ind + 1] == 'n') {
+    it_follows = true;
+  } else if (fmt_input->str[fmt_input->curr_ind + 1] != '\0') {
+    if (fmt_input->str[fmt_input->curr_ind] == '%' &&
+        fmt_input->str[fmt_input->curr_ind + 1] == '*' &&
+        fmt_input->str[fmt_input->curr_ind + 2] == 'n') {
+      it_follows = true;
+    }
+  }
+  return it_follows;
 }
 
 bool format_string_starts_with_char_spec(InputStr* fmt_input) {
@@ -85,6 +76,45 @@ int source_validity_check(InputStr* source, InputStr* fmt_input,
     *matching_failure = true;
   }
   return char_found ? 0 : -1;
+}
+
+int s21_sscanf(const char* str, const char* format, ...) {
+  bool matching_failure = false;
+
+  va_list args;  // Список аргументов
+  va_start(args, format);  // Инициализируем список аргументов
+
+  InputStr source = {str, 0};
+  InputStr fmt_input = {format, 0};
+
+  int result = source_validity_check(&source, &fmt_input, &matching_failure);
+
+  // while (fmt_input.str[fmt_input.curr_ind] != '\0' &&
+  //        source.str[source.curr_ind] != '\0' && matching_failure == false)
+  while (we_continue_consuming(&source, &fmt_input, &matching_failure)) {
+    if (is_space(fmt_input.str[fmt_input.curr_ind])) {
+      while (is_space(source.str[source.curr_ind])) {
+        source.curr_ind++;
+      }
+      fmt_input.curr_ind++;
+    } else if (fmt_input.str[fmt_input.curr_ind] == '%') {
+      result +=
+          consume_specifier(&args, &source, &fmt_input, &matching_failure);
+    } else {
+      if (fmt_input.str[fmt_input.curr_ind] != source.str[source.curr_ind]) {
+        // if (result == 0) {
+        //   result = -1;
+        // }
+        matching_failure = true;
+      } else {
+        fmt_input.curr_ind++;
+        source.curr_ind++;
+      }
+    }
+  }
+  va_end(args);
+
+  return result;
 }
 
 int read_char(va_list* args, InputStr* source, SpecOptions* spec_opts) {
