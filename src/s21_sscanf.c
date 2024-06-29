@@ -178,13 +178,16 @@ int s21_sscanf(const char* str, const char* format, ...) {
   consume_initial_space_and_n(&args, &source, &fmt_input);
 
   while (we_continue_consuming(&source, &fmt_input, &matching_failure)) {
-    printf("\n\nwe're here\n\n");
     if (is_space(fmt_input.str[fmt_input.curr_ind])) {
       consume_space(&source);
       fmt_input.curr_ind++;
     } else if (fmt_input.str[fmt_input.curr_ind] == '%') {
       if (n_specifier_follows(&fmt_input, NULL) == false &&
           is_end_of_string(&source) == true) {
+        result = -1;
+        matching_failure = true;
+      } else if (is_space(source.str[source.curr_ind]) &&
+                 c_specifier_follows(&fmt_input) == false) {
         result = -1;
         matching_failure = true;
       } else {
