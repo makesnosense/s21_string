@@ -53,6 +53,11 @@ int source_validity_check(InputStr* source, InputStr* format_input,
 int consume_specifier(va_list* args, InputStr* source, InputStr* fmt_input,
                       bool* matching_failure);
 
+bool we_continue_consuming(InputStr* source, InputStr* fmt_input,
+                           bool* matching_failure);
+
+bool n_specifier_follows(InputStr* fmt_input);
+
 // // Функция для считывания значений из буфера по формату
 // int s21_sscanf(const char *str, const char *format, ...);
 
