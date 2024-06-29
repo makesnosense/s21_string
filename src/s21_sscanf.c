@@ -9,8 +9,7 @@ int s21_sscanf(const char* str, const char* format, ...) {
   InputStr source = {str, 0};
   InputStr fmt_input = {format, 0};
 
-  // Зануляем структуру с опциями
-  int result = validity_check(&matching_failure, &source);
+  int result = source_validity_check(&source, &fmt_input, &matching_failure);
 
   while (fmt_input.str[fmt_input.curr_ind] != '\0' &&
          matching_failure == false) {
@@ -39,23 +38,53 @@ int s21_sscanf(const char* str, const char* format, ...) {
   return result;
 }
 
-int validity_check(bool* matching_failure, InputStr* source) {
-  bool finding_char = false;
+bool format_string_starts_with_char_spec(InputStr* fmt_input) {
+  bool result = false;
+  s21_size_t fmt_len = s21_strlen(fmt_input->str);
+
+  if (fmt_len >= 2) {
+    if (fmt_input->str[0] == '%' && fmt_input->str[1] == 'c') {
+      result = true;
+    }
+  } else if (fmt_len >= 3) {
+    if (fmt_input->str[0] == '%' && fmt_input->str[1] == 'l' &&
+        fmt_input->str[2] == 'c') {
+      result = true;
+    } else if (fmt_input->str[0] == '%' && fmt_input->str[1] == '*' &&
+               fmt_input->str[2] == 'c') {
+      result = true;
+    }
+  } else if (fmt_len >= 4) {
+    if (fmt_input->str[0] == '%' && fmt_input->str[1] == '*' &&
+        fmt_input->str[2] == 'l' && fmt_input->str[3] == 'c') {
+      result = true;
+    }
+  }
+  return result;
+}
+
+int source_validity_check(InputStr* source, InputStr* fmt_input,
+                          bool* matching_failure) {
+  bool char_found = false;
   int i = 0;
 
-  while (source->str[i] != '\0') {
-    if (source->str[i] != ' ' || source->str[i] != '\t' ||
-        source->str[i] != '\n' || source->str[i] != '\v' ||
-        source->str[i] != '\r') {
-      finding_char = true;
+  s21_size_t source_len = s21_strlen(source->str);
+
+  if (source_len != 0) {
+    while (source->str[i] != '\0') {
+      if (is_space(source->str[i]) == false) {
+        char_found = true;
+      }
+      i++;
     }
-    i++;
+    if (char_found == false) {
+      char_found = format_string_starts_with_char_spec(fmt_input);
+    }
   }
-  if (finding_char == false) {
+  if (char_found == false) {
     *matching_failure = true;
   }
-
-  return finding_char ? 0 : -1;
+  return char_found ? 0 : -1;
 }
 
 int read_char(va_list* args, InputStr* source, SpecOptions* spec_opts) {
