@@ -4,7 +4,8 @@ int s21_sprintf(char* str, const char* format, ...) {
   set_locale_for_wide_chars();
   DestStr dest = {str, 0};
   SpecOptions spec_opts = {0};
-  int fin_result = 0;  // Результат работы функции, пока не используется нигде
+  // int fin_result = 0;  // Результат работы функции, пока не используется
+  // нигде
 
   va_list args;  // Список аргументов
   va_start(args, format);  // Инициализируем список аргументов
@@ -90,7 +91,7 @@ int s21_sprintf(char* str, const char* format, ...) {
   dest.str[dest.curr_ind] = '\0';
   va_end(args);
 
-  return fin_result;
+  return dest.curr_ind;
 }
 
 void parse_format(const char** format, va_list args, SpecOptions* spec_opts) {
