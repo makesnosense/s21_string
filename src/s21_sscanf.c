@@ -1,5 +1,15 @@
 #include "s21_sscanf.h"
 
+void set_sscanf_base(SpecOptions* spec_opts) {
+  if (spec_opts->specifier == o) {
+    spec_opts->base = 8.0;
+  } else if (spec_opts->is_hexadecimal) {
+    spec_opts->base = 16.0;
+  } else {
+    spec_opts->base = 10.0;
+  }
+}
+
 int s21_sscanf(const char* str, const char* format, ...) {
   bool matching_failure = false;
   int result = 0;
@@ -19,6 +29,7 @@ int s21_sscanf(const char* str, const char* format, ...) {
           is_end_of_string(&source) == true) {
         result = -1;
         matching_failure = true;
+
       } else if (is_space(source.str[source.curr_ind]) &&
                  c_specifier_follows(&fmt_input) == false) {
         result = -1;
@@ -64,14 +75,125 @@ int consume_specifier(va_list* args, InputStr* source, InputStr* fmt_input,
     }
     case 'i':
     case 'd': {
-      if (spec_opts.specifier == i) {
-        // read_i();
-      }
-      printf("meow");
+      specifier_result = read_input_num(args, &spec_opts, source);
+      // printf("meow");
     }
   }
   fmt_input->curr_ind++;
   return specifier_result;
+}
+
+int read_input_num(va_list* args, SpecOptions* spec_opts, InputStr* source) {
+  int read_result = 0;
+  // s21_size_t source_remaining = s21_strlen(source->str) - source->curr_ind;
+  int* num = va_arg(*args, int*);
+  *num = 0;
+
+  // i = 0;
+
+  if (s21_strncmp(&source->str[source->curr_ind], "0x", 2) == 0 &&
+      spec_opts->specifier == i) {
+    spec_opts->base = 16;
+    source->curr_ind += 2;
+    read_result = read_hex(source, spec_opts, num);
+  } else if (s21_strncmp(&source->str[source->curr_ind], "0", 1) == 0 &&
+             spec_opts->specifier == i) {
+    spec_opts->base = 8;
+    read_result = read_octal(source, spec_opts, num);
+  } else {
+    spec_opts->base = 10;
+    read_result = read_int(source, spec_opts, num);
+  }
+  return read_result;
+}
+
+int read_hex(InputStr* source, SpecOptions* spec_opts, int* x) {
+  int num = 0;
+  int read_result = 0;
+  // printf("%d", spec_opts->is_star);
+  while (is_space(source->str[source->curr_ind]) == false &&
+         source->str[source->curr_ind] != '\0' &&
+         is_valid_digit(source->str[source->curr_ind], spec_opts->base)) {
+    if (source->str[source->curr_ind] >= '0' &&
+        source->str[source->curr_ind] <= '9') {
+      num = num * 16 + (source->str[source->curr_ind] - '0');
+    } else if (source->str[source->curr_ind] >= 'a' &&
+               source->str[source->curr_ind] <= 'f') {
+      num = num * 16 + (source->str[source->curr_ind] - 'a' + 10);
+    } else {
+      num = num * 16 + (source->str[source->curr_ind] - 'A' + 10);
+    }
+    source->curr_ind++;
+    // opts->count++;
+    read_result = 1;
+  }
+  *x = num;
+
+  return read_result;
+}
+
+int read_int(InputStr* source, SpecOptions* spec_opts, int* d) {
+  int read_result = 0;
+  int sign = 1;
+  int num = 0;
+  // printf("%d", spec_opts->is_star);
+
+  if (source->str[source->curr_ind] == '-') {
+    sign = -1;
+    source->curr_ind++;
+  }
+
+  while (is_space(source->str[source->curr_ind]) == false &&
+         source->str[source->curr_ind] != '\0' &&
+         is_valid_digit(source->str[source->curr_ind], spec_opts->base)) {
+    num = num * 10 + (source->str[source->curr_ind] - '0');
+    source->curr_ind++;
+    read_result = 1;
+  }
+  *d = sign * num;
+
+  return read_result;
+}
+
+int read_octal(InputStr* source, SpecOptions* spec_opts, int* num_input) {
+  int read_result = 0;
+  int num = 0;
+  // int base = 1;
+
+  int i = 0;
+  int j = source->curr_ind;
+
+  while (is_space(source->str[j]) == false && source->str[j] != '\0' &&
+         is_valid_digit(source->str[j], spec_opts->base)) {
+    i++;
+    j++;
+  }
+
+  i -= 1;
+
+  while (is_space(source->str[source->curr_ind]) == false &&
+         source->str[source->curr_ind] != '\0' &&
+         is_valid_digit(source->str[source->curr_ind], spec_opts->base)) {
+    char digit = source->str[source->curr_ind];
+    num += (digit - '0') * pow(8, i--);
+    read_result = 1;
+    source->curr_ind++;
+  }
+
+  *num_input = num;
+
+  return read_result;
+}
+
+bool is_valid_digit(char incoming_char, s21_size_t base) {
+  bool char_is_valid = false;
+  const char* digits = "0123456789abcdef";
+  for (s21_size_t i = 0; i < base && char_is_valid == false; i++) {
+    if (incoming_char == digits[i]) {
+      char_is_valid = true;
+    }
+  }
+  return char_is_valid;
 }
 
 // case 's': {
@@ -298,10 +420,11 @@ bool parse_suppression(InputStr* fmt_input) {
 
 bool is_sscanf_specifier(char ch) {
   char* res = s21_strchr(VALID_SSCANF_SPECIFIERS, ch);
-  return res == S21_NULL;
+  return res != S21_NULL;
 }
 
 void parse_sscanf_specifier(InputStr* fmt_input, SpecOptions* spec_opts) {
+  // printf("\n\n%c\n\n", fmt_input->str[fmt_input->curr_ind]);
   if (is_sscanf_specifier(fmt_input->str[fmt_input->curr_ind])) {
     char current_specifier = fmt_input->str[fmt_input->curr_ind];
     switch (current_specifier) {
@@ -309,12 +432,29 @@ void parse_sscanf_specifier(InputStr* fmt_input, SpecOptions* spec_opts) {
         spec_opts->specifier = c;
         break;
       }
-      case 'd':
+      case 'd': {
         spec_opts->specifier = d;
         break;
-      case 'i':
+      }
+      case 'i': {
+        // printf("\n\n\n\ndfgyuigrflslfopjgkfpwlrg\n\n\n\n\n");
         spec_opts->specifier = i;
         break;
+      }
+      case 'x':
+      case 'X': {
+        if (current_specifier == 'x') {
+          spec_opts->specifier = x;
+        }
+        if (current_specifier == 'X') {
+          spec_opts->specifier = X;
+        }
+        break;
+      }
+      case 'o': {
+        spec_opts->specifier = o;
+        break;
+      }
     }
   }
 }
