@@ -57,7 +57,7 @@ int consume_specifier(va_list* args, InputStr* source, InputStr* fmt_input,
   int specifier_result = 0;
   SpecOptions spec_opts = {0};
   *matching_failure = 0;
-  // s21_memset(&spec_opts, 0, sizeof(spec_opts));
+
   fmt_input->curr_ind++;
 
   spec_opts.is_star = parse_suppression(fmt_input);
@@ -75,15 +75,14 @@ int consume_specifier(va_list* args, InputStr* source, InputStr* fmt_input,
     }
     case 'i':
     case 'd': {
-      specifier_result = read_input_num(args, &spec_opts, source);
-      // printf("meow");
+      specifier_result = read_int(args, &spec_opts, source);
     }
   }
   fmt_input->curr_ind++;
   return specifier_result;
 }
 
-int read_input_num(va_list* args, SpecOptions* spec_opts, InputStr* source) {
+int read_int(va_list* args, SpecOptions* spec_opts, InputStr* source) {
   int read_result = 0;
   // s21_size_t source_remaining = s21_strlen(source->str) - source->curr_ind;
   int* dest_input_pointer = va_arg(*args, int*);
@@ -105,7 +104,7 @@ int read_input_num(va_list* args, SpecOptions* spec_opts, InputStr* source) {
     read_result = read_octal(source, spec_opts, dest_input_pointer);
   } else {
     spec_opts->base = 10;
-    read_result = read_int(source, spec_opts, dest_input_pointer);
+    read_result = read_decimal(source, spec_opts, dest_input_pointer);
   }
   return read_result;
 }
@@ -143,8 +142,8 @@ int read_hex(InputStr* source, SpecOptions* spec_opts,
   return read_result;
 }
 
-int read_int(InputStr* source, SpecOptions* spec_opts,
-             int* dest_input_pointer) {
+int read_decimal(InputStr* source, SpecOptions* spec_opts,
+                 int* dest_input_pointer) {
   int read_result = 0;
   int sign = 1;
   int num = 0;
