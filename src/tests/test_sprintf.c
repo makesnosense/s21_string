@@ -14,9 +14,14 @@
 START_TEST(test_sprintf_int) {
   char lib_res[100];
   char s21_res[100];
-  sprintf(lib_res, "%+i-% d %d", -100, 0, 3333);
-  s21_sprintf(s21_res, "%+i-% d %d", -100, 0, 3333);
+
+  int lib_return = 0;
+  int s21_return = 0;
+
+  lib_return = sprintf(lib_res, "%+i-% d %d", -100, 0, 3333);
+  s21_return = s21_sprintf(s21_res, "%+i-% d %d", -100, 0, 3333);
   ck_assert_str_eq(lib_res, s21_res);
+  ck_assert_int_eq(lib_return, s21_return);
 }
 END_TEST
 
