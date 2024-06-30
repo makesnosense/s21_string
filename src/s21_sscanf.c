@@ -41,6 +41,39 @@ int s21_sscanf(const char* str, const char* format, ...) {
   return result;
 }
 
+int consume_specifier(va_list* args, InputStr* source, InputStr* fmt_input,
+                      bool* matching_failure) {
+  int specifier_result = 0;
+  SpecOptions spec_opts = {0};
+  *matching_failure = 0;
+  // s21_memset(&spec_opts, 0, sizeof(spec_opts));
+  fmt_input->curr_ind++;
+
+  spec_opts.is_star = parse_suppression(fmt_input);
+  parse_width_sscanf(fmt_input, &spec_opts);
+  parse_sscanf_specifier(fmt_input, &spec_opts);
+  switch (fmt_input->str[fmt_input->curr_ind]) {
+    case 'c': {
+      specifier_result = read_char(args, source, &spec_opts);
+      break;
+    }
+    case 'n': {
+      int* num = va_arg(*args, int*);
+      *num = source->curr_ind;
+      break;
+    }
+    case 'i':
+    case 'd': {
+      if (spec_opts.specifier == i) {
+        // read_i();
+      }
+      printf("meow");
+    }
+  }
+  fmt_input->curr_ind++;
+  return specifier_result;
+}
+
 // case 's': {
 //   char* s = va_arg(args, char*);
 //   if (read_string(&str, s, &spec_opts)) {
@@ -225,32 +258,6 @@ void consume_initial_space_and_n(va_list* args, InputStr* source,
       }
     }
   }
-}
-
-int consume_specifier(va_list* args, InputStr* source, InputStr* fmt_input,
-                      bool* matching_failure) {
-  int specifier_result = 0;
-  SpecOptions spec_opts = {0};
-  *matching_failure = 0;
-  // s21_memset(&spec_opts, 0, sizeof(spec_opts));
-  fmt_input->curr_ind++;
-
-  spec_opts.is_star = parse_suppression(fmt_input);
-  parse_width_sscanf(fmt_input, &spec_opts);
-  parse_sscanf_specifier(fmt_input, &spec_opts);
-  switch (fmt_input->str[fmt_input->curr_ind]) {
-    case 'c': {
-      specifier_result = read_char(args, source, &spec_opts);
-      break;
-    }
-    case 'n': {
-      int* num = va_arg(*args, int*);
-      *num = source->curr_ind;
-      break;
-    }
-  }
-  fmt_input->curr_ind++;
-  return specifier_result;
 }
 
 void process_n(va_list* args, InputStr* source, bool n_star) {
