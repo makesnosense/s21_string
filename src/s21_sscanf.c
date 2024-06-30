@@ -9,7 +9,9 @@ bool n_specifier_follows(InputStr* fmt_input, bool* n_star_present) {
     if (fmt_input->str[fmt_input->curr_ind] == '%' &&
         fmt_input->str[fmt_input->curr_ind + 1] == '*' &&
         fmt_input->str[fmt_input->curr_ind + 2] == 'n') {
-      *n_star_present = true;
+      if (n_star_present != NULL) {
+        *n_star_present = true;
+      }
       it_follows = true;
     }
   }
