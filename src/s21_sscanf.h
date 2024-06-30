@@ -19,7 +19,6 @@ typedef struct SpecifierOptions {
   SscanfSpecifier specifier;
   bool is_hexadecimal;
   s21_size_t base;
-  bool is_minus;
 } SpecOptions;
 
 typedef struct InputString {
