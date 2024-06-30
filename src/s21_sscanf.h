@@ -2,6 +2,7 @@
 #define S21_SSCANF_H_
 
 #include <ctype.h>
+#include <math.h>
 #include <stdarg.h>
 #include <stdbool.h>
 #include <stdio.h>
@@ -10,18 +11,14 @@
 #include "s21_string.h"
 
 #define VALID_SSCANF_SPECIFIERS "cdin%"
-typedef enum SscanfSpecifier {
-  NOT_SET,
-  c,
-  d,
-  i,
-  n,
-} SscanfSpecifier;
+typedef enum SscanfSpecifier { NOT_SET, c, d, i, n, x, o, X } SscanfSpecifier;
 
 typedef struct SpecifierOptions {
   int width;     // Ширина
   bool is_star;  // Флаг подавления считывания
   SscanfSpecifier specifier;
+  bool is_hexadecimal;
+  s21_size_t base;
 } SpecOptions;
 
 typedef struct InputString {
@@ -48,7 +45,10 @@ void consume_initial_space_and_n(va_list* args, InputStr* source,
 
 void process_n(va_list* args, InputStr* source, bool n_star);
 int read_char(va_list* args, InputStr* source, SpecOptions* spec_opts);
-int read_int(InputStr* input, int* d, SpecOptions* opts);
+int read_int(InputStr* source, SpecOptions* spec_opts, int* d);
+int read_hex(InputStr* source, SpecOptions* spec_opts, int* x);
+int read_input_num(va_list* args, SpecOptions* spec_opts, InputStr* source);
+int read_octal(InputStr* source, SpecOptions* spec_opts, int* num_input);
 
 void parse_width_sscanf(InputStr* fmt_input, SpecOptions* spec_opts);
 
@@ -67,6 +67,8 @@ void parse_width_sscanf(InputStr* fmt_input, SpecOptions* spec_opts);
 bool parse_suppression(InputStr* fmt_input);
 bool is_sscanf_specifier(char ch);
 void parse_sscanf_specifier(InputStr* fmt_input, SpecOptions* spec_opts);
+
+bool is_valid_digit(char incoming_char, s21_size_t base);
 
 // // Функция для считывания значений из буфера по формату
 // int s21_sscanf(const char *str, const char *format, ...);
