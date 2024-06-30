@@ -29,6 +29,9 @@ typedef struct InputString {
   s21_size_t curr_ind;
 } InputStr;
 
+int consume_specifier(va_list* args, InputStr* source, InputStr* fmt_input,
+                      bool* matching_failure);
+
 bool n_specifier_follows(InputStr* fmt_input, bool* n_star_present);
 bool c_specifier_follows(InputStr* fmt_input);
 
@@ -43,8 +46,6 @@ void consume_space(InputStr* source);
 void consume_initial_space_and_n(va_list* args, InputStr* source,
                                  InputStr* fmt_input);
 
-int consume_specifier(va_list* args, InputStr* source, InputStr* fmt_input,
-                      bool* matching_failure);
 void process_n(va_list* args, InputStr* source, bool n_star);
 int read_char(va_list* args, InputStr* source, SpecOptions* spec_opts);
 int read_int(InputStr* input, int* d, SpecOptions* opts);
