@@ -89,11 +89,6 @@ int read_input_num(va_list* args, SpecOptions* spec_opts, InputStr* source) {
   int* dest_input_pointer = va_arg(*args, int*);
   *dest_input_pointer = 0;
 
-  if (s21_strncmp(&source->str[source->curr_ind], "-", 1) == 0) {
-    source->curr_ind++;
-    spec_opts->is_minus = true;
-  }
-
   if (s21_strncmp(&source->str[source->curr_ind], "0x", 2) == 0 &&
       spec_opts->specifier == i) {
     spec_opts->base = 16;
@@ -114,12 +109,7 @@ int read_hex(InputStr* source, SpecOptions* spec_opts,
              int* dest_input_pointer) {
   int num = 0;
   int read_result = 0;
-  int sign = 1;
-
-  if (spec_opts->is_minus == true) {
-    sign = -1;
-  }
-
+  // printf("%d", spec_opts->is_star);
   while (is_space(source->str[source->curr_ind]) == false &&
          source->str[source->curr_ind] != '\0' &&
          is_valid_digit(source->str[source->curr_ind], spec_opts->base)) {
@@ -137,7 +127,7 @@ int read_hex(InputStr* source, SpecOptions* spec_opts,
     read_result = 1;
   }
   if (read_result == 1) {
-    *dest_input_pointer = num * sign;
+    *dest_input_pointer = num;
   }
 
   return read_result;
@@ -150,8 +140,9 @@ int read_int(InputStr* source, SpecOptions* spec_opts,
   int num = 0;
   // printf("%d", spec_opts->is_star);
 
-  if (spec_opts->is_minus == true) {
+  if (source->str[source->curr_ind] == '-') {
     sign = -1;
+    source->curr_ind++;
   }
 
   while (is_space(source->str[source->curr_ind]) == false &&
@@ -161,9 +152,7 @@ int read_int(InputStr* source, SpecOptions* spec_opts,
     source->curr_ind++;
     read_result = 1;
   }
-  if (read_result == 1) {
-    *dest_input_pointer = sign * num;
-  }
+  *dest_input_pointer = sign * num;
 
   return read_result;
 }
@@ -172,11 +161,6 @@ int read_octal(InputStr* source, SpecOptions* spec_opts,
                int* dest_input_pointer) {
   int read_result = 0;
   int num = 0;
-  int sign = 1;
-
-  if (spec_opts->is_minus == true) {
-    sign = -1;
-  }
 
   s21_size_t num_length_minus_one =
       get_octal_num_length(source, spec_opts->base);
@@ -192,9 +176,7 @@ int read_octal(InputStr* source, SpecOptions* spec_opts,
     source->curr_ind++;
   }
 
-  if (read_result == 1) {
-    *dest_input_pointer = num * sign;
-  }
+  *dest_input_pointer = num;
 
   return read_result;
 }
