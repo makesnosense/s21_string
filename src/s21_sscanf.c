@@ -85,6 +85,7 @@ void parce_width_sscanf(InputStr* fmt_input, SpecOptions* spec_opts) {
     spec_opts->width =
         spec_opts->width * 10 + (fmt_input->str[fmt_input->curr_ind] - '0');
     fmt_input->curr_ind++;
+    spec_opts->width_set = true;
   }
 }
 
@@ -154,51 +155,42 @@ int read_hex(InputStr* source, SpecOptions* spec_opts, int* dest_input_pointer,
   return weve_read_at_least_once_successfully;
 }
 
+bool width_limit_reached(s21_size_t bytes_read, SpecOptions* spec_opts) {
+  bool limit_reached = false;
+
+  if (spec_opts->width_set == true && bytes_read >= spec_opts->width) {
+    limit_reached = true;
+  }
+
+  return limit_reached;
+}
+
 int read_decimal(InputStr* source, SpecOptions* spec_opts,
                  int* dest_input_pointer, bool* matching_failure) {
   s21_size_t base = 10;
   bool weve_read_at_least_once_successfully = false;
   int sign = 1;
   int num = 0;
-  s21_size_t counter_width = 0;
+  s21_size_t bytes_read = 0;
 
   if (spec_opts->is_minus == true) {
     sign = -1;
   }
 
-  if (spec_opts->width) {
-    while (is_space(source->str[source->curr_ind]) == false &&
-           source->str[source->curr_ind] != '\0' &&
-           *matching_failure == false && counter_width < spec_opts->width) {
-      if (is_valid_digit(source->str[source->curr_ind], base)) {
-        num = num * 10 + (source->str[source->curr_ind] - '0');
-        source->curr_ind++;
-        weve_read_at_least_once_successfully = true;
-      } else {
-        *matching_failure = true;
-      }
-      if (spec_opts->width > 0) {
-        counter_width++;
-      }
-    }
-  } else {
-    while (is_space(source->str[source->curr_ind]) == false &&
-           source->str[source->curr_ind] != '\0' &&
-           *matching_failure == false) {
-      if (is_valid_digit(source->str[source->curr_ind], base)) {
-        num = num * 10 + (source->str[source->curr_ind] - '0');
-        source->curr_ind++;
-        weve_read_at_least_once_successfully = true;
-      } else {
-        *matching_failure = true;
-      }
-      if (spec_opts->width > 0) {
-        counter_width++;
-      }
+  while (is_space(source->str[source->curr_ind]) == false &&
+         source->str[source->curr_ind] != '\0' && *matching_failure == false &&
+         width_limit_reached(bytes_read, spec_opts) == false) {
+    if (is_valid_digit(source->str[source->curr_ind], base)) {
+      num = num * 10 + (source->str[source->curr_ind] - '0');
+      source->curr_ind++;
+      bytes_read++;
+
+    } else {
+      *matching_failure = true;
     }
   }
-
-  if (weve_read_at_least_once_successfully) {
+  if (bytes_read > 0) {
+    weve_read_at_least_once_successfully = true;
     *dest_input_pointer = sign * num;
   }
   return weve_read_at_least_once_successfully;
