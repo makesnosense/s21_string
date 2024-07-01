@@ -10,7 +10,7 @@
 
 #include "s21_string.h"
 
-#define VALID_SSCANF_SPECIFIERS "cdin%"
+#define VALID_SSCANF_SPECIFIERS "cdinxoX%"
 typedef enum SscanfSpecifier { NOT_SET, c, d, i, n, x, o, X } SscanfSpecifier;
 
 typedef struct SpecifierOptions {
@@ -18,7 +18,6 @@ typedef struct SpecifierOptions {
   bool is_star;  // Флаг подавления считывания
   SscanfSpecifier specifier;
   bool is_hexadecimal;
-  s21_size_t base;
   bool is_minus;
 } SpecOptions;
 
@@ -30,7 +29,8 @@ typedef struct InputString {
 int consume_specifier(va_list* args, InputStr* source, InputStr* fmt_input,
                       bool* matching_failure);
 
-bool n_specifier_follows(InputStr* fmt_input, bool* n_star_present);
+bool n_specifier_follows(InputStr* fmt_input);
+bool is_n_star_present(InputStr* fmt_input);
 bool c_specifier_follows(InputStr* fmt_input);
 
 bool is_end_of_string(InputStr* string_structure);
@@ -46,13 +46,15 @@ void consume_initial_space_and_n(va_list* args, InputStr* source,
 
 void process_n(va_list* args, InputStr* source, bool n_star);
 int read_char(va_list* args, InputStr* source, SpecOptions* spec_opts);
-int read_int(va_list* args, SpecOptions* spec_opts, InputStr* source);
+int read_int(va_list* args, SpecOptions* spec_opts, InputStr* source,
+             bool* matching_failure);
 int read_decimal(InputStr* source, SpecOptions* spec_opts,
-                 int* dest_input_pointer);
-int read_hex(InputStr* source, SpecOptions* spec_opts, int* dest_input_pointer);
+                 int* dest_input_pointer, bool* matching_failure);
+int read_hex(InputStr* source, SpecOptions* spec_opts, int* dest_input_pointer,
+             bool* matching_failure);
 
 int read_octal(InputStr* source, SpecOptions* spec_opts,
-               int* dest_input_pointer);
+               int* dest_input_pointer, bool* matching_failure);
 
 void parse_width_sscanf(InputStr* fmt_input, SpecOptions* spec_opts);
 
@@ -69,6 +71,7 @@ int read_char(va_list* args, InputStr* source, SpecOptions* spec_opts);
 
 void parse_width_sscanf(InputStr* fmt_input, SpecOptions* spec_opts);
 bool parse_suppression(InputStr* fmt_input);
+void set_sscanf_base(SpecOptions* spec_opts);
 bool is_sscanf_specifier(char ch);
 void parse_sscanf_specifier(InputStr* fmt_input, SpecOptions* spec_opts);
 
