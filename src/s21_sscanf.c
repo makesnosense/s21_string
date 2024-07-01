@@ -126,7 +126,7 @@ int read_hex(InputStr* source, SpecOptions* spec_opts,
              long unsigned* dest_input_pointer, bool* matching_failure) {
   s21_size_t base = 16;
   bool weve_read_at_least_once_successfully = false;
-  bool not_hex_but_we_continue_with_decimal = false;
+  bool hex_reading_failure = false;
   int num = 0;
   s21_size_t bytes_read = 0;
 
@@ -137,7 +137,7 @@ int read_hex(InputStr* source, SpecOptions* spec_opts,
 
   while (is_space(source->str[source->curr_ind]) == false &&
          source->str[source->curr_ind] != '\0' && *matching_failure == false &&
-         not_hex_but_we_continue_with_decimal == false &&
+         hex_reading_failure == false &&
          width_limit_reached(bytes_read, spec_opts) == false) {
     if (is_valid_digit(source->str[source->curr_ind], base)) {
       if (source->str[source->curr_ind] >= '0' &&
@@ -153,11 +153,8 @@ int read_hex(InputStr* source, SpecOptions* spec_opts,
       bytes_read++;
       weve_read_at_least_once_successfully = true;
     } else if (is_valid_digit(source->str[source->curr_ind], base) == false) {
-      not_hex_but_we_continue_with_decimal = true;
+      hex_reading_failure = true;
     }
-    //  else {
-    //   *matching_failure = true;
-    // }
   }
 
   if (bytes_read > 0) {
@@ -245,20 +242,20 @@ int read_octal(InputStr* source, SpecOptions* spec_opts,
 
 s21_size_t get_octal_num_length(InputStr* source, SpecOptions* spec_opts,
                                 s21_size_t base) {
-  int num_len_cristal = 0;
-  int num_len_dirty = source->curr_ind;
+  int num_len_result = 0;
+  int temp_curr_ind = source->curr_ind;
   s21_size_t bytes_read = 0;
 
-  while (is_space(source->str[num_len_dirty]) == false &&
-         source->str[num_len_dirty] != '\0' &&
+  while (is_space(source->str[temp_curr_ind]) == false &&
+         source->str[temp_curr_ind] != '\0' &&
          width_limit_reached(bytes_read, spec_opts) == false &&
-         is_valid_digit(source->str[num_len_dirty], base)) {
-    num_len_cristal++;
-    num_len_dirty++;
+         is_valid_digit(source->str[temp_curr_ind], base)) {
+    num_len_result++;
+    temp_curr_ind++;
     bytes_read++;
   }
-
-  return num_len_cristal - 1;
+  // -1 because it is used for power of 8s later, ending with zero
+  return num_len_result - 1;
 }
 
 bool is_valid_digit(char incoming_char, s21_size_t base) {
