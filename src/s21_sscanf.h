@@ -56,7 +56,7 @@ int read_hex(InputStr* source, SpecOptions* spec_opts, int* dest_input_pointer,
 int read_octal(InputStr* source, SpecOptions* spec_opts,
                int* dest_input_pointer, bool* matching_failure);
 
-void parse_width_sscanf(InputStr* fmt_input, SpecOptions* spec_opts);
+void parce_width_sscanf(InputStr* fmt_input, SpecOptions* spec_opts);
 
 bool parse_suppression(InputStr* fmt_input);
 
