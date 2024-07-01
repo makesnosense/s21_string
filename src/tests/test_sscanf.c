@@ -528,9 +528,40 @@ START_TEST(test_sscanf_width_p2) {
   int lib_n = 0;
   int lib_res = 0;
 
-  s21_res = s21_sscanf("23254 -0673342 -0xz2357", "%d %i %4i %n", &s21_a,
+  s21_res = s21_sscanf("23254 -0673342 -0x2357", "%d %i %3i %n", &s21_a, &s21_b,
+                       &s21_c, &s21_n);
+  lib_res = sscanf("23254 -0673342 -0x2357", "%d %i %3i %n", &lib_a, &lib_b,
+                   &lib_c, &lib_n);
+
+  printf("lib первый чар %d второй чар %d третий: %d n: %d res: %d\n", lib_a,
+         lib_b, lib_c, lib_n, lib_res);
+  printf("s21 первый чар %d второй чар %d третий: %d n: %d res: %d\n", s21_a,
+         s21_b, s21_c, s21_n, s21_res);
+
+  ck_assert_int_eq(lib_res, s21_res);
+  ck_assert_int_eq(s21_a, lib_a);
+  ck_assert_int_eq(s21_b, lib_b);
+  ck_assert_int_eq(s21_c, lib_c);
+  ck_assert_int_eq(s21_n, lib_n);
+}
+END_TEST
+
+START_TEST(test_sscanf_width_p2_linux_only) {
+  int s21_a = 0;
+  int s21_b = 0;
+  int s21_c = 0;
+  int s21_n = 0;
+  int s21_res = 0;
+
+  int lib_a = 0;
+  int lib_b = 0;
+  int lib_c = 0;
+  int lib_n = 0;
+  int lib_res = 0;
+
+  s21_res = s21_sscanf("23254 -0673342 -0xz2357", "%d %i %3i %n", &s21_a,
                        &s21_b, &s21_c, &s21_n);
-  lib_res = sscanf("23254 -0673342 -0xz2357", "%d %i %4i %n", &lib_a, &lib_b,
+  lib_res = sscanf("23254 -0673342 -0xz2357", "%d %i %3i %n", &lib_a, &lib_b,
                    &lib_c, &lib_n);
 
   printf("lib первый чар %d второй чар %d третий: %d n: %d res: %d\n", lib_a,
@@ -547,6 +578,49 @@ START_TEST(test_sscanf_width_p2) {
 END_TEST
 
 START_TEST(test_sscanf_width_p3) {
+  int s21_a = 0;
+  int s21_b = 0;
+  int s21_c = 0;
+  int s21_d = 0;
+  int s21_e = 0;
+  int s21_n = 0;
+  int s21_res = 0;
+
+  int lib_a = 0;
+  int lib_b = 0;
+  int lib_c = 0;
+  int lib_d = 0;
+  int lib_e = 0;
+  int lib_n = 0;
+  int lib_res = 0;
+
+  s21_res = s21_sscanf("23254 -0673342 -0xz2357 0x664532", "%d %i %4i %i %i %n",
+                       &s21_a, &s21_b, &s21_c, &s21_d, &s21_e, &s21_n);
+  lib_res = sscanf("23254 -0673342 -0xz2357 0x664532", "%d %i %4i %i %i %n",
+                   &lib_a, &lib_b, &lib_c, &lib_d, &lib_e, &lib_n);
+
+  printf(
+      "lib первый чар %d второй чар %d третий: %d четвёртый: %c пять: %d n: %d "
+      "res: "
+      "%d\n",
+      lib_a, lib_b, lib_c, lib_d, lib_e, lib_n, lib_res);
+  printf(
+      "s21 первый чар %d второй чар %d третий: %d четвёртый: %c пять: %d n: %d "
+      "res: "
+      "%d\n",
+      s21_a, s21_b, s21_c, s21_d, s21_e, s21_n, s21_res);
+
+  ck_assert_int_eq(s21_n, lib_n);
+  ck_assert_int_eq(lib_res, s21_res);
+  ck_assert_int_eq(s21_a, lib_a);
+  ck_assert_int_eq(s21_b, lib_b);
+  ck_assert_int_eq(s21_c, lib_c);
+  ck_assert_int_eq(s21_d, lib_d);
+  ck_assert_int_eq(s21_e, lib_e);
+}
+END_TEST
+
+START_TEST(test_sscanf_width_p3_linux_only) {
   int s21_a = 0;
   int s21_b = 0;
   int s21_c = 0;
@@ -579,13 +653,13 @@ START_TEST(test_sscanf_width_p3) {
       "%d\n",
       s21_a, s21_b, s21_c, s21_d, s21_e, s21_n, s21_res);
 
+  ck_assert_int_eq(s21_n, lib_n);
   ck_assert_int_eq(lib_res, s21_res);
   ck_assert_int_eq(s21_a, lib_a);
   ck_assert_int_eq(s21_b, lib_b);
   ck_assert_int_eq(s21_c, lib_c);
   ck_assert_int_eq(s21_d, lib_d);
   ck_assert_int_eq(s21_e, lib_e);
-  ck_assert_int_eq(s21_n, lib_n);
 }
 END_TEST
 
@@ -880,7 +954,9 @@ Suite* make_sscanf_suite() {
   tcase_add_test(tc_core, test_sscanf_i_p8);
   tcase_add_test(tc_core, test_sscanf_width_p1);
   tcase_add_test(tc_core, test_sscanf_width_p2);
-  tcase_add_test(tc_problem, test_sscanf_width_p3);
+  tcase_add_test(tc_core, test_sscanf_width_p2_linux_only);
+  tcase_add_test(tc_core, test_sscanf_width_p3);
+  tcase_add_test(tc_core, test_sscanf_width_p3_linux_only);
   tcase_add_test(tc_core, test_sscanf_d);
   // tcase_add_test(tc_core, test_sscanf_int);
   // tcase_add_test(tc_core, test_sscanf_int_2);
