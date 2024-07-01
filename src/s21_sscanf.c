@@ -152,7 +152,7 @@ int read_hex(InputStr* source, SpecOptions* spec_opts,
       source->curr_ind++;
       bytes_read++;
       weve_read_at_least_once_successfully = true;
-    } else if (!is_valid_digit(source->str[source->curr_ind], base)) {
+    } else if (is_valid_digit(source->str[source->curr_ind], base) == false) {
       not_hex_but_we_continue_with_decimal = true;
     }
     //  else {
