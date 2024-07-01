@@ -484,7 +484,7 @@ START_TEST(test_sscanf_i_p8) {
 }
 END_TEST
 
-START_TEST(test_sscanf_width) {
+START_TEST(test_sscanf_width_p1) {
   int s21_a = 0;
   int s21_b = 0;
   int s21_c = 0;
@@ -497,15 +497,46 @@ START_TEST(test_sscanf_width) {
   int lib_n = 0;
   int lib_res = 0;
 
-  s21_res = s21_sscanf("23254 -06733 -0x123", "%2d %i %i %n", &s21_a, &s21_b,
-                       &s21_c, &s21_n);
-  lib_res = sscanf("23254 -06733 -0x123", "%2d %i %i %n", &lib_a, &lib_b,
+  s21_res = s21_sscanf("23254 -0673342 -0x12357", "%d %i %4i %n", &s21_a,
+                       &s21_b, &s21_c, &s21_n);
+  lib_res = sscanf("23254 -0673342 -0x12357", "%d %i %4i %n", &lib_a, &lib_b,
                    &lib_c, &lib_n);
 
-  printf("первый чар %d второй чар %d третий: %d n: %d res: %d\n", lib_a, lib_b,
-         lib_c, lib_n, lib_res);
-  printf("первый чар %d второй чар %d третий: %d n: %d res: %d\n", s21_a, s21_b,
-         s21_c, s21_n, s21_res);
+  printf("lib первый чар %d второй чар %d третий: %d n: %d res: %d\n", lib_a,
+         lib_b, lib_c, lib_n, lib_res);
+  printf("s21 первый чар %d второй чар %d третий: %d n: %d res: %d\n", s21_a,
+         s21_b, s21_c, s21_n, s21_res);
+
+  ck_assert_int_eq(lib_res, s21_res);
+  ck_assert_int_eq(s21_a, lib_a);
+  ck_assert_int_eq(s21_b, lib_b);
+  ck_assert_int_eq(s21_c, lib_c);
+  ck_assert_int_eq(s21_n, lib_n);
+}
+END_TEST
+
+START_TEST(test_sscanf_width_p2) {
+  int s21_a = 0;
+  int s21_b = 0;
+  int s21_c = 0;
+  int s21_n = 0;
+  int s21_res = 0;
+
+  int lib_a = 0;
+  int lib_b = 0;
+  int lib_c = 0;
+  int lib_n = 0;
+  int lib_res = 0;
+
+  s21_res = s21_sscanf("23254 -0673342 -0xz2357", "%d %i %4i %n", &s21_a,
+                       &s21_b, &s21_c, &s21_n);
+  lib_res = sscanf("23254 -0673342 -0xz2357", "%d %i %4i %n", &lib_a, &lib_b,
+                   &lib_c, &lib_n);
+
+  printf("lib первый чар %d второй чар %d третий: %d n: %d res: %d\n", lib_a,
+         lib_b, lib_c, lib_n, lib_res);
+  printf("s21 первый чар %d второй чар %d третий: %d n: %d res: %d\n", s21_a,
+         s21_b, s21_c, s21_n, s21_res);
 
   ck_assert_int_eq(lib_res, s21_res);
   ck_assert_int_eq(s21_a, lib_a);
@@ -804,7 +835,8 @@ Suite* make_sscanf_suite() {
   tcase_add_test(tc_core, test_sscanf_i_p6);
   tcase_add_test(tc_core, test_sscanf_i_p7);
   tcase_add_test(tc_core, test_sscanf_i_p8);
-  tcase_add_test(tc_problem, test_sscanf_width);
+  tcase_add_test(tc_core, test_sscanf_width_p1);
+  tcase_add_test(tc_problem, test_sscanf_width_p2);
   tcase_add_test(tc_core, test_sscanf_d);
   // tcase_add_test(tc_core, test_sscanf_int);
   // tcase_add_test(tc_core, test_sscanf_int_2);
