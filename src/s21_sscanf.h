@@ -15,10 +15,12 @@ typedef enum SscanfSpecifier { NOT_SET, c, d, i, n, x, o, X } SscanfSpecifier;
 
 typedef struct SpecifierOptions {
   s21_size_t width;
+  bool width_set;
   bool is_star;  // Флаг подавления считывания
   SscanfSpecifier specifier;
   bool is_hexadecimal;
   bool is_minus;
+
 } SpecOptions;
 
 typedef struct InputString {

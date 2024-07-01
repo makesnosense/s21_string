@@ -484,7 +484,7 @@ START_TEST(test_sscanf_i_p8) {
 }
 END_TEST
 
-START_TEST(test_sscanf_wdith) {
+START_TEST(test_sscanf_width) {
   int s21_a = 0;
   int s21_b = 0;
   int s21_c = 0;
@@ -497,9 +497,9 @@ START_TEST(test_sscanf_wdith) {
   int lib_n = 0;
   int lib_res = 0;
 
-  s21_res = s21_sscanf("23254 -06733 -0x123", "%4d %i %i %n", &s21_a, &s21_b,
+  s21_res = s21_sscanf("23254 -06733 -0x123", "%2d %i %i %n", &s21_a, &s21_b,
                        &s21_c, &s21_n);
-  lib_res = sscanf("23254 -06733 -0x123", "%4d %i %i %n", &lib_a, &lib_b,
+  lib_res = sscanf("23254 -06733 -0x123", "%2d %i %i %n", &lib_a, &lib_b,
                    &lib_c, &lib_n);
 
   printf("первый чар %d второй чар %d третий: %d n: %d res: %d\n", lib_a, lib_b,
@@ -804,7 +804,7 @@ Suite* make_sscanf_suite() {
   tcase_add_test(tc_core, test_sscanf_i_p6);
   tcase_add_test(tc_core, test_sscanf_i_p7);
   tcase_add_test(tc_core, test_sscanf_i_p8);
-  tcase_add_test(tc_problem, test_sscanf_wdith);
+  tcase_add_test(tc_problem, test_sscanf_width);
   tcase_add_test(tc_core, test_sscanf_d);
   // tcase_add_test(tc_core, test_sscanf_int);
   // tcase_add_test(tc_core, test_sscanf_int_2);
