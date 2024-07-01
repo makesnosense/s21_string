@@ -56,7 +56,7 @@ int consume_specifier(va_list* args, InputStr* source, InputStr* fmt_input,
   fmt_input->curr_ind++;
 
   spec_opts.is_star = parse_suppression(fmt_input);
-  parse_width_sscanf(fmt_input, &spec_opts);
+  parce_width_sscanf(fmt_input, &spec_opts);
   parse_sscanf_specifier(fmt_input, &spec_opts);
   // set_sscanf_base(&spec_opts);
 
@@ -78,6 +78,14 @@ int consume_specifier(va_list* args, InputStr* source, InputStr* fmt_input,
   }
   fmt_input->curr_ind++;
   return specifier_result;
+}
+
+void parce_width_sscanf(InputStr* fmt_input, SpecOptions* spec_opts) {
+  while (is_valid_digit(fmt_input->str[fmt_input->curr_ind], 10)) {
+    spec_opts->width =
+        spec_opts->width * 10 + (fmt_input->str[fmt_input->curr_ind] - '0');
+    fmt_input->curr_ind++;
+  }
 }
 
 int read_int(va_list* args, SpecOptions* spec_opts, InputStr* source,
@@ -152,21 +160,44 @@ int read_decimal(InputStr* source, SpecOptions* spec_opts,
   bool weve_read_at_least_once_successfully = false;
   int sign = 1;
   int num = 0;
+  s21_size_t counter_width = 0;
 
   if (spec_opts->is_minus == true) {
     sign = -1;
   }
 
-  while (is_space(source->str[source->curr_ind]) == false &&
-         source->str[source->curr_ind] != '\0' && *matching_failure == false) {
-    if (is_valid_digit(source->str[source->curr_ind], base)) {
-      num = num * 10 + (source->str[source->curr_ind] - '0');
-      source->curr_ind++;
-      weve_read_at_least_once_successfully = true;
-    } else {
-      *matching_failure = true;
+  if (spec_opts->width) {
+    while (is_space(source->str[source->curr_ind]) == false &&
+           source->str[source->curr_ind] != '\0' &&
+           *matching_failure == false && counter_width < spec_opts->width) {
+      if (is_valid_digit(source->str[source->curr_ind], base)) {
+        num = num * 10 + (source->str[source->curr_ind] - '0');
+        source->curr_ind++;
+        weve_read_at_least_once_successfully = true;
+      } else {
+        *matching_failure = true;
+      }
+      if (spec_opts->width > 0) {
+        counter_width++;
+      }
+    }
+  } else {
+    while (is_space(source->str[source->curr_ind]) == false &&
+           source->str[source->curr_ind] != '\0' &&
+           *matching_failure == false) {
+      if (is_valid_digit(source->str[source->curr_ind], base)) {
+        num = num * 10 + (source->str[source->curr_ind] - '0');
+        source->curr_ind++;
+        weve_read_at_least_once_successfully = true;
+      } else {
+        *matching_failure = true;
+      }
+      if (spec_opts->width > 0) {
+        counter_width++;
+      }
     }
   }
+
   if (weve_read_at_least_once_successfully) {
     *dest_input_pointer = sign * num;
   }
@@ -468,14 +499,15 @@ int read_char(va_list* args, InputStr* source, SpecOptions* spec_opts) {
   return read_result;
 };
 
-void parse_width_sscanf(InputStr* fmt_input, SpecOptions* spec_opts) {
-  while (fmt_input->str[fmt_input->curr_ind] >= '0' &&
-         fmt_input->str[fmt_input->curr_ind] <= '9') {
-    spec_opts->width =
-        spec_opts->width * 10 + (fmt_input->str[fmt_input->curr_ind] - '0');
-    fmt_input->curr_ind++;
-  }
-}
+// void parse_width_sscanf(InputStr* fmt_input, SpecOptions* spec_opts) {
+//   while (fmt_input->str[fmt_input->curr_ind] >= '0' &&
+//          fmt_input->str[fmt_input->curr_ind] <= '9') {
+//     spec_opts->width =
+//         spec_opts->width * 10 + (fmt_input->str[fmt_input->curr_ind] - '0');
+//     fmt_input->curr_ind++;
+//   }
+// }
+
 bool parse_suppression(InputStr* fmt_input) {
   bool star_present = false;
   if (fmt_input->str[fmt_input->curr_ind] == '*') {
@@ -537,30 +569,6 @@ void parse_sscanf_specifier(InputStr* fmt_input, SpecOptions* spec_opts) {
   }
 }
 
-// int read_int(InputStr* input, int* d, SpecOptions* opts) {
-//   int result = 0;
-//   int sign = 1;
-//   int num = 0;
-//   printf("%d", opts->is_star);
-
-//   if (input->str[input->curr_ind] == '-') {
-//     sign = -1;
-//     input->curr_ind++;
-//     // opts->count++;
-//   }
-
-//   while (input->str[input->curr_ind] >= '0' &&
-//          input->str[input->curr_ind] <= '9') {
-//     num = num * 10 + (input->str[input->curr_ind] - '0');
-//     input->curr_ind++;
-//     // opts->count++;
-//     result = 1;
-//   }
-//   *d = sign * num;
-
-//   return result;
-// }
-
 // int parse_pointer(InputStr* input, void** value) {
 //   int res = 0;
 
@@ -621,30 +629,6 @@ void parse_sscanf_specifier(InputStr* fmt_input, SpecOptions* spec_opts) {
 //   return result;
 // }
 
-// int read_int(InputStr* input, int* d, SpecOptions* opts) {
-//   int result = 0;
-//   int sign = 1;
-//   int num = 0;
-//   printf("%d", opts->is_star);
-
-//   if (input->str[input->curr_ind] == '-') {
-//     sign = -1;
-//     input->curr_ind++;
-//     // opts->count++;
-//   }
-
-//   while (input->str[input->curr_ind] >= '0' &&
-//          input->str[input->curr_ind] <= '9') {
-//     num = num * 10 + (input->str[input->curr_ind] - '0');
-//     input->curr_ind++;
-//     // opts->count++;
-//     result = 1;
-//   }
-//   *d = sign * num;
-
-//   return result;
-// }
-
 // int read_unsigned_int(const char** str, unsigned int* u, SpecOptions* opts)
 // {
 //   unsigned int num = 0;
@@ -695,29 +679,6 @@ void parse_sscanf_specifier(InputStr* fmt_input, SpecOptions* spec_opts) {
 //     }
 //   }
 //   *f = sign * (int_part + frac_part / frac_div);
-
-//   return result;
-// }
-
-// int read_hex(const char** str, unsigned int* x, SpecOptions* opts) {
-//   unsigned int num = 0;
-//   int result = 0;
-//   printf("%d", opts->is_star);
-//   while ((**str >= '0' && **str <= '9') || (**str >= 'a' && **str <= 'f')
-//   ||
-//          (**str >= 'A' && **str <= 'F')) {
-//     if (**str >= '0' && **str <= '9') {
-//       num = num * 16 + (**str - '0');
-//     } else if (**str >= 'a' && **str <= 'f') {
-//       num = num * 16 + (**str - 'a' + 10);
-//     } else {
-//       num = num * 16 + (**str - 'A' + 10);
-//     }
-//     (*str)++;
-//     // opts->count++;
-//     result = 1;
-//   }
-//   *x = num;
 
 //   return result;
 // }
