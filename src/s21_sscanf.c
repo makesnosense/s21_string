@@ -51,14 +51,13 @@ int consume_specifier(va_list* args, InputStr* source, InputStr* fmt_input,
                       bool* matching_failure) {
   int specifier_result = 0;
   SpecOptions spec_opts = {0};
-  // *matching_failure = 0;
 
   fmt_input->curr_ind++;
 
   spec_opts.is_star = parse_suppression(fmt_input);
   parse_width_sscanf(fmt_input, &spec_opts);
+  parse_length_sscanf(fmt_input, &spec_opts);
   parse_sscanf_specifier(fmt_input, &spec_opts);
-  // set_sscanf_base(&spec_opts);
 
   switch (fmt_input->str[fmt_input->curr_ind]) {
     case 'c': {
@@ -80,48 +79,114 @@ int consume_specifier(va_list* args, InputStr* source, InputStr* fmt_input,
   return specifier_result;
 }
 
+void parse_width_sscanf(InputStr* fmt_input, SpecOptions* spec_opts) {
+  while (is_valid_digit(fmt_input->str[fmt_input->curr_ind], 10)) {
+    spec_opts->width =
+        spec_opts->width * 10 + (fmt_input->str[fmt_input->curr_ind] - '0');
+    fmt_input->curr_ind++;
+    spec_opts->width_set = true;
+  }
+}
+
+bool is_length_sscanf(char ch) {
+  char* res = s21_strchr(VALID_SSCANF_LENGTHS, ch);
+  return res == S21_NULL ? false : true;
+}
+
+// int is_length(char ch) {
+//   char* res = s21_strchr(VALID_LENGTHS, ch);
+//   return res == S21_NULL ? 0 : 1;
+// }
+
+void parse_length_sscanf(InputStr* fmt_input, SpecOptions* spec_opts) {
+  if (is_length_sscanf(fmt_input->str[fmt_input->curr_ind])) {
+    switch (fmt_input->str[fmt_input->curr_ind]) {
+      case 'L':
+        spec_opts->length = L;
+        break;
+      case 'l':
+        spec_opts->length = l;
+        break;
+      case 'h':
+        spec_opts->length = h;
+        break;
+    }
+    fmt_input->curr_ind++;
+  }
+}
+
 int read_int(va_list* args, SpecOptions* spec_opts, InputStr* source,
              bool* matching_failure) {
   int read_result = 0;
 
-  int* dest_input_pointer = va_arg(*args, int*);
-  *dest_input_pointer = 0;
-
+  long unsigned temp_unsigned_destination = 0;
+  long long temp_long_long_int_destination = 0;
   if (s21_strncmp(&source->str[source->curr_ind], "-", 1) == 0) {
-    spec_opts->is_minus = true;
+    spec_opts->is_negative = true;
     source->curr_ind++;
   }
 
+  // if (s21_strncmp(&source->str[source->curr_ind], "-", 1) == 0) {
+  //   spec_opts->is_negative = true;
+  // }
+
   if (s21_strncmp(&source->str[source->curr_ind], "0x", 2) == 0 &&
       spec_opts->specifier == i) {
-    source->curr_ind += 2;
-    read_result =
-        read_hex(source, spec_opts, dest_input_pointer, matching_failure);
+    read_result = read_hex(source, spec_opts, &temp_unsigned_destination,
+                           matching_failure);
   } else if (s21_strncmp(&source->str[source->curr_ind], "0", 1) == 0 &&
              spec_opts->specifier == i) {
-    read_result =
-        read_octal(source, spec_opts, dest_input_pointer, matching_failure);
+    read_result = read_octal(source, spec_opts, &temp_unsigned_destination,
+                             matching_failure);
   } else {
-    read_result =
-        read_decimal(source, spec_opts, dest_input_pointer, matching_failure);
+    read_result = read_decimal(source, spec_opts, &temp_unsigned_destination,
+                               matching_failure);
   }
+
+  // int sign = -spec_opts->is_negative;
+
+  int sign = spec_opts->is_negative ? -1 : 1;
+
+  if (spec_opts->length == h) {
+    temp_long_long_int_destination = sign * (short)temp_unsigned_destination;
+
+    short* dest_input_pointer = va_arg(*args, short*);
+    *dest_input_pointer = (short)+temp_long_long_int_destination;
+  } else if (spec_opts->length == l) {
+    temp_long_long_int_destination = temp_unsigned_destination;
+    long* dest_input_pointer = va_arg(*args, long*);
+    *dest_input_pointer = (long)+temp_unsigned_destination;
+    if (temp_long_long_int_destination == INT_MIN) {
+      *dest_input_pointer = (long)+temp_unsigned_destination;
+    } else {
+      *dest_input_pointer = sign * ((long)+temp_unsigned_destination);
+    }
+  } else {
+    temp_long_long_int_destination = sign * (int)temp_unsigned_destination;
+    int* dest_input_pointer = va_arg(*args, int*);
+    *dest_input_pointer = (int)+temp_long_long_int_destination;
+  }
+
   return read_result;
 }
 
-int read_hex(InputStr* source, SpecOptions* spec_opts, int* dest_input_pointer,
-             bool* matching_failure) {
+int read_hex(InputStr* source, SpecOptions* spec_opts,
+             long unsigned* dest_input_pointer, bool* matching_failure) {
   s21_size_t base = 16;
   bool weve_read_at_least_once_successfully = false;
+  bool hex_reading_failure = false;
   int num = 0;
+  s21_size_t bytes_read = 0;
 
-  int sign = 1;
-
-  if (spec_opts->is_minus == true) {
-    sign = -1;
+  if (s21_strncmp(&source->str[source->curr_ind], "0x", 2) == 0) {
+    source->curr_ind += 2;
+    bytes_read += 2;
   }
 
   while (is_space(source->str[source->curr_ind]) == false &&
-         source->str[source->curr_ind] != '\0' && *matching_failure == false) {
+         source->str[source->curr_ind] != '\0' && *matching_failure == false &&
+         hex_reading_failure == false &&
+         width_limit_reached(bytes_read, spec_opts) == false) {
     if (is_valid_digit(source->str[source->curr_ind], base)) {
       if (source->str[source->curr_ind] >= '0' &&
           source->str[source->curr_ind] <= '9') {
@@ -133,70 +198,84 @@ int read_hex(InputStr* source, SpecOptions* spec_opts, int* dest_input_pointer,
         num = num * 16 + (source->str[source->curr_ind] - 'A' + 10);
       }
       source->curr_ind++;
+      bytes_read++;
       weve_read_at_least_once_successfully = true;
-    } else {
-      *matching_failure = true;
+    } else if (is_valid_digit(source->str[source->curr_ind], base) == false) {
+      hex_reading_failure = true;
     }
   }
 
-  if (weve_read_at_least_once_successfully == true) {
-    *dest_input_pointer = num * sign;
+  if (bytes_read > 0) {
+    weve_read_at_least_once_successfully = true;
+    *dest_input_pointer = num;
   }
 
   return weve_read_at_least_once_successfully;
 }
 
-int read_decimal(InputStr* source, SpecOptions* spec_opts,
-                 int* dest_input_pointer, bool* matching_failure) {
-  s21_size_t base = 10;
-  bool weve_read_at_least_once_successfully = false;
-  int sign = 1;
-  int num = 0;
-
-  if (spec_opts->is_minus == true) {
-    sign = -1;
+bool width_limit_reached(s21_size_t bytes_read, SpecOptions* spec_opts) {
+  bool limit_reached = false;
+  s21_size_t limit = spec_opts->width;
+  if (spec_opts->is_negative) {
+    limit -= 1;
   }
 
+  if (spec_opts->width_set == true && bytes_read >= limit) {
+    limit_reached = true;
+  }
+
+  return limit_reached;
+}
+
+int read_decimal(InputStr* source, SpecOptions* spec_opts,
+                 long unsigned* dest_input_pointer, bool* matching_failure) {
+  s21_size_t base = 10;
+  bool weve_read_at_least_once_successfully = false;
+  int num = 0;
+  s21_size_t bytes_read = 0;
+
   while (is_space(source->str[source->curr_ind]) == false &&
-         source->str[source->curr_ind] != '\0' && *matching_failure == false) {
+         source->str[source->curr_ind] != '\0' && *matching_failure == false &&
+         width_limit_reached(bytes_read, spec_opts) == false) {
     if (is_valid_digit(source->str[source->curr_ind], base)) {
       num = num * 10 + (source->str[source->curr_ind] - '0');
       source->curr_ind++;
-      weve_read_at_least_once_successfully = true;
+      bytes_read++;
+
     } else {
       *matching_failure = true;
     }
   }
-  if (weve_read_at_least_once_successfully) {
-    *dest_input_pointer = sign * num;
+  if (bytes_read > 0) {
+    weve_read_at_least_once_successfully = true;
+    *dest_input_pointer = num;
   }
   return weve_read_at_least_once_successfully;
 }
 
 int read_octal(InputStr* source, SpecOptions* spec_opts,
-               int* dest_input_pointer, bool* matching_failure) {
+               long unsigned* dest_input_pointer, bool* matching_failure) {
   bool weve_read_at_least_once_successfully = false;
   bool not_octal_but_we_continue_with_decimal = false;
   s21_size_t base = 8;
 
   int num = 0;
-  int sign = 1;
+  s21_size_t bytes_read = 0;
 
-  if (spec_opts->is_minus == true) {
-    sign = -1;
-  }
-
-  s21_size_t num_length_minus_one = get_octal_num_length(source, base);
+  s21_size_t num_length_minus_one =
+      get_octal_num_length(source, spec_opts, base);
   s21_size_t power = num_length_minus_one;
 
   while (is_space(source->str[source->curr_ind]) == false &&
          source->str[source->curr_ind] != '\0' && *matching_failure == false &&
-         not_octal_but_we_continue_with_decimal == false) {
+         not_octal_but_we_continue_with_decimal == false &&
+         width_limit_reached(bytes_read, spec_opts) == false) {
     if (is_valid_digit(source->str[source->curr_ind], base) == true) {
       char digit = source->str[source->curr_ind];
       num += (digit - '0') * pow(8, power--);
       weve_read_at_least_once_successfully = true;
       source->curr_ind++;
+      bytes_read++;
     } else if (is_valid_digit(source->str[source->curr_ind], 10)) {
       not_octal_but_we_continue_with_decimal = true;
     } else {
@@ -204,23 +283,27 @@ int read_octal(InputStr* source, SpecOptions* spec_opts,
     }
   }
   if (weve_read_at_least_once_successfully) {
-    *dest_input_pointer = num * sign;
+    *dest_input_pointer = num;
   }
   return weve_read_at_least_once_successfully;
 }
 
-s21_size_t get_octal_num_length(InputStr* source, s21_size_t base) {
-  int num_len_cristal = 0;
-  int num_len_dirty = source->curr_ind;
+s21_size_t get_octal_num_length(InputStr* source, SpecOptions* spec_opts,
+                                s21_size_t base) {
+  int num_len_result = 0;
+  int temp_curr_ind = source->curr_ind;
+  s21_size_t bytes_read = 0;
 
-  while (is_space(source->str[num_len_dirty]) == false &&
-         source->str[num_len_dirty] != '\0' &&
-         is_valid_digit(source->str[num_len_dirty], base)) {
-    num_len_cristal++;
-    num_len_dirty++;
+  while (is_space(source->str[temp_curr_ind]) == false &&
+         source->str[temp_curr_ind] != '\0' &&
+         width_limit_reached(bytes_read, spec_opts) == false &&
+         is_valid_digit(source->str[temp_curr_ind], base)) {
+    num_len_result++;
+    temp_curr_ind++;
+    bytes_read++;
   }
-
-  return num_len_cristal - 1;
+  // -1 because it is used for power of 8s later, ending with zero
+  return num_len_result - 1;
 }
 
 bool is_valid_digit(char incoming_char, s21_size_t base) {
@@ -468,14 +551,15 @@ int read_char(va_list* args, InputStr* source, SpecOptions* spec_opts) {
   return read_result;
 };
 
-void parse_width_sscanf(InputStr* fmt_input, SpecOptions* spec_opts) {
-  while (fmt_input->str[fmt_input->curr_ind] >= '0' &&
-         fmt_input->str[fmt_input->curr_ind] <= '9') {
-    spec_opts->width =
-        spec_opts->width * 10 + (fmt_input->str[fmt_input->curr_ind] - '0');
-    fmt_input->curr_ind++;
-  }
-}
+// void parse_width_sscanf(InputStr* fmt_input, SpecOptions* spec_opts) {
+//   while (fmt_input->str[fmt_input->curr_ind] >= '0' &&
+//          fmt_input->str[fmt_input->curr_ind] <= '9') {
+//     spec_opts->width =
+//         spec_opts->width * 10 + (fmt_input->str[fmt_input->curr_ind] - '0');
+//     fmt_input->curr_ind++;
+//   }
+// }
+
 bool parse_suppression(InputStr* fmt_input) {
   bool star_present = false;
   if (fmt_input->str[fmt_input->curr_ind] == '*') {
@@ -537,30 +621,6 @@ void parse_sscanf_specifier(InputStr* fmt_input, SpecOptions* spec_opts) {
   }
 }
 
-// int read_int(InputStr* input, int* d, SpecOptions* opts) {
-//   int result = 0;
-//   int sign = 1;
-//   int num = 0;
-//   printf("%d", opts->is_star);
-
-//   if (input->str[input->curr_ind] == '-') {
-//     sign = -1;
-//     input->curr_ind++;
-//     // opts->count++;
-//   }
-
-//   while (input->str[input->curr_ind] >= '0' &&
-//          input->str[input->curr_ind] <= '9') {
-//     num = num * 10 + (input->str[input->curr_ind] - '0');
-//     input->curr_ind++;
-//     // opts->count++;
-//     result = 1;
-//   }
-//   *d = sign * num;
-
-//   return result;
-// }
-
 // int parse_pointer(InputStr* input, void** value) {
 //   int res = 0;
 
@@ -621,30 +681,6 @@ void parse_sscanf_specifier(InputStr* fmt_input, SpecOptions* spec_opts) {
 //   return result;
 // }
 
-// int read_int(InputStr* input, int* d, SpecOptions* opts) {
-//   int result = 0;
-//   int sign = 1;
-//   int num = 0;
-//   printf("%d", opts->is_star);
-
-//   if (input->str[input->curr_ind] == '-') {
-//     sign = -1;
-//     input->curr_ind++;
-//     // opts->count++;
-//   }
-
-//   while (input->str[input->curr_ind] >= '0' &&
-//          input->str[input->curr_ind] <= '9') {
-//     num = num * 10 + (input->str[input->curr_ind] - '0');
-//     input->curr_ind++;
-//     // opts->count++;
-//     result = 1;
-//   }
-//   *d = sign * num;
-
-//   return result;
-// }
-
 // int read_unsigned_int(const char** str, unsigned int* u, SpecOptions* opts)
 // {
 //   unsigned int num = 0;
@@ -695,29 +731,6 @@ void parse_sscanf_specifier(InputStr* fmt_input, SpecOptions* spec_opts) {
 //     }
 //   }
 //   *f = sign * (int_part + frac_part / frac_div);
-
-//   return result;
-// }
-
-// int read_hex(const char** str, unsigned int* x, SpecOptions* opts) {
-//   unsigned int num = 0;
-//   int result = 0;
-//   printf("%d", opts->is_star);
-//   while ((**str >= '0' && **str <= '9') || (**str >= 'a' && **str <= 'f')
-//   ||
-//          (**str >= 'A' && **str <= 'F')) {
-//     if (**str >= '0' && **str <= '9') {
-//       num = num * 16 + (**str - '0');
-//     } else if (**str >= 'a' && **str <= 'f') {
-//       num = num * 16 + (**str - 'a' + 10);
-//     } else {
-//       num = num * 16 + (**str - 'A' + 10);
-//     }
-//     (*str)++;
-//     // opts->count++;
-//     result = 1;
-//   }
-//   *x = num;
 
 //   return result;
 // }
