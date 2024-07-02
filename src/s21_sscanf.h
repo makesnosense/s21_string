@@ -57,11 +57,12 @@ int read_char(va_list* args, InputStr* source, SpecOptions* spec_opts);
 int read_int(va_list* args, SpecOptions* spec_opts, InputStr* source,
              bool* matching_failure);
 int read_decimal(InputStr* source, SpecOptions* spec_opts,
-                 long unsigned* dest_input_pointer, bool* matching_failure);
+                 long long unsigned* dest_input_pointer,
+                 bool* matching_failure);
 int read_hex(InputStr* source, SpecOptions* spec_opts,
-             long unsigned* dest_input_pointer, bool* matching_failure);
+             long long unsigned* dest_input_pointer, bool* matching_failure);
 int read_octal(InputStr* source, SpecOptions* spec_opts,
-               long unsigned* dest_input_pointer, bool* matching_failure);
+               long long unsigned* dest_input_pointer, bool* matching_failure);
 
 void parse_width_sscanf(InputStr* fmt_input, SpecOptions* spec_opts);
 
