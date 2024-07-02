@@ -951,10 +951,10 @@ START_TEST(test_sscanf_overflow_short_i) {
   int lib_n = 0;
   int lib_res = 0;
 
-  s21_res = s21_sscanf("32769 -32769 0100001 0x8001", "%hi %hi %hi %hi %n",
+  s21_res = s21_sscanf("32769 -3279999 0100001 0x8001", "%hi %hi %hi %hi %n",
                        &s21_a, &s21_b, &s21_c, &s21_d, &s21_n);
-  lib_res = sscanf("32767 -32768 077777 0x7fff", "%hi %hi %hi %hi %n", &lib_a,
-                   &lib_b, &lib_c, &lib_d, &lib_n);
+  lib_res = sscanf("32769 -3279999 0100001 0x8001", "%hi %hi %hi %hi %n",
+                   &lib_a, &lib_b, &lib_c, &lib_d, &lib_n);
 
   printf(
       "lib первый чар %d второй чар %d третий: %d четыре %d  n: %d res: %d\n",
