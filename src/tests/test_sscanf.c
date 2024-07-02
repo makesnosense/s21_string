@@ -1301,6 +1301,28 @@ START_TEST(test_sscanf_float_3) {
 }
 END_TEST
 
+START_TEST(test_sscanf_unsigned) {
+  unsigned s21_a = 0;
+  unsigned s21_b = 0;
+  int s21_res = 0;
+
+  unsigned lib_a = 0;
+  unsigned lib_b = 0;
+  int lib_res = 0;
+
+  lib_res = sscanf("Unsigned 1: 0, unsigned 2: 123123123",
+                   "Unsigned 1: %u, unsigned 2: %u", &lib_a, &lib_b);
+  s21_res = s21_sscanf("Unsigned 1: 0, unsigned 2: 123123123",
+                       "Unsigned 1: %u, unsigned 2: %u", &s21_a, &s21_b);
+
+  printf("s21 first: %u second: %u res: %d\n", s21_a, s21_b, s21_res);
+  printf("s21 first: %u second: %u res: %d\n\n", lib_a, lib_b, lib_res);
+  ck_assert_int_eq(lib_res, s21_res);
+  ck_assert_int_eq(lib_a, s21_a);
+  ck_assert_int_eq(lib_b, s21_b);
+}
+END_TEST
+
 Suite* make_sscanf_suite() {
   Suite* sscanf_suite = suite_create("sscanf");
   TCase* tc_core;
@@ -1361,12 +1383,14 @@ Suite* make_sscanf_suite() {
   tcase_add_test(tc_core, test_sscanf_long_hex);
   tcase_add_test(tc_core, test_sscanf_short_hex);
 
+  tcase_add_test(tc_problem, test_sscanf_unsigned);
+
   // tcase_add_test(tc_core, test_sscanf_int);
   // tcase_add_test(tc_core, test_sscanf_int_2);
   // tcase_add_test(tc_core, test_sscanf_int_3);
   tcase_add_test(tc_core, test_sscanf_float);
   tcase_add_test(tc_core, test_sscanf_float_2);
-  tcase_add_test(tc_problem, test_sscanf_float_3);
+  tcase_add_test(tc_core, test_sscanf_float_3);
 
   // tcase_add_test(tc_core, test_sscanf_unsigned);
   // tcase_add_test(tc_problem, test_sscanf_star);
@@ -1380,28 +1404,6 @@ Suite* make_sscanf_suite() {
 
   return sscanf_suite;
 }
-
-// START_TEST(test_sscanf_unsigned) {
-//   char* input_string = "Unsigned 1: 0, unsigned 2: 123123123";
-//   char* format_string = "Unsigned 1: %u, unsigned 2: %u";
-
-//   unsigned s21_res1 = 0;
-//   unsigned s21_res2 = 0;
-//   int s21_res_res = 0;
-
-//   unsigned lib_res1 = 0;
-//   unsigned lib_res2 = 0;
-//   int lib_res_res = 0;
-
-//   lib_res_res = sscanf(input_string, format_string, &lib_res1, &lib_res2);
-//   s21_res_res = s21_sscanf(input_string, format_string, &s21_res1,
-//   &s21_res2);
-
-//   ck_assert_int_eq(lib_res_res, s21_res_res);
-//   ck_assert_int_eq(lib_res1, s21_res1);
-//   ck_assert_int_eq(lib_res2, s21_res2);
-// }
-// END_TEST
 
 // START_TEST(test_sscanf_star) {
 //   char* input_string =
