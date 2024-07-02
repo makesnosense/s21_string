@@ -776,10 +776,10 @@ START_TEST(test_sscanf_long_i) {
   int lib_res = 0;
 
   s21_res =
-      s21_sscanf("2147483647 -2147483648 017777777777 0x7fffffff",
+      s21_sscanf("2147483647 -21474836489 017777777777 0x7fffffff",
                  "%li %li %li %li %n", &s21_a, &s21_b, &s21_c, &s21_d, &s21_n);
   lib_res =
-      sscanf("2147483647 -2147483648 017777777777 0x7fffffff",
+      sscanf("2147483647 -21474836489 017777777777 0x7fffffff",
              "%li %li %li %li %n", &lib_a, &lib_b, &lib_c, &lib_d, &lib_n);
 
   printf(
@@ -879,45 +879,6 @@ START_TEST(test_sscanf_overflow_long_i) {
   ck_assert_int_eq(s21_n, lib_n);
 }
 END_TEST
-
-// START_TEST(test_sscanf_overflow_long_i) {
-//   int s21_a = 0;
-//   int s21_b = 0;
-//   int s21_c = 0;
-//   int s21_d = 0;
-//   int s21_n = 0;
-//   int s21_res = 0;
-
-//   int lib_a = 0;
-//   int lib_b = 0;
-//   int lib_c = 0;
-//   int lib_d = 0;
-//   int lib_n = 0;
-//   int lib_res = 0;
-
-//   s21_res =
-//       s21_sscanf("2147483641554 -2147483649 020000000001 0x80000001",
-//                  "%i %i %i %i %n", &s21_a, &s21_b, &s21_c, &s21_d, &s21_n);
-//   lib_res = sscanf("2147483641554 -2147483649 020000000001 0x80000001",
-//                    "%i %i %i %i %n", &lib_a, &lib_b, &lib_c, &lib_d, &lib_n);
-
-//   printf(
-//       "lib первый чар %d второй чар %d третий: %d четыре %d  n: %d res: "
-//       "%d\n",
-//       lib_a, lib_b, lib_c, lib_d, lib_n, lib_res);
-//   printf(
-//       "s21 первый чар %d второй чар %d третий: %d четыре %d n: %d res: "
-//       "%d\n",
-//       s21_a, s21_b, s21_c, s21_d, s21_n, s21_res);
-
-//   ck_assert_int_eq(lib_res, s21_res);
-//   ck_assert_int_eq(s21_a, lib_a);
-//   ck_assert_int_eq(s21_b, lib_b);
-//   ck_assert_int_eq(s21_c, lib_c);
-//   ck_assert_int_eq(s21_d, lib_d);
-//   ck_assert_int_eq(s21_n, lib_n);
-// }
-// END_TEST
 
 START_TEST(test_sscanf_long_i_problematic) {
   long int s21_a = 0;
@@ -1127,9 +1088,9 @@ Suite* make_sscanf_suite() {
   tcase_add_test(tc_core, test_sscanf_short_i);
   tcase_add_test(tc_core, test_sscanf_overflow_short_i);
   tcase_add_test(tc_problem, test_sscanf_overflow_long_i);
-  tcase_add_test(tc_core, test_sscanf_overflow_short_i);
-  tcase_add_test(tc_problem, test_sscanf_octal);
-  tcase_add_test(tc_problem, test_sscanf_hex);
+  // tcase_add_test(tc_core, test_sscanf_overflow_short_i);
+  tcase_add_test(tc_core, test_sscanf_octal);
+  tcase_add_test(tc_core, test_sscanf_hex);
 
   // tcase_add_test(tc_core, test_sscanf_int);
   // tcase_add_test(tc_core, test_sscanf_int_2);
