@@ -2,6 +2,7 @@
 #define S21_SSCANF_H_
 
 #include <ctype.h>
+#include <limits.h>
 #include <math.h>
 #include <stdarg.h>
 #include <stdbool.h>
@@ -24,7 +25,7 @@ typedef struct SpecifierOptions {
   SscanfSpecifier specifier;
   Length length;
   bool is_hexadecimal;
-  bool is_minus;
+  bool is_negative;
 
 } SpecOptions;
 
@@ -77,6 +78,7 @@ int read_char(va_list* args, InputStr* source, SpecOptions* spec_opts);
 
 void parse_width_sscanf(InputStr* fmt_input, SpecOptions* spec_opts);
 bool parse_suppression(InputStr* fmt_input);
+void parse_length_sscanf(InputStr* fmt_input, SpecOptions* spec_opts);
 void set_sscanf_base(SpecOptions* spec_opts);
 bool is_sscanf_specifier(char ch);
 void parse_sscanf_specifier(InputStr* fmt_input, SpecOptions* spec_opts);

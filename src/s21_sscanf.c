@@ -56,6 +56,7 @@ int consume_specifier(va_list* args, InputStr* source, InputStr* fmt_input,
 
   spec_opts.is_star = parse_suppression(fmt_input);
   parse_width_sscanf(fmt_input, &spec_opts);
+  parse_length_sscanf(fmt_input, &spec_opts);
   parse_sscanf_specifier(fmt_input, &spec_opts);
 
   switch (fmt_input->str[fmt_input->curr_ind]) {
@@ -118,32 +119,54 @@ int read_int(va_list* args, SpecOptions* spec_opts, InputStr* source,
              bool* matching_failure) {
   int read_result = 0;
 
-  long unsigned destination = 0;
+  long unsigned temp_unsigned_destination = 0;
+  long long temp_long_long_int_destination = 0;
   if (s21_strncmp(&source->str[source->curr_ind], "-", 1) == 0) {
-    spec_opts->is_minus = true;
+    spec_opts->is_negative = true;
     source->curr_ind++;
   }
 
   // if (s21_strncmp(&source->str[source->curr_ind], "-", 1) == 0) {
-  //   spec_opts->is_minus = true;
+  //   spec_opts->is_negative = true;
   // }
 
   if (s21_strncmp(&source->str[source->curr_ind], "0x", 2) == 0 &&
       spec_opts->specifier == i) {
-    read_result = read_hex(source, spec_opts, &destination, matching_failure);
+    read_result = read_hex(source, spec_opts, &temp_unsigned_destination,
+                           matching_failure);
   } else if (s21_strncmp(&source->str[source->curr_ind], "0", 1) == 0 &&
              spec_opts->specifier == i) {
-    read_result = read_octal(source, spec_opts, &destination, matching_failure);
+    read_result = read_octal(source, spec_opts, &temp_unsigned_destination,
+                             matching_failure);
   } else {
-    read_result =
-        read_decimal(source, spec_opts, &destination, matching_failure);
+    read_result = read_decimal(source, spec_opts, &temp_unsigned_destination,
+                               matching_failure);
   }
 
-  int* dest_input_pointer = va_arg(*args, int*);
-  *dest_input_pointer = (int)destination;
-  if (spec_opts->is_minus) {
-    *dest_input_pointer *= -1;
+  // int sign = -spec_opts->is_negative;
+
+  int sign = spec_opts->is_negative ? -1 : 1;
+
+  if (spec_opts->length == h) {
+    temp_long_long_int_destination = sign * (short)temp_unsigned_destination;
+
+    short* dest_input_pointer = va_arg(*args, short*);
+    *dest_input_pointer = (short)+temp_long_long_int_destination;
+  } else if (spec_opts->length == l) {
+    temp_long_long_int_destination = temp_unsigned_destination;
+    long* dest_input_pointer = va_arg(*args, long*);
+    *dest_input_pointer = (long)+temp_unsigned_destination;
+    if (temp_long_long_int_destination == INT_MIN) {
+      *dest_input_pointer = (long)+temp_unsigned_destination;
+    } else {
+      *dest_input_pointer = sign * ((long)+temp_unsigned_destination);
+    }
+  } else {
+    temp_long_long_int_destination = sign * (int)temp_unsigned_destination;
+    int* dest_input_pointer = va_arg(*args, int*);
+    *dest_input_pointer = (int)+temp_long_long_int_destination;
   }
+
   return read_result;
 }
 
@@ -193,7 +216,7 @@ int read_hex(InputStr* source, SpecOptions* spec_opts,
 bool width_limit_reached(s21_size_t bytes_read, SpecOptions* spec_opts) {
   bool limit_reached = false;
   s21_size_t limit = spec_opts->width;
-  if (spec_opts->is_minus) {
+  if (spec_opts->is_negative) {
     limit -= 1;
   }
 
