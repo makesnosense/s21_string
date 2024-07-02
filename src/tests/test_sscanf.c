@@ -725,6 +725,75 @@ START_TEST(test_sscanf_d) {
 }
 END_TEST
 
+START_TEST(test_sscanf_long_i) {
+  long int s21_a = 0;
+  long int s21_b = 0;
+  long int s21_c = 0;
+  long int s21_d = 0;
+  int s21_n = 0;
+  int s21_res = 0;
+
+  long int lib_a = 0;
+  long int lib_b = 0;
+  long int lib_c = 0;
+  long int lib_d = 0;
+  int lib_n = 0;
+  int lib_res = 0;
+
+  s21_res =
+      s21_sscanf("2147483647 -2147483648 017777777777 0x7fffffff",
+                 "%li %li %li %li %n", &s21_a, &s21_b, &s21_c, &s21_d, &s21_n);
+  lib_res =
+      sscanf("2147483647 -2147483648 017777777777 0x7fffffff",
+             "%li %li %li %li %n", &lib_a, &lib_b, &lib_c, &lib_d, &lib_n);
+
+  printf(
+      "первый чар %ld второй чар %ld третий: %ld четыре %ld  n: %d res: %d\n",
+      lib_a, lib_b, lib_c, lib_d, lib_n, lib_res);
+  printf("первый чар %ld второй чар %ld третий: %ld четыре %ld n: %d res: %d\n",
+         s21_a, s21_b, s21_c, s21_d, s21_n, s21_res);
+
+  ck_assert_int_eq(lib_res, s21_res);
+  ck_assert_int_eq(s21_a, lib_a);
+  ck_assert_int_eq(s21_b, lib_b);
+  ck_assert_int_eq(s21_c, lib_c);
+  ck_assert_int_eq(s21_n, lib_n);
+}
+END_TEST
+
+START_TEST(test_sscanf_short_i) {
+  short int s21_a = 0;
+  short int s21_b = 0;
+  short int s21_c = 0;
+  short int s21_d = 0;
+  int s21_n = 0;
+  int s21_res = 0;
+
+  short int lib_a = 0;
+  short int lib_b = 0;
+  short int lib_c = 0;
+  short int lib_d = 0;
+  int lib_n = 0;
+  int lib_res = 0;
+
+  s21_res = s21_sscanf("32767 -32768 077777 0x7fff", "%hi %hi %hi %hi %n",
+                       &s21_a, &s21_b, &s21_c, &s21_d, &s21_n);
+  lib_res = sscanf("32767 -32768 077777 0x7fff", "%hi %hi %hi %hi %n", &lib_a,
+                   &lib_b, &lib_c, &lib_d, &lib_n);
+
+  printf("первый чар %d второй чар %d третий: %d четыре %d  n: %d res: %d\n",
+         lib_a, lib_b, lib_c, lib_d, lib_n, lib_res);
+  printf("первый чар %d второй чар %d третий: %d четыре %d n: %d res: %d\n",
+         s21_a, s21_b, s21_c, s21_d, s21_n, s21_res);
+
+  ck_assert_int_eq(lib_res, s21_res);
+  ck_assert_int_eq(s21_a, lib_a);
+  ck_assert_int_eq(s21_b, lib_b);
+  ck_assert_int_eq(s21_c, lib_c);
+  ck_assert_int_eq(s21_n, lib_n);
+}
+END_TEST
+
 START_TEST(test_sscanf_char) {
   char* format_string = "Reading chars: %c-%c!%c@%c#%c$%c^";
   char* input_string = "Reading chars: Q-W!E@r#t$y^";
@@ -994,6 +1063,9 @@ Suite* make_sscanf_suite() {
   tcase_add_test(tc_linux_only, test_sscanf_width_p2_linux_only);
   tcase_add_test(tc_linux_only, test_sscanf_width_p2_1_linux_only);
   tcase_add_test(tc_linux_only, test_sscanf_width_p3_linux_only);
+
+  tcase_add_test(tc_problem, test_sscanf_long_i);
+  tcase_add_test(tc_problem, test_sscanf_short_i);
 
   // tcase_add_test(tc_core, test_sscanf_int);
   // tcase_add_test(tc_core, test_sscanf_int_2);
