@@ -11,10 +11,20 @@
 
 #include "s21_string.h"
 
-#define VALID_SSCANF_SPECIFIERS "cdinxoX%"
+#define VALID_SSCANF_SPECIFIERS "cdinouxX%"
 #define VALID_SSCANF_LENGTHS "Llh"
 
-typedef enum SscanfSpecifier { NOT_SET, c, d, i, n, x, o, X } SscanfSpecifier;
+typedef enum SscanfSpecifier {
+  NOT_SET,
+  c,
+  d,
+  i,
+  n,
+  o,
+  u,
+  x,
+  X,
+} SscanfSpecifier;
 
 typedef enum Length { LENGTH_NOT_SET, h, l, L } Length;
 
@@ -53,9 +63,12 @@ void consume_initial_space_and_n(va_list* args, InputStr* source,
                                  InputStr* fmt_input);
 
 void process_n(va_list* args, InputStr* source, bool n_star);
-int read_char(va_list* args, InputStr* source, SpecOptions* spec_opts);
-int read_int(va_list* args, SpecOptions* spec_opts, InputStr* source,
-             bool* matching_failure);
+int process_unsigned_sscanf(va_list* args, SpecOptions* spec_opts,
+                            InputStr* source, bool* matching_failure);
+
+int process_int_sscanf(va_list* args, SpecOptions* spec_opts, InputStr* source,
+                       bool* matching_failure);
+
 int read_decimal(InputStr* source, SpecOptions* spec_opts,
                  long long unsigned* dest_input_pointer,
                  bool* matching_failure);
@@ -65,6 +78,8 @@ int read_octal(InputStr* source, SpecOptions* spec_opts,
                long long unsigned* dest_input_pointer, bool* matching_failure);
 int read_float(InputStr* sourse, float* dest_input_pointer,
                SpecOptions* spec_opts);
+
+int read_char(va_list* args, InputStr* source, SpecOptions* spec_opts);
 
 void parse_width_sscanf(InputStr* fmt_input, SpecOptions* spec_opts);
 
@@ -76,7 +91,6 @@ int source_validity_check(InputStr* source, InputStr* format_input,
 int consume_specifier(va_list* args, InputStr* source, InputStr* fmt_input,
                       bool* matching_failure);
 
-void process_n(va_list* args, InputStr* source, bool n_star);
 int read_char(va_list* args, InputStr* source, SpecOptions* spec_opts);
 
 void parse_width_sscanf(InputStr* fmt_input, SpecOptions* spec_opts);
