@@ -1316,7 +1316,7 @@ START_TEST(test_sscanf_unsigned) {
                        "Unsigned 1: %u, unsigned 2: %u", &s21_a, &s21_b);
 
   printf("s21 first: %u second: %u res: %d\n", s21_a, s21_b, s21_res);
-  printf("s21 first: %u second: %u res: %d\n\n", lib_a, lib_b, lib_res);
+  printf("lib first: %u second: %u res: %d\n\n", lib_a, lib_b, lib_res);
   ck_assert_int_eq(lib_res, s21_res);
   ck_assert_int_eq(lib_a, s21_a);
   ck_assert_int_eq(lib_b, s21_b);
