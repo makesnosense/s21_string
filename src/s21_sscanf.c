@@ -51,14 +51,12 @@ int consume_specifier(va_list* args, InputStr* source, InputStr* fmt_input,
                       bool* matching_failure) {
   int specifier_result = 0;
   SpecOptions spec_opts = {0};
-  // *matching_failure = 0;
 
   fmt_input->curr_ind++;
 
   spec_opts.is_star = parse_suppression(fmt_input);
-  parce_width_sscanf(fmt_input, &spec_opts);
+  parse_width_sscanf(fmt_input, &spec_opts);
   parse_sscanf_specifier(fmt_input, &spec_opts);
-  // set_sscanf_base(&spec_opts);
 
   switch (fmt_input->str[fmt_input->curr_ind]) {
     case 'c': {
@@ -80,12 +78,39 @@ int consume_specifier(va_list* args, InputStr* source, InputStr* fmt_input,
   return specifier_result;
 }
 
-void parce_width_sscanf(InputStr* fmt_input, SpecOptions* spec_opts) {
+void parse_width_sscanf(InputStr* fmt_input, SpecOptions* spec_opts) {
   while (is_valid_digit(fmt_input->str[fmt_input->curr_ind], 10)) {
     spec_opts->width =
         spec_opts->width * 10 + (fmt_input->str[fmt_input->curr_ind] - '0');
     fmt_input->curr_ind++;
     spec_opts->width_set = true;
+  }
+}
+
+bool is_length_sscanf(char ch) {
+  char* res = s21_strchr(VALID_SSCANF_LENGTHS, ch);
+  return res == S21_NULL ? false : true;
+}
+
+// int is_length(char ch) {
+//   char* res = s21_strchr(VALID_LENGTHS, ch);
+//   return res == S21_NULL ? 0 : 1;
+// }
+
+void parse_length_sscanf(InputStr* fmt_input, SpecOptions* spec_opts) {
+  if (is_length_sscanf(fmt_input->str[fmt_input->curr_ind])) {
+    switch (fmt_input->str[fmt_input->curr_ind]) {
+      case 'L':
+        spec_opts->length = L;
+        break;
+      case 'l':
+        spec_opts->length = l;
+        break;
+      case 'h':
+        spec_opts->length = h;
+        break;
+    }
+    fmt_input->curr_ind++;
   }
 }
 
