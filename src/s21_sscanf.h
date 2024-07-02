@@ -57,11 +57,14 @@ int read_char(va_list* args, InputStr* source, SpecOptions* spec_opts);
 int read_int(va_list* args, SpecOptions* spec_opts, InputStr* source,
              bool* matching_failure);
 int read_decimal(InputStr* source, SpecOptions* spec_opts,
-                 long unsigned* dest_input_pointer, bool* matching_failure);
+                 long long unsigned* dest_input_pointer,
+                 bool* matching_failure);
 int read_hex(InputStr* source, SpecOptions* spec_opts,
-             long unsigned* dest_input_pointer, bool* matching_failure);
+             long long unsigned* dest_input_pointer, bool* matching_failure);
 int read_octal(InputStr* source, SpecOptions* spec_opts,
-               long unsigned* dest_input_pointer, bool* matching_failure);
+               long long unsigned* dest_input_pointer, bool* matching_failure);
+int read_float(InputStr* sourse, float* dest_input_pointer,
+               SpecOptions* spec_opts);
 
 void parse_width_sscanf(InputStr* fmt_input, SpecOptions* spec_opts);
 
@@ -97,14 +100,15 @@ bool width_limit_reached(s21_size_t bytes_read, SpecOptions* spec_opts);
 // int read_string(const char** str, char* s, SpecOptions* opts);
 
 // // Функция для чтения беззнакового целого числа
-// int read_unsigned_int(const char** str, unsigned int* u, SpecOptions*
-// opts);
+// int read_unsigned_int(const char** str, unsigned int* u,
+// SpecOptions* opts);
 
 // // Функция для чтения вещественного числа
 // int read_float(InputStr* input, float* f, SpecOptions* opts);
 
 // // Функция для чтения шестнадцатеричного числа
-// int read_hex(const char** str, unsigned int* x, SpecOptions* opts);
+// int read_hex(const char** str, unsigned int* x, SpecOptions*
+// opts);
 
 // int parse_pointer(InputStr* input, void** value);
 
