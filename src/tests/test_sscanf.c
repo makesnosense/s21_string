@@ -466,10 +466,10 @@ START_TEST(test_sscanf_i_p8) {
   int lib_n = 0;
   int lib_res = 0;
 
-  s21_res = s21_sscanf("23254 -06733 -0x123", "%d %i %i %n", &s21_a, &s21_b,
+  s21_res = s21_sscanf("23254 -06733 -0x123", "%10d %7i %4i %n", &s21_a, &s21_b,
                        &s21_c, &s21_n);
-  lib_res = sscanf("23254 -06733 -0x123", "%d %i %i %n", &lib_a, &lib_b, &lib_c,
-                   &lib_n);
+  lib_res = sscanf("23254 -06733 -0x123", "%10d %7i %4i %n", &lib_a, &lib_b,
+                   &lib_c, &lib_n);
 
   printf("первый чар %d второй чар %d третий: %d n: %d res: %d\n", lib_a, lib_b,
          lib_c, lib_n, lib_res);

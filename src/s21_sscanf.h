@@ -11,13 +11,18 @@
 #include "s21_string.h"
 
 #define VALID_SSCANF_SPECIFIERS "cdinxoX%"
+#define VALID_SSCANF_LENGTHS "Llh"
+
 typedef enum SscanfSpecifier { NOT_SET, c, d, i, n, x, o, X } SscanfSpecifier;
+
+typedef enum Length { LENGTH_NOT_SET, h, l, L } Length;
 
 typedef struct SpecifierOptions {
   s21_size_t width;
   bool width_set;
   bool is_star;  // Флаг подавления считывания
   SscanfSpecifier specifier;
+  Length length;
   bool is_hexadecimal;
   bool is_minus;
 
@@ -57,7 +62,7 @@ int read_hex(InputStr* source, SpecOptions* spec_opts,
 int read_octal(InputStr* source, SpecOptions* spec_opts,
                long unsigned* dest_input_pointer, bool* matching_failure);
 
-void parce_width_sscanf(InputStr* fmt_input, SpecOptions* spec_opts);
+void parse_width_sscanf(InputStr* fmt_input, SpecOptions* spec_opts);
 
 bool parse_suppression(InputStr* fmt_input);
 
