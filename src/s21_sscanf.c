@@ -74,6 +74,23 @@ int consume_specifier(va_list* args, InputStr* source, InputStr* fmt_input,
       specifier_result = read_int(args, &spec_opts, source, matching_failure);
       break;
     }
+    case 'o': {
+      long unsigned input_num = 0;
+      specifier_result =
+          read_octal(source, &spec_opts, &input_num, matching_failure);
+      long unsigned* num = va_arg(*args, long unsigned*);
+      *num = input_num;
+      break;
+    }
+    case 'x':
+    case 'X': {
+      long unsigned input_num = 0;
+      specifier_result =
+          read_hex(source, &spec_opts, &input_num, matching_failure);
+      long unsigned* num = va_arg(*args, long unsigned*);
+      *num = input_num;
+      break;
+    }
   }
   fmt_input->curr_ind++;
   return specifier_result;
@@ -276,7 +293,8 @@ int read_octal(InputStr* source, SpecOptions* spec_opts,
       weve_read_at_least_once_successfully = true;
       source->curr_ind++;
       bytes_read++;
-    } else if (is_valid_digit(source->str[source->curr_ind], 10)) {
+    } else if (is_valid_digit(source->str[source->curr_ind], 10) &&
+               spec_opts->specifier) {
       not_octal_but_we_continue_with_decimal = true;
     } else {
       *matching_failure = true;
@@ -613,7 +631,7 @@ void parse_sscanf_specifier(InputStr* fmt_input, SpecOptions* spec_opts) {
         break;
       }
       case 'o': {
-        printf("im here");
+        // printf("im here");
         spec_opts->specifier = o;
         break;
       }
