@@ -1080,6 +1080,66 @@ START_TEST(test_sscanf_hex) {
 }
 END_TEST
 
+START_TEST(test_sscanf_float) {
+  char* input_string = "i have 0.0 money";
+  char* format_string = "i have %f money";
+
+  float s21_a = 0;
+  float s21_res = 0;
+
+  int lib_a = 0;
+  int lib_res = 0;
+
+  lib_res = sscanf(input_string, format_string, &lib_a);
+  s21_res = s21_sscanf(input_string, format_string, &s21_a);
+
+  ck_assert_int_eq(lib_res, s21_res);
+  ck_assert_int_eq(lib_a, s21_a);
+}
+END_TEST
+
+START_TEST(test_sscanf_float_2) {
+  float s21_a = 0;
+  float s21_b = 0;
+  int s21_res = 0;
+
+  float lib_a = 0;
+  float lib_b = 0;
+  int lib_res = 0;
+
+  lib_res = sscanf("1844.654656 1844.654656", "%f %f", &lib_a, &lib_b);
+  s21_res = s21_sscanf("1844.654656 1844.654656", "%f %f", &s21_a, &s21_b);
+
+  printf("s21 first: %f second: %f res: %d\n", s21_a, s21_b, s21_res);
+  printf("lib first: %f second: %f res: %d\n\n", lib_a, lib_b, lib_res);
+
+  ck_assert_int_eq(lib_res, s21_res);
+  ck_assert_float_eq(lib_a, s21_a);
+  ck_assert_float_eq(lib_b, s21_b);
+}
+END_TEST
+
+START_TEST(test_sscanf_float_3) {
+  float s21_a = 7;
+  float s21_b = 0;
+  int s21_res = 0;
+
+  float lib_a = 0;
+  float lib_b = 0;
+  int lib_res = 0;
+
+  lib_res = sscanf("-0.999 -912.12", "%4f %*f", &lib_a, &lib_b);
+  s21_res = s21_sscanf("-0.999 -912.12", "%4f %*f", &s21_a, &s21_b);
+
+  printf("s21 first: %f second: %f res: %d\n", s21_a, s21_b, s21_res);
+  printf("lib first: %f second: %f res: %d\n\n", lib_a, lib_b, lib_res);
+
+  ck_assert_int_eq(lib_res, s21_res);
+  ck_assert_float_eq(lib_a, s21_a);
+  ck_assert_float_eq(lib_b, s21_b);
+}
+END_TEST
+
 Suite* make_sscanf_suite() {
   Suite* sscanf_suite = suite_create("sscanf");
   TCase* tc_core;
@@ -1126,17 +1186,17 @@ Suite* make_sscanf_suite() {
   tcase_add_test(tc_core, test_sscanf_long_i_problematic);
   tcase_add_test(tc_core, test_sscanf_short_i);
   tcase_add_test(tc_core, test_sscanf_overflow_short_i);
-  tcase_add_test(tc_problem, test_sscanf_overflow_long_i);
+  tcase_add_test(tc_core, test_sscanf_overflow_long_i);
   tcase_add_test(tc_core, test_sscanf_overflow_short_i);
-  tcase_add_test(tc_problem, test_sscanf_octal);
-  tcase_add_test(tc_problem, test_sscanf_hex);
+  tcase_add_test(tc_core, test_sscanf_octal);
+  tcase_add_test(tc_core, test_sscanf_hex);
 
   // tcase_add_test(tc_core, test_sscanf_int);
   // tcase_add_test(tc_core, test_sscanf_int_2);
   // tcase_add_test(tc_core, test_sscanf_int_3);
-  // tcase_add_test(tc_core, test_sscanf_float);
-  // tcase_add_test(tc_core, test_sscanf_float_2);
-  // tcase_add_test(tc_core, test_sscanf_float_3);
+  tcase_add_test(tc_core, test_sscanf_float);
+  tcase_add_test(tc_core, test_sscanf_float_2);
+  tcase_add_test(tc_problem, test_sscanf_float_3);
 
   // tcase_add_test(tc_core, test_sscanf_unsigned);
   // tcase_add_test(tc_problem, test_sscanf_star);
@@ -1283,67 +1343,5 @@ Suite* make_sscanf_suite() {
 //   ck_assert_int_eq(lib_res1, s21_res1);
 //   ck_assert_int_eq(lib_res2, s21_res2);
 //   ck_assert_int_eq(lib_res3, s21_res3);
-// }
-// END_TEST
-
-// START_TEST(test_sscanf_float) {
-//   char* input_string = "i have 0.0 money";
-//   char* format_string = "i have %f money";
-
-//   int s21_res1 = 0;
-//   int s21_res_res = 0;
-
-//   int lib_res1 = 0;
-//   int lib_res_res = 0;
-
-//   lib_res_res = sscanf(input_string, format_string, &lib_res1);
-//   s21_res_res = s21_sscanf(input_string, format_string, &s21_res1);
-
-//   ck_assert_int_eq(lib_res_res, s21_res_res);
-//   ck_assert_int_eq(lib_res1, s21_res1);
-// }
-// END_TEST
-
-// START_TEST(test_sscanf_float_2) {
-//   char* input_string = "Pi is 3.1415926 and e is 2.7182818";
-//   char* format_string = "Pi is %f and e is %f";
-
-//   int s21_res1 = 0;
-//   int s21_res2 = 0;
-//   int s21_res_res = 0;
-
-//   int lib_res1 = 0;
-//   int lib_res2 = 0;
-//   int lib_res_res = 0;
-
-//   lib_res_res = sscanf(input_string, format_string, &lib_res1, &lib_res2);
-//   s21_res_res = s21_sscanf(input_string, format_string, &s21_res1,
-//   &s21_res2);
-
-//   ck_assert_int_eq(lib_res_res, s21_res_res);
-//   ck_assert_int_eq(lib_res1, s21_res1);
-//   ck_assert_int_eq(lib_res2, s21_res2);
-// }
-// END_TEST
-
-// START_TEST(test_sscanf_float_3) {
-//   char* input_string = "Negative float 1: -0.999, negative float 2: -912.12";
-//   char* format_string = "Negative float 1: %f, negative float 2: %f";
-
-//   int s21_res1 = 0;
-//   int s21_res2 = 0;
-//   int s21_res_res = 0;
-
-//   int lib_res1 = 0;
-//   int lib_res2 = 0;
-//   int lib_res_res = 0;
-
-//   lib_res_res = sscanf(input_string, format_string, &lib_res1, &lib_res2);
-//   s21_res_res = s21_sscanf(input_string, format_string, &s21_res1,
-//   &s21_res2);
-
-//   ck_assert_int_eq(lib_res_res, s21_res_res);
-//   ck_assert_int_eq(lib_res1, s21_res1);
-//   ck_assert_int_eq(lib_res2, s21_res2);
 // }
 // END_TEST

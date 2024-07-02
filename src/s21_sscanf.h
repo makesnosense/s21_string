@@ -62,6 +62,8 @@ int read_hex(InputStr* source, SpecOptions* spec_opts,
              long unsigned* dest_input_pointer, bool* matching_failure);
 int read_octal(InputStr* source, SpecOptions* spec_opts,
                long unsigned* dest_input_pointer, bool* matching_failure);
+int read_float(InputStr* sourse, float* dest_input_pointer,
+               SpecOptions* spec_opts);
 
 void parse_width_sscanf(InputStr* fmt_input, SpecOptions* spec_opts);
 
