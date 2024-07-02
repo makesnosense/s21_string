@@ -91,9 +91,64 @@ int consume_specifier(va_list* args, InputStr* source, InputStr* fmt_input,
       *num = input_num;
       break;
     }
+    case 'f': {
+      float input_num = 0;
+      specifier_result = read_float(source, &input_num, &spec_opts);
+      float* num = va_arg(*args, float*);
+      if (spec_opts.is_star == false) {
+        *num = input_num;
+      }
+    }
   }
   fmt_input->curr_ind++;
   return specifier_result;
+}
+
+int read_float(InputStr* source, float* dest_input_pointer,
+               SpecOptions* spec_opts) {
+  int sign = 1;
+  int int_part = 0;
+  float frac_part = 0.0;
+  int frac_div = 1;
+  bool weve_read_at_least_once_successfully = 0;
+  s21_size_t bytes_read = 0;
+  s21_size_t base = 10;
+  if (source->str[source->curr_ind] == '-') {
+    sign = -1;
+    source->curr_ind++;
+    bytes_read++;
+  }
+
+  while (is_valid_digit(source->str[source->curr_ind], base) &&
+         is_space(source->str[source->curr_ind]) == false &&
+         source->str[source->curr_ind] != '\0' &&
+         width_limit_reached(bytes_read, spec_opts) == false) {
+    int_part = int_part * 10 + (source->str[source->curr_ind] - '0');
+    source->curr_ind++;
+    bytes_read++;
+    weve_read_at_least_once_successfully = 1;
+  }
+
+  if (source->str[source->curr_ind] == '.') {
+    bytes_read++;
+    source->curr_ind++;
+    while (is_valid_digit(source->str[source->curr_ind], base) &&
+           is_space(source->str[source->curr_ind]) == false &&
+           source->str[source->curr_ind] != '\0' &&
+           width_limit_reached(bytes_read, spec_opts) == false) {
+      frac_part = frac_part * 10 + (source->str[source->curr_ind] - '0');
+      frac_div *= 10;
+      source->curr_ind++;
+      bytes_read++;
+    }
+  }
+
+  if (bytes_read > 0) {
+    weve_read_at_least_once_successfully = true;
+    *dest_input_pointer = sign * (int_part + (frac_part / frac_div));
+  }
+
+  return weve_read_at_least_once_successfully;
 }
 
 void parse_width_sscanf(InputStr* fmt_input, SpecOptions* spec_opts) {
@@ -712,43 +767,6 @@ void parse_sscanf_specifier(InputStr* fmt_input, SpecOptions* spec_opts) {
 //     result = 1;
 //   }
 //   *u = num;
-
-//   return result;
-// }
-
-// int read_float(InputStr* input, float* f, SpecOptions* opts) {
-//   int sign = 1;
-//   int int_part = 0;
-//   float frac_part = 0.0;
-//   int frac_div = 1;
-//   int result = 0;
-//   printf("%d", opts->is_star);
-//   if (input->str[input->curr_ind] == '-') {
-//     sign = -1;
-//     input->curr_ind++;
-//     // opts->count++;
-//   }
-
-//   while (input->str[input->curr_ind] >= '0' &&
-//          input->str[input->curr_ind] <= '9') {
-//     int_part = int_part * 10 + (input->str[input->curr_ind] - '0');
-//     input->curr_ind++;
-//     // opts->count++;
-//     result = 1;
-//   }
-
-//   if (input->str[input->curr_ind] == '.') {
-//     input->curr_ind++;
-//     // opts->count++;
-//     while (input->str[input->curr_ind] >= '0' &&
-//            input->str[input->curr_ind] <= '9') {
-//       frac_part = frac_part * 10 + (input->str[input->curr_ind] - '0');
-//       frac_div *= 10;
-//       input->curr_ind++;
-//       // opts->count++;
-//     }
-//   }
-//   *f = sign * (int_part + frac_part / frac_div);
 
 //   return result;
 // }
