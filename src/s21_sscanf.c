@@ -229,8 +229,11 @@ int read_hex(InputStr* source, SpecOptions* spec_opts,
       source->curr_ind++;
       bytes_read++;
       weve_read_at_least_once_successfully = true;
-    } else if (is_valid_digit(source->str[source->curr_ind], base) == false) {
+    } else if (is_valid_digit(source->str[source->curr_ind], base) == false &&
+               spec_opts->specifier == i) {
       hex_reading_failure = true;
+    } else {
+      *matching_failure = true;
     }
   }
 
@@ -240,20 +243,6 @@ int read_hex(InputStr* source, SpecOptions* spec_opts,
   }
 
   return weve_read_at_least_once_successfully;
-}
-
-bool width_limit_reached(s21_size_t bytes_read, SpecOptions* spec_opts) {
-  bool limit_reached = false;
-  s21_size_t limit = spec_opts->width;
-  if (spec_opts->is_negative) {
-    limit -= 1;
-  }
-
-  if (spec_opts->width_set == true && bytes_read >= limit) {
-    limit_reached = true;
-  }
-
-  return limit_reached;
 }
 
 int read_decimal(InputStr* source, SpecOptions* spec_opts,
@@ -307,7 +296,7 @@ int read_octal(InputStr* source, SpecOptions* spec_opts,
       source->curr_ind++;
       bytes_read++;
     } else if (is_valid_digit(source->str[source->curr_ind], 10) &&
-               spec_opts->specifier) {
+               spec_opts->specifier == i) {
       not_octal_but_we_continue_with_decimal = true;
     } else {
       *matching_failure = true;
@@ -317,6 +306,20 @@ int read_octal(InputStr* source, SpecOptions* spec_opts,
     *dest_input_pointer = num;
   }
   return weve_read_at_least_once_successfully;
+}
+
+bool width_limit_reached(s21_size_t bytes_read, SpecOptions* spec_opts) {
+  bool limit_reached = false;
+  s21_size_t limit = spec_opts->width;
+  if (spec_opts->is_negative) {
+    limit -= 1;
+  }
+
+  if (spec_opts->width_set == true && bytes_read >= limit) {
+    limit_reached = true;
+  }
+
+  return limit_reached;
 }
 
 int read_char(va_list* args, InputStr* source, SpecOptions* spec_opts) {
