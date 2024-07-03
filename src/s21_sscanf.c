@@ -112,9 +112,12 @@ int process_float_sscanf(va_list* args, SpecOptions* spec_opts,
 void write_to_floating_pointer(va_list* args, SpecOptions* spec_opts,
                                long double temp_floating_destination) {
   if (spec_opts->is_star == false) {
-    if (spec_opts->length == L) {
+    if (spec_opts->length == l) {
       double* dest_input_pointer = va_arg(*args, double*);
       *dest_input_pointer = (double)temp_floating_destination;
+    } else if (spec_opts->length == L) {
+      long double* dest_input_pointer = va_arg(*args, long double*);
+      *dest_input_pointer = (long double)temp_floating_destination;
     } else {
       float* dest_input_pointer = va_arg(*args, float*);
       *dest_input_pointer = (float)temp_floating_destination;
@@ -375,9 +378,9 @@ int read_char(va_list* args, InputStr* source, SpecOptions* spec_opts) {
 int read_float(InputStr* source, long double* dest_input_pointer,
                SpecOptions* spec_opts) {
   int sign = 1;
-  int int_part = 0;
-  float frac_part = 0.0;
-  int frac_div = 1;
+  long double int_part = 0;
+  long double frac_part = 0.0;
+  long long frac_div = 1;
   bool weve_read_at_least_once_successfully = 0;
   s21_size_t bytes_read = 0;
   s21_size_t base = 10;
