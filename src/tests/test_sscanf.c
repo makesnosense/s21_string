@@ -1565,14 +1565,12 @@ START_TEST(test_sscanf_star_problematic) {
   int lib_res1 = 0;
   int lib_res_res = 0;
 
-  lib_res_res =
-      sscanf("int: 123, float: -123.0, char: @, unsigned: 0 %, string: cringe",
-             "int: %*d, float: %*f, char: %*c, unsigned: %*u %%, string: %n",
-             &s21_res1);
+  lib_res_res = sscanf(
+      "int: 123 float: -123.0 char: @ unsigned: 0 % string: cringe",
+      "int: %*d float: %*f char: %*c unsigned: %*u %% string: %n", &lib_res1);
   s21_res_res = s21_sscanf(
-      "int: 123, float: -123.0, char: @, unsigned: 0 %, string: cringe",
-      "int: %*d, float: %*f, char: %*c, unsigned: %*u %%, string: %n",
-      &lib_res1);
+      "int: 123 float: -123.0 char: @ unsigned: 0 % string: cringe",
+      "int: %*d float: %*f char: %*c unsigned: %*u %% string: %n", &s21_res1);
 
   ck_assert_int_eq(lib_res_res, s21_res_res);
   ck_assert_int_eq(lib_res1, s21_res1);
