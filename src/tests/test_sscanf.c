@@ -1041,10 +1041,10 @@ START_TEST(test_sscanf_octal_problematic) {
          s21_a, s21_b, s21_c, s21_d, s21_n, s21_res);
 
   ck_assert_int_eq(lib_res, s21_res);
-  ck_assert_int_eq(s21_a, lib_a);
-  ck_assert_int_eq(s21_b, lib_b);
-  ck_assert_int_eq(s21_c, lib_c);
-  ck_assert_int_eq(s21_d, lib_d);
+  ck_assert_uint_eq(s21_a, lib_a);
+  ck_assert_uint_eq(s21_b, lib_b);
+  ck_assert_uint_eq(s21_c, lib_c);
+  ck_assert_uint_eq(s21_d, lib_d);
   ck_assert_int_eq(s21_n, lib_n);
 }
 END_TEST
@@ -1075,10 +1075,10 @@ START_TEST(test_sscanf_octal) {
          s21_a, s21_b, s21_c, s21_d, s21_n, s21_res);
 
   ck_assert_int_eq(lib_res, s21_res);
-  ck_assert_int_eq(s21_a, lib_a);
-  ck_assert_int_eq(s21_b, lib_b);
-  ck_assert_int_eq(s21_c, lib_c);
-  ck_assert_int_eq(s21_d, lib_d);
+  ck_assert_uint_eq(s21_a, lib_a);
+  ck_assert_uint_eq(s21_b, lib_b);
+  ck_assert_uint_eq(s21_c, lib_c);
+  ck_assert_uint_eq(s21_d, lib_d);
   ck_assert_int_eq(s21_n, lib_n);
 }
 END_TEST
@@ -1100,7 +1100,29 @@ START_TEST(test_sscanf_long_octal) {
   printf("s21 первый чар %ld n: %d res: %d\n", s21_a, s21_n, s21_res);
 
   ck_assert_int_eq(lib_res, s21_res);
-  ck_assert_int_eq(s21_a, lib_a);
+  ck_assert_uint_eq(s21_a, lib_a);
+  ck_assert_int_eq(s21_n, lib_n);
+}
+END_TEST
+
+START_TEST(test_sscanf_overflow_long_octal) {
+  long unsigned s21_a = 0;
+  int s21_n = 0;
+  int s21_res = 0;
+
+  long unsigned lib_a = 0;
+  int lib_n = 0;
+
+  int lib_res = 0;
+
+  s21_res = s21_sscanf("045156223377", "%lo %n", &s21_a, &s21_n);
+  lib_res = sscanf("045156223377", "%lo %n", &lib_a, &lib_n);
+
+  printf("lib первый чар %ld n: %d res: %d\n", lib_a, lib_n, lib_res);
+  printf("s21 первый чар %ld n: %d res: %d\n", s21_a, s21_n, s21_res);
+
+  ck_assert_int_eq(lib_res, s21_res);
+  ck_assert_uint_eq(s21_a, lib_a);
   ck_assert_int_eq(s21_n, lib_n);
 }
 END_TEST
@@ -1122,7 +1144,29 @@ START_TEST(test_sscanf_short_octal) {
   printf("s21 первый чар %hd n: %d res: %d\n", s21_a, s21_n, s21_res);
 
   ck_assert_int_eq(lib_res, s21_res);
-  ck_assert_int_eq(s21_a, lib_a);
+  ck_assert_uint_eq(s21_a, lib_a);
+  ck_assert_int_eq(s21_n, lib_n);
+}
+END_TEST
+
+START_TEST(test_sscanf_overflow_short_octal) {
+  short unsigned s21_a = 0;
+  int s21_n = 0;
+  int s21_res = 0;
+
+  short unsigned lib_a = 0;
+  int lib_n = 0;
+
+  int lib_res = 0;
+
+  s21_res = s21_sscanf("02516077", "%ho %n", &s21_a, &s21_n);
+  lib_res = sscanf("02516077", "%ho %n", &lib_a, &lib_n);
+
+  printf("lib первый чар %hd n: %d res: %d\n", lib_a, lib_n, lib_res);
+  printf("s21 первый чар %hd n: %d res: %d\n", s21_a, s21_n, s21_res);
+
+  ck_assert_int_eq(lib_res, s21_res);
+  ck_assert_uint_eq(s21_a, lib_a);
   ck_assert_int_eq(s21_n, lib_n);
 }
 END_TEST
@@ -1154,10 +1198,10 @@ START_TEST(test_sscanf_hex_problematic) {
          s21_a, s21_b, s21_c, s21_d, s21_n, s21_res);
 
   ck_assert_int_eq(lib_res, s21_res);
-  ck_assert_int_eq(s21_a, lib_a);
-  ck_assert_int_eq(s21_b, lib_b);
-  ck_assert_int_eq(s21_c, lib_c);
-  ck_assert_int_eq(s21_d, lib_d);
+  ck_assert_uint_eq(s21_a, lib_a);
+  ck_assert_uint_eq(s21_b, lib_b);
+  ck_assert_uint_eq(s21_c, lib_c);
+  ck_assert_uint_eq(s21_d, lib_d);
   ck_assert_int_eq(s21_n, lib_n);
 }
 END_TEST
@@ -1189,10 +1233,10 @@ START_TEST(test_sscanf_hex) {
          s21_a, s21_b, s21_c, s21_d, s21_n, s21_res);
 
   ck_assert_int_eq(lib_res, s21_res);
-  ck_assert_int_eq(s21_a, lib_a);
-  ck_assert_int_eq(s21_b, lib_b);
-  ck_assert_int_eq(s21_c, lib_c);
-  ck_assert_int_eq(s21_d, lib_d);
+  ck_assert_uint_eq(s21_a, lib_a);
+  ck_assert_uint_eq(s21_b, lib_b);
+  ck_assert_uint_eq(s21_c, lib_c);
+  ck_assert_uint_eq(s21_d, lib_d);
   ck_assert_int_eq(s21_n, lib_n);
 }
 END_TEST
@@ -1207,14 +1251,36 @@ START_TEST(test_sscanf_long_hex) {
 
   int lib_res = 0;
 
-  s21_res = s21_sscanf("0xffffffff", "%lx %n", &s21_a, &s21_n);
-  lib_res = sscanf("0xffffffff", "%lx %n", &lib_a, &lib_n);
+  s21_res = s21_sscanf("0xffffffff,", "%lx, %n", &s21_a, &s21_n);
+  lib_res = sscanf("0xffffffff,", "%lx, %n", &lib_a, &lib_n);
 
   printf("lib первый чар %ld n: %d res: %d\n", lib_a, lib_n, lib_res);
   printf("s21 первый чар %ld n: %d res: %d\n", s21_a, s21_n, s21_res);
 
   ck_assert_int_eq(lib_res, s21_res);
-  ck_assert_int_eq(s21_a, lib_a);
+  ck_assert_uint_eq(s21_a, lib_a);
+  ck_assert_int_eq(s21_n, lib_n);
+}
+END_TEST
+
+START_TEST(test_sscanf_overflow_long_hex) {
+  long unsigned s21_a = 0;
+  int s21_n = 0;
+  int s21_res = 0;
+
+  long unsigned lib_a = 0;
+  int lib_n = 0;
+
+  int lib_res = 0;
+
+  s21_res = s21_sscanf("0x129b926ff,", "%lx, %n", &s21_a, &s21_n);
+  lib_res = sscanf("0x129b926ff,", "%lx, %n", &lib_a, &lib_n);
+
+  printf("lib первый чар %ld n: %d res: %d\n", lib_a, lib_n, lib_res);
+  printf("s21 первый чар %ld n: %d res: %d\n", s21_a, s21_n, s21_res);
+
+  ck_assert_int_eq(lib_res, s21_res);
+  ck_assert_uint_eq(s21_a, lib_a);
   ck_assert_int_eq(s21_n, lib_n);
 }
 END_TEST
@@ -1236,7 +1302,29 @@ START_TEST(test_sscanf_short_hex) {
   printf("s21 первый чар %hd n: %d res: %d\n", s21_a, s21_n, s21_res);
 
   ck_assert_int_eq(lib_res, s21_res);
-  ck_assert_int_eq(s21_a, lib_a);
+  ck_assert_uint_eq(s21_a, lib_a);
+  ck_assert_int_eq(s21_n, lib_n);
+}
+END_TEST
+
+START_TEST(test_sscanf_overflow_short_hex) {
+  short unsigned s21_a = 0;
+  int s21_n = 0;
+  int s21_res = 0;
+
+  short unsigned lib_a = 0;
+  int lib_n = 0;
+
+  int lib_res = 0;
+
+  s21_res = s21_sscanf("0x11387", "%hx %n", &s21_a, &s21_n);
+  lib_res = sscanf("0x11387", "%hx %n", &lib_a, &lib_n);
+
+  printf("lib первый чар %hd n: %d res: %d\n", lib_a, lib_n, lib_res);
+  printf("s21 первый чар %hd n: %d res: %d\n", s21_a, s21_n, s21_res);
+
+  ck_assert_int_eq(lib_res, s21_res);
+  ck_assert_uint_eq(s21_a, lib_a);
   ck_assert_int_eq(s21_n, lib_n);
 }
 END_TEST
@@ -1255,7 +1343,7 @@ START_TEST(test_sscanf_float) {
   s21_res = s21_sscanf(input_string, format_string, &s21_a);
 
   ck_assert_int_eq(lib_res, s21_res);
-  ck_assert_int_eq(lib_a, s21_a);
+  ck_assert_float_eq(lib_a, s21_a);
 }
 END_TEST
 
@@ -1318,8 +1406,80 @@ START_TEST(test_sscanf_unsigned) {
   printf("s21 first: %u second: %u res: %d\n", s21_a, s21_b, s21_res);
   printf("lib first: %u second: %u res: %d\n\n", lib_a, lib_b, lib_res);
   ck_assert_int_eq(lib_res, s21_res);
-  ck_assert_int_eq(lib_a, s21_a);
+  ck_assert_uint_eq(lib_a, s21_a);
   ck_assert_int_eq(lib_b, s21_b);
+}
+END_TEST
+
+START_TEST(test_sscanf_long_unsigned) {
+  long unsigned s21_a = 0;
+  int s21_res = 0;
+
+  long unsigned lib_a = 0;
+  int lib_res = 0;
+
+  lib_res = sscanf("4294967295", "%lu", &lib_a);
+  s21_res = s21_sscanf("4294967295", "%lu", &s21_a);
+
+  printf("s21 first: %lu res: %d\n", s21_a, s21_res);
+  printf("lib first: %lu res: %d\n\n", lib_a, lib_res);
+
+  ck_assert_int_eq(lib_res, s21_res);
+  ck_assert_uint_eq(lib_a, s21_a);
+}
+END_TEST
+
+START_TEST(test_sscanf_overflow_long_unsigned) {
+  long unsigned s21_a = 0;
+  int s21_res = 0;
+
+  long unsigned lib_a = 0;
+  int lib_res = 0;
+
+  lib_res = sscanf("59949672955", "%lu", &lib_a);
+  s21_res = s21_sscanf("59949672955", "%lu", &s21_a);
+
+  printf("s21 first: %lu res: %d\n", s21_a, s21_res);
+  printf("lib first: %lu res: %d\n\n", lib_a, lib_res);
+
+  ck_assert_int_eq(lib_res, s21_res);
+  ck_assert_uint_eq(lib_a, s21_a);
+}
+END_TEST
+
+START_TEST(test_sscanf_short_unsigned) {
+  short unsigned s21_a = 0;
+  int s21_res = 0;
+
+  short unsigned lib_a = 0;
+  int lib_res = 0;
+
+  lib_res = sscanf("65535", "%hu", &lib_a);
+  s21_res = s21_sscanf("65535", "%hu", &s21_a);
+
+  printf("s21 first: %hu res: %d\n", s21_a, s21_res);
+  printf("lib first: %hu res: %d\n\n", lib_a, lib_res);
+
+  ck_assert_int_eq(lib_res, s21_res);
+  ck_assert_uint_eq(lib_a, s21_a);
+}
+END_TEST
+
+START_TEST(test_sscanf_overflow_short_unsigned) {
+  short unsigned s21_a = 0;
+  int s21_res = 0;
+
+  short unsigned lib_a = 0;
+  int lib_res = 0;
+
+  lib_res = sscanf("95536555", "%hu", &lib_a);
+  s21_res = s21_sscanf("95536555", "%hu", &s21_a);
+
+  printf("s21 first: %hu res: %d\n", s21_a, s21_res);
+  printf("lib first: %hu res: %d\n\n", lib_a, lib_res);
+
+  ck_assert_int_eq(lib_res, s21_res);
+  ck_assert_uint_eq(lib_a, s21_a);
 }
 END_TEST
 
@@ -1377,13 +1537,21 @@ Suite* make_sscanf_suite() {
 
   tcase_add_test(tc_core, test_sscanf_octal);
   tcase_add_test(tc_core, test_sscanf_long_octal);
+  tcase_add_test(tc_core, test_sscanf_overflow_long_octal);
   tcase_add_test(tc_core, test_sscanf_short_octal);
+  tcase_add_test(tc_core, test_sscanf_overflow_short_octal);
 
   tcase_add_test(tc_core, test_sscanf_hex);
   tcase_add_test(tc_core, test_sscanf_long_hex);
+  tcase_add_test(tc_core, test_sscanf_overflow_long_hex);
   tcase_add_test(tc_core, test_sscanf_short_hex);
+  tcase_add_test(tc_core, test_sscanf_overflow_short_hex);
 
   tcase_add_test(tc_problem, test_sscanf_unsigned);
+  tcase_add_test(tc_problem, test_sscanf_long_unsigned);
+  tcase_add_test(tc_problem, test_sscanf_overflow_long_unsigned);
+  tcase_add_test(tc_problem, test_sscanf_short_unsigned);
+  tcase_add_test(tc_problem, test_sscanf_overflow_short_unsigned);
 
   // tcase_add_test(tc_core, test_sscanf_int);
   // tcase_add_test(tc_core, test_sscanf_int_2);
