@@ -1814,8 +1814,11 @@ START_TEST(test_sscanf_ptr_whitespaces) {
   void* lib_ptr = NULL;
   int lib_res = 0;
 
-  lib_res = sscanf("      0x12345678 ", "%p", &lib_ptr);
+  lib_res = sscanf("      0x12345678 ", " %p", &lib_ptr);
   s21_res = s21_sscanf("      0x12345678 ", "%p", &s21_ptr);
+
+  printf("s21 pointer: %p\n", s21_ptr);
+  printf("lib pointer: %p\n\n", lib_ptr);
 
   ck_assert_int_eq(lib_res, s21_res);
   ck_assert_ptr_eq(lib_ptr, s21_ptr);
@@ -2079,11 +2082,11 @@ Suite* make_sscanf_suite() {
   tcase_add_test(tc_core, test_sscanf_string_mix_width_and_suppresion);
 
   tcase_add_test(tc_core, test_sscanf_ptr_null);
-  tcase_add_test(tc_problem, test_sscanf_ptr_hex);
+  tcase_add_test(tc_core, test_sscanf_ptr_hex);
   tcase_add_test(tc_core, test_sscanf_ptr_lead_zero);
   tcase_add_test(tc_core, test_sscanf_ptr_with_letters);
   tcase_add_test(tc_core, test_sscanf_ptr_lead_zero_2);
-  tcase_add_test(tc_core, test_sscanf_ptr_whitespaces);
+  tcase_add_test(tc_problem, test_sscanf_ptr_whitespaces);
   tcase_add_test(tc_core, test_sscanf_ptr_invalid);
   tcase_add_test(tc_core, test_sscanf_ptr_empty);
   tcase_add_test(tc_core, test_sscanf_ptr_invalid_2);

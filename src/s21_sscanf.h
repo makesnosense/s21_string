@@ -11,7 +11,7 @@
 
 #include "s21_string.h"
 
-#define VALID_SSCANF_SPECIFIERS "cdinouxX%"
+#define VALID_SSCANF_SPECIFIERS "cdinopuxX%"
 #define VALID_SSCANF_LENGTHS "Llh"
 
 typedef enum SscanfSpecifier {
