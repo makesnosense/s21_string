@@ -128,18 +128,31 @@ int process_unsigned_sscanf(va_list* args, SpecOptions* spec_opts,
                      matching_failure);
   }
 
-  if (spec_opts->length == h) {
-    short unsigned* dest_input_pointer = va_arg(*args, short unsigned*);
-    *dest_input_pointer = (short unsigned)temp_long_long_unsigned_destination;
-  } else if (spec_opts->length == l) {
-    long unsigned* dest_input_pointer = va_arg(*args, long unsigned*);
-    *dest_input_pointer = (long unsigned)temp_long_long_unsigned_destination;
-  } else {
-    unsigned* dest_input_pointer = va_arg(*args, unsigned*);
-    *dest_input_pointer = (unsigned)temp_long_long_unsigned_destination;
-  }
+  write_to_unsigned_pointer(args, spec_opts,
+                            temp_long_long_unsigned_destination);
 
   return read_result;
+}
+
+void write_to_unsigned_pointer(
+    va_list* args, SpecOptions* spec_opts,
+    long long unsigned temp_long_long_unsigned_destination) {
+  if (spec_opts->length == h) {
+    short unsigned* dest_input_pointer = va_arg(*args, short unsigned*);
+    if (spec_opts->is_star == false) {
+      *dest_input_pointer = (short unsigned)temp_long_long_unsigned_destination;
+    }
+  } else if (spec_opts->length == l) {
+    long unsigned* dest_input_pointer = va_arg(*args, long unsigned*);
+    if (spec_opts->is_star == false) {
+      *dest_input_pointer = (long unsigned)temp_long_long_unsigned_destination;
+    }
+  } else {
+    unsigned* dest_input_pointer = va_arg(*args, unsigned*);
+    if (spec_opts->is_star == false) {
+      *dest_input_pointer = (unsigned)temp_long_long_unsigned_destination;
+    }
+  }
 }
 
 int process_int_sscanf(va_list* args, SpecOptions* spec_opts, InputStr* source,
@@ -168,18 +181,30 @@ int process_int_sscanf(va_list* args, SpecOptions* spec_opts, InputStr* source,
 
   int sign = spec_opts->is_negative ? -1 : 1;
 
-  if (spec_opts->length == h) {
-    short* dest_input_pointer = va_arg(*args, short*);
-    *dest_input_pointer = sign * (short)temp_unsigned_destination;
-  } else if (spec_opts->length == l) {
-    long* dest_input_pointer = va_arg(*args, long*);
-    *dest_input_pointer = sign * (long)temp_unsigned_destination;
-  } else {
-    int* dest_input_pointer = va_arg(*args, int*);
-    *dest_input_pointer = sign * (int)temp_unsigned_destination;
-  }
+  write_to_integer_pointer(args, spec_opts, temp_unsigned_destination, sign);
 
   return read_result;
+}
+
+void write_to_integer_pointer(va_list* args, SpecOptions* spec_opts,
+                              long long unsigned temp_unsigned_destination,
+                              int sign) {
+  if (spec_opts->length == h) {
+    short* dest_input_pointer = va_arg(*args, short*);
+    if (spec_opts->is_star == false) {
+      *dest_input_pointer = sign * (short)temp_unsigned_destination;
+    }
+  } else if (spec_opts->length == l) {
+    long* dest_input_pointer = va_arg(*args, long*);
+    if (spec_opts->is_star == false) {
+      *dest_input_pointer = sign * (long)temp_unsigned_destination;
+    }
+  } else {
+    int* dest_input_pointer = va_arg(*args, int*);
+    if (spec_opts->is_star == false) {
+      *dest_input_pointer = sign * (int)temp_unsigned_destination;
+    }
+  }
 }
 
 int read_hex(InputStr* source, SpecOptions* spec_opts,
