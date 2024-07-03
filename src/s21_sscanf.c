@@ -25,6 +25,7 @@ int s21_sscanf(const char* str, const char* format, ...) {
 
       } else if (is_space(source.str[source.curr_ind]) &&
                  c_specifier_follows(&fmt_input) == false) {
+        printf("\n\n\n\n%c HERE\n\n\n", source.str[source.curr_ind]);
         if (result == 0) {
           result = -1;
         }
@@ -120,6 +121,7 @@ int read_pointer(InputStr* source, void** value, SpecOptions* spec_opts) {
 
   while (is_space(source->str[source->curr_ind]) == true) {
     source->curr_ind++;
+    printf("\n\n\n\n%c HERE\n\n\n", source->str[source->curr_ind]);
   }
 
   if (hexadecimal_prefix_follows(source)) {
