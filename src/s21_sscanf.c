@@ -70,6 +70,15 @@ int consume_specifier(va_list* args, InputStr* source, InputStr* fmt_input,
       *num = source->curr_ind;
       break;
     }
+    case 's': {
+      specifier_result = read_string(args, source, &spec_opts);
+      break;
+    }
+    case 'p': {
+      void** dest_input_pointer = va_arg(*args, void**);
+      specifier_result = read_pointer(source, dest_input_pointer, &spec_opts);
+      break;
+    }
     case 'i':
     case 'd': {
       specifier_result =
@@ -97,6 +106,67 @@ int consume_specifier(va_list* args, InputStr* source, InputStr* fmt_input,
   return specifier_result;
 }
 
+int read_pointer(InputStr* source, void** value, SpecOptions* spec_opts) {
+  bool weve_read_at_least_once_successfully = 0;
+  unsigned long long ptr_value = 0;
+
+  if (hexadecimal_prefix_follows(source)) {
+    source->curr_ind += 2;
+  }
+
+  // Чтение шестнадцатеричных цифр
+  while (isxdigit(source->str[source->curr_ind])) {
+    ptr_value *= 16;
+    if (isdigit(source->str[source->curr_ind])) {
+      ptr_value += source->str[source->curr_ind] - '0';
+    } else if (source->str[source->curr_ind] >= 'a' &&
+               source->str[source->curr_ind] <= 'f') {
+      ptr_value += source->str[source->curr_ind] - 'a' + 10;
+    } else if (source->str[source->curr_ind] >= 'A' &&
+               source->str[source->curr_ind] <= 'F') {
+      ptr_value += source->str[source->curr_ind] - 'A' + 10;
+    }
+    source->curr_ind++;
+    weve_read_at_least_once_successfully = true;
+  }
+
+  // Преобразование ptr_value в указатель и сохранение в value
+  if (spec_opts->is_star == false) {
+    *value = (void*)ptr_value;
+  }
+  return weve_read_at_least_once_successfully;
+}
+
+int read_string(va_list* args, InputStr* source, SpecOptions* spec_opts) {
+  bool weve_read_at_least_once_successfully = 0;
+  s21_size_t bytes_read = 0;
+
+  if (spec_opts->is_star == false) {
+    char* dest_input_pointer = va_arg(*args, char*);
+
+    while (is_space(source->str[source->curr_ind]) == false &&
+           source->str[source->curr_ind] != '\0' &&
+           width_limit_reached(bytes_read, spec_opts) == false) {
+      *dest_input_pointer = source->str[source->curr_ind];
+      dest_input_pointer++;
+      weve_read_at_least_once_successfully = true;
+      source->curr_ind++;
+      bytes_read++;
+    }
+    *dest_input_pointer = '\0';
+
+  } else {
+    while (is_space(source->str[source->curr_ind]) == false &&
+           source->str[source->curr_ind] != '\0' &&
+           width_limit_reached(bytes_read, spec_opts) == false) {
+      source->curr_ind++;
+      bytes_read++;
+    }
+  }
+
+  return weve_read_at_least_once_successfully;
+}
+
 int process_float_sscanf(va_list* args, SpecOptions* spec_opts,
                          InputStr* source) {
   int read_result = 0;
@@ -106,7 +176,7 @@ int process_float_sscanf(va_list* args, SpecOptions* spec_opts,
 
   write_to_floating_pointer(args, spec_opts, temp_floating_destination);
 
-  return read_result;
+  return spec_opts->is_star == false ? read_result : 0;
 }
 
 void write_to_floating_pointer(va_list* args, SpecOptions* spec_opts,
@@ -159,7 +229,7 @@ int process_unsigned_sscanf(va_list* args, SpecOptions* spec_opts,
   write_to_unsigned_pointer(args, spec_opts,
                             temp_long_long_unsigned_destination);
 
-  return read_result;
+  return spec_opts->is_star == false ? read_result : 0;
 }
 
 void write_to_unsigned_pointer(
@@ -206,7 +276,7 @@ int process_int_sscanf(va_list* args, SpecOptions* spec_opts, InputStr* source,
 
   write_to_integer_pointer(args, spec_opts, temp_unsigned_destination, sign);
 
-  return read_result;
+  return spec_opts->is_star == false ? read_result : 0;
 }
 
 void write_to_integer_pointer(va_list* args, SpecOptions* spec_opts,
@@ -397,7 +467,7 @@ int read_float(InputStr* source, long double* dest_input_pointer,
     int_part = int_part * 10 + (source->str[source->curr_ind] - '0');
     source->curr_ind++;
     bytes_read++;
-    weve_read_at_least_once_successfully = 1;
+    weve_read_at_least_once_successfully = true;
   }
 
   if (source->str[source->curr_ind] == '.') {
@@ -471,42 +541,7 @@ char to_lower_char(char incoming_char) {
 //   }
 //   break;
 // }
-// case 'd':
-// case 'i': {
-//   int* d = va_arg(args, int*);
-//   if (read_int(&input, d, &spec_opts)) {
-//     if (!spec_opts.is_star) result++;
-//     fmt_input.curr_ind++;
-//     // input.curr_ind++;
-//   }
-//   break;
-// }
-// case 'f': {
-//   float* f = va_arg(args, float*);
-//   if (read_float(&input, f, &spec_opts)) {
-//     if (!spec_opts.is_star) result++;
-//     fmt_input.curr_ind++;
-//     // input.curr_ind++;
-//   }
-//   break;
-// }
-// case 'u': {
-//   unsigned int* u = va_arg(args, unsigned int*);
-//   if (read_unsigned_int(&str, u, &spec_opts)) {
-//     if (!spec_opts.is_star) result++;
-//     fmt_input.curr_ind++;
-//   }
-//   break;
-// }
-// case 'x':
-// case 'X': {
-//   unsigned int* x = va_arg(args, unsigned int*);
-//   if (read_hex(&str, x, &spec_opts)) {
-//     if (!spec_opts.is_star) result++;
-//     fmt_input.curr_ind++;
-//   }
-//   break;
-// }
+
 // case 'p': {
 //   void** address = va_arg(args, void**);
 //   if (parse_pointer(&input, address)) {
@@ -517,35 +552,6 @@ char to_lower_char(char incoming_char) {
 //     // input.curr_ind++;
 //   }
 // } break;
-// case '%': {
-//   fmt_input.curr_ind++;
-//   str++;
-//   break;
-// }
-// case 'n': {
-//   int* n = va_arg(args, int*);
-//   // YA HYU ZNAYET POCHEMU NO TAK RABOTAET
-//   if (input.str[input.curr_ind - 2] == ' ') {
-//     int temp = input.curr_ind;
-//     *n = temp;
-//   }
-//   //  else {
-//   //   // int temp = spec_opts.count;
-//   //   // *n = temp;
-//   // }
-//   // *n = opts.count;
-//   fmt_input.curr_ind++;
-//   break;
-// }
-// default:
-//   break;
-// }
-
-// else {
-//   // spec_opts.count++;
-//   fmt_input.curr_ind++;
-//   input.curr_ind++;
-// }
 
 bool n_specifier_follows(InputStr* fmt_input) {
   bool it_follows = false;
@@ -751,49 +757,8 @@ void parse_length_sscanf(InputStr* fmt_input, SpecOptions* spec_opts) {
   }
 }
 
-// int parse_pointer(InputStr* input, void** value) {
-//   int res = 0;
-
-//   // Skip "0x" and increment count by 2
-//   // input->curr_ind += 1;
-//   // printf("\n\n.%c.\n\n", input->str[input->curr_ind]);
-
-//   // Convert hexadecimal value to pointer
-//   unsigned long int ptr_value = 0;
-//   while (isxdigit(input->str[input->curr_ind])) {
-//     ptr_value *= 16;
-//     if (isdigit(input->str[input->curr_ind])) {
-//       ptr_value += input->str[input->curr_ind] - '0';
-//     } else if (input->str[input->curr_ind] >= 'a' &&
-//                input->str[input->curr_ind] <= 'f') {
-//       ptr_value += input->str[input->curr_ind] - 'a' + 10;
-//     } else if (input->str[input->curr_ind] >= 'A' &&
-//                input->str[input->curr_ind] <= 'F') {
-//       ptr_value += input->str[input->curr_ind] - 'A' + 10;
-//     }
-//     input->curr_ind++;
-//     // opts->count++;
-//     res = 1;
-//   }
-
 //   *value = (void*)ptr_value;
 //   return res;  // Success
-// }
-
-// int read_string(const char** str, char* s, SpecOptions* opts) {
-//   int result = 0;
-//   printf("%d", opts->is_star);
-//   while (**str != ' ' && **str != '\t' && **str != '\n' && **str != '\0') {
-//     // opts->count++;
-//     *s = **str;
-//     (*str)++;
-//     s++;
-//     // opts->count++;
-//     result = 1;
-//   }
-//   *s = '\0';
-
-//   return result;
 // }
 
 // bool format_string_starts_with_char_spec(InputStr* fmt_input) {
