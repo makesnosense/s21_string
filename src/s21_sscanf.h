@@ -69,6 +69,8 @@ int process_unsigned_sscanf(va_list* args, SpecOptions* spec_opts,
 
 int process_int_sscanf(va_list* args, SpecOptions* spec_opts, InputStr* source,
                        bool* matching_failure);
+int process_float_sscanf(va_list* args, SpecOptions* spec_opts,
+                         InputStr* source);
 
 int read_decimal(InputStr* source, SpecOptions* spec_opts,
                  long long unsigned* dest_input_pointer,
@@ -77,7 +79,7 @@ int read_hex(InputStr* source, SpecOptions* spec_opts,
              long long unsigned* dest_input_pointer, bool* matching_failure);
 int read_octal(InputStr* source, SpecOptions* spec_opts,
                long long unsigned* dest_input_pointer, bool* matching_failure);
-int read_float(InputStr* sourse, float* dest_input_pointer,
+int read_float(InputStr* sourse, long double* dest_input_pointer,
                SpecOptions* spec_opts);
 
 int read_char(va_list* args, InputStr* source, SpecOptions* spec_opts);
@@ -116,6 +118,8 @@ void write_to_integer_pointer(va_list* args, SpecOptions* spec_opts,
 void write_to_unsigned_pointer(
     va_list* args, SpecOptions* spec_opts,
     long long unsigned temp_long_long_unsigned_destination);
+void write_to_floating_pointer(va_list* args, SpecOptions* spec_opts,
+                               long double temp_floating_destination);
 
 // // Функция для считывания значений из буфера по формату
 // int s21_sscanf(const char *str, const char *format, ...);

@@ -84,17 +84,42 @@ int consume_specifier(va_list* args, InputStr* source, InputStr* fmt_input,
           process_unsigned_sscanf(args, &spec_opts, source, matching_failure);
       break;
     }
+    case 'g':
+    case 'G':
+    case 'e':
+    case 'E':
     case 'f': {
-      float input_num = 0;
-      specifier_result = read_float(source, &input_num, &spec_opts);
-      float* num = va_arg(*args, float*);
-      if (spec_opts.is_star == false) {
-        *num = input_num;
-      }
+      specifier_result = process_float_sscanf(args, &spec_opts, source);
+      break;
     }
   }
   fmt_input->curr_ind++;
   return specifier_result;
+}
+
+int process_float_sscanf(va_list* args, SpecOptions* spec_opts,
+                         InputStr* source) {
+  int read_result = 0;
+  long double temp_floating_destination = 0;
+
+  read_result = read_float(source, &temp_floating_destination, spec_opts);
+
+  write_to_floating_pointer(args, spec_opts, temp_floating_destination);
+
+  return read_result;
+}
+
+void write_to_floating_pointer(va_list* args, SpecOptions* spec_opts,
+                               long double temp_floating_destination) {
+  if (spec_opts->is_star == false) {
+    if (spec_opts->length == L) {
+      double* dest_input_pointer = va_arg(*args, double*);
+      *dest_input_pointer = (double)temp_floating_destination;
+    } else {
+      float* dest_input_pointer = va_arg(*args, float*);
+      *dest_input_pointer = (float)temp_floating_destination;
+    }
+  }
 }
 
 void read_next_digit_in_fmt(InputStr fmt_input, SpecOptions* spec_opts) {
@@ -137,19 +162,15 @@ int process_unsigned_sscanf(va_list* args, SpecOptions* spec_opts,
 void write_to_unsigned_pointer(
     va_list* args, SpecOptions* spec_opts,
     long long unsigned temp_long_long_unsigned_destination) {
-  if (spec_opts->length == h) {
-    short unsigned* dest_input_pointer = va_arg(*args, short unsigned*);
-    if (spec_opts->is_star == false) {
+  if (spec_opts->is_star == false) {
+    if (spec_opts->length == h) {
+      short unsigned* dest_input_pointer = va_arg(*args, short unsigned*);
       *dest_input_pointer = (short unsigned)temp_long_long_unsigned_destination;
-    }
-  } else if (spec_opts->length == l) {
-    long unsigned* dest_input_pointer = va_arg(*args, long unsigned*);
-    if (spec_opts->is_star == false) {
+    } else if (spec_opts->length == l) {
+      long unsigned* dest_input_pointer = va_arg(*args, long unsigned*);
       *dest_input_pointer = (long unsigned)temp_long_long_unsigned_destination;
-    }
-  } else {
-    unsigned* dest_input_pointer = va_arg(*args, unsigned*);
-    if (spec_opts->is_star == false) {
+    } else {
+      unsigned* dest_input_pointer = va_arg(*args, unsigned*);
       *dest_input_pointer = (unsigned)temp_long_long_unsigned_destination;
     }
   }
@@ -189,19 +210,15 @@ int process_int_sscanf(va_list* args, SpecOptions* spec_opts, InputStr* source,
 void write_to_integer_pointer(va_list* args, SpecOptions* spec_opts,
                               long long unsigned temp_unsigned_destination,
                               int sign) {
-  if (spec_opts->length == h) {
-    short* dest_input_pointer = va_arg(*args, short*);
-    if (spec_opts->is_star == false) {
+  if (spec_opts->is_star == false) {
+    if (spec_opts->length == h) {
+      short* dest_input_pointer = va_arg(*args, short*);
       *dest_input_pointer = sign * (short)temp_unsigned_destination;
-    }
-  } else if (spec_opts->length == l) {
-    long* dest_input_pointer = va_arg(*args, long*);
-    if (spec_opts->is_star == false) {
+    } else if (spec_opts->length == l) {
+      long* dest_input_pointer = va_arg(*args, long*);
       *dest_input_pointer = sign * (long)temp_unsigned_destination;
-    }
-  } else {
-    int* dest_input_pointer = va_arg(*args, int*);
-    if (spec_opts->is_star == false) {
+    } else {
+      int* dest_input_pointer = va_arg(*args, int*);
       *dest_input_pointer = sign * (int)temp_unsigned_destination;
     }
   }
@@ -347,7 +364,7 @@ int read_char(va_list* args, InputStr* source, SpecOptions* spec_opts) {
   return read_result;
 };
 
-int read_float(InputStr* source, float* dest_input_pointer,
+int read_float(InputStr* source, long double* dest_input_pointer,
                SpecOptions* spec_opts) {
   int sign = 1;
   int int_part = 0;
@@ -740,21 +757,6 @@ void parse_length_sscanf(InputStr* fmt_input, SpecOptions* spec_opts) {
 //   return res;  // Success
 // }
 
-// int read_char(InputStr* source, SpecOptions* opts) {
-//   int result = 0;
-
-//   // printf("\n\n%lu\n\n", input->curr_ind);
-//   /// here to add \t and n
-//   if (input->str[input->curr_ind] != '\0') {
-//     if (!opts->is_star) *c = input->str[input->curr_ind];
-//     input->curr_ind++;
-//     // opts->count++;
-//     result = 1;
-//   }
-
-//   return result;
-// }
-
 // int read_string(const char** str, char* s, SpecOptions* opts) {
 //   int result = 0;
 //   printf("%d", opts->is_star);
@@ -767,23 +769,6 @@ void parse_length_sscanf(InputStr* fmt_input, SpecOptions* spec_opts) {
 //     result = 1;
 //   }
 //   *s = '\0';
-
-//   return result;
-// }
-
-// int read_unsigned_int(const char** str, unsigned int* u, SpecOptions* opts)
-// {
-//   unsigned int num = 0;
-//   int result = 0;
-//   printf("%d", opts->is_star);
-
-//   while (**str >= '0' && **str <= '9') {
-//     num = num * 10 + (**str - '0');
-//     (*str)++;
-//     // opts->count++;
-//     result = 1;
-//   }
-//   *u = num;
 
 //   return result;
 // }
@@ -805,53 +790,6 @@ void parse_length_sscanf(InputStr* fmt_input, SpecOptions* spec_opts) {
 //       result = true;
 //     }
 //   } else if (fmt_len >= 4) {
-//     if (fmt_input->str[0] == '%' && fmt_input->str[1] == '*' &&
-//         fmt_input->str[2] == 'l' && fmt_input->str[3] == 'c') {
-//       result = true;
-//     }
-//   }
-//   return result;
-// }
-
-// int source_validity_check(InputStr* source, InputStr* fmt_input,
-//                           bool* matching_failure) {
-//   bool char_found = false;
-//   int i = 0;
-
-//   s21_size_t source_characters_remaining =
-//       s21_strlen(source->str) - source->curr_ind;
-
-//   if (source_characters_remaining == 0) {
-//     while (source->str[i] != '\0') {
-//       if (char_found == false) {
-//         char_found = format_string_starts_with_char_spec(fmt_input);
-//       }
-//     }
-//     if (char_found == false) {
-//       *matching_failure = true;
-//     }
-//     return char_found ? 0 : -1;
-//   }
-
-// bool c_specifier_follows(InputStr* fmt_input) {
-//   bool result = false;
-//   s21_size_t fmt_characters_remaining =
-//       s21_strlen(fmt_input->str) - fmt_input->curr_ind;
-
-//   if (fmt_characters_remaining >= 2) {
-//     if (fmt_input->str[fmt_input->curr_ind] == '%' &&
-//         fmt_input->str[fmt_input->curr_ind + 1] == 'c') {
-//       result = true;
-//     }
-//   } else if (fmt_characters_remaining >= 3) {
-//     if (fmt_input->str[0] == '%' && fmt_input->str[1] == 'l' &&
-//         fmt_input->str[2] == 'c') {
-//       result = true;
-//     } else if (fmt_input->str[0] == '%' && fmt_input->str[1] == '*' &&
-//                fmt_input->str[2] == 'c') {
-//       result = true;
-//     }
-//   } else if (fmt_characters_remaining >= 4) {
 //     if (fmt_input->str[0] == '%' && fmt_input->str[1] == '*' &&
 //         fmt_input->str[2] == 'l' && fmt_input->str[3] == 'c') {
 //       result = true;
