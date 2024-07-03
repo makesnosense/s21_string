@@ -110,6 +110,13 @@ bool width_limit_reached(s21_size_t bytes_read, SpecOptions* spec_opts);
 
 void read_next_digit_in_fmt(InputStr fmt_input, SpecOptions* spec_opts);
 
+void write_to_integer_pointer(va_list* args, SpecOptions* spec_opts,
+                              long long unsigned temp_unsigned_destination,
+                              int sign);
+void write_to_unsigned_pointer(
+    va_list* args, SpecOptions* spec_opts,
+    long long unsigned temp_long_long_unsigned_destination);
+
 // // Функция для считывания значений из буфера по формату
 // int s21_sscanf(const char *str, const char *format, ...);
 
