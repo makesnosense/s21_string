@@ -121,6 +121,8 @@ void write_to_unsigned_pointer(
 void write_to_floating_pointer(va_list* args, SpecOptions* spec_opts,
                                long double temp_floating_destination);
 
+char to_lower_char(char incoming_char);
+
 // // Функция для считывания значений из буфера по формату
 // int s21_sscanf(const char *str, const char *format, ...);
 
