@@ -11,7 +11,7 @@ int s21_sscanf(const char* str, const char* format, ...) {
   consume_initial_space_and_n(&args, &source, &fmt_input);
 
   while (we_continue_consuming(&source, &fmt_input, &matching_failure)) {
-    if (is_space(fmt_input.str[fmt_input.curr_ind])) {
+    if (is_space_specifier(&fmt_input)) {
       consume_space(&source);
       fmt_input.curr_ind++;
     } else if (fmt_input.str[fmt_input.curr_ind] == '%') {
@@ -42,7 +42,11 @@ int s21_sscanf(const char* str, const char* format, ...) {
       }
     }
   }
+
   va_end(args);
+  if (result == 0 && source.curr_ind == 0) {
+    result = -1;
+  }
 
   return result;
 }
@@ -101,6 +105,10 @@ int consume_specifier(va_list* args, InputStr* source, InputStr* fmt_input,
       specifier_result = process_float_sscanf(args, &spec_opts, source);
       break;
     }
+    case '%':
+      if (source->str[source->curr_ind] == '%') {
+        source->curr_ind++;
+      }
   }
   fmt_input->curr_ind++;
   return specifier_result;
@@ -109,6 +117,10 @@ int consume_specifier(va_list* args, InputStr* source, InputStr* fmt_input,
 int read_pointer(InputStr* source, void** value, SpecOptions* spec_opts) {
   bool weve_read_at_least_once_successfully = 0;
   unsigned long long ptr_value = 0;
+
+  while (is_space(source->str[source->curr_ind]) == true) {
+    source->curr_ind++;
+  }
 
   if (hexadecimal_prefix_follows(source)) {
     source->curr_ind += 2;
@@ -532,15 +544,6 @@ char to_lower_char(char incoming_char) {
   }
   return temp_incoming_char;
 }
-
-// case 's': {
-//   char* s = va_arg(args, char*);
-//   if (read_string(&str, s, &spec_opts)) {
-//     if (!spec_opts.is_star) result++;
-//     fmt_input.curr_ind++;
-//   }
-//   break;
-// }
 
 // case 'p': {
 //   void** address = va_arg(args, void**);
