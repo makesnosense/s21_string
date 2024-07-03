@@ -187,9 +187,7 @@ int process_int_sscanf(va_list* args, SpecOptions* spec_opts, InputStr* source,
     source->curr_ind++;
   }
 
-  if ((s21_strncmp(&source->str[source->curr_ind], "0x", 2) == 0 ||
-       s21_strncmp(&source->str[source->curr_ind], "0X", 2) == 0) &&
-      spec_opts->specifier == i) {
+  if (hexadecimal_prefix_follows(source) && spec_opts->specifier == i) {
     read_result = read_hex(source, spec_opts, &temp_unsigned_destination,
                            matching_failure);
   } else if (s21_strncmp(&source->str[source->curr_ind], "0", 1) == 0 &&
@@ -225,6 +223,15 @@ void write_to_integer_pointer(va_list* args, SpecOptions* spec_opts,
   }
 }
 
+bool hexadecimal_prefix_follows(InputStr* source) {
+  bool hexadecimal_prefix_follows = false;
+  if ((s21_strncmp(&source->str[source->curr_ind], "0x", 2) == 0 ||
+       s21_strncmp(&source->str[source->curr_ind], "0X", 2) == 0)) {
+    hexadecimal_prefix_follows = true;
+  }
+  return hexadecimal_prefix_follows;
+}
+
 int read_hex(InputStr* source, SpecOptions* spec_opts,
              long long unsigned* dest_input_pointer, bool* matching_failure) {
   s21_size_t base = 16;
@@ -233,8 +240,7 @@ int read_hex(InputStr* source, SpecOptions* spec_opts,
   long long unsigned num = 0;
   s21_size_t bytes_read = 0;
 
-  if ((s21_strncmp(&source->str[source->curr_ind], "0x", 2) == 0 ||
-       s21_strncmp(&source->str[source->curr_ind], "0X", 2) == 0)) {
+  if (hexadecimal_prefix_follows(source)) {
     source->curr_ind += 2;
     bytes_read += 2;
   }

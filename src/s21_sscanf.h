@@ -122,6 +122,7 @@ void write_to_floating_pointer(va_list* args, SpecOptions* spec_opts,
                                long double temp_floating_destination);
 
 char to_lower_char(char incoming_char);
+bool hexadecimal_prefix_follows(InputStr* source);
 
 // // Функция для считывания значений из буфера по формату
 // int s21_sscanf(const char *str, const char *format, ...);
