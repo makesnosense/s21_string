@@ -36,6 +36,7 @@ typedef struct SpecifierOptions {
   Length length;
   bool is_hexadecimal;
   bool is_negative;
+  char next_digit;
 
 } SpecOptions;
 
@@ -106,6 +107,8 @@ s21_size_t get_octal_num_length(InputStr* source, SpecOptions* spec_opts,
                                 s21_size_t base);
 
 bool width_limit_reached(s21_size_t bytes_read, SpecOptions* spec_opts);
+
+void read_next_digit_in_fmt(InputStr fmt_input, SpecOptions* spec_opts);
 
 // // Функция для считывания значений из буфера по формату
 // int s21_sscanf(const char *str, const char *format, ...);
