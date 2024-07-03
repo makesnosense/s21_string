@@ -187,7 +187,8 @@ int process_int_sscanf(va_list* args, SpecOptions* spec_opts, InputStr* source,
     source->curr_ind++;
   }
 
-  if (s21_strncmp(&source->str[source->curr_ind], "0x", 2) == 0 &&
+  if ((s21_strncmp(&source->str[source->curr_ind], "0x", 2) == 0 ||
+       s21_strncmp(&source->str[source->curr_ind], "0X", 2) == 0) &&
       spec_opts->specifier == i) {
     read_result = read_hex(source, spec_opts, &temp_unsigned_destination,
                            matching_failure);
@@ -232,7 +233,8 @@ int read_hex(InputStr* source, SpecOptions* spec_opts,
   long long unsigned num = 0;
   s21_size_t bytes_read = 0;
 
-  if (s21_strncmp(&source->str[source->curr_ind], "0x", 2) == 0) {
+  if ((s21_strncmp(&source->str[source->curr_ind], "0x", 2) == 0 ||
+       s21_strncmp(&source->str[source->curr_ind], "0X", 2) == 0)) {
     source->curr_ind += 2;
     bytes_read += 2;
   }
@@ -431,6 +433,8 @@ s21_size_t get_octal_num_length(InputStr* source, SpecOptions* spec_opts,
 
 bool is_valid_digit(char incoming_char, s21_size_t base) {
   bool char_is_valid = false;
+  incoming_char = to_lower_char(incoming_char);
+  // printf("\n\n\n\n%c\n\n\n\n", incoming_char);
   const char* digits = "0123456789abcdef";
   for (s21_size_t i = 0; i < base && char_is_valid == false; i++) {
     if (incoming_char == digits[i]) {
@@ -438,6 +442,16 @@ bool is_valid_digit(char incoming_char, s21_size_t base) {
     }
   }
   return char_is_valid;
+}
+
+char to_lower_char(char incoming_char) {
+  char temp_incoming_char;
+  if (incoming_char >= 'A' && incoming_char <= 'Z') {
+    temp_incoming_char = incoming_char + ('a' - 'A');
+  } else {
+    temp_incoming_char = incoming_char;
+  }
+  return temp_incoming_char;
 }
 
 // case 's': {

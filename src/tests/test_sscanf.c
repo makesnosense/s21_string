@@ -1295,8 +1295,8 @@ START_TEST(test_sscanf_short_hex) {
 
   int lib_res = 0;
 
-  s21_res = s21_sscanf("0xffff", "%hx %n", &s21_a, &s21_n);
-  lib_res = sscanf("0xffff", "%hx %n", &lib_a, &lib_n);
+  s21_res = s21_sscanf("0XFFFF", "%hx %n", &s21_a, &s21_n);
+  lib_res = sscanf("0XFFFF", "%hx %n", &lib_a, &lib_n);
 
   printf("lib первый чар %hd n: %d res: %d\n", lib_a, lib_n, lib_res);
   printf("s21 первый чар %hd n: %d res: %d\n", s21_a, s21_n, s21_res);
@@ -1544,14 +1544,14 @@ Suite* make_sscanf_suite() {
   tcase_add_test(tc_core, test_sscanf_hex);
   tcase_add_test(tc_core, test_sscanf_long_hex);
   tcase_add_test(tc_core, test_sscanf_overflow_long_hex);
-  tcase_add_test(tc_core, test_sscanf_short_hex);
+  tcase_add_test(tc_problem, test_sscanf_short_hex);
   tcase_add_test(tc_core, test_sscanf_overflow_short_hex);
 
-  tcase_add_test(tc_problem, test_sscanf_unsigned);
-  tcase_add_test(tc_problem, test_sscanf_long_unsigned);
-  tcase_add_test(tc_problem, test_sscanf_overflow_long_unsigned);
-  tcase_add_test(tc_problem, test_sscanf_short_unsigned);
-  tcase_add_test(tc_problem, test_sscanf_overflow_short_unsigned);
+  tcase_add_test(tc_core, test_sscanf_unsigned);
+  tcase_add_test(tc_core, test_sscanf_long_unsigned);
+  tcase_add_test(tc_core, test_sscanf_overflow_long_unsigned);
+  tcase_add_test(tc_core, test_sscanf_short_unsigned);
+  tcase_add_test(tc_core, test_sscanf_overflow_short_unsigned);
 
   // tcase_add_test(tc_core, test_sscanf_int);
   // tcase_add_test(tc_core, test_sscanf_int_2);
