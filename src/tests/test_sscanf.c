@@ -924,9 +924,9 @@ START_TEST(test_sscanf_short_i) {
   int lib_n = 0;
   int lib_res = 0;
 
-  s21_res = s21_sscanf("32767 -32768 077777 0x7fff", "%hi %hi %hi %hi %n",
+  s21_res = s21_sscanf("32767 -32768 077777, 0x7fff", "%hi %hi %hi, %hi %n",
                        &s21_a, &s21_b, &s21_c, &s21_d, &s21_n);
-  lib_res = sscanf("32767 -32768 077777 0x7fff", "%hi %hi %hi %hi %n", &lib_a,
+  lib_res = sscanf("32767 -32768 077777, 0x7fff", "%hi %hi %hi, %hi %n", &lib_a,
                    &lib_b, &lib_c, &lib_d, &lib_n);
 
   printf("первый чар %d второй чар %d третий: %d четыре %d  n: %d res: %d\n",
@@ -995,10 +995,10 @@ START_TEST(test_sscanf_overflow_spec_i) {
   int lib_res = 0;
 
   s21_res =
-      s21_sscanf("2147883677 -020000000537 0x802626ff -0x802626ff",
-                 "%i %i %i %i %n", &s21_a, &s21_b, &s21_c, &s21_d, &s21_n);
-  lib_res = sscanf("2147883677 -020000000537 0x802626ff -0x802626ff",
-                   "%i %i %i %i %n", &lib_a, &lib_b, &lib_c, &lib_d, &lib_n);
+      s21_sscanf("2147883677, -020000000537 0x802626ff -0x802626ff",
+                 "%i, %i %i %i %n", &s21_a, &s21_b, &s21_c, &s21_d, &s21_n);
+  lib_res = sscanf("2147883677, -020000000537 0x802626ff -0x802626ff",
+                   "%i, %i %i %i %n", &lib_a, &lib_b, &lib_c, &lib_d, &lib_n);
 
   printf(
       "lib первый чар %d второй чар %d третий: %d четыре %d  n: %d res: %d\n",
@@ -1310,9 +1310,9 @@ START_TEST(test_sscanf_unsigned) {
   unsigned lib_b = 0;
   int lib_res = 0;
 
-  lib_res = sscanf("Unsigned 1: 0, unsigned 2: 123123123",
+  lib_res = sscanf("Unsigned 1: 7, unsigned 2: 123123123",
                    "Unsigned 1: %u, unsigned 2: %u", &lib_a, &lib_b);
-  s21_res = s21_sscanf("Unsigned 1: 0, unsigned 2: 123123123",
+  s21_res = s21_sscanf("Unsigned 1: 7, unsigned 2: 123123123",
                        "Unsigned 1: %u, unsigned 2: %u", &s21_a, &s21_b);
 
   printf("s21 first: %u second: %u res: %d\n", s21_a, s21_b, s21_res);

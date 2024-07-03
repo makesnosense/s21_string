@@ -58,6 +58,7 @@ int consume_specifier(va_list* args, InputStr* source, InputStr* fmt_input,
   parse_width_sscanf(fmt_input, &spec_opts);
   parse_length_sscanf(fmt_input, &spec_opts);
   parse_sscanf_specifier(fmt_input, &spec_opts);
+  read_next_digit_in_fmt(*fmt_input, &spec_opts);
 
   switch (fmt_input->str[fmt_input->curr_ind]) {
     case 'c': {
@@ -94,6 +95,12 @@ int consume_specifier(va_list* args, InputStr* source, InputStr* fmt_input,
   }
   fmt_input->curr_ind++;
   return specifier_result;
+}
+
+void read_next_digit_in_fmt(InputStr fmt_input, SpecOptions* spec_opts) {
+  if (fmt_input.str[fmt_input.curr_ind + 1] != '\0') {
+    spec_opts->next_digit = fmt_input.str[fmt_input.curr_ind + 1];
+  }
 }
 
 void process_n(va_list* args, InputStr* source, bool n_star) {
@@ -134,30 +141,6 @@ int process_unsigned_sscanf(va_list* args, SpecOptions* spec_opts,
 
   return read_result;
 }
-
-// int process_hexadecimal(va_list* args, SpecOptions* spec_opts, InputStr*
-// source,
-//                         bool* matching_failure) {
-//   int read_result = 0;
-//   long long unsigned temp_long_long_unsigned_destination = 0;
-//   read_result =
-//       read_octal(source, &spec_opts, &temp_long_long_unsigned_destination,
-//                  matching_failure);
-
-//   if (spec_opts->length == h) {
-//     short unsigned* dest_input_pointer = va_arg(*args, short unsigned*);
-//     *dest_input_pointer = (short
-//     unsigned)temp_long_long_unsigned_destination;
-//   } else if (spec_opts->length == l) {
-//     long unsigned* dest_input_pointer = va_arg(*args, long unsigned*);
-//     *dest_input_pointer = (long unsigned)temp_long_long_unsigned_destination;
-//   } else {
-//     unsigned* dest_input_pointer = va_arg(*args, unsigned*);
-//     *dest_input_pointer = (unsigned)temp_long_long_unsigned_destination;
-//   }
-
-//   return read_result;
-// }
 
 int process_int_sscanf(va_list* args, SpecOptions* spec_opts, InputStr* source,
                        bool* matching_failure) {
@@ -229,8 +212,9 @@ int read_hex(InputStr* source, SpecOptions* spec_opts,
       source->curr_ind++;
       bytes_read++;
       weve_read_at_least_once_successfully = true;
-    } else if (is_valid_digit(source->str[source->curr_ind], base) == false &&
-               spec_opts->specifier == i) {
+    } else if ((is_valid_digit(source->str[source->curr_ind], base) == false &&
+                spec_opts->specifier == i) ||
+               (source->str[source->curr_ind] == spec_opts->next_digit)) {
       hex_reading_failure = true;
     } else {
       *matching_failure = true;
@@ -250,17 +234,21 @@ int read_decimal(InputStr* source, SpecOptions* spec_opts,
                  bool* matching_failure) {
   s21_size_t base = 10;
   bool weve_read_at_least_once_successfully = false;
+  bool decimal_reading_failure = false;
   long long unsigned num = 0;
   s21_size_t bytes_read = 0;
 
   while (is_space(source->str[source->curr_ind]) == false &&
          source->str[source->curr_ind] != '\0' && *matching_failure == false &&
+         decimal_reading_failure == false &&
          width_limit_reached(bytes_read, spec_opts) == false) {
     if (is_valid_digit(source->str[source->curr_ind], base)) {
       num = num * 10 + (source->str[source->curr_ind] - '0');
       source->curr_ind++;
       bytes_read++;
 
+    } else if (source->str[source->curr_ind] == spec_opts->next_digit) {
+      decimal_reading_failure = true;
     } else {
       *matching_failure = true;
     }
@@ -295,8 +283,9 @@ int read_octal(InputStr* source, SpecOptions* spec_opts,
       weve_read_at_least_once_successfully = true;
       source->curr_ind++;
       bytes_read++;
-    } else if (is_valid_digit(source->str[source->curr_ind], 10) &&
-               spec_opts->specifier == i) {
+    } else if ((is_valid_digit(source->str[source->curr_ind], 10) &&
+                spec_opts->specifier == i) ||
+               (source->str[source->curr_ind] == spec_opts->next_digit)) {
       not_octal_but_we_continue_with_decimal = true;
     } else {
       *matching_failure = true;
