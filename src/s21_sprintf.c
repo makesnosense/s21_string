@@ -49,27 +49,7 @@ int s21_sprintf(char* str, const char* format, ...) {
         case 'E':
         case 'g':
         case 'G': {
-          long double input_floating_point_number =
-              ingest_floating_point_number(&args, &spec_opts);
-          is_negative(input_floating_point_number, &spec_opts);
-
-          if (isnan(input_floating_point_number)) {
-            spec_opts.is_floating_point_number = false;
-#if defined(__linux__)
-            spec_opts->is_negative = signbit(input_floating_point_number);
-#endif
-            process_narrow_string("nan", &dest, &spec_opts);
-          } else if (isinf(input_floating_point_number)) {
-            spec_opts.is_floating_point_number = false;
-            process_narrow_string("inf", &dest, &spec_opts);
-          } else if (spec_opts.is_scientific) {
-            process_scientific(&dest, input_floating_point_number, &spec_opts);
-          } else if (spec_opts.is_g_spec) {
-            process_g_spec(&dest, input_floating_point_number, &spec_opts);
-          } else {
-            floating_point_number_to_str(&dest, input_floating_point_number,
-                                         &spec_opts);
-          }
+          process_floating_point_number(&args, &dest, &spec_opts);
           break;
         }
         case 'p': {
@@ -84,10 +64,6 @@ int s21_sprintf(char* str, const char* format, ...) {
 #endif
           break;
         }
-        // case 'f': {
-        //   process_floating_point_number(&args, &dest, &spec_opts);
-        //   break;
-        // }
         case '%': {
           dest.str[dest.curr_ind++] = '%';
           break;
@@ -306,6 +282,10 @@ void process_floating_point_number(va_list* args, DestStr* dest,
   } else if (isinf(input_floating_point_number)) {
     spec_opts->is_floating_point_number = false;
     process_narrow_string("inf", dest, spec_opts);
+  } else if (spec_opts->is_scientific) {
+    process_scientific(dest, input_floating_point_number, spec_opts);
+  } else if (spec_opts->is_g_spec) {
+    process_g_spec(dest, input_floating_point_number, spec_opts);
   } else {
     floating_point_number_to_str(dest, input_floating_point_number, spec_opts);
   }
