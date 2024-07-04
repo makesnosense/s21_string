@@ -468,19 +468,16 @@ int read_wide_char(va_list* args, InputStr* source, SpecOptions* spec_opts) {
   int read_result = 0;
   if (spec_opts->is_star == false) {
     wchar_t* dest_wchar_ptr = va_arg(*args, wchar_t*);
-    wchar_t wc;
-    int len = mbtowc(&wc, &source->str[source->curr_ind], MB_CUR_MAX);
+    wchar_t wide_char = 0;
+    int len = mbtowc(&wide_char, &source->str[source->curr_ind], MB_CUR_MAX);
 
     if (len > 0) {
-      *dest_wchar_ptr = wc;
+      *dest_wchar_ptr = wide_char;
       source->curr_ind += len;
-      // read_result = 1;
-
       read_result++;
     }
     source->curr_ind += mblen(&source->str[source->curr_ind], MB_CUR_MAX);
   }
-  // source->curr_ind++;
   return read_result;
 };
 
