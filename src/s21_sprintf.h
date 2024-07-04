@@ -107,6 +107,9 @@ void calculate_padding_ge_spec(s21_size_t num_len, SpecOptions* spec_opts);
 void apply_width(DestStr* dest, s21_size_t num_len, SpecOptions* spec_opts);
 void apply_minus_width(DestStr* dest, SpecOptions* spec_opts);
 
+void process_specifier(char format_char, va_list* args, DestStr* dest,
+                       SpecOptions* spec_opts);
+void process_pointer(va_list* args, DestStr* dest, SpecOptions* spec_opts);
 void process_chars(va_list* args, DestStr* dest, SpecOptions* spec_opts);
 void process_narrow_char(va_list* args, DestStr* dest, SpecOptions* spec_opts);
 void process_wide_char(va_list* args, DestStr* dest, SpecOptions* spec_opts);
@@ -122,8 +125,6 @@ void process_scientific(DestStr* dest, long double input_num,
 void process_scientific_standard(DestStr* dest, long double input_num,
                                  SpecOptions* spec_opts);
 void process_scientific_zero_input(DestStr* dest, SpecOptions* spec_opts);
-// void process_scientific_for_g_spec(long double input_num, DestStr* dest,
-//                                    SpecOptions* spec_opts);
 void add_scientific_e_part(long long exponent, DestStr* dest,
                            SpecOptions* spec_opts);
 
@@ -187,7 +188,4 @@ void remove_trailing_zeros(DestStr* dest, SpecOptions* spec_opts);
 long double bank_roundl(long double input_num);
 bool is_zero(long double input_num);
 
-int calculate_diget(DestStr* dest);
-
-// Функция устанавливает локаль в зависимости от ОС
 void set_locale_for_wide_chars();
