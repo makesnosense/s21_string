@@ -8,7 +8,7 @@ int s21_sscanf(const char* str, const char* format, ...) {
 
   InputStr source = {str, 0};
   InputStr fmt_input = {format, 0};
-  consume_initial_space_and_n(&args, &source, &fmt_input);
+  process_initial_space_and_n(&args, &source, &fmt_input);
 
   while (we_continue_consuming(&source, &fmt_input, &matching_failure)) {
     if (is_space_specifier(&fmt_input)) {
@@ -665,7 +665,7 @@ void consume_space(InputStr* source) {
   }
 }
 
-void consume_initial_space_and_n(va_list* args, InputStr* source,
+void process_initial_space_and_n(va_list* args, InputStr* source,
                                  InputStr* fmt_input) {
   while (n_specifier_follows(fmt_input) || is_space_specifier(fmt_input)) {
     if (is_space_specifier(fmt_input)) {
