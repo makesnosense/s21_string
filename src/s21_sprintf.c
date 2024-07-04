@@ -690,7 +690,7 @@ void whole_to_str(DestStr* dest, long double num, SpecOptions* spec_opts) {
 
 void set_needed_precision(SpecOptions* spec_opts) {
   if (!spec_opts->precision_set) {
-    spec_opts->precision = F_PRECISION;
+    spec_opts->precision = DEFAULT_F_PRECISION;
   }
 }
 
@@ -704,7 +704,7 @@ void process_scientific_zero_input(DestStr* dest, SpecOptions* spec_opts) {
   if (spec_opts->precision_set) {
     zeros_to_print = spec_opts->precision;
   } else {
-    zeros_to_print = F_PRECISION;
+    zeros_to_print = DEFAULT_F_PRECISION;
   }
 
   if (!(spec_opts->precision_set == true && spec_opts->precision == 0)) {
@@ -817,8 +817,6 @@ bool g_spec_scientific_needed(long double input_num, SpecOptions* spec_opts) {
   fraction_part = modfl(input_num, &whole_part);
   fraction_part = fraction_part - 0;
 
-  // s21_size_t whole_part_length = get_num_length(whole_part, spec_opts);
-
   s21_size_t whole_part_length_after_rounding =
       get_num_length(bank_roundl(input_num), spec_opts);
 
@@ -829,7 +827,7 @@ bool g_spec_scientific_needed(long double input_num, SpecOptions* spec_opts) {
   }
   // not set precision
   else if (spec_opts->precision_set == false &&
-           whole_part_length_after_rounding > F_PRECISION) {
+           whole_part_length_after_rounding > DEFAULT_F_PRECISION) {
     result = true;
     // precision set and it's nonzero
   } else if (spec_opts->precision_set == true && spec_opts->precision != 0 &&
@@ -914,9 +912,9 @@ void process_g_spec_not_set_precision_sharp_on(DestStr* dest,
     whole_part_length = 0;
   }
 
-  needed_decimal_places = F_PRECISION - whole_part_length;
+  needed_decimal_places = DEFAULT_F_PRECISION - whole_part_length;
 
-  // whole_part_length always <= F_PRECISION
+  // whole_part_length always <= DEFAULT_F_PRECISION
   fraction_part = multiply_by_10_n_times(fraction_part, needed_decimal_places);
   fraction_part = bank_roundl(fraction_part);
 
@@ -927,12 +925,12 @@ void process_g_spec_not_set_precision_sharp_on(DestStr* dest,
   whole_part_length = get_num_length_simple(whole_part);
   s21_size_t total_length = whole_part_length + fraction_part_length;
 
-  if (whole_part_length < F_PRECISION) {
+  if (whole_part_length < DEFAULT_F_PRECISION) {
     itoa(dest, llround(fraction_part), spec_opts);
   }
   if (spec_opts->precision_set == false) {
-    if (total_length < F_PRECISION) {
-      add_zeros_to_destination(dest, F_PRECISION - total_length);
+    if (total_length < DEFAULT_F_PRECISION) {
+      add_zeros_to_destination(dest, DEFAULT_F_PRECISION - total_length);
     }
     // remove_trailing_zeros(dest, spec_opts);
   } else if (spec_opts->precision_set == true) {
@@ -961,7 +959,7 @@ void process_g_spec_not_set_precision_sharp_off(DestStr* dest,
     whole_part_length = 0;
   }
 
-  needed_decimal_places = F_PRECISION - whole_part_length;
+  needed_decimal_places = DEFAULT_F_PRECISION - whole_part_length;
 
   fraction_part = multiply_by_10_n_times(fraction_part, needed_decimal_places);
   fraction_part = bank_roundl(fraction_part);
