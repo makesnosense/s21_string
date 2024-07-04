@@ -44,7 +44,8 @@ typedef struct InputString {
   const char* str;
   s21_size_t curr_ind;
 } InputStr;
-
+void process_initial_space_and_n(va_list* args, InputStr* source,
+                                 InputStr* fmt_input);
 void process_foreign_char_in_format(InputStr* source, InputStr* fmt_input,
                                     bool* matching_failure);
 void process_specifier_sscanf(int* sscanf_result, va_list* args,
@@ -67,8 +68,6 @@ bool we_continue_consuming(InputStr* source, InputStr* fmt_input,
 
 void process_space(InputStr* source, InputStr* fmt_input);
 void consume_space(InputStr* source);
-void consume_initial_space_and_n(va_list* args, InputStr* source,
-                                 InputStr* fmt_input);
 
 void process_n(va_list* args, InputStr* source, bool n_star);
 int process_unsigned_sscanf(va_list* args, SpecOptions* spec_opts,
