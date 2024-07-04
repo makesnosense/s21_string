@@ -1938,6 +1938,24 @@ START_TEST(test_sscanf_ptr_empty) {
 }
 END_TEST
 
+START_TEST(test_sscanf_ptr_mix_width_and_suppression) {
+  void* s21_ptr1 = NULL;
+  void* s21_ptr2 = NULL;
+  int s21_res = 0;
+
+  void* lib_ptr1 = NULL;
+  void* lib_ptr2 = NULL;
+  int lib_res = 0;
+
+  lib_res = sscanf("0x23452613 0x673254", "%*p %5p", &lib_ptr2);
+  s21_res = s21_sscanf("0x23452613 0x673254", "%*p %5p", &s21_ptr2);
+
+  ck_assert_int_eq(lib_res, s21_res);
+  ck_assert_ptr_eq(lib_ptr1, s21_ptr1);
+  ck_assert_ptr_eq(lib_ptr2, s21_ptr2);
+}
+END_TEST
+
 START_TEST(test_sscanf_ptr_invalid_2) {
   void* s21_ptr = NULL;
   int s21_res = 0;
@@ -2176,6 +2194,7 @@ Suite* make_sscanf_suite() {
   tcase_add_test(tc_core, test_sscanf_ptr_invalid);
   tcase_add_test(tc_core, test_sscanf_ptr_empty);
   tcase_add_test(tc_core, test_sscanf_ptr_invalid_2);
+  tcase_add_test(tc_core, test_sscanf_ptr_mix_width_and_suppression);
 
   tcase_add_test(tc_core, test_sscanf_e_positive);
   tcase_add_test(tc_core, test_sscanf_e_negative);
