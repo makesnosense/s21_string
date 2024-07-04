@@ -251,15 +251,81 @@ START_TEST(test_sscanf_possible_minus_one_p8) {
 
   int lib_res = 0;
 
-  lib_res = sscanf(" ", "%n%d ", &lib_a, &lib_b);
-  s21_res = s21_sscanf(" ", "%n%d ", &s21_a, &s21_b);
+  lib_res = sscanf(" 8", "%n%d ", &lib_a, &lib_b);
+  s21_res = s21_sscanf(" 8", "%n%d ", &s21_a, &s21_b);
 
-  printf("первый чар %c второй чар %c res: %d\n", lib_a, lib_b, lib_res);
-  printf("первый чар  %c второй чар %c res: %d\n", s21_a, s21_b, s21_res);
+  printf("lib первый чар %d второй чар %d res: %d\n", lib_a, lib_b, lib_res);
+  printf("s21 первый чар %d второй чар %d res: %d\n", s21_a, s21_b, s21_res);
 
   ck_assert_int_eq(lib_res, s21_res);
   ck_assert_int_eq(lib_a, s21_a);
   ck_assert_int_eq(lib_b, s21_b);
+}
+END_TEST
+
+START_TEST(test_sscanf_possible_minus_one_p9) {
+  int s21_a = 0;
+  int s21_b = 0;
+
+  int s21_res = 0;
+
+  int lib_a = 0;
+  int lib_b = 0;
+
+  int lib_res = 0;
+
+  lib_res = sscanf("   ", "%n%d", &lib_a, &lib_b);
+  s21_res = s21_sscanf("   ", "%n%d", &s21_a, &s21_b);
+
+  printf("lib первый чар %d второй чар %d res: %d\n", lib_a, lib_b, lib_res);
+  printf("s21 первый чар %d второй чар %d res: %d\n", s21_a, s21_b, s21_res);
+
+  ck_assert_int_eq(lib_res, s21_res);
+  ck_assert_int_eq(lib_a, s21_a);
+  ck_assert_int_eq(lib_b, s21_b);
+}
+END_TEST
+
+START_TEST(test_sscanf_possible_minus_one_p10) {
+  int s21_a = 0;
+  int s21_b = 0;
+
+  int s21_res = 0;
+
+  int lib_a = 0;
+  int lib_b = 0;
+
+  int lib_res = 0;
+
+  lib_res = sscanf("", "%n%d", &lib_a, &lib_b);
+  s21_res = s21_sscanf("", "%n%d", &s21_a, &s21_b);
+
+  printf("lib первый чар %d второй чар %d res: %d\n", lib_a, lib_b, lib_res);
+  printf("s21 первый чар %d второй чар %d res: %d\n", s21_a, s21_b, s21_res);
+
+  ck_assert_int_eq(lib_res, s21_res);
+  ck_assert_int_eq(lib_a, s21_a);
+  ck_assert_int_eq(lib_b, s21_b);
+}
+END_TEST
+
+START_TEST(test_sscanf_possible_minus_one_p11) {
+  int s21_a = 0;
+
+  int s21_res = 0;
+
+  int lib_a = 0;
+
+  int lib_res = 0;
+
+  lib_res = sscanf("", "%n", &lib_a);
+  s21_res = s21_sscanf("", "%n", &s21_a);
+
+  printf("lib первый чар %d res: %d\n", lib_a, lib_res);
+  printf("s21 первый чар %d res: %d\n", s21_a, s21_res);
+
+  ck_assert_int_eq(lib_res, s21_res);
+  ck_assert_int_eq(lib_a, s21_a);
 }
 END_TEST
 
@@ -1389,6 +1455,81 @@ START_TEST(test_sscanf_float_3) {
 }
 END_TEST
 
+START_TEST(test_sscanf_long_float) {
+  double s21_a = 7;
+  double s21_b = 0;
+  int s21_res = 0;
+
+  double lib_a = 0;
+  double lib_b = 0;
+  int lib_res = 0;
+
+  lib_res = sscanf("1119007199254740992.6424 -1119007199254740992.6424",
+                   "%lf %lf", &lib_a, &lib_b);
+  s21_res = s21_sscanf("1119007199254740992.6424 -1119007199254740992.6424",
+                       "%lf %lf", &s21_a, &s21_b);
+
+  printf("s21 first: %lf second: %lf res: %d\n", s21_a, s21_b, s21_res);
+  printf("lib first: %lf second: %lf res: %d\n\n", lib_a, lib_b, lib_res);
+
+  ck_assert_int_eq(lib_res, s21_res);
+  ck_assert_double_eq(lib_a, s21_a);
+  ck_assert_double_eq(lib_b, s21_b);
+}
+END_TEST
+
+START_TEST(test_sscanf_long_long_float) {
+  long double s21_a = 7;
+  long double s21_b = 0;
+  int s21_res = 0;
+
+  long double lib_a = 0;
+  long double lib_b = 0;
+  int lib_res = 0;
+
+  lib_res =
+      sscanf("79228162514264337593543950336 -79228162514264337593543950336",
+             "%Lf %Lf", &lib_a, &lib_b);
+  s21_res =
+      s21_sscanf("79228162514264337593543950336 -79228162514264337593543950336",
+                 "%Lf %Lf", &s21_a, &s21_b);
+
+  printf("s21 first: %Lf second: %Lf res: %d\n", s21_a, s21_b, s21_res);
+  printf("lib first: %Lf second: %Lf res: %d\n\n", lib_a, lib_b, lib_res);
+
+  ck_assert_int_eq(lib_res, s21_res);
+  ck_assert_double_eq(lib_a, s21_a);
+  ck_assert_double_eq(lib_b, s21_b);
+}
+END_TEST
+
+START_TEST(test_sscanf_overflow_long_long_float) {
+  long double s21_a = 7;
+  long double s21_b = 0;
+  int s21_res = 0;
+
+  long double lib_a = 0;
+  long double lib_b = 0;
+  int lib_res = 0;
+
+  lib_res = sscanf(
+      "792281625142643375935439503366354234 "
+      "-792281625142643375935439503366354234",
+      "%Lf %Lf", &lib_a, &lib_b);
+  s21_res = s21_sscanf(
+      "792281625142643375935439503366354234 "
+      "-792281625142643375935439503366354234",
+      "%Lf %Lf", &s21_a, &s21_b);
+
+  printf("s21 first: %Lf second: %Lf res: %d\n", s21_a, s21_b, s21_res);
+  printf("lib first: %Lf second: %Lf res: %d\n\n", lib_a, lib_b, lib_res);
+
+  ck_assert_int_eq(lib_res, s21_res);
+  ck_assert_double_eq(lib_a, s21_a);
+  ck_assert_double_eq(lib_b, s21_b);
+}
+END_TEST
+
 START_TEST(test_sscanf_unsigned) {
   unsigned s21_a = 0;
   unsigned s21_b = 0;
@@ -1483,6 +1624,441 @@ START_TEST(test_sscanf_overflow_short_unsigned) {
 }
 END_TEST
 
+START_TEST(test_sscanf_star_problematic) {
+  int s21_res1 = 0;
+  int s21_res_res = 0;
+
+  int lib_res1 = 0;
+  int lib_res_res = 0;
+
+  lib_res_res = sscanf(
+      "int: 123 float: -123.0 char: @ unsigned: 0 % string: cringe",
+      "int: %*d float: %*f char: %*c unsigned: %*u %% string: %n", &lib_res1);
+  s21_res_res = s21_sscanf(
+      "int: 123 float: -123.0 char: @ unsigned: 0 % string: cringe",
+      "int: %*d float: %*f char: %*c unsigned: %*u %% string: %n", &s21_res1);
+
+  ck_assert_int_eq(lib_res_res, s21_res_res);
+  ck_assert_int_eq(lib_res1, s21_res1);
+}
+END_TEST
+
+START_TEST(test_sscanf_int) {
+  char* input_string = "77 13";
+  char* format_string = "%d %i";
+
+  int s21_res1 = 0;
+  int s21_res2 = 0;
+  int s21_res_res = 0;
+
+  int lib_res1 = 0;
+  int lib_res2 = 0;
+  int lib_res_res = 0;
+
+  lib_res_res = sscanf(input_string, format_string, &lib_res1, &lib_res2);
+  s21_res_res = s21_sscanf(input_string, format_string, &s21_res1, &s21_res2);
+
+  ck_assert_int_eq(lib_res_res, s21_res_res);
+  ck_assert_int_eq(lib_res1, s21_res1);
+  ck_assert_int_eq(lib_res2, s21_res2);
+}
+END_TEST
+
+START_TEST(test_sscanf_int_2) {
+  char* input_string = "-12841 -19824127";
+  char* format_string = "%d %i";
+
+  int s21_res1 = 0;
+  int s21_res2 = 0;
+  int s21_res_res = 0;
+
+  int lib_res1 = 0;
+  int lib_res2 = 0;
+  int lib_res_res = 0;
+
+  lib_res_res = sscanf(input_string, format_string, &lib_res1, &lib_res2);
+  s21_res_res = s21_sscanf(input_string, format_string, &s21_res1, &s21_res2);
+
+  ck_assert_int_eq(lib_res_res, s21_res_res);
+  ck_assert_int_eq(lib_res1, s21_res1);
+  ck_assert_int_eq(lib_res2, s21_res2);
+}
+END_TEST
+
+START_TEST(test_sscanf_int_3) {
+  char* input_string = "My date of birth is => 08-12-1994";
+  char* format_string = "My date of birth is => %d-%i-%d";
+
+  int s21_res1 = 0;
+  int s21_res2 = 0;
+  int s21_res3 = 0;
+  int s21_res_res = 0;
+
+  int lib_res1 = 0;
+  int lib_res2 = 0;
+  int lib_res3 = 0;
+  int lib_res_res = 0;
+
+  lib_res_res =
+      sscanf(input_string, format_string, &lib_res1, &lib_res2, &lib_res3);
+  s21_res_res =
+      s21_sscanf(input_string, format_string, &s21_res1, &s21_res2, &s21_res3);
+
+  ck_assert_int_eq(lib_res_res, s21_res_res);
+  ck_assert_int_eq(lib_res1, s21_res1);
+  ck_assert_int_eq(lib_res2, s21_res2);
+  ck_assert_int_eq(lib_res3, s21_res3);
+}
+END_TEST
+
+START_TEST(test_sscanf_string) {
+  char s21_a[50];
+  int s21_res = 0;
+
+  char lib_a[50];
+  int lib_res = 0;
+
+  lib_res = sscanf("Hello, world", "%s", lib_a);
+  s21_res = s21_sscanf("Hello, world", "%s", s21_a);
+
+  printf("s21 string: %s\n", s21_a);
+  printf("lib string: %s\n\n", lib_a);
+
+  ck_assert_int_eq(lib_res, s21_res);
+  ck_assert_str_eq(lib_a, s21_a);
+}
+END_TEST
+
+START_TEST(test_sscanf_string_suppresion) {
+  char s21_a[50] = {'\0'};
+  char s21_b[50];
+  int s21_res = 0;
+
+  char lib_a[50] = {'\0'};
+  char lib_b[50];
+  int lib_res = 0;
+
+  lib_res = sscanf("Hello, world", "%*s %s", lib_b);
+  s21_res = s21_sscanf("Hello, world", "%*s %s", s21_b);
+
+  printf("s21 string one: %s string two: %s\n", s21_a, s21_b);
+  printf("lib string one: %s string two: %s\n\n", lib_a, lib_b);
+
+  ck_assert_int_eq(lib_res, s21_res);
+  ck_assert_str_eq(lib_a, s21_a);
+  ck_assert_str_eq(lib_b, s21_b);
+}
+END_TEST
+
+START_TEST(test_sscanf_string_width) {
+  char s21_a[50] = {'\0'};
+  char s21_b[50];
+  int s21_res = 0;
+
+  char lib_a[50] = {'\0'};
+  char lib_b[50];
+  int lib_res = 0;
+
+  lib_res = sscanf("Hello, world", "%2s %s", lib_a, lib_b);
+  s21_res = s21_sscanf("Hello, world", "%2s %s", s21_a, s21_b);
+
+  printf("s21 string one: %s string two: %s\n", s21_a, s21_b);
+  printf("lib string one: %s string two: %s\n\n", lib_a, lib_b);
+
+  ck_assert_int_eq(lib_res, s21_res);
+  ck_assert_str_eq(lib_a, s21_a);
+  ck_assert_str_eq(lib_b, s21_b);
+}
+END_TEST
+
+START_TEST(test_sscanf_string_mix_width_and_suppresion) {
+  char s21_a[50] = {'\0'};
+  char s21_b[50];
+  int s21_res = 0;
+
+  char lib_a[50] = {'\0'};
+  char lib_b[50];
+  int lib_res = 0;
+
+  lib_res = sscanf("Hello, world", "%*2s %s", lib_b);
+  s21_res = s21_sscanf("Hello, world", "%*2s %s", s21_b);
+
+  printf("s21 string one: %s string two: %s\n", s21_a, s21_b);
+  printf("lib string one: %s string two: %s\n\n", lib_a, lib_b);
+
+  ck_assert_int_eq(lib_res, s21_res);
+  ck_assert_str_eq(lib_a, s21_a);
+  ck_assert_str_eq(lib_b, s21_b);
+}
+END_TEST
+
+START_TEST(test_sscanf_ptr_null) {
+  void* s21_ptr = NULL;
+  int s21_res = 0;
+
+  void* lib_ptr = NULL;
+  int lib_res = 0;
+
+  lib_res = sscanf("A NULL pointer -> 0x0", "A NULL pointer -> %p", &lib_ptr);
+  s21_res =
+      s21_sscanf("A NULL pointer -> 0x0", "A NULL pointer -> %p", &s21_ptr);
+
+  ck_assert_int_eq(lib_res, s21_res);
+  ck_assert_ptr_eq(lib_ptr, s21_ptr);
+}
+END_TEST
+
+START_TEST(test_sscanf_ptr_hex) {
+  void* s21_ptr = NULL;
+  int s21_res = 0;
+
+  void* lib_ptr = NULL;
+  int lib_res = 0;
+
+  lib_res = sscanf("Hex pointer -> 0x12345678", "Hex pointer -> %p", &lib_ptr);
+  s21_res =
+      s21_sscanf("Hex pointer -> 0x12345678", "Hex pointer -> %p", &s21_ptr);
+
+  ck_assert_int_eq(lib_res, s21_res);
+  ck_assert_ptr_eq(lib_ptr, s21_ptr);
+}
+END_TEST
+
+START_TEST(test_sscanf_ptr_lead_zero) {
+  void* s21_ptr = NULL;
+  int s21_res = 0;
+
+  void* lib_ptr = NULL;
+  int lib_res = 0;
+
+  lib_res = sscanf("Lead zero -> 01234567", "Lead zero -> %p", &lib_ptr);
+  s21_res = s21_sscanf("Lead zero -> 01234567", "Lead zero -> %p", &s21_ptr);
+
+  ck_assert_int_eq(lib_res, s21_res);
+  ck_assert_ptr_eq(lib_ptr, s21_ptr);
+}
+END_TEST
+
+START_TEST(test_sscanf_ptr_with_letters) {
+  void* s21_ptr = NULL;
+  int s21_res = 0;
+
+  void* lib_ptr = NULL;
+  int lib_res = 0;
+
+  lib_res = sscanf("Pointer with letters -> 0x123456789abcdef",
+                   "Pointer with letters -> %p", &lib_ptr);
+  s21_res = s21_sscanf("Pointer with letters -> 0x123456789abcdef",
+                       "Pointer with letters -> %p", &s21_ptr);
+
+  ck_assert_int_eq(lib_res, s21_res);
+  ck_assert_ptr_eq(lib_ptr, s21_ptr);
+}
+END_TEST
+
+START_TEST(test_sscanf_ptr_lead_zero_2) {
+  void* s21_ptr = NULL;
+  int s21_res = 0;
+
+  void* lib_ptr = NULL;
+  int lib_res = 0;
+
+  lib_res = sscanf("Lead zero + letters -> 0123456789abcdef",
+                   "Lead zero + letters -> %p", &lib_ptr);
+  s21_res = s21_sscanf("Lead zero + letters -> 0123456789abcdef",
+                       "Lead zero + letters -> %p", &s21_ptr);
+
+  ck_assert_int_eq(lib_res, s21_res);
+  ck_assert_ptr_eq(lib_ptr, s21_ptr);
+}
+END_TEST
+
+START_TEST(test_sscanf_ptr_whitespaces) {
+  void* s21_ptr = NULL;
+  int s21_res = 0;
+
+  void* lib_ptr = NULL;
+  int lib_res = 0;
+
+  lib_res = sscanf("      0x12345678", "%p", &lib_ptr);
+  s21_res = s21_sscanf("      0x12345678", "%p", &s21_ptr);
+
+  printf("s21 pointer: %p\n", s21_ptr);
+  printf("lib pointer: %p\n\n", lib_ptr);
+
+  ck_assert_int_eq(lib_res, s21_res);
+  ck_assert_ptr_eq(lib_ptr, s21_ptr);
+}
+END_TEST
+
+START_TEST(test_sscanf_ptr_invalid) {
+  void* s21_ptr = NULL;
+  int s21_res = 0;
+
+  void* lib_ptr = NULL;
+  int lib_res = 0;
+
+  lib_res =
+      sscanf("Invalid pointer -> abcdefg", "Invalid pointer -> %p", &lib_ptr);
+  s21_res = s21_sscanf("Invalid pointer -> abcdefg", "Invalid pointer -> %p",
+                       &s21_ptr);
+
+  ck_assert_int_eq(lib_res, s21_res);
+  ck_assert_ptr_eq(lib_ptr, s21_ptr);
+}
+END_TEST
+
+START_TEST(test_sscanf_ptr_empty) {
+  void* s21_ptr = NULL;
+  int s21_res = 0;
+
+  void* lib_ptr = NULL;
+  int lib_res = 0;
+
+  lib_res = sscanf("", "%p", &lib_ptr);
+  s21_res = s21_sscanf("", "%p", &s21_ptr);
+
+  ck_assert_int_eq(lib_res, s21_res);
+  ck_assert_ptr_eq(lib_ptr, s21_ptr);
+}
+END_TEST
+
+START_TEST(test_sscanf_ptr_invalid_2) {
+  void* s21_ptr = NULL;
+  int s21_res = 0;
+
+  void* lib_ptr = NULL;
+  int lib_res = 0;
+
+  lib_res = sscanf("Invalid pointer -> zxc", "Invalid pointer -> %p", &lib_ptr);
+  s21_res =
+      s21_sscanf("Invalid pointer -> zxc", "Invalid pointer -> %p", &s21_ptr);
+
+  ck_assert_int_eq(lib_res, s21_res);
+  ck_assert_ptr_eq(lib_ptr, s21_ptr);
+}
+END_TEST
+
+START_TEST(test_sscanf_e_positive) {
+  float s21_f = 0;
+  int s21_res = 0;
+
+  float lib_f = 0;
+  int lib_res = 0;
+
+  lib_res = sscanf("Positive -> 1.234e-5", "Positive -> %e", &lib_f);
+  s21_res = s21_sscanf("Positive -> 1.234e-5", "Positive -> %e", &s21_f);
+
+  ck_assert_int_eq(lib_res, s21_res);
+  ck_assert_float_eq(lib_f, s21_f);
+}
+END_TEST
+
+START_TEST(test_sscanf_e_negative) {
+  float s21_f = 0;
+  int s21_res = 0;
+
+  float lib_f = 0;
+  int lib_res = 0;
+
+  lib_res = sscanf("Negative -> -1.234e-5", "Negative -> %e", &lib_f);
+  s21_res = s21_sscanf("Negative -> -1.234e-5", "Negative -> %e", &s21_f);
+
+  ck_assert_int_eq(lib_res, s21_res);
+  ck_assert_float_eq(lib_f, s21_f);
+}
+END_TEST
+
+START_TEST(test_sscanf_e_exponent_plus) {
+  float s21_f = 0;
+  int s21_res = 0;
+
+  float lib_f = 0;
+  int lib_res = 0;
+
+  lib_res = sscanf("С плюсом - > 1.234e+5", "С плюсом - > %e", &lib_f);
+  s21_res = s21_sscanf("С плюсом - > 1.234e+5", "С плюсом - > %e", &s21_f);
+
+  ck_assert_int_eq(lib_res, s21_res);
+  ck_assert_float_eq(lib_f, s21_f);
+}
+END_TEST
+
+START_TEST(test_sscanf_e_exponent_space) {
+  float s21_f = 0;
+  int s21_res = 0;
+
+  float lib_f = 0;
+  int lib_res = 0;
+
+  lib_res = sscanf("+ and ' ' -> 1.234e +5", "+ and ' ' -> %e", &lib_f);
+  s21_res = s21_sscanf("+ and ' ' -> 1.234e +5", "+ and ' ' -> %e", &s21_f);
+
+  ck_assert_int_eq(lib_res, s21_res);
+  ck_assert_float_eq(lib_f, s21_f);
+}
+END_TEST
+
+START_TEST(test_sscanf_e_inf) {
+  float s21_f = 0;
+  int s21_res = 0;
+
+  float lib_f = 0;
+  int lib_res = 0;
+
+  lib_res = sscanf("inf", "%e", &lib_f);
+  s21_res = s21_sscanf("inf", "%e", &s21_f);
+
+  ck_assert_int_eq(lib_res, s21_res);
+  ck_assert_float_eq(lib_f, s21_f);
+}
+END_TEST
+
+START_TEST(test_sscanf_e_nan) {
+  float s21_f = 0;
+  int s21_res = 0;
+
+  float lib_f = 0;
+  int lib_res = 0;
+
+  lib_res = sscanf("nan", "%e", &lib_f);
+  s21_res = s21_sscanf("nan", "%e", &s21_f);
+
+  ck_assert_int_eq(lib_res, s21_res);
+  ck_assert_float_eq(lib_f, s21_f);
+}
+END_TEST
+
+START_TEST(test_sscanf_e_inf_nan_mixed) {
+  float s21_f = 0;
+  int s21_res = 0;
+
+  float lib_f = 0;
+  int lib_res = 0;
+
+  lib_res = sscanf("inf+nan", "%e", &lib_f);
+  s21_res = s21_sscanf("inf+nan", "%e", &s21_f);
+
+  ck_assert_int_eq(lib_res, s21_res);
+  ck_assert_float_eq(lib_f, s21_f);
+}
+END_TEST
+
+START_TEST(test_sscanf_e_invalid) {
+  float s21_f = 0;
+  int s21_res = 0;
+
+  float lib_f = 0;
+  int lib_res = 0;
+
+  lib_res = sscanf("abcdefg", "%e", &lib_f);
+  s21_res = s21_sscanf("abcdefg", "%e", &s21_f);
+
+  ck_assert_int_eq(lib_res, s21_res);
+  ck_assert_float_eq(lib_f, s21_f);
+}
+END_TEST
+
 Suite* make_sscanf_suite() {
   Suite* sscanf_suite = suite_create("sscanf");
   TCase* tc_core;
@@ -1503,6 +2079,9 @@ Suite* make_sscanf_suite() {
   tcase_add_test(tc_core, test_sscanf_possible_minus_one_p6);
   tcase_add_test(tc_core, test_sscanf_possible_minus_one_p7);
   tcase_add_test(tc_core, test_sscanf_possible_minus_one_p8);
+  tcase_add_test(tc_core, test_sscanf_possible_minus_one_p9);
+  tcase_add_test(tc_core, test_sscanf_possible_minus_one_p10);
+  tcase_add_test(tc_problem, test_sscanf_possible_minus_one_p11);
 
   tcase_add_test(tc_core, test_sscanf_i_p1);
   tcase_add_test(tc_core, test_sscanf_i_p2);
@@ -1512,6 +2091,7 @@ Suite* make_sscanf_suite() {
   tcase_add_test(tc_core, test_sscanf_i_p6);
   tcase_add_test(tc_core, test_sscanf_i_p7);
   tcase_add_test(tc_core, test_sscanf_i_p8);
+
   tcase_add_test(tc_core, test_sscanf_width_p1);
   tcase_add_test(tc_core, test_sscanf_width_p2);
   tcase_add_test(tc_core, test_sscanf_width_p3);
@@ -1544,8 +2124,15 @@ Suite* make_sscanf_suite() {
   tcase_add_test(tc_core, test_sscanf_hex);
   tcase_add_test(tc_core, test_sscanf_long_hex);
   tcase_add_test(tc_core, test_sscanf_overflow_long_hex);
-  tcase_add_test(tc_problem, test_sscanf_short_hex);
+  tcase_add_test(tc_core, test_sscanf_short_hex);
   tcase_add_test(tc_core, test_sscanf_overflow_short_hex);
+
+  tcase_add_test(tc_core, test_sscanf_float);
+  tcase_add_test(tc_core, test_sscanf_float_2);
+  tcase_add_test(tc_core, test_sscanf_float_3);
+  tcase_add_test(tc_core, test_sscanf_long_float);
+  tcase_add_test(tc_core, test_sscanf_long_long_float);
+  tcase_add_test(tc_core, test_sscanf_overflow_long_long_float);
 
   tcase_add_test(tc_core, test_sscanf_unsigned);
   tcase_add_test(tc_core, test_sscanf_long_unsigned);
@@ -1553,12 +2140,35 @@ Suite* make_sscanf_suite() {
   tcase_add_test(tc_core, test_sscanf_short_unsigned);
   tcase_add_test(tc_core, test_sscanf_overflow_short_unsigned);
 
-  // tcase_add_test(tc_core, test_sscanf_int);
-  // tcase_add_test(tc_core, test_sscanf_int_2);
-  // tcase_add_test(tc_core, test_sscanf_int_3);
-  tcase_add_test(tc_core, test_sscanf_float);
-  tcase_add_test(tc_core, test_sscanf_float_2);
-  tcase_add_test(tc_core, test_sscanf_float_3);
+  tcase_add_test(tc_core, test_sscanf_star_problematic);
+
+  tcase_add_test(tc_core, test_sscanf_int);
+  tcase_add_test(tc_core, test_sscanf_int_2);
+  tcase_add_test(tc_core, test_sscanf_int_3);
+
+  tcase_add_test(tc_core, test_sscanf_string);
+  tcase_add_test(tc_core, test_sscanf_string_suppresion);
+  tcase_add_test(tc_core, test_sscanf_string_width);
+  tcase_add_test(tc_core, test_sscanf_string_mix_width_and_suppresion);
+
+  tcase_add_test(tc_core, test_sscanf_ptr_null);
+  tcase_add_test(tc_core, test_sscanf_ptr_hex);
+  tcase_add_test(tc_core, test_sscanf_ptr_lead_zero);
+  tcase_add_test(tc_core, test_sscanf_ptr_with_letters);
+  tcase_add_test(tc_core, test_sscanf_ptr_lead_zero_2);
+  tcase_add_test(tc_core, test_sscanf_ptr_whitespaces);
+  tcase_add_test(tc_core, test_sscanf_ptr_invalid);
+  tcase_add_test(tc_core, test_sscanf_ptr_empty);
+  tcase_add_test(tc_core, test_sscanf_ptr_invalid_2);
+
+  tcase_add_test(tc_core, test_sscanf_e_positive);
+  tcase_add_test(tc_core, test_sscanf_e_negative);
+  tcase_add_test(tc_core, test_sscanf_e_exponent_plus);
+  tcase_add_test(tc_core, test_sscanf_e_exponent_space);
+  tcase_add_test(tc_core, test_sscanf_e_inf);
+  tcase_add_test(tc_core, test_sscanf_e_nan);
+  tcase_add_test(tc_core, test_sscanf_e_inf_nan_mixed);
+  tcase_add_test(tc_core, test_sscanf_e_invalid);
 
   // tcase_add_test(tc_core, test_sscanf_unsigned);
   // tcase_add_test(tc_problem, test_sscanf_star);
@@ -1572,26 +2182,6 @@ Suite* make_sscanf_suite() {
 
   return sscanf_suite;
 }
-
-// START_TEST(test_sscanf_star) {
-//   char* input_string =
-//       "int: 123, float: -123.0, char: @, unsigned: 0 %, string: cringe";
-//   char* format_string =
-//       "int: %*d, float: %*f, char: %*c, unsigned: %*u %%, string: %*s %n";
-
-//   int s21_res1 = 0;
-//   int s21_res_res = 0;
-
-//   int lib_res1 = 0;
-//   int lib_res_res = 0;
-
-//   lib_res_res = sscanf(input_string, format_string, &s21_res1);
-//   s21_res_res = s21_sscanf(input_string, format_string, &lib_res1);
-
-//   ck_assert_int_eq(lib_res_res, s21_res_res);
-//   ck_assert_int_eq(lib_res1, s21_res1);
-// }
-// END_TEST
 
 // START_TEST(test_sscanf_non_valid_string) {
 //   char* input_string = "  \t   \n   \r   ";
@@ -1612,76 +2202,5 @@ Suite* make_sscanf_suite() {
 //   ck_assert_int_eq(lib_res_res, s21_res_res);
 //   ck_assert_int_eq(lib_res1, s21_res1);
 //   ck_assert_int_eq(lib_res2, s21_res2);
-// }
-// END_TEST
-
-// START_TEST(test_sscanf_int) {
-//   char* input_string = "77 13";
-//   char* format_string = "%d %i";
-
-//   int s21_res1 = 0;
-//   int s21_res2 = 0;
-//   int s21_res_res = 0;
-
-//   int lib_res1 = 0;
-//   int lib_res2 = 0;
-//   int lib_res_res = 0;
-
-//   lib_res_res = sscanf(input_string, format_string, &lib_res1, &lib_res2);
-//   s21_res_res = s21_sscanf(input_string, format_string, &s21_res1,
-//   &s21_res2);
-
-//   ck_assert_int_eq(lib_res_res, s21_res_res);
-//   ck_assert_int_eq(lib_res1, s21_res1);
-//   ck_assert_int_eq(lib_res2, s21_res2);
-// }
-// END_TEST
-
-// START_TEST(test_sscanf_int_2) {
-//   char* input_string = "-12841 -19824127";
-//   char* format_string = "%d %i";
-
-//   int s21_res1 = 0;
-//   int s21_res2 = 0;
-//   int s21_res_res = 0;
-
-//   int lib_res1 = 0;
-//   int lib_res2 = 0;
-//   int lib_res_res = 0;
-
-//   lib_res_res = sscanf(input_string, format_string, &lib_res1, &lib_res2);
-//   s21_res_res = s21_sscanf(input_string, format_string, &s21_res1,
-//   &s21_res2);
-
-//   ck_assert_int_eq(lib_res_res, s21_res_res);
-//   ck_assert_int_eq(lib_res1, s21_res1);
-//   ck_assert_int_eq(lib_res2, s21_res2);
-// }
-// END_TEST
-
-// START_TEST(test_sscanf_int_3) {
-//   char* input_string = "My date of birth is => 08-12-1994";
-//   char* format_string = "My date of birth is => %d-%i-%d";
-
-//   int s21_res1 = 0;
-//   int s21_res2 = 0;
-//   int s21_res3 = 0;
-//   int s21_res_res = 0;
-
-//   int lib_res1 = 0;
-//   int lib_res2 = 0;
-//   int lib_res3 = 0;
-//   int lib_res_res = 0;
-
-//   lib_res_res =
-//       sscanf(input_string, format_string, &lib_res1, &lib_res2, &lib_res3);
-//   s21_res_res =
-//       s21_sscanf(input_string, format_string, &s21_res1, &s21_res2,
-//       &s21_res3);
-
-//   ck_assert_int_eq(lib_res_res, s21_res_res);
-//   ck_assert_int_eq(lib_res1, s21_res1);
-//   ck_assert_int_eq(lib_res2, s21_res2);
-//   ck_assert_int_eq(lib_res3, s21_res3);
 // }
 // END_TEST
