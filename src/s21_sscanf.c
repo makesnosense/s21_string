@@ -83,8 +83,7 @@ int consume_specifier(va_list* args, InputStr* source, InputStr* fmt_input,
       break;
     }
     case 'p': {
-      void** dest_input_pointer = va_arg(*args, void**);
-      specifier_result = read_pointer(source, dest_input_pointer, &spec_opts);
+      specifier_result = read_pointer(args, source, &spec_opts);
       break;
     }
     case 'i':
@@ -118,21 +117,23 @@ int consume_specifier(va_list* args, InputStr* source, InputStr* fmt_input,
   return specifier_result;
 }
 
-int read_pointer(InputStr* source, void** value, SpecOptions* spec_opts) {
+int read_pointer(va_list* args, InputStr* source, SpecOptions* spec_opts) {
   bool weve_read_at_least_once_successfully = 0;
   unsigned long long ptr_value = 0;
+  s21_size_t bytes_read = 0;
 
   while (is_space(source->str[source->curr_ind]) == true) {
     source->curr_ind++;
-    // printf("\n\n\n\n%c HERE\n\n\n", source->str[source->curr_ind]);
   }
 
   if (hexadecimal_prefix_follows(source)) {
     source->curr_ind += 2;
+    bytes_read += 2;
   }
 
   // Чтение шестнадцатеричных цифр
-  while (isxdigit(source->str[source->curr_ind])) {
+  while (isxdigit(source->str[source->curr_ind]) &&
+         width_limit_reached(bytes_read, spec_opts) == false) {
     ptr_value *= 16;
     if (isdigit(source->str[source->curr_ind])) {
       ptr_value += source->str[source->curr_ind] - '0';
@@ -144,14 +145,16 @@ int read_pointer(InputStr* source, void** value, SpecOptions* spec_opts) {
       ptr_value += source->str[source->curr_ind] - 'A' + 10;
     }
     source->curr_ind++;
+    bytes_read++;
     weve_read_at_least_once_successfully = true;
   }
 
   // Преобразование ptr_value в указатель и сохранение в value
-  if (spec_opts->is_star == false) {
-    *value = (void*)ptr_value;
+  if (spec_opts->is_star == false && bytes_read > 0) {
+    void** dest_input_pointer = va_arg(*args, void**);
+    *dest_input_pointer = (void*)ptr_value;
   }
-  return weve_read_at_least_once_successfully;
+  return spec_opts->is_star == false ? weve_read_at_least_once_successfully : 0;
 }
 
 int read_string(va_list* args, InputStr* source, SpecOptions* spec_opts) {
