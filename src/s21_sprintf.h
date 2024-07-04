@@ -22,7 +22,7 @@
 
 #define TO_ABS(x) (x) < 0 ? (-x) : (x)
 
-typedef enum Specificator {
+typedef enum Specifier {
   NOT_SET,
   c,
   d,
@@ -39,7 +39,7 @@ typedef enum Specificator {
   u,
   x,
   X
-} Specificator;
+} Specifier;
 
 typedef struct SpecifierOptions {
   bool flag_plus;        // Флаг '+'
@@ -62,7 +62,7 @@ typedef struct SpecifierOptions {
   bool is_floating_point_number;  // Является ли float/double
   bool is_hexadecimal;
   bool is_g_spec;
-  Specificator specificator;
+  Specifier specifier;
   bool is_scientific;
 } SpecOptions;
 
