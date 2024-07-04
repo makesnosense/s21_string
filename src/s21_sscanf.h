@@ -82,6 +82,10 @@ int process_int_sscanf(va_list* args, SpecOptions* spec_opts, InputStr* source,
                        bool* matching_failure);
 int process_float_sscanf(va_list* args, SpecOptions* spec_opts,
                          InputStr* source);
+int process_input_width_string_pointer(va_list* args, InputStr* source,
+                                       SpecOptions* spec_opts);
+int process_input_string_pointer(va_list* args, InputStr* source,
+                                 SpecOptions* spec_opts);
 
 int read_decimal(InputStr* source, SpecOptions* spec_opts,
                  long long unsigned* dest_input_pointer,
