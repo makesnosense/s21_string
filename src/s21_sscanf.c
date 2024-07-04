@@ -78,7 +78,7 @@ int consume_specifier(va_list* args, InputStr* source, InputStr* fmt_input,
       break;
     }
     case 's': {
-      specifier_result = read_string(args, source, &spec_opts);
+      specifier_result = process_strings_sscanf(args, source, &spec_opts);
       break;
     }
     case 'p': {
@@ -155,26 +155,60 @@ int read_pointer(va_list* args, InputStr* source, SpecOptions* spec_opts) {
   return spec_opts->is_star == false ? weve_read_at_least_once_successfully : 0;
 }
 
-int read_string(va_list* args, InputStr* source, SpecOptions* spec_opts) {
+int process_strings_sscanf(va_list* args, InputStr* source,
+                           SpecOptions* spec_opts) {
   bool weve_read_at_least_once_successfully = 0;
-  s21_size_t bytes_read = 0;
+  // s21_size_t bytes_read = 0;
 
   if (spec_opts->length == l) {
     weve_read_at_least_once_successfully =
-        process_input_width_string_pointer(args, source, spec_opts);
+        process_input_wide_string_pointer(args, source, spec_opts);
   } else {
     weve_read_at_least_once_successfully =
-        process_input_string_pointer(args, source, spec_opts);
+        process_input_narrow_string_pointer(args, source, spec_opts);
   }
 
   return weve_read_at_least_once_successfully;
 }
 
-int process_input_width_string_pointer(va_list* args, InputStr* source,
-                                       SpecOptions* spec_opts);
+int process_input_wide_string_pointer(va_list* args, InputStr* source,
+                                      SpecOptions* spec_opts) {
+  wchar_t* dest_wide_string_pointer = va_arg(*args, wchar_t*);
+  if (spec_opts->width) {
+    ;
+  }
+  // Найдем конец широкой строки (пробел или конец строки)
+  s21_size_t wide_string_start_index = source->curr_ind;
+  s21_size_t wide_string_end_index = wide_string_start_index;
 
-int process_input_string_pointer(va_list* args, InputStr* source,
-                                 SpecOptions* spec_opts) {
+  while (is_end_of_string_char(source->str[wide_string_end_index]) == false &&
+         is_space(source->str[wide_string_end_index]) == false) {
+    wide_string_end_index++;
+  }
+
+  // Вычислим длину широкой строки
+  s21_size_t wide_string_length =
+      wide_string_end_index - wide_string_start_index;
+
+  // Выделим память для временного буфера
+  char* temp = (char*)malloc(wide_string_length + 1);
+
+  // Копируем строку во временный буфер
+  s21_strncpy(temp, &source->str[wide_string_start_index], wide_string_length);
+  temp[wide_string_length] = '\0';
+
+  // Преобразуем в широкую строку
+  mbstowcs(dest_wide_string_pointer, temp, wide_string_length + 1);
+
+  // Освобождаем память
+  free(temp);
+
+  source->curr_ind += wide_string_length;
+  return 1;
+}
+
+int process_input_narrow_string_pointer(va_list* args, InputStr* source,
+                                        SpecOptions* spec_opts) {
   bool weve_read_at_least_once_successfully = 0;
   s21_size_t bytes_read = 0;
 
@@ -200,6 +234,7 @@ int process_input_string_pointer(va_list* args, InputStr* source,
       bytes_read++;
     }
   }
+  return weve_read_at_least_once_successfully;
 }
 
 int process_float_sscanf(va_list* args, SpecOptions* spec_opts,
@@ -669,6 +704,8 @@ bool c_specifier_follows(InputStr* fmt_input) {
 bool is_end_of_string(InputStr* string_structure) {
   return string_structure->str[string_structure->curr_ind] == '\0';
 }
+
+bool is_end_of_string_char(char input_char) { return input_char == '\0'; }
 
 bool is_space(char input_char) {
   bool result = false;
