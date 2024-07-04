@@ -10,7 +10,7 @@ int s21_sscanf(const char* str, const char* format, ...) {
   InputStr fmt_input = {format, 0};
   process_initial_space_and_n(&args, &source, &fmt_input);
 
-  while (we_continue_consuming(&source, &fmt_input, &matching_failure)) {
+  while (we_continue_processing(&source, &fmt_input, &matching_failure)) {
     if (is_space_specifier(&fmt_input)) {
       process_space(&source, &fmt_input);
     } else if (fmt_input.str[fmt_input.curr_ind] == '%') {
@@ -638,8 +638,8 @@ bool is_space_specifier(InputStr* fmt_input) {
   return is_space(fmt_input->str[fmt_input->curr_ind]);
 }
 
-bool we_continue_consuming(InputStr* source, InputStr* fmt_input,
-                           bool* matching_failure) {
+bool we_continue_processing(InputStr* source, InputStr* fmt_input,
+                            bool* matching_failure) {
   bool we_continue = false;
   if (is_end_of_string(fmt_input) == false && *matching_failure == false) {
     printf("\n\ncurr ind %lu\n", source->curr_ind);
