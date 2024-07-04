@@ -50,6 +50,7 @@ void process_foreign_char_in_format(InputStr* source, InputStr* fmt_input,
 void process_specifier_sscanf(int* sscanf_result, va_list* args,
                               InputStr* source, InputStr* fmt_input,
                               bool* matching_failure);
+
 int consume_specifier(va_list* args, InputStr* source, InputStr* fmt_input,
                       bool* matching_failure);
 
@@ -64,7 +65,8 @@ bool is_space_specifier(InputStr* fmt_input);
 bool we_continue_consuming(InputStr* source, InputStr* fmt_input,
                            bool* matching_failure);
 
-void consume_space(InputStr* source);
+void consume_space(InputStr* source, InputStr* fmt_input,
+                   bool increment_format_index);
 void consume_initial_space_and_n(va_list* args, InputStr* source,
                                  InputStr* fmt_input);
 
