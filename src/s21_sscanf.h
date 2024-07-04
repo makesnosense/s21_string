@@ -65,8 +65,7 @@ bool is_end_of_string(InputStr* string_structure);
 bool is_space(char input_char);
 bool is_space_specifier(InputStr* fmt_input);
 
-bool we_continue_processing(InputStr* source, InputStr* fmt_input,
-                            bool* matching_failure);
+bool we_continue_processing(InputStr* fmt_input, bool* matching_failure);
 
 void process_space(InputStr* source, InputStr* fmt_input);
 void consume_space(InputStr* source);
