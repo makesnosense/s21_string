@@ -1,4 +1,6 @@
+#include <locale.h>
 #include <stdio.h>
+// #include <wchar.h>
 
 #include "run_tests.h"
 
@@ -6,28 +8,26 @@ START_TEST(test_sscanf_simple_char) {
   char* input_string = "\t\tab \t \n \f";
   char* format_string = " %c %c %n";
 
-  int s21_res1 = 0;
-  int s21_res2 = 0;
-  int s21_res3 = 0;
-  int s21_res_res = 0;
+  int s21_a = 0;
+  int s21_b = 0;
+  int s21_c = 0;
+  int s21_res = 0;
 
-  int lib_res1 = 0;
-  int lib_res2 = 0;
-  int lib_res3 = 0;
-  int lib_res_res = 0;
+  int lib_a = 0;
+  int lib_b = 0;
+  int lib_c = 0;
+  int lib_res = 0;
 
-  lib_res_res =
-      sscanf(input_string, format_string, &lib_res1, &lib_res2, &lib_res3);
-  s21_res_res =
-      s21_sscanf(input_string, format_string, &s21_res1, &s21_res2, &s21_res3);
+  lib_res = sscanf(input_string, format_string, &lib_a, &lib_b, &lib_c);
+  s21_res = s21_sscanf(input_string, format_string, &s21_a, &s21_b, &s21_c);
 
-  printf("первый чар %c второй чар %c n: %d\n", lib_res1, lib_res2, lib_res3);
-  printf("первый чар %c второй чар %c n: %d\n", s21_res1, s21_res2, s21_res3);
+  printf("первый чар %c второй чар %c n: %d\n", lib_a, lib_b, lib_c);
+  printf("первый чар %c второй чар %c n: %d\n", s21_a, s21_b, s21_c);
 
-  ck_assert_int_eq(lib_res_res, s21_res_res);
-  ck_assert_int_eq(lib_res1, s21_res1);
-  ck_assert_int_eq(lib_res2, s21_res2);
-  ck_assert_int_eq(lib_res3, s21_res3);
+  ck_assert_int_eq(lib_res, s21_res);
+  ck_assert_int_eq(lib_a, s21_a);
+  ck_assert_int_eq(lib_b, s21_b);
+  ck_assert_int_eq(lib_c, s21_c);
 }
 END_TEST
 
@@ -1530,6 +1530,21 @@ START_TEST(test_sscanf_overflow_long_long_float) {
 }
 END_TEST
 
+START_TEST(test_sscanf_specific_float) {
+  float s21_a = 0;
+  int s21_res = 0;
+
+  float lib_a = 0;
+  int lib_res = 0;
+
+  lib_res = sscanf(".43234", "%f", &lib_a);
+  s21_res = s21_sscanf(".43234", "%f", &s21_a);
+
+  ck_assert_int_eq(lib_res, s21_res);
+  ck_assert_float_eq(lib_a, s21_a);
+}
+END_TEST
+
 START_TEST(test_sscanf_unsigned) {
   unsigned s21_a = 0;
   unsigned s21_b = 0;
@@ -1923,6 +1938,24 @@ START_TEST(test_sscanf_ptr_empty) {
 }
 END_TEST
 
+START_TEST(test_sscanf_ptr_mix_width_and_suppression) {
+  void* s21_ptr1 = NULL;
+  void* s21_ptr2 = NULL;
+  int s21_res = 0;
+
+  void* lib_ptr1 = NULL;
+  void* lib_ptr2 = NULL;
+  int lib_res = 0;
+
+  lib_res = sscanf("0x23452613 0x673254", "%*p %5p", &lib_ptr2);
+  s21_res = s21_sscanf("0x23452613 0x673254", "%*p %5p", &s21_ptr2);
+
+  ck_assert_int_eq(lib_res, s21_res);
+  ck_assert_ptr_eq(lib_ptr1, s21_ptr1);
+  ck_assert_ptr_eq(lib_ptr2, s21_ptr2);
+}
+END_TEST
+
 START_TEST(test_sscanf_ptr_invalid_2) {
   void* s21_ptr = NULL;
   int s21_res = 0;
@@ -2059,6 +2092,38 @@ START_TEST(test_sscanf_e_invalid) {
 }
 END_TEST
 
+START_TEST(test_sscanf_nonsimple_wchar) {
+#if defined(__APPLE__)
+  setlocale(LC_ALL, "en_US.UTF-8");
+
+#elif defined(__linux__)
+  setlocale(LC_ALL, "C.UTF-8");
+#endif
+
+  wchar_t s21_a = 0;
+  wchar_t s21_b = 0;
+  int s21_c = 0;
+  int s21_res = 0;
+
+  wchar_t lib_a = 0;
+  wchar_t lib_b = 0;
+  int lib_c = 0;
+  int lib_res = 0;
+
+  lib_res = sscanf("\t\t й ツ \t \n \f", " %lc %lc %n", &lib_a, &lib_b, &lib_c);
+  s21_res =
+      s21_sscanf("\t\t й ツ \t \n \f", " %lc %lc %n", &s21_a, &s21_b, &s21_c);
+
+  printf("\ns21 первый чар %lc второй чар %lc n: %d\n", s21_a, s21_b, s21_c);
+  printf("\nlib первый чар %lc второй чар %lc n: %d\n", lib_a, lib_b, lib_c);
+
+  ck_assert_int_eq(lib_res, s21_res);
+  ck_assert_int_eq(lib_a, s21_a);
+  ck_assert_int_eq(lib_b, s21_b);
+  ck_assert_int_eq(lib_c, s21_c);
+}
+END_TEST
+
 Suite* make_sscanf_suite() {
   Suite* sscanf_suite = suite_create("sscanf");
   TCase* tc_core;
@@ -2081,7 +2146,7 @@ Suite* make_sscanf_suite() {
   tcase_add_test(tc_core, test_sscanf_possible_minus_one_p8);
   tcase_add_test(tc_core, test_sscanf_possible_minus_one_p9);
   tcase_add_test(tc_core, test_sscanf_possible_minus_one_p10);
-  tcase_add_test(tc_problem, test_sscanf_possible_minus_one_p11);
+  tcase_add_test(tc_core, test_sscanf_possible_minus_one_p11);
 
   tcase_add_test(tc_core, test_sscanf_i_p1);
   tcase_add_test(tc_core, test_sscanf_i_p2);
@@ -2133,6 +2198,7 @@ Suite* make_sscanf_suite() {
   tcase_add_test(tc_core, test_sscanf_long_float);
   tcase_add_test(tc_core, test_sscanf_long_long_float);
   tcase_add_test(tc_core, test_sscanf_overflow_long_long_float);
+  tcase_add_test(tc_core, test_sscanf_specific_float);
 
   tcase_add_test(tc_core, test_sscanf_unsigned);
   tcase_add_test(tc_core, test_sscanf_long_unsigned);
@@ -2160,6 +2226,9 @@ Suite* make_sscanf_suite() {
   tcase_add_test(tc_core, test_sscanf_ptr_invalid);
   tcase_add_test(tc_core, test_sscanf_ptr_empty);
   tcase_add_test(tc_core, test_sscanf_ptr_invalid_2);
+  tcase_add_test(tc_core, test_sscanf_ptr_mix_width_and_suppression);
+
+  tcase_add_test(tc_problem, test_sscanf_nonsimple_wchar);
 
   tcase_add_test(tc_core, test_sscanf_e_positive);
   tcase_add_test(tc_core, test_sscanf_e_negative);
