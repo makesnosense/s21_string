@@ -48,8 +48,10 @@ void process_specifier_sscanf(int* sscanf_result, va_list* args,
              c_specifier_follows(fmt_input) == false) {
     consume_space(source);
   } else {
+    fmt_input->curr_ind++;
     *sscanf_result +=
         consume_specifier(args, source, fmt_input, matching_failure);
+    fmt_input->curr_ind++;
   }
 }
 
@@ -57,8 +59,6 @@ int consume_specifier(va_list* args, InputStr* source, InputStr* fmt_input,
                       bool* matching_failure) {
   int specifier_result = 0;
   SpecOptions spec_opts = {0};
-
-  fmt_input->curr_ind++;
 
   spec_opts.is_star = parse_suppression(fmt_input);
   parse_width_sscanf(fmt_input, &spec_opts);
@@ -111,7 +111,6 @@ int consume_specifier(va_list* args, InputStr* source, InputStr* fmt_input,
         source->curr_ind++;
       }
   }
-  fmt_input->curr_ind++;
   return specifier_result;
 }
 
