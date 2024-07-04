@@ -45,6 +45,8 @@ typedef struct InputString {
   s21_size_t curr_ind;
 } InputStr;
 
+void process_foreign_char_in_format(InputStr* source, InputStr* fmt_input,
+                                    bool* matching_failure);
 void process_specifier_sscanf(int* sscanf_result, va_list* args,
                               InputStr* source, InputStr* fmt_input,
                               bool* matching_failure);
