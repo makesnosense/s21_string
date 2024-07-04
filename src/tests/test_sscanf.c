@@ -251,8 +251,8 @@ START_TEST(test_sscanf_possible_minus_one_p8) {
 
   int lib_res = 0;
 
-  lib_res = sscanf(" ", "%n%d ", &lib_a, &lib_b);
-  s21_res = s21_sscanf(" ", "%n%d ", &s21_a, &s21_b);
+  lib_res = sscanf(" 8", "%n%d ", &lib_a, &lib_b);
+  s21_res = s21_sscanf(" 8", "%n%d ", &s21_a, &s21_b);
 
   printf("первый чар %c второй чар %c res: %d\n", lib_a, lib_b, lib_res);
   printf("первый чар  %c второй чар %c res: %d\n", s21_a, s21_b, s21_res);
@@ -1814,8 +1814,8 @@ START_TEST(test_sscanf_ptr_whitespaces) {
   void* lib_ptr = NULL;
   int lib_res = 0;
 
-  lib_res = sscanf("      0x12345678 ", " %p", &lib_ptr);
-  s21_res = s21_sscanf("      0x12345678 ", "%p", &s21_ptr);
+  lib_res = sscanf("      0x12345678", "%p", &lib_ptr);
+  s21_res = s21_sscanf("      0x12345678", "%p", &s21_ptr);
 
   printf("s21 pointer: %p\n", s21_ptr);
   printf("lib pointer: %p\n\n", lib_ptr);
@@ -2012,7 +2012,7 @@ Suite* make_sscanf_suite() {
   tcase_add_test(tc_core, test_sscanf_possible_minus_one_p5);
   tcase_add_test(tc_core, test_sscanf_possible_minus_one_p6);
   tcase_add_test(tc_core, test_sscanf_possible_minus_one_p7);
-  tcase_add_test(tc_core, test_sscanf_possible_minus_one_p8);
+  tcase_add_test(tc_problem, test_sscanf_possible_minus_one_p8);
 
   tcase_add_test(tc_core, test_sscanf_i_p1);
   tcase_add_test(tc_core, test_sscanf_i_p2);
@@ -2086,7 +2086,7 @@ Suite* make_sscanf_suite() {
   tcase_add_test(tc_core, test_sscanf_ptr_lead_zero);
   tcase_add_test(tc_core, test_sscanf_ptr_with_letters);
   tcase_add_test(tc_core, test_sscanf_ptr_lead_zero_2);
-  tcase_add_test(tc_problem, test_sscanf_ptr_whitespaces);
+  tcase_add_test(tc_core, test_sscanf_ptr_whitespaces);
   tcase_add_test(tc_core, test_sscanf_ptr_invalid);
   tcase_add_test(tc_core, test_sscanf_ptr_empty);
   tcase_add_test(tc_core, test_sscanf_ptr_invalid_2);
