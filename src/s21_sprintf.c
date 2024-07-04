@@ -4,11 +4,8 @@ int s21_sprintf(char* str, const char* format, ...) {
   set_locale_for_wide_chars();
   DestStr dest = {str, 0};
   SpecOptions spec_opts = {0};
-  // int fin_result = 0;  // Результат работы функции, пока не используется
-  // нигде
-
-  va_list args;  // Список аргументов
-  va_start(args, format);  // Инициализируем список аргументов
+  va_list args;
+  va_start(args, format);
   while (*format != '\0') {
     if (*format == '%') {
       format++;
@@ -17,60 +14,7 @@ int s21_sprintf(char* str, const char* format, ...) {
       set_base(&spec_opts);
       set_padding_char(&spec_opts);
       set_exponent_char(&spec_opts);
-
-      switch (*format) {
-        case 'c': {
-          process_chars(&args, &dest, &spec_opts);
-          break;
-        }
-        case 's': {
-          process_strings(&args, &dest, &spec_opts);
-          break;
-        }
-        case 'i':
-        case 'd': {
-          process_int(&args, &dest, &spec_opts);
-          break;
-        }
-        case 'x':
-        case 'X':
-        case 'o':
-        case 'u': {
-          process_unsigned(&args, &dest, &spec_opts);
-          break;
-        }
-        case 'n': {
-          int* counter_n = va_arg(args, int*);
-          *counter_n = s21_strlen(dest.str);
-          break;
-        }
-        case 'f':
-        case 'e':
-        case 'E':
-        case 'g':
-        case 'G': {
-          process_floating_point_number(&args, &dest, &spec_opts);
-          break;
-        }
-        case 'p': {
-          void* pointer_str_input = va_arg(args, void*);
-#if defined(__linux__)
-          if (pointer_str_input == 0x0)
-            process_narrow_string("(nil)", &dest, &spec_opts);
-          else
-            pointer_to_str(&dest, pointer_str_input, &spec_opts);
-#else
-          pointer_to_str(&dest, pointer_str_input, &spec_opts);
-#endif
-          break;
-        }
-        case '%': {
-          dest.str[dest.curr_ind++] = '%';
-          break;
-        }
-        default:
-          break;
-      }
+      process_specifier(*format, &args, &dest, &spec_opts);
     } else {
       dest.str[dest.curr_ind++] = *format;
     }
@@ -78,7 +22,6 @@ int s21_sprintf(char* str, const char* format, ...) {
   }
   dest.str[dest.curr_ind] = '\0';
   va_end(args);
-
   return dest.curr_ind;
 }
 
@@ -223,6 +166,67 @@ void parse_specifier(const char** format, SpecOptions* spec_opts) {
       }
     }
   }
+}
+
+void process_specifier(char format_char, va_list* args, DestStr* dest,
+                       SpecOptions* spec_opts) {
+  switch (format_char) {
+    case 'c': {
+      process_chars(args, dest, spec_opts);
+      break;
+    }
+    case 's': {
+      process_strings(args, dest, spec_opts);
+      break;
+    }
+    case 'i':
+    case 'd': {
+      process_int(args, dest, spec_opts);
+      break;
+    }
+    case 'x':
+    case 'X':
+    case 'o':
+    case 'u': {
+      process_unsigned(args, dest, spec_opts);
+      break;
+    }
+    case 'n': {
+      int* counter_n = va_arg(*args, int*);
+      *counter_n = s21_strlen(dest->str);
+      break;
+    }
+    case 'f':
+    case 'e':
+    case 'E':
+    case 'g':
+    case 'G': {
+      process_floating_point_number(args, dest, spec_opts);
+      break;
+    }
+    case 'p': {
+      process_pointer(args, dest, spec_opts);
+      break;
+    }
+    case '%': {
+      dest->str[dest->curr_ind++] = '%';
+      break;
+    }
+    default:
+      break;
+  }
+}
+
+void process_pointer(va_list* args, DestStr* dest, SpecOptions* spec_opts) {
+  void* pointer_str_input = va_arg(*args, void*);
+#if defined(__linux__)
+  if (pointer_str_input == 0x0)
+    process_narrow_string("(nil)", dest, spec_opts);
+  else
+    pointer_to_str(dest, pointer_str_input, spec_opts);
+#else
+  pointer_to_str(dest, pointer_str_input, spec_opts);
+#endif
 }
 
 void process_chars(va_list* args, DestStr* dest, SpecOptions* spec_opts) {
