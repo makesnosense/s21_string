@@ -17,22 +17,15 @@ int s21_sscanf(const char* str, const char* format, ...) {
     } else if (fmt_input.str[fmt_input.curr_ind] == '%') {
       if (n_specifier_follows(&fmt_input) == false &&
           is_end_of_string(&source) == true) {
-        // result = -1;
         if (result == 0) {
           result = -1;
         }
         matching_failure = true;
 
-      }
-      //  else if (is_space(source.str[source.curr_ind]) &&
-      //            c_specifier_follows(&fmt_input) == false) {
-      //   printf("\n\n\n\n%c HERE\n\n\n", source.str[source.curr_ind]);
-      //   if (result == 0) {
-      //     result = -1;
-      //   }
-      //   matching_failure = true;
-      // }
-      else {
+      } else if (is_space(source.str[source.curr_ind]) &&
+                 c_specifier_follows(&fmt_input) == false) {
+        consume_space(&source);
+      } else {
         result +=
             consume_specifier(&args, &source, &fmt_input, &matching_failure);
       }
@@ -640,12 +633,14 @@ bool we_continue_consuming(InputStr* source, InputStr* fmt_input,
                            bool* matching_failure) {
   bool we_continue = false;
   if (is_end_of_string(fmt_input) == false && *matching_failure == false) {
-    if (is_end_of_string(source) == false || is_space_specifier(fmt_input)) {
-      we_continue = true;
-    } else {
-      we_continue =
-          n_specifier_follows(fmt_input) || c_specifier_follows(fmt_input);
-    }
+    printf("\n\ncurr ind %lu\n", source->curr_ind);
+    we_continue = true;
+    // if (is_end_of_string(source) == false || is_space_specifier(fmt_input)) {
+    //   we_continue = true;
+    // } else {
+    //   we_continue =
+    //       n_specifier_follows(fmt_input) || c_specifier_follows(fmt_input);
+    // }
   }
   return we_continue;
 }
