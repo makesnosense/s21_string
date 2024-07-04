@@ -12,7 +12,7 @@ int s21_sscanf(const char* str, const char* format, ...) {
 
   while (we_continue_consuming(&source, &fmt_input, &matching_failure)) {
     if (is_space_specifier(&fmt_input)) {
-      process_space(&source, &fmt_input, true);
+      process_space(&source, &fmt_input);
     } else if (fmt_input.str[fmt_input.curr_ind] == '%') {
       process_specifier_sscanf(&result, &args, &source, &fmt_input,
                                &matching_failure);
@@ -654,12 +654,9 @@ bool we_continue_consuming(InputStr* source, InputStr* fmt_input,
   return we_continue;
 }
 
-void process_space(InputStr* source, InputStr* fmt_input,
-                   bool increment_format_index) {
+void process_space(InputStr* source, InputStr* fmt_input) {
   consume_space(source);
-  if (increment_format_index == true) {
-    fmt_input->curr_ind++;
-  }
+  fmt_input->curr_ind++;
 }
 
 void consume_space(InputStr* source) {
@@ -672,7 +669,7 @@ void consume_initial_space_and_n(va_list* args, InputStr* source,
                                  InputStr* fmt_input) {
   while (n_specifier_follows(fmt_input) || is_space_specifier(fmt_input)) {
     if (is_space_specifier(fmt_input)) {
-      process_space(source, fmt_input, true);
+      process_space(source, fmt_input);
     } else if (n_specifier_follows(fmt_input)) {
       bool n_star_present = is_n_star_present(fmt_input);
       process_n(args, source, n_star_present);

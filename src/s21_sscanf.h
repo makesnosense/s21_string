@@ -65,8 +65,7 @@ bool is_space_specifier(InputStr* fmt_input);
 bool we_continue_consuming(InputStr* source, InputStr* fmt_input,
                            bool* matching_failure);
 
-void process_space(InputStr* source, InputStr* fmt_input,
-                   bool increment_format_index);
+void process_space(InputStr* source, InputStr* fmt_input);
 void consume_space(InputStr* source);
 void consume_initial_space_and_n(va_list* args, InputStr* source,
                                  InputStr* fmt_input);
