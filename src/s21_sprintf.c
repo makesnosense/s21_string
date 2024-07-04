@@ -123,24 +123,24 @@ void parse_specifier(const char** format, SpecOptions* spec_opts) {
     int current_specifier = **format;
     switch (current_specifier) {
       case 'c': {
-        spec_opts->specificator = c;
+        spec_opts->specifier = c;
         break;
       }
       case 'X':
       case 'p':
       case 'x': {
         if (current_specifier == 'X') {
-          spec_opts->specificator = X;
+          spec_opts->specifier = X;
         } else if (current_specifier == 'x') {
-          spec_opts->specificator = x;
+          spec_opts->specifier = x;
         } else {
-          spec_opts->specificator = p;
+          spec_opts->specifier = p;
         }
         spec_opts->is_hexadecimal = true;
         break;
       }
       case 'o': {
-        spec_opts->specificator = o;
+        spec_opts->specifier = o;
         break;
       }
       case 'f':
@@ -150,16 +150,16 @@ void parse_specifier(const char** format, SpecOptions* spec_opts) {
       case 'E': {
         spec_opts->is_floating_point_number = true;
         if (current_specifier == 'g') {
-          spec_opts->specificator = g;
+          spec_opts->specifier = g;
           spec_opts->is_g_spec = true;
         } else if (current_specifier == 'G') {
-          spec_opts->specificator = G;
+          spec_opts->specifier = G;
           spec_opts->is_g_spec = true;
         } else if (current_specifier == 'e') {
-          spec_opts->specificator = e;
+          spec_opts->specifier = e;
           spec_opts->is_scientific = true;
         } else if (current_specifier == 'E') {
-          spec_opts->specificator = E;
+          spec_opts->specifier = E;
           spec_opts->is_scientific = true;
         }
         break;
@@ -369,10 +369,8 @@ long double ingest_floating_point_number(va_list* args,
   long double input_floating_point_number = 0;
   if (spec_opts->length_big_l) {
     input_floating_point_number = va_arg(*args, long double);
-    // printf("\nLongDouble: %.18Lf\n", input_floating_point_number);
   } else {
     input_floating_point_number = va_arg(*args, double);
-    // printf("\nDouble: %.18Lf\n", input_floating_point_number);
   }
   spec_opts->is_zero = is_zero(input_floating_point_number);
   return input_floating_point_number;
@@ -399,7 +397,7 @@ long long unsigned ingest_unsinged(va_list* args, SpecOptions* spec_opts) {
 }
 
 void set_base(SpecOptions* spec_opts) {
-  if (spec_opts->specificator == o) {
+  if (spec_opts->specifier == o) {
     spec_opts->base = 8.0;
   } else if (spec_opts->is_hexadecimal) {
     spec_opts->base = 16.0;
@@ -417,9 +415,9 @@ void set_padding_char(SpecOptions* spec_opts) {
 }
 
 void set_exponent_char(SpecOptions* spec_opts) {
-  if (spec_opts->specificator == e || spec_opts->specificator == g) {
+  if (spec_opts->specifier == e || spec_opts->specifier == g) {
     spec_opts->exponent_char = 'e';
-  } else if (spec_opts->specificator == E || spec_opts->specificator == G) {
+  } else if (spec_opts->specifier == E || spec_opts->specifier == G) {
     spec_opts->exponent_char = 'E';
   }
 }
@@ -432,7 +430,7 @@ void is_negative(long double num, SpecOptions* spec_opts) {
 s21_size_t get_num_length(long double num, SpecOptions* spec_opts) {
   int num_len = 0;
 
-  if ((num >= 0 && num < 1) || spec_opts->specificator == c) {
+  if ((num >= 0 && num < 1) || spec_opts->specifier == c) {
     num_len++;
   } else {
     while (num >= 1) {
@@ -483,10 +481,10 @@ void calculate_padding_not_ge_spec(s21_size_t num_len, SpecOptions* spec_opts) {
   if (spec_opts->flag_sharp) {
     if (spec_opts->is_hexadecimal && spec_opts->is_zero == false) {
       sharp_corr = 2;
-    } else if (spec_opts->specificator == o && spec_opts->is_zero == false) {
+    } else if (spec_opts->specifier == o && spec_opts->is_zero == false) {
       sharp_corr = 1;
     }
-  } else if (spec_opts->specificator == p) {
+  } else if (spec_opts->specifier == p) {
     sharp_corr = 2;
   }
 
@@ -541,12 +539,12 @@ void apply_flags(DestStr* dest, SpecOptions* spec_opts) {
   } else if (spec_opts->flag_space) {
     dest->str[dest->curr_ind++] = ' ';
   } else if (spec_opts->flag_sharp) {
-    if (spec_opts->specificator == o) {
+    if (spec_opts->specifier == o) {
       dest->str[dest->curr_ind++] = '0';
-    } else if (spec_opts->specificator == x) {
+    } else if (spec_opts->specifier == x) {
       dest->str[dest->curr_ind++] = '0';
       dest->str[dest->curr_ind++] = 'x';
-    } else if (spec_opts->specificator == X) {
+    } else if (spec_opts->specifier == X) {
       dest->str[dest->curr_ind++] = '0';
       dest->str[dest->curr_ind++] = 'X';
     } else if (spec_opts->is_floating_point_number &&
@@ -560,8 +558,8 @@ void floating_point_number_to_str(DestStr* dest, long double input_num,
                                   SpecOptions* spec_opts) {
   input_num = TO_ABS(input_num);
 
-  long double whole_part = 0;     // Целая часть
-  long double fraction_part = 0;  // Дробная часть
+  long double whole_part = 0;
+  long double fraction_part = 0;
 
   s21_size_t zeros_to_insert = 0;
 
@@ -570,7 +568,6 @@ void floating_point_number_to_str(DestStr* dest, long double input_num,
 
   fraction_part = modfl(input_num, &whole_part);
 
-  // Записываем целую часть в строку dest
   whole_to_str(dest, whole_part, spec_opts);
   // Если не спарсили .0 - выводим дробную часть
   if (!(spec_opts->precision_set && !spec_opts->precision)) {
@@ -593,11 +590,10 @@ void floating_point_number_to_str(DestStr* dest, long double input_num,
 
     add_zeros_to_destination(dest, zeros_to_add_on_the_right);
 
-    // Добавляем пробелы в конец, если флаг '-'
     if (!spec_opts->is_g_spec && !spec_opts->is_scientific) {
       apply_minus_width(dest, spec_opts);
     }
-    // Добавляем нуль-терминатор
+
     dest->str[dest->curr_ind] = '\0';
   }
 
@@ -623,7 +619,7 @@ int itoa(DestStr* dest, long double input_num, SpecOptions* spec_opts) {
   int num_len = 0;
   const char* digits = "0123456789abcdef";
 
-  if (spec_opts->specificator == X) {
+  if (spec_opts->specifier == X) {
     digits = "0123456789ABCDEF";
   }
 
@@ -648,7 +644,6 @@ int itoa(DestStr* dest, long double input_num, SpecOptions* spec_opts) {
 }
 
 void apply_minus_width(DestStr* dest, SpecOptions* spec_opts) {
-  // Если ширина > длины числа и флаг '-' == 1
   if (spec_opts->flag_minus) {
     for (s21_size_t i = 0; i < spec_opts->padding; i++) {
       dest->str[dest->curr_ind++] = ' ';
@@ -676,21 +671,18 @@ void whole_to_str(DestStr* dest, long double num, SpecOptions* spec_opts) {
     apply_flags(dest, spec_opts);
   }
 
-  // Преобразуем целое число в строку
   itoa(dest, num, spec_opts);
 
-  // Если ширина больше длины числа, добавляем пробелы в конец
   if (!spec_opts->is_floating_point_number && !spec_opts->is_g_spec &&
       !spec_opts->is_scientific)
     apply_minus_width(dest, spec_opts);
 
-  // Добавляем нуль-терминатор
   dest->str[dest->curr_ind] = '\0';
 }
 
 void set_needed_precision(SpecOptions* spec_opts) {
   if (!spec_opts->precision_set) {
-    spec_opts->precision = F_PRECISION;
+    spec_opts->precision = DEFAULT_F_PRECISION;
   }
 }
 
@@ -704,7 +696,7 @@ void process_scientific_zero_input(DestStr* dest, SpecOptions* spec_opts) {
   if (spec_opts->precision_set) {
     zeros_to_print = spec_opts->precision;
   } else {
-    zeros_to_print = F_PRECISION;
+    zeros_to_print = DEFAULT_F_PRECISION;
   }
 
   if (!(spec_opts->precision_set == true && spec_opts->precision == 0)) {
@@ -727,7 +719,7 @@ void process_scientific_zero_input(DestStr* dest, SpecOptions* spec_opts) {
 void process_scientific_standard(DestStr* dest, long double input_num,
                                  SpecOptions* spec_opts) {
   int exponent = 0;
-  // exponent = scale_input_and_calculate_exponent(&input_num);
+
   if (input_num > 1) {
     exponent = calculate_exponent(bank_roundl(input_num));
   } else {
@@ -773,7 +765,7 @@ void add_scientific_e_part(long long exponent, DestStr* dest,
   } else {
     dest->str[dest->curr_ind++] = '+';
   }
-  // Убедитесь, что экспонента имеет как минимум два знака
+  // экспонента имеет как минимум два знака
   if (exponent < 10) {
     dest->str[dest->curr_ind++] = '0';
   }
@@ -817,8 +809,6 @@ bool g_spec_scientific_needed(long double input_num, SpecOptions* spec_opts) {
   fraction_part = modfl(input_num, &whole_part);
   fraction_part = fraction_part - 0;
 
-  // s21_size_t whole_part_length = get_num_length(whole_part, spec_opts);
-
   s21_size_t whole_part_length_after_rounding =
       get_num_length(bank_roundl(input_num), spec_opts);
 
@@ -829,7 +819,7 @@ bool g_spec_scientific_needed(long double input_num, SpecOptions* spec_opts) {
   }
   // not set precision
   else if (spec_opts->precision_set == false &&
-           whole_part_length_after_rounding > F_PRECISION) {
+           whole_part_length_after_rounding > DEFAULT_F_PRECISION) {
     result = true;
     // precision set and it's nonzero
   } else if (spec_opts->precision_set == true && spec_opts->precision != 0 &&
@@ -914,9 +904,9 @@ void process_g_spec_not_set_precision_sharp_on(DestStr* dest,
     whole_part_length = 0;
   }
 
-  needed_decimal_places = F_PRECISION - whole_part_length;
+  needed_decimal_places = DEFAULT_F_PRECISION - whole_part_length;
 
-  // whole_part_length always <= F_PRECISION
+  // whole_part_length always <= DEFAULT_F_PRECISION
   fraction_part = multiply_by_10_n_times(fraction_part, needed_decimal_places);
   fraction_part = bank_roundl(fraction_part);
 
@@ -927,12 +917,12 @@ void process_g_spec_not_set_precision_sharp_on(DestStr* dest,
   whole_part_length = get_num_length_simple(whole_part);
   s21_size_t total_length = whole_part_length + fraction_part_length;
 
-  if (whole_part_length < F_PRECISION) {
+  if (whole_part_length < DEFAULT_F_PRECISION) {
     itoa(dest, llround(fraction_part), spec_opts);
   }
   if (spec_opts->precision_set == false) {
-    if (total_length < F_PRECISION) {
-      add_zeros_to_destination(dest, F_PRECISION - total_length);
+    if (total_length < DEFAULT_F_PRECISION) {
+      add_zeros_to_destination(dest, DEFAULT_F_PRECISION - total_length);
     }
     // remove_trailing_zeros(dest, spec_opts);
   } else if (spec_opts->precision_set == true) {
@@ -961,7 +951,7 @@ void process_g_spec_not_set_precision_sharp_off(DestStr* dest,
     whole_part_length = 0;
   }
 
-  needed_decimal_places = F_PRECISION - whole_part_length;
+  needed_decimal_places = DEFAULT_F_PRECISION - whole_part_length;
 
   fraction_part = multiply_by_10_n_times(fraction_part, needed_decimal_places);
   fraction_part = bank_roundl(fraction_part);
