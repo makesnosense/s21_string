@@ -68,7 +68,7 @@ int consume_specifier(va_list* args, InputStr* source, InputStr* fmt_input,
 
   switch (fmt_input->str[fmt_input->curr_ind]) {
     case 'c': {
-      specifier_result = read_char(args, source, &spec_opts);
+      specifier_result = process_chars_sscanf(args, source, &spec_opts);
       break;
     }
     case 'n': {
@@ -191,13 +191,15 @@ int process_float_sscanf(va_list* args, SpecOptions* spec_opts,
 
   read_result = read_float(source, &temp_floating_destination, spec_opts);
 
-  write_to_floating_pointer(args, spec_opts, temp_floating_destination);
+  write_to_floating_point_number_pointer(args, spec_opts,
+                                         temp_floating_destination);
 
   return spec_opts->is_star == false ? read_result : 0;
 }
 
-void write_to_floating_pointer(va_list* args, SpecOptions* spec_opts,
-                               long double temp_floating_destination) {
+void write_to_floating_point_number_pointer(
+    va_list* args, SpecOptions* spec_opts,
+    long double temp_floating_destination) {
   if (spec_opts->is_star == false) {
     if (spec_opts->length == l) {
       double* dest_input_pointer = va_arg(*args, double*);
@@ -451,7 +453,18 @@ bool width_limit_reached(s21_size_t bytes_read, SpecOptions* spec_opts) {
   return limit_reached;
 }
 
-int read_char(va_list* args, InputStr* source, SpecOptions* spec_opts) {
+int process_chars_sscanf(va_list* args, InputStr* source,
+                         SpecOptions* spec_opts) {
+  int specifier_result = 0;
+  if (spec_opts->length == l) {
+    ;
+  } else {
+    specifier_result = read_narrow_char(args, source, spec_opts);
+  }
+  return specifier_result;
+}
+
+int read_narrow_char(va_list* args, InputStr* source, SpecOptions* spec_opts) {
   int read_result = 0;
   if (spec_opts->is_star == false) {
     char* dest_char_ptr = va_arg(*args, char*);
@@ -643,7 +656,8 @@ bool we_continue_processing(InputStr* source, InputStr* fmt_input,
   if (is_end_of_string(fmt_input) == false && *matching_failure == false) {
     printf("\n\ncurr ind %lu\n", source->curr_ind);
     we_continue = true;
-    // if (is_end_of_string(source) == false || is_space_specifier(fmt_input)) {
+    // if (is_end_of_string(source) == false || is_space_specifier(fmt_input))
+    // {
     //   we_continue = true;
     // } else {
     //   we_continue =

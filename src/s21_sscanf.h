@@ -69,6 +69,10 @@ bool we_continue_processing(InputStr* source, InputStr* fmt_input,
 void process_space(InputStr* source, InputStr* fmt_input);
 void consume_space(InputStr* source);
 
+int process_chars_sscanf(va_list* args, InputStr* source,
+                         SpecOptions* spec_opts);
+int read_narrow_char(va_list* args, InputStr* source, SpecOptions* spec_opts);
+
 void process_n(va_list* args, InputStr* source, bool n_star);
 int process_unsigned_sscanf(va_list* args, SpecOptions* spec_opts,
                             InputStr* source, bool* matching_failure);
@@ -89,8 +93,6 @@ int read_float(InputStr* sourse, long double* dest_input_pointer,
                SpecOptions* spec_opts);
 int read_string(va_list* args, InputStr* source, SpecOptions* spec_opts);
 int read_pointer(va_list* args, InputStr* source, SpecOptions* spec_opts);
-
-int read_char(va_list* args, InputStr* source, SpecOptions* spec_opts);
 
 void parse_width_sscanf(InputStr* fmt_input, SpecOptions* spec_opts);
 
@@ -126,8 +128,9 @@ void write_to_integer_pointer(va_list* args, SpecOptions* spec_opts,
 void write_to_unsigned_pointer(
     va_list* args, SpecOptions* spec_opts,
     long long unsigned temp_long_long_unsigned_destination);
-void write_to_floating_pointer(va_list* args, SpecOptions* spec_opts,
-                               long double temp_floating_destination);
+void write_to_floating_point_number_pointer(
+    va_list* args, SpecOptions* spec_opts,
+    long double temp_floating_destination);
 
 char to_lower_char(char incoming_char);
 bool hexadecimal_prefix_follows(InputStr* source);
