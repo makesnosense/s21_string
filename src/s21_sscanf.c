@@ -15,20 +15,8 @@ int s21_sscanf(const char* str, const char* format, ...) {
       consume_space(&source);
       fmt_input.curr_ind++;
     } else if (fmt_input.str[fmt_input.curr_ind] == '%') {
-      if (n_specifier_follows(&fmt_input) == false &&
-          is_end_of_string(&source) == true) {
-        if (result == 0) {
-          result = -1;
-        }
-        matching_failure = true;
-
-      } else if (is_space(source.str[source.curr_ind]) &&
-                 c_specifier_follows(&fmt_input) == false) {
-        consume_space(&source);
-      } else {
-        result +=
-            consume_specifier(&args, &source, &fmt_input, &matching_failure);
-      }
+      process_specifier_sscanf(&result, &args, &source, &fmt_input,
+                               &matching_failure);
     } else {
       if (fmt_input.str[fmt_input.curr_ind] != source.str[source.curr_ind]) {
         matching_failure = true;
@@ -42,6 +30,25 @@ int s21_sscanf(const char* str, const char* format, ...) {
   va_end(args);
 
   return result;
+}
+
+void process_specifier_sscanf(int* sscanf_result, va_list* args,
+                              InputStr* source, InputStr* fmt_input,
+                              bool* matching_failure) {
+  if (n_specifier_follows(fmt_input) == false &&
+      is_end_of_string(source) == true) {
+    if (*sscanf_result == 0) {
+      *sscanf_result = -1;
+    }
+    *matching_failure = true;
+
+  } else if (is_space(source->str[source->curr_ind]) &&
+             c_specifier_follows(fmt_input) == false) {
+    consume_space(source);
+  } else {
+    *sscanf_result +=
+        consume_specifier(args, source, fmt_input, matching_failure);
+  }
 }
 
 int consume_specifier(va_list* args, InputStr* source, InputStr* fmt_input,
