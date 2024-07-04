@@ -159,6 +159,25 @@ int read_string(va_list* args, InputStr* source, SpecOptions* spec_opts) {
   bool weve_read_at_least_once_successfully = 0;
   s21_size_t bytes_read = 0;
 
+  if (spec_opts->length == l) {
+    weve_read_at_least_once_successfully =
+        process_input_width_string_pointer(args, source, spec_opts);
+  } else {
+    weve_read_at_least_once_successfully =
+        process_input_string_pointer(args, source, spec_opts);
+  }
+
+  return weve_read_at_least_once_successfully;
+}
+
+int process_input_width_string_pointer(va_list* args, InputStr* source,
+                                       SpecOptions* spec_opts);
+
+int process_input_string_pointer(va_list* args, InputStr* source,
+                                 SpecOptions* spec_opts) {
+  bool weve_read_at_least_once_successfully = 0;
+  s21_size_t bytes_read = 0;
+
   if (spec_opts->is_star == false) {
     char* dest_input_pointer = va_arg(*args, char*);
 
@@ -181,8 +200,6 @@ int read_string(va_list* args, InputStr* source, SpecOptions* spec_opts) {
       bytes_read++;
     }
   }
-
-  return weve_read_at_least_once_successfully;
 }
 
 int process_float_sscanf(va_list* args, SpecOptions* spec_opts,

@@ -2124,6 +2124,38 @@ START_TEST(test_sscanf_nonsimple_wchar) {
 }
 END_TEST
 
+START_TEST(test_sscanf_nonsimple_wstring) {
+#if defined(__APPLE__)
+  setlocale(LC_ALL, "en_US.UTF-8");
+
+#elif defined(__linux__)
+  setlocale(LC_ALL, "C.UTF-8");
+#endif
+
+  wchar_t s21_a[50] = {0};
+  wchar_t s21_b[50] = {0};
+  int s21_c = 0;
+  int s21_res = 0;
+
+  wchar_t lib_a[50] = {0};
+  wchar_t lib_b[50] = {0};
+  int lib_c = 0;
+  int lib_res = 0;
+
+  lib_res = sscanf("молодец у мамы я", " %4ls %ls %n", lib_a, lib_b, &lib_c);
+  s21_res =
+      s21_sscanf("молодец у мамы я", " %4ls %ls %n", s21_a, s21_b, &s21_c);
+
+  printf("\ns21 первый чар %ls второй чар %ls n: %d\n", s21_a, s21_b, s21_c);
+  printf("\nlib первый чар %ls второй чар %ls n: %d\n", lib_a, lib_b, lib_c);
+
+  ck_assert_int_eq(lib_res, s21_res);
+  ck_assert_mem_eq(lib_a, s21_a, 15);
+  ck_assert_mem_eq(lib_b, s21_b, 15);
+  ck_assert_int_eq(lib_c, s21_c);
+}
+END_TEST
+
 Suite* make_sscanf_suite() {
   Suite* sscanf_suite = suite_create("sscanf");
   TCase* tc_core;
@@ -2229,6 +2261,7 @@ Suite* make_sscanf_suite() {
   tcase_add_test(tc_core, test_sscanf_ptr_mix_width_and_suppression);
 
   tcase_add_test(tc_problem, test_sscanf_nonsimple_wchar);
+  tcase_add_test(tc_problem, test_sscanf_nonsimple_wstring);
 
   tcase_add_test(tc_core, test_sscanf_e_positive);
   tcase_add_test(tc_core, test_sscanf_e_negative);
