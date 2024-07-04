@@ -1530,6 +1530,21 @@ START_TEST(test_sscanf_overflow_long_long_float) {
 }
 END_TEST
 
+START_TEST(test_sscanf_specific_float) {
+  float s21_a = 0;
+  int s21_res = 0;
+
+  float lib_a = 0;
+  int lib_res = 0;
+
+  lib_res = sscanf(".43234", "%f", &lib_a);
+  s21_res = s21_sscanf(".43234", "%f", &s21_a);
+
+  ck_assert_int_eq(lib_res, s21_res);
+  ck_assert_float_eq(lib_a, s21_a);
+}
+END_TEST
+
 START_TEST(test_sscanf_unsigned) {
   unsigned s21_a = 0;
   unsigned s21_b = 0;
@@ -2133,6 +2148,7 @@ Suite* make_sscanf_suite() {
   tcase_add_test(tc_core, test_sscanf_long_float);
   tcase_add_test(tc_core, test_sscanf_long_long_float);
   tcase_add_test(tc_core, test_sscanf_overflow_long_long_float);
+  tcase_add_test(tc_core, test_sscanf_specific_float);
 
   tcase_add_test(tc_core, test_sscanf_unsigned);
   tcase_add_test(tc_core, test_sscanf_long_unsigned);
