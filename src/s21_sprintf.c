@@ -39,25 +39,23 @@ int s21_sprintf(char* str, const char* format, ...) {
           process_unsigned(&args, &dest, &spec_opts);
           break;
         }
-        case 'e':
-        case 'E': {
-          long double input_floating_point_number =
-              ingest_floating_point_number(&args, &spec_opts);
-          is_negative(input_floating_point_number, &spec_opts);
-          process_scientific(&dest, input_floating_point_number, &spec_opts);
-          break;
-        }
         case 'n': {
           int* counter_n = va_arg(args, int*);
           *counter_n = s21_strlen(dest.str);
           break;
         }
+        case 'e':
+        case 'E':
         case 'g':
         case 'G': {
           long double input_floating_point_number =
               ingest_floating_point_number(&args, &spec_opts);
           is_negative(input_floating_point_number, &spec_opts);
-          process_g_spec(&dest, input_floating_point_number, &spec_opts);
+          if (spec_opts.is_scientific) {
+            process_scientific(&dest, input_floating_point_number, &spec_opts);
+          } else {
+            process_g_spec(&dest, input_floating_point_number, &spec_opts);
+          }
           break;
         }
         case 'p': {
