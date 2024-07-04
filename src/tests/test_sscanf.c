@@ -1,6 +1,6 @@
 #include <locale.h>
 #include <stdio.h>
-#include <wchar.h>
+// #include <wchar.h>
 
 #include "run_tests.h"
 
@@ -2118,9 +2118,9 @@ START_TEST(test_sscanf_nonsimple_wchar) {
   printf("\nlib первый чар %lc второй чар %lc n: %d\n", lib_a, lib_b, lib_c);
 
   ck_assert_int_eq(lib_res, s21_res);
-  // ck_assert_int_eq(lib_a, s21_a);
-  // ck_assert_int_eq(lib_b, s21_b);
-  // ck_assert_int_eq(lib_c, s21_c);
+  ck_assert_int_eq(lib_a, s21_a);
+  ck_assert_int_eq(lib_b, s21_b);
+  ck_assert_int_eq(lib_c, s21_c);
 }
 END_TEST
 
