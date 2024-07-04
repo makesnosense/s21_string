@@ -3,11 +3,13 @@
 
 #include <ctype.h>
 #include <limits.h>
+#include <locale.h>
 #include <math.h>
 #include <stdarg.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <wchar.h>
 
 #include "s21_string.h"
 
@@ -44,6 +46,13 @@ typedef struct InputString {
   const char* str;
   s21_size_t curr_ind;
 } InputStr;
+void process_initial_space_and_n(va_list* args, InputStr* source,
+                                 InputStr* fmt_input);
+void process_foreign_char_in_format(InputStr* source, InputStr* fmt_input,
+                                    bool* matching_failure);
+void process_specifier_sscanf(int* sscanf_result, va_list* args,
+                              InputStr* source, InputStr* fmt_input,
+                              bool* matching_failure);
 
 int consume_specifier(va_list* args, InputStr* source, InputStr* fmt_input,
                       bool* matching_failure);
@@ -56,12 +65,14 @@ bool is_end_of_string(InputStr* string_structure);
 bool is_space(char input_char);
 bool is_space_specifier(InputStr* fmt_input);
 
-bool we_continue_consuming(InputStr* source, InputStr* fmt_input,
-                           bool* matching_failure);
+bool we_continue_processing(InputStr* fmt_input, bool* matching_failure);
 
+void process_space(InputStr* source, InputStr* fmt_input);
 void consume_space(InputStr* source);
-void consume_initial_space_and_n(va_list* args, InputStr* source,
-                                 InputStr* fmt_input);
+
+int process_chars_sscanf(va_list* args, InputStr* source,
+                         SpecOptions* spec_opts);
+int read_narrow_char(va_list* args, InputStr* source, SpecOptions* spec_opts);
 
 void process_n(va_list* args, InputStr* source, bool n_star);
 int process_unsigned_sscanf(va_list* args, SpecOptions* spec_opts,
@@ -82,9 +93,7 @@ int read_octal(InputStr* source, SpecOptions* spec_opts,
 int read_float(InputStr* sourse, long double* dest_input_pointer,
                SpecOptions* spec_opts);
 int read_string(va_list* args, InputStr* source, SpecOptions* spec_opts);
-int read_pointer(InputStr* source, void** value, SpecOptions* spec_opts);
-
-int read_char(va_list* args, InputStr* source, SpecOptions* spec_opts);
+int read_pointer(va_list* args, InputStr* source, SpecOptions* spec_opts);
 
 void parse_width_sscanf(InputStr* fmt_input, SpecOptions* spec_opts);
 
@@ -96,7 +105,8 @@ int source_validity_check(InputStr* source, InputStr* format_input,
 int consume_specifier(va_list* args, InputStr* source, InputStr* fmt_input,
                       bool* matching_failure);
 
-int read_char(va_list* args, InputStr* source, SpecOptions* spec_opts);
+int read_wide_char(va_list* args, InputStr* source, SpecOptions* spec_opts);
+int read_narrow_char(va_list* args, InputStr* source, SpecOptions* spec_opts);
 
 void parse_width_sscanf(InputStr* fmt_input, SpecOptions* spec_opts);
 bool parse_suppression(InputStr* fmt_input);
@@ -120,11 +130,14 @@ void write_to_integer_pointer(va_list* args, SpecOptions* spec_opts,
 void write_to_unsigned_pointer(
     va_list* args, SpecOptions* spec_opts,
     long long unsigned temp_long_long_unsigned_destination);
-void write_to_floating_pointer(va_list* args, SpecOptions* spec_opts,
-                               long double temp_floating_destination);
+void write_to_floating_point_number_pointer(
+    va_list* args, SpecOptions* spec_opts,
+    long double temp_floating_destination);
 
 char to_lower_char(char incoming_char);
 bool hexadecimal_prefix_follows(InputStr* source);
+
+void set_locale_for_wide_chars_sscanf();
 
 // // Функция для считывания значений из буфера по формату
 // int s21_sscanf(const char *str, const char *format, ...);
