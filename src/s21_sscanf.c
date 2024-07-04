@@ -18,18 +18,23 @@ int s21_sscanf(const char* str, const char* format, ...) {
       process_specifier_sscanf(&result, &args, &source, &fmt_input,
                                &matching_failure);
     } else {
-      if (fmt_input.str[fmt_input.curr_ind] != source.str[source.curr_ind]) {
-        matching_failure = true;
-      } else {
-        fmt_input.curr_ind++;
-        source.curr_ind++;
-      }
+      process_foreign_char_in_format(&source, &fmt_input, &matching_failure);
     }
   }
 
   va_end(args);
 
   return result;
+}
+
+void process_foreign_char_in_format(InputStr* source, InputStr* fmt_input,
+                                    bool* matching_failure) {
+  if (fmt_input->str[fmt_input->curr_ind] != source->str[source->curr_ind]) {
+    *matching_failure = true;
+  } else {
+    fmt_input->curr_ind++;
+    source->curr_ind++;
+  }
 }
 
 void process_specifier_sscanf(int* sscanf_result, va_list* args,
