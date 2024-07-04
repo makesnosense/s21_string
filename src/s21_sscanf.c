@@ -1,6 +1,7 @@
 #include "s21_sscanf.h"
 
 int s21_sscanf(const char* str, const char* format, ...) {
+  set_locale_for_wide_chars_sscanf();
   bool matching_failure = false;
   int result = 0;
   va_list args;  // Список аргументов
@@ -449,7 +450,6 @@ bool width_limit_reached(s21_size_t bytes_read, SpecOptions* spec_opts) {
   if (spec_opts->width_set == true && bytes_read >= limit) {
     limit_reached = true;
   }
-
   return limit_reached;
 }
 
@@ -457,12 +457,23 @@ int process_chars_sscanf(va_list* args, InputStr* source,
                          SpecOptions* spec_opts) {
   int specifier_result = 0;
   if (spec_opts->length == l) {
-    ;
+    specifier_result = read_wide_char(args, source, spec_opts);
   } else {
     specifier_result = read_narrow_char(args, source, spec_opts);
   }
   return specifier_result;
 }
+
+int read_wide_char(va_list* args, InputStr* source, SpecOptions* spec_opts) {
+  int read_result = 0;
+  if (spec_opts->is_star == false) {
+    wchar_t* dest_wchar_ptr = va_arg(*args, wchar_t*);
+    *dest_wchar_ptr = source->str[source->curr_ind];
+    read_result++;
+  }
+  source->curr_ind++;
+  return read_result;
+};
 
 int read_narrow_char(va_list* args, InputStr* source, SpecOptions* spec_opts) {
   int read_result = 0;
@@ -543,7 +554,6 @@ s21_size_t get_octal_num_length(InputStr* source, SpecOptions* spec_opts,
 bool is_valid_digit(char incoming_char, s21_size_t base) {
   bool char_is_valid = false;
   incoming_char = to_lower_char(incoming_char);
-  // printf("\n\n\n\n%c\n\n\n\n", incoming_char);
   const char* digits = "0123456789abcdef";
   for (s21_size_t i = 0; i < base && char_is_valid == false; i++) {
     if (incoming_char == digits[i]) {
@@ -783,6 +793,16 @@ void parse_length_sscanf(InputStr* fmt_input, SpecOptions* spec_opts) {
     }
     fmt_input->curr_ind++;
   }
+}
+
+void set_locale_for_wide_chars_sscanf() {
+#if defined(__APPLE__)
+  setlocale(LC_ALL, "en_US.UTF-8");
+
+#elif defined(__linux__)
+  setlocale(LC_ALL, "C.UTF-8");
+
+#endif
 }
 
 //   *value = (void*)ptr_value;

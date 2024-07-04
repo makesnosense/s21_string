@@ -3,11 +3,13 @@
 
 #include <ctype.h>
 #include <limits.h>
+#include <locale.h>
 #include <math.h>
 #include <stdarg.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <wchar.h>
 
 #include "s21_string.h"
 
@@ -104,7 +106,8 @@ int source_validity_check(InputStr* source, InputStr* format_input,
 int consume_specifier(va_list* args, InputStr* source, InputStr* fmt_input,
                       bool* matching_failure);
 
-int read_char(va_list* args, InputStr* source, SpecOptions* spec_opts);
+int read_wide_char(va_list* args, InputStr* source, SpecOptions* spec_opts);
+int read_narrow_char(va_list* args, InputStr* source, SpecOptions* spec_opts);
 
 void parse_width_sscanf(InputStr* fmt_input, SpecOptions* spec_opts);
 bool parse_suppression(InputStr* fmt_input);
@@ -134,6 +137,8 @@ void write_to_floating_point_number_pointer(
 
 char to_lower_char(char incoming_char);
 bool hexadecimal_prefix_follows(InputStr* source);
+
+void set_locale_for_wide_chars_sscanf();
 
 // // Функция для считывания значений из буфера по формату
 // int s21_sscanf(const char *str, const char *format, ...);
