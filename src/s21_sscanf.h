@@ -85,7 +85,7 @@ int read_octal(InputStr* source, SpecOptions* spec_opts,
 int read_float(InputStr* sourse, long double* dest_input_pointer,
                SpecOptions* spec_opts);
 int read_string(va_list* args, InputStr* source, SpecOptions* spec_opts);
-int read_pointer(InputStr* source, void** value, SpecOptions* spec_opts);
+int read_pointer(va_list* args, InputStr* source, SpecOptions* spec_opts);
 
 int read_char(va_list* args, InputStr* source, SpecOptions* spec_opts);
 
