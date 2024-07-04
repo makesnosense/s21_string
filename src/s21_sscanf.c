@@ -40,9 +40,6 @@ int s21_sscanf(const char* str, const char* format, ...) {
   }
 
   va_end(args);
-  if (result == 0 && source.curr_ind == 0) {
-    result = -1;
-  }
 
   return result;
 }
