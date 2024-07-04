@@ -12,17 +12,14 @@
 
 #include "s21_string.h"
 
-// Точность для %f по умолчанию
-#define F_PRECISION 6
+#define DEFAULT_F_PRECISION 6
 #define MANTISSA_DIGITS 5
 #define EPSILON (LDBL_EPSILON * 100)
 
-// Валидные флаги и спецификаторы
 #define VALID_FLAGS "+- 0#"
 #define VALID_SPECIFIERS "cdefginsopuxEGX%"
 #define VALID_LENGTHS "Llh"
 
-// Макрос для смены знака числа
 #define TO_ABS(x) (x) < 0 ? (-x) : (x)
 
 typedef enum Specificator {
@@ -44,7 +41,6 @@ typedef enum Specificator {
   X
 } Specificator;
 
-// Опции функции s21_sprintf
 typedef struct SpecifierOptions {
   bool flag_plus;        // Флаг '+'
   bool flag_minus;       // Флаг '-'
@@ -68,16 +64,12 @@ typedef struct SpecifierOptions {
   bool is_g_spec;
   Specificator specificator;
   bool is_scientific;
-
 } SpecOptions;
 
 typedef struct DestinationString {
   char* str;
   s21_size_t curr_ind;
 } DestStr;
-
-// // %[flags][width][.precision][length][specifier]
-// int s21_sprintf(char* str, const char* format, ...);
 
 int is_flag(char ch);
 int is_specifier(char ch);
