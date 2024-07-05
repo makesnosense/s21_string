@@ -13,7 +13,7 @@
 
 #include "s21_string.h"
 
-#define VALID_SSCANF_SPECIFIERS "cdinopuxX%"
+#define VALID_SSCANF_SPECIFIERS "cdeginopuxEGX%"
 #define VALID_SSCANF_LENGTHS "Llh"
 
 typedef enum SscanfSpecifier {
@@ -36,6 +36,7 @@ typedef struct SpecifierOptions {
   bool is_star;  // Флаг подавления считывания
   SscanfSpecifier specifier;
   Length length;
+  bool is_scientific;
   bool is_hexadecimal;
   bool is_negative;
   char next_digit;
@@ -83,6 +84,10 @@ int process_int_sscanf(va_list* args, SpecOptions* spec_opts, InputStr* source,
                        bool* matching_failure);
 int process_float_sscanf(va_list* args, SpecOptions* spec_opts,
                          InputStr* source);
+int read_scientific(InputStr* source, long double* dest_input_pointer,
+                    SpecOptions* spec_opts);
+int read_float(InputStr* sourse, long double* dest_input_pointer,
+               SpecOptions* spec_opts);
 
 int process_strings_sscanf(va_list* args, InputStr* source,
                            SpecOptions* spec_opts);
@@ -97,8 +102,6 @@ int read_hex(InputStr* source, SpecOptions* spec_opts,
              long long unsigned* dest_input_pointer, bool* matching_failure);
 int read_octal(InputStr* source, SpecOptions* spec_opts,
                long long unsigned* dest_input_pointer, bool* matching_failure);
-int read_float(InputStr* sourse, long double* dest_input_pointer,
-               SpecOptions* spec_opts);
 
 int read_pointer(va_list* args, InputStr* source, SpecOptions* spec_opts);
 
