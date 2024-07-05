@@ -251,12 +251,13 @@ int process_float_sscanf(va_list* args, SpecOptions* spec_opts,
   int read_result = 0;
   long double temp_floating_destination = 0;
 
-  // if (source->str[source->curr_ind] == '-') {
-  //   spec_opts->is_negative = true;
-  //   source->curr_ind++;
-  // } else if (source->str[source->curr_ind] == '+') {
-  //   source->curr_ind++;
-  // }
+  if (source->str[source->curr_ind] == '-') {
+    spec_opts->is_negative = true;
+    source->curr_ind++;
+  } else if (source->str[source->curr_ind] == '+') {
+    spec_opts->plus_sign_present = true;
+    source->curr_ind++;
+  }
 
   if (s21_strncmp(source->str + source->curr_ind, "inf", 3) == 0 ||
       s21_strncmp(source->str + source->curr_ind, "INF", 3) == 0) {
@@ -294,10 +295,9 @@ int read_float(InputStr* source, long double* dest_input_pointer,
   bool weve_read_at_least_once_successfully = 0;
   s21_size_t bytes_read = 0;
   s21_size_t base = 10;
-  if (source->str[source->curr_ind] == '-') {
+
+  if (spec_opts->is_negative) {
     sign = -1;
-    source->curr_ind++;
-    bytes_read++;
   }
 
   while (is_valid_digit(source->str[source->curr_ind], base) &&
@@ -342,14 +342,8 @@ int read_scientific(InputStr* source, long double* dest_input_pointer,
   s21_size_t bytes_read = 0;
   s21_size_t base = 10;
 
-  // Read sign
-  if (source->str[source->curr_ind] == '-') {
+  if (spec_opts->is_negative) {
     sign = -1;
-    source->curr_ind++;
-    bytes_read++;
-  } else if (source->str[source->curr_ind] == '+') {
-    source->curr_ind++;
-    bytes_read++;
   }
 
   // Read mantissa
@@ -665,7 +659,7 @@ int read_octal(InputStr* source, SpecOptions* spec_opts,
 bool width_limit_reached(s21_size_t bytes_read, SpecOptions* spec_opts) {
   bool limit_reached = false;
   s21_size_t limit = spec_opts->width;
-  if (spec_opts->is_negative) {
+  if (spec_opts->is_negative || spec_opts->plus_sign_present) {
     limit -= 1;
   }
 
