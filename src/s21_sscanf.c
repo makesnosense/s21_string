@@ -251,16 +251,37 @@ int process_float_sscanf(va_list* args, SpecOptions* spec_opts,
   int read_result = 0;
   long double temp_floating_destination = 0;
 
-  if (spec_opts->is_scientific) {
-    read_result =
-        read_scientific(source, &temp_floating_destination, spec_opts);
-  } else {
-    read_result = read_float(source, &temp_floating_destination, spec_opts);
+  // if (source->str[source->curr_ind] == '-') {
+  //   spec_opts->is_negative = true;
+  //   source->curr_ind++;
+  // } else if (source->str[source->curr_ind] == '+') {
+  //   source->curr_ind++;
+  // }
+
+  if (s21_strncmp(source->str + source->curr_ind, "inf", 3) == 0 ||
+      s21_strncmp(source->str + source->curr_ind, "INF", 3) == 0) {
+    float* dest_input_pointer = va_arg(*args, float*);
+    *dest_input_pointer =
+        (source->str[source->curr_ind] == '-') ? -INFINITY : INFINITY;
+    read_result = 1;
   }
 
-  write_to_floating_point_number_pointer(args, spec_opts,
-                                         temp_floating_destination);
+  else if (s21_strncmp(source->str + source->curr_ind, "nan", 3) == 0 ||
+           s21_strncmp(source->str + source->curr_ind, "NaN", 3) == 0) {
+    float* dest_input_pointer = va_arg(*args, float*);
+    *dest_input_pointer = (source->str[source->curr_ind] == '-') ? -NAN : NAN;
+    read_result = true;
+  } else {
+    if (spec_opts->is_scientific) {
+      read_result =
+          read_scientific(source, &temp_floating_destination, spec_opts);
+    } else {
+      read_result = read_float(source, &temp_floating_destination, spec_opts);
+    }
 
+    write_to_floating_point_number_pointer(args, spec_opts,
+                                           temp_floating_destination);
+  }
   return spec_opts->is_star == false ? read_result : 0;
 }
 
