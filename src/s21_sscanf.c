@@ -186,7 +186,7 @@ int read_wide_string(va_list* args, InputStr* source, SpecOptions* spec_opts) {
          (width_limit_reached(char_count, spec_opts) == false) &&
          source->str[start_index + multibyte_length] != '\0') {
     wchar_t wide_char;
-    size_t result =
+    s21_size_t result =
         mbrtowc(&wide_char, &source->str[start_index + multibyte_length],
                 MB_CUR_MAX, &state);
 
