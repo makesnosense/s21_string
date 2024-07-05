@@ -174,6 +174,7 @@ int process_strings_sscanf(va_list* args, InputStr* source,
 
 int read_input_wide_string(va_list* args, InputStr* source,
                            SpecOptions* spec_opts) {
+  bool weve_read_at_least_once_successfully = false;
   wchar_t* dest_wide_string_pointer = va_arg(*args, wchar_t*);
 
   s21_size_t multibyte_length = 0;
@@ -203,12 +204,17 @@ int read_input_wide_string(va_list* args, InputStr* source,
   char* temp_buffer = (char*)malloc(multibyte_length + 1);
   s21_strncpy(temp_buffer, &source->str[start_index], multibyte_length);
   temp_buffer[multibyte_length] = '\0';
-  size_t wide_len = mbstowcs(dest_wide_string_pointer, temp_buffer, char_count);
+  s21_size_t wide_len =
+      mbstowcs(dest_wide_string_pointer, temp_buffer, char_count);
 
   free(temp_buffer);
   dest_wide_string_pointer[wide_len] = L'\0';
   source->curr_ind += multibyte_length;
-  return (int)wide_len;
+
+  if (wide_len > 0) {
+    weve_read_at_least_once_successfully = true;
+  }
+  return weve_read_at_least_once_successfully;
 }
 
 int read_input_narrow_string(va_list* args, InputStr* source,
