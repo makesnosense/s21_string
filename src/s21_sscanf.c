@@ -106,7 +106,7 @@ int consume_specifier(va_list* args, InputStr* source, InputStr* fmt_input,
     case 'e':
     case 'E':
     case 'f': {
-      specifier_result = process_float_sscanf(args, &spec_opts, source);
+      specifier_result = process_float(args, &spec_opts, source);
       break;
     }
     case '%':
@@ -246,7 +246,7 @@ int read_narrow_string(va_list* args, InputStr* source,
   return weve_read_at_least_once_successfully;
 }
 
-int process_float_sscanf(va_list* args, SpecOptions* spec_opts,
+static int process_float(va_list* args, SpecOptions* spec_opts,
                          InputStr* source) {
   int read_result = 0;
   long double temp_floating_destination = 0;
@@ -280,8 +280,8 @@ int process_float_sscanf(va_list* args, SpecOptions* spec_opts,
   return spec_opts->is_star == false ? read_result : 0;
 }
 
-static int read_integer_part(InputStr* source, long double* int_part,
-                             s21_size_t* bytes_read, SpecOptions* spec_opts) {
+static int read_whole_part(InputStr* source, long double* int_part,
+                           s21_size_t* bytes_read, SpecOptions* spec_opts) {
   s21_size_t base = 10;
   *int_part = 0;
   int digits_read = 0;
@@ -361,118 +361,32 @@ static int read_exponent(InputStr* source, int* exponent, int* exponent_sign,
   return digits_read;
 }
 
-int read_float(InputStr* source, long double* dest_input_pointer,
-               SpecOptions* spec_opts) {
+static int read_float(InputStr* source, long double* dest_input_pointer,
+                      SpecOptions* spec_opts) {
   int sign = spec_opts->is_negative ? -1 : 1;
-  long double int_part = 0;
-  long double frac_part = 0.0;
-  long long frac_div = 1;
+  long double whole_part = 0;
+  long double fraction_part = 0.0;
+  long long fraction_divisor = 1;
   int exponent = 0;
   int exponent_sign = 1;
   s21_size_t bytes_read = 0;
   bool weve_read_at_least_once_successfully = false;
 
   int wholepart_digits =
-      read_integer_part(source, &int_part, &bytes_read, spec_opts);
-  int frac_digits = read_fractional_part(source, &frac_part, &frac_div,
-                                         &bytes_read, spec_opts);
-  int exp_digits =
+      read_whole_part(source, &whole_part, &bytes_read, spec_opts);
+  int fraction_part_digits = read_fractional_part(
+      source, &fraction_part, &fraction_divisor, &bytes_read, spec_opts);
+  int exponent_digits =
       read_exponent(source, &exponent, &exponent_sign, &bytes_read, spec_opts);
 
-  if (wholepart_digits + frac_digits + exp_digits > 0) {
+  if (wholepart_digits + fraction_part_digits + exponent_digits > 0) {
     weve_read_at_least_once_successfully = true;
-    long double mantissa = int_part + (frac_part / frac_div);
+    long double mantissa = whole_part + (fraction_part / fraction_divisor);
     *dest_input_pointer = sign * mantissa * powl(10, exponent_sign * exponent);
   }
 
   return weve_read_at_least_once_successfully;
 }
-
-// int read_float(InputStr* source, long double* dest_input_pointer,
-//                SpecOptions* spec_opts) {
-//   int sign = 1;
-//   long double mantissa = 0;
-//   int exponent = 0;
-//   int exponent_sign = 1;
-//   bool weve_read_at_least_once_successfully = false;
-//   s21_size_t bytes_read = 0;
-//   s21_size_t base = 10;
-
-//   if (spec_opts->is_negative) {
-//     sign = -1;
-//   }
-
-//   // Read mantissa
-//   long double int_part = 0;
-//   long double frac_part = 0.0;
-//   long long frac_div = 1;
-
-//   // Read integer part
-//   while (is_valid_digit(source->str[source->curr_ind], base) &&
-//          is_space(source->str[source->curr_ind]) == false &&
-//          source->str[source->curr_ind] != '\0' &&
-//          width_limit_reached(bytes_read, spec_opts) == false) {
-//     int_part = int_part * 10 + (source->str[source->curr_ind] - '0');
-//     source->curr_ind++;
-//     bytes_read++;
-//   }
-
-//   // Read fractional part
-//   if (source->str[source->curr_ind] == '.') {
-//     bytes_read++;
-//     source->curr_ind++;
-//     while (is_valid_digit(source->str[source->curr_ind], base) &&
-//            !is_space(source->str[source->curr_ind]) &&
-//            source->str[source->curr_ind] != '\0' &&
-//            !width_limit_reached(bytes_read, spec_opts)) {
-//       frac_part = frac_part * 10 + (source->str[source->curr_ind] - '0');
-//       frac_div *= 10;
-//       source->curr_ind++;
-//       bytes_read++;
-//     }
-//   }
-
-//   mantissa = int_part + (frac_part / frac_div);
-
-//   // Read exponent
-//   if ((source->str[source->curr_ind] == 'e' ||
-//        source->str[source->curr_ind] == 'E') &&
-//       !width_limit_reached(bytes_read, spec_opts)) {
-//     source->curr_ind++;
-//     bytes_read++;
-
-//     // Read exponent sign
-//     if (source->str[source->curr_ind] == '-') {
-//       exponent_sign = -1;
-//       source->curr_ind++;
-//       bytes_read++;
-//     } else if (source->str[source->curr_ind] == '+') {
-//       source->curr_ind++;
-//       bytes_read++;
-//     }
-
-//     // Read exponent value
-//     while (is_valid_digit(source->str[source->curr_ind], base) &&
-//            !is_space(source->str[source->curr_ind]) &&
-//            source->str[source->curr_ind] != '\0' &&
-//            !width_limit_reached(bytes_read, spec_opts)) {
-//       exponent = exponent * 10 + (source->str[source->curr_ind] - '0');
-//       source->curr_ind++;
-//       bytes_read++;
-//     }
-//   }
-
-//   if (bytes_read > 0) {
-//     weve_read_at_least_once_successfully = true;
-//   }
-
-//   if (weve_read_at_least_once_successfully) {
-//     *dest_input_pointer = sign * mantissa * powl(10, exponent_sign *
-//     exponent);
-//   }
-
-//   return weve_read_at_least_once_successfully;
-// }
 
 void write_to_floating_point_number_pointer(
     va_list* args, SpecOptions* spec_opts,
