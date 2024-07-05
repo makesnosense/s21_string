@@ -83,10 +83,17 @@ int process_unsigned_sscanf(va_list* args, SpecOptions* spec_opts,
 
 int process_int_sscanf(va_list* args, SpecOptions* spec_opts, InputStr* source,
                        bool* matching_failure);
-int process_float_sscanf(va_list* args, SpecOptions* spec_opts,
+static int process_float(va_list* args, SpecOptions* spec_opts,
                          InputStr* source);
-int read_float(InputStr* source, long double* dest_input_pointer,
-               SpecOptions* spec_opts);
+static int read_float(InputStr* source, long double* dest_input_pointer,
+                      SpecOptions* spec_opts);
+static int read_whole_part(InputStr* source, long double* int_part,
+                           s21_size_t* bytes_read, SpecOptions* spec_opts);
+static int read_fractional_part(InputStr* source, long double* frac_part,
+                                long long* frac_div, s21_size_t* bytes_read,
+                                SpecOptions* spec_opts);
+static int read_exponent(InputStr* source, int* exponent, int* exponent_sign,
+                         s21_size_t* bytes_read, SpecOptions* spec_opts);
 
 int process_strings_sscanf(va_list* args, InputStr* source,
                            SpecOptions* spec_opts);
