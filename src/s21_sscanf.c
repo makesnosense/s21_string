@@ -17,8 +17,7 @@ int s21_sscanf(const char* str, const char* format, ...) {
     if (is_space_specifier(&fmt_input)) {
       process_space(&source, &fmt_input);
     } else if (fmt_input.str[fmt_input.curr_ind] == '%') {
-      process_specifier_sscanf(&result, &args, &source, &fmt_input,
-                               &matching_failure);
+      process_specifier(&result, &args, &source, &fmt_input, &matching_failure);
     } else {
       process_foreign_char_in_format(&source, &fmt_input, &matching_failure);
     }
@@ -37,7 +36,7 @@ void process_foreign_char_in_format(InputStr* source, InputStr* fmt_input,
   }
 }
 
-void process_specifier_sscanf(int* sscanf_result, va_list* args,
+static void process_specifier(int* sscanf_result, va_list* args,
                               InputStr* source, InputStr* fmt_input,
                               bool* matching_failure) {
   if (n_specifier_follows(fmt_input) == false &&
@@ -58,29 +57,30 @@ void process_specifier_sscanf(int* sscanf_result, va_list* args,
   }
 }
 
+static void parse_format(InputStr* fmt_input, SpecOptions* spec_opts) {
+  spec_opts->is_star = parse_suppression(fmt_input);
+  parse_width_sscanf(fmt_input, spec_opts);
+  parse_length_sscanf(fmt_input, spec_opts);
+  parse_sscanf_specifier(*fmt_input, spec_opts);
+  read_next_digit_in_fmt(*fmt_input, spec_opts);
+}
+
 int consume_specifier(va_list* args, InputStr* source, InputStr* fmt_input,
                       bool* matching_failure) {
   int specifier_result = 0;
   SpecOptions spec_opts = {0};
-
-  spec_opts.is_star = parse_suppression(fmt_input);
-  parse_width_sscanf(fmt_input, &spec_opts);
-  parse_length_sscanf(fmt_input, &spec_opts);
-  parse_sscanf_specifier(fmt_input, &spec_opts);
-  read_next_digit_in_fmt(*fmt_input, &spec_opts);
-
+  parse_format(fmt_input, &spec_opts);
   switch (fmt_input->str[fmt_input->curr_ind]) {
     case 'c': {
       specifier_result = process_chars_sscanf(args, source, &spec_opts);
       break;
     }
     case 'n': {
-      int* num = va_arg(*args, int*);
-      *num = source->curr_ind;
+      process_n(args, source, spec_opts.is_star);
       break;
     }
     case 's': {
-      specifier_result = process_strings_sscanf(args, source, &spec_opts);
+      specifier_result = process_strings(args, source, &spec_opts);
       break;
     }
     case 'p': {
@@ -90,7 +90,7 @@ int consume_specifier(va_list* args, InputStr* source, InputStr* fmt_input,
     case 'i':
     case 'd': {
       specifier_result =
-          process_int_sscanf(args, &spec_opts, source, matching_failure);
+          process_int(args, &spec_opts, source, matching_failure);
       break;
     }
     case 'x':
@@ -98,7 +98,7 @@ int consume_specifier(va_list* args, InputStr* source, InputStr* fmt_input,
     case 'o':
     case 'u': {
       specifier_result =
-          process_unsigned_sscanf(args, &spec_opts, source, matching_failure);
+          process_unsigned(args, &spec_opts, source, matching_failure);
       break;
     }
     case 'g':
@@ -109,12 +109,17 @@ int consume_specifier(va_list* args, InputStr* source, InputStr* fmt_input,
       specifier_result = process_float(args, &spec_opts, source);
       break;
     }
-    case '%':
-      if (source->str[source->curr_ind] == '%') {
-        source->curr_ind++;
-      }
+    case '%': {
+      process_percent(source);
+    }
   }
   return specifier_result;
+}
+
+static void process_percent(InputStr* source) {
+  if (source->str[source->curr_ind] == '%') {
+    source->curr_ind++;
+  }
 }
 
 int read_pointer(va_list* args, InputStr* source, SpecOptions* spec_opts) {
@@ -157,7 +162,7 @@ int read_pointer(va_list* args, InputStr* source, SpecOptions* spec_opts) {
   return spec_opts->is_star == false ? weve_read_at_least_once_successfully : 0;
 }
 
-int process_strings_sscanf(va_list* args, InputStr* source,
+static int process_strings(va_list* args, InputStr* source,
                            SpecOptions* spec_opts) {
   bool weve_read_at_least_once_successfully = 0;
 
@@ -172,7 +177,8 @@ int process_strings_sscanf(va_list* args, InputStr* source,
   return weve_read_at_least_once_successfully;
 }
 
-int read_wide_string(va_list* args, InputStr* source, SpecOptions* spec_opts) {
+static int read_wide_string(va_list* args, InputStr* source,
+                            SpecOptions* spec_opts) {
   bool weve_read_at_least_once_successfully = false;
   wchar_t* dest_wide_string_pointer = va_arg(*args, wchar_t*);
 
@@ -216,8 +222,8 @@ int read_wide_string(va_list* args, InputStr* source, SpecOptions* spec_opts) {
   return weve_read_at_least_once_successfully;
 }
 
-int read_narrow_string(va_list* args, InputStr* source,
-                       SpecOptions* spec_opts) {
+static int read_narrow_string(va_list* args, InputStr* source,
+                              SpecOptions* spec_opts) {
   bool weve_read_at_least_once_successfully = 0;
   s21_size_t bytes_read = 0;
 
@@ -418,7 +424,7 @@ void process_n(va_list* args, InputStr* source, bool n_star) {
   }
 }
 
-int process_unsigned_sscanf(va_list* args, SpecOptions* spec_opts,
+static int process_unsigned(va_list* args, SpecOptions* spec_opts,
                             InputStr* source, bool* matching_failure) {
   int read_result = 0;
   long long unsigned temp_long_long_unsigned_destination = 0;
@@ -459,7 +465,7 @@ void write_to_unsigned_pointer(
   }
 }
 
-int process_int_sscanf(va_list* args, SpecOptions* spec_opts, InputStr* source,
+static int process_int(va_list* args, SpecOptions* spec_opts, InputStr* source,
                        bool* matching_failure) {
   int read_result = 0;
 
@@ -830,7 +836,7 @@ bool we_continue_processing(InputStr* fmt_input, bool* matching_failure) {
   return we_continue;
 }
 
-void process_space(InputStr* source, InputStr* fmt_input) {
+static void process_space(InputStr* source, InputStr* fmt_input) {
   consume_space(source);
   fmt_input->curr_ind++;
 }
@@ -882,9 +888,9 @@ bool is_sscanf_specifier(char ch) {
 //   }
 // }
 
-void parse_sscanf_specifier(InputStr* fmt_input, SpecOptions* spec_opts) {
-  if (is_sscanf_specifier(fmt_input->str[fmt_input->curr_ind])) {
-    char current_specifier = fmt_input->str[fmt_input->curr_ind];
+void parse_sscanf_specifier(InputStr fmt_input, SpecOptions* spec_opts) {
+  if (is_sscanf_specifier(fmt_input.str[fmt_input.curr_ind])) {
+    char current_specifier = fmt_input.str[fmt_input.curr_ind];
     switch (current_specifier) {
       case 'c': {
         spec_opts->specifier = c;
