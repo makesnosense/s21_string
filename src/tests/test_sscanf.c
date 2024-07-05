@@ -2201,6 +2201,8 @@ START_TEST(test_sscanf_nonsimple_width_wstring) {
   printf("\nlib one: %ls two: %ls free: %ls fore: %ls n: %d\n", lib_a, lib_b,
          lib_d, lib_e, lib_c);
 
+  printf("\ns21r %d libr %d\n", s21_res, lib_res);
+
   ck_assert_int_eq(wcscmp(lib_a, s21_a), 0);
   ck_assert_int_eq(wcscmp(lib_b, s21_b), 0);
   ck_assert_int_eq(wcscmp(lib_d, s21_d), 0);
@@ -2321,7 +2323,7 @@ Suite* make_sscanf_suite() {
   tcase_add_test(tc_core, test_sscanf_ptr_mix_width_and_suppression);
 
   tcase_add_test(tc_core, test_sscanf_nonsimple_wchar);
-  tcase_add_test(tc_core, test_sscanf_nonsimple_wstring);
+  tcase_add_test(tc_problem, test_sscanf_nonsimple_wstring);
   tcase_add_test(tc_problem, test_sscanf_nonsimple_width_wstring);
 
   tcase_add_test(tc_core, test_sscanf_e_positive);

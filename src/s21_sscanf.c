@@ -160,76 +160,59 @@ int read_pointer(va_list* args, InputStr* source, SpecOptions* spec_opts) {
 int process_strings_sscanf(va_list* args, InputStr* source,
                            SpecOptions* spec_opts) {
   bool weve_read_at_least_once_successfully = 0;
-  // s21_size_t bytes_read = 0;
 
   if (spec_opts->length == l) {
     weve_read_at_least_once_successfully =
-        process_input_wide_string_pointer(args, source, spec_opts);
+        read_input_wide_string(args, source, spec_opts);
   } else {
     weve_read_at_least_once_successfully =
-        process_input_narrow_string_pointer(args, source, spec_opts);
+        read_input_narrow_string(args, source, spec_opts);
   }
 
   return weve_read_at_least_once_successfully;
 }
 
-int process_input_wide_string_pointer(va_list* args, InputStr* source,
-                                      SpecOptions* spec_opts) {
+int read_input_wide_string(va_list* args, InputStr* source,
+                           SpecOptions* spec_opts) {
   wchar_t* dest_wide_string_pointer = va_arg(*args, wchar_t*);
 
-  s21_size_t max_chars = spec_opts->width > 0 ? spec_opts->width : 1000000;
-
-  // Находим конец широкой строки
-  s21_size_t mb_len = 0;
+  s21_size_t multibyte_length = 0;
   s21_size_t char_count = 0;
   s21_size_t start_index = source->curr_ind;
   mbstate_t state = {0};
-  bool should_continue = true;
 
-  while (should_continue && char_count < max_chars &&
-         source->str[start_index + mb_len] != '\0') {
-    wchar_t wc;
+  bool should_continue = true;
+  while (should_continue &&
+         (width_limit_reached(char_count, spec_opts) == false) &&
+         source->str[start_index + multibyte_length] != '\0') {
+    wchar_t wide_char;
     size_t result =
-        mbrtowc(&wc, &source->str[start_index + mb_len], MB_CUR_MAX, &state);
+        mbrtowc(&wide_char, &source->str[start_index + multibyte_length],
+                MB_CUR_MAX, &state);
 
     if (result == 0) {
       // Достигнут нулевой символ
       should_continue = false;
-    } else if (iswspace(wc)) {
+    } else if (iswspace(wide_char)) {
       should_continue = false;
     } else {
-      mb_len += result;
+      multibyte_length += result;
       char_count++;
     }
   }
+  char* temp_buffer = (char*)malloc(multibyte_length + 1);
+  s21_strncpy(temp_buffer, &source->str[start_index], multibyte_length);
+  temp_buffer[multibyte_length] = '\0';
+  size_t wide_len = mbstowcs(dest_wide_string_pointer, temp_buffer, char_count);
 
-  char* temp = (char*)malloc(mb_len + 1);
-  if (temp == NULL) {
-    return 0;
-  }
-
-  s21_strncpy(temp, &source->str[start_index], mb_len);
-  temp[mb_len] = '\0';
-
-  size_t wide_len = mbstowcs(dest_wide_string_pointer, temp, char_count);
-
-  free(temp);
-
-  if (wide_len == (size_t)-1) {
-    return 0;
-  }
-
-  // Добавляем завершающий нулевой символ
+  free(temp_buffer);
   dest_wide_string_pointer[wide_len] = L'\0';
-
-  // Обновляем текущий индекс в исходной строке
-  source->curr_ind += mb_len;
-
-  return (int)wide_len;  // Возвращаем количество записанных широких символов
+  source->curr_ind += multibyte_length;
+  return (int)wide_len;
 }
 
-int process_input_narrow_string_pointer(va_list* args, InputStr* source,
-                                        SpecOptions* spec_opts) {
+int read_input_narrow_string(va_list* args, InputStr* source,
+                             SpecOptions* spec_opts) {
   bool weve_read_at_least_once_successfully = 0;
   s21_size_t bytes_read = 0;
 

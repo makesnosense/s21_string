@@ -87,10 +87,10 @@ int process_float_sscanf(va_list* args, SpecOptions* spec_opts,
 int process_strings_sscanf(va_list* args, InputStr* source,
                            SpecOptions* spec_opts);
 
-int process_input_wide_string_pointer(va_list* args, InputStr* source,
-                                      SpecOptions* spec_opts);
-int process_input_narrow_string_pointer(va_list* args, InputStr* source,
-                                        SpecOptions* spec_opts);
+int read_input_wide_string(va_list* args, InputStr* source,
+                           SpecOptions* spec_opts);
+int read_input_narrow_string(va_list* args, InputStr* source,
+                             SpecOptions* spec_opts);
 
 int read_decimal(InputStr* source, SpecOptions* spec_opts,
                  long long unsigned* dest_input_pointer,
