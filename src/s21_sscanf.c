@@ -262,15 +262,14 @@ int process_float_sscanf(va_list* args, SpecOptions* spec_opts,
   if (s21_strncmp(source->str + source->curr_ind, "inf", 3) == 0 ||
       s21_strncmp(source->str + source->curr_ind, "INF", 3) == 0) {
     float* dest_input_pointer = va_arg(*args, float*);
-    *dest_input_pointer =
-        (source->str[source->curr_ind] == '-') ? -INFINITY : INFINITY;
+    *dest_input_pointer = spec_opts->is_negative ? -INFINITY : INFINITY;
     read_result = 1;
   }
 
   else if (s21_strncmp(source->str + source->curr_ind, "nan", 3) == 0 ||
            s21_strncmp(source->str + source->curr_ind, "NaN", 3) == 0) {
     float* dest_input_pointer = va_arg(*args, float*);
-    *dest_input_pointer = (source->str[source->curr_ind] == '-') ? -NAN : NAN;
+    *dest_input_pointer = spec_opts->is_negative ? -NAN : NAN;
     read_result = true;
   } else {
     read_result = read_float(source, &temp_floating_destination, spec_opts);
