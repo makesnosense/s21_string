@@ -87,7 +87,7 @@ int process_float_sscanf(va_list* args, SpecOptions* spec_opts,
 int read_scientific(InputStr* source, long double* dest_input_pointer,
                     SpecOptions* spec_opts);
 int read_float(InputStr* sourse, long double* dest_input_pointer,
-               SpecOptions* spec_opts);
+               s21_size_t* bytes_read, SpecOptions* spec_opts);
 
 int process_strings_sscanf(va_list* args, InputStr* source,
                            SpecOptions* spec_opts);
