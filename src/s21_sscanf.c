@@ -163,17 +163,16 @@ int process_strings_sscanf(va_list* args, InputStr* source,
 
   if (spec_opts->length == l) {
     weve_read_at_least_once_successfully =
-        read_input_wide_string(args, source, spec_opts);
+        read_wide_string(args, source, spec_opts);
   } else {
     weve_read_at_least_once_successfully =
-        read_input_narrow_string(args, source, spec_opts);
+        read_narrow_string(args, source, spec_opts);
   }
 
   return weve_read_at_least_once_successfully;
 }
 
-int read_input_wide_string(va_list* args, InputStr* source,
-                           SpecOptions* spec_opts) {
+int read_wide_string(va_list* args, InputStr* source, SpecOptions* spec_opts) {
   bool weve_read_at_least_once_successfully = false;
   wchar_t* dest_wide_string_pointer = va_arg(*args, wchar_t*);
 
@@ -217,8 +216,8 @@ int read_input_wide_string(va_list* args, InputStr* source,
   return weve_read_at_least_once_successfully;
 }
 
-int read_input_narrow_string(va_list* args, InputStr* source,
-                             SpecOptions* spec_opts) {
+int read_narrow_string(va_list* args, InputStr* source,
+                       SpecOptions* spec_opts) {
   bool weve_read_at_least_once_successfully = 0;
   s21_size_t bytes_read = 0;
 
