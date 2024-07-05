@@ -39,6 +39,7 @@ typedef struct SpecifierOptions {
   bool is_scientific;
   bool is_hexadecimal;
   bool is_negative;
+  bool plus_sign_present;
   char next_digit;
 
 } SpecOptions;
@@ -84,9 +85,7 @@ int process_int_sscanf(va_list* args, SpecOptions* spec_opts, InputStr* source,
                        bool* matching_failure);
 int process_float_sscanf(va_list* args, SpecOptions* spec_opts,
                          InputStr* source);
-int read_scientific(InputStr* source, long double* dest_input_pointer,
-                    SpecOptions* spec_opts);
-int read_float(InputStr* sourse, long double* dest_input_pointer,
+int read_float(InputStr* source, long double* dest_input_pointer,
                SpecOptions* spec_opts);
 
 int process_strings_sscanf(va_list* args, InputStr* source,

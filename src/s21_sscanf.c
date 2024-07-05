@@ -251,12 +251,13 @@ int process_float_sscanf(va_list* args, SpecOptions* spec_opts,
   int read_result = 0;
   long double temp_floating_destination = 0;
 
-  // if (source->str[source->curr_ind] == '-') {
-  //   spec_opts->is_negative = true;
-  //   source->curr_ind++;
-  // } else if (source->str[source->curr_ind] == '+') {
-  //   source->curr_ind++;
-  // }
+  if (source->str[source->curr_ind] == '-') {
+    spec_opts->is_negative = true;
+    source->curr_ind++;
+  } else if (source->str[source->curr_ind] == '+') {
+    spec_opts->plus_sign_present = true;
+    source->curr_ind++;
+  }
 
   if (s21_strncmp(source->str + source->curr_ind, "inf", 3) == 0 ||
       s21_strncmp(source->str + source->curr_ind, "INF", 3) == 0) {
@@ -272,68 +273,16 @@ int process_float_sscanf(va_list* args, SpecOptions* spec_opts,
     *dest_input_pointer = (source->str[source->curr_ind] == '-') ? -NAN : NAN;
     read_result = true;
   } else {
-    if (spec_opts->is_scientific) {
-      read_result =
-          read_scientific(source, &temp_floating_destination, spec_opts);
-    } else {
-      read_result = read_float(source, &temp_floating_destination, spec_opts);
-    }
-
+    read_result = read_float(source, &temp_floating_destination, spec_opts);
     write_to_floating_point_number_pointer(args, spec_opts,
                                            temp_floating_destination);
   }
+
   return spec_opts->is_star == false ? read_result : 0;
 }
 
 int read_float(InputStr* source, long double* dest_input_pointer,
                SpecOptions* spec_opts) {
-  int sign = 1;
-  long double int_part = 0;
-  long double frac_part = 0.0;
-  long long frac_div = 1;
-  bool weve_read_at_least_once_successfully = 0;
-  s21_size_t bytes_read = 0;
-  s21_size_t base = 10;
-  if (source->str[source->curr_ind] == '-') {
-    sign = -1;
-    source->curr_ind++;
-    bytes_read++;
-  }
-
-  while (is_valid_digit(source->str[source->curr_ind], base) &&
-         is_space(source->str[source->curr_ind]) == false &&
-         source->str[source->curr_ind] != '\0' &&
-         width_limit_reached(bytes_read, spec_opts) == false) {
-    int_part = int_part * 10 + (source->str[source->curr_ind] - '0');
-    source->curr_ind++;
-    bytes_read++;
-    weve_read_at_least_once_successfully = true;
-  }
-
-  if (source->str[source->curr_ind] == '.') {
-    bytes_read++;
-    source->curr_ind++;
-    while (is_valid_digit(source->str[source->curr_ind], base) &&
-           is_space(source->str[source->curr_ind]) == false &&
-           source->str[source->curr_ind] != '\0' &&
-           width_limit_reached(bytes_read, spec_opts) == false) {
-      frac_part = frac_part * 10 + (source->str[source->curr_ind] - '0');
-      frac_div *= 10;
-      source->curr_ind++;
-      bytes_read++;
-    }
-  }
-
-  if (bytes_read > 0) {
-    weve_read_at_least_once_successfully = true;
-    *dest_input_pointer = sign * (int_part + (frac_part / frac_div));
-  }
-
-  return weve_read_at_least_once_successfully;
-}
-
-int read_scientific(InputStr* source, long double* dest_input_pointer,
-                    SpecOptions* spec_opts) {
   int sign = 1;
   long double mantissa = 0;
   int exponent = 0;
@@ -342,14 +291,8 @@ int read_scientific(InputStr* source, long double* dest_input_pointer,
   s21_size_t bytes_read = 0;
   s21_size_t base = 10;
 
-  // Read sign
-  if (source->str[source->curr_ind] == '-') {
+  if (spec_opts->is_negative) {
     sign = -1;
-    source->curr_ind++;
-    bytes_read++;
-  } else if (source->str[source->curr_ind] == '+') {
-    source->curr_ind++;
-    bytes_read++;
   }
 
   // Read mantissa
@@ -365,7 +308,6 @@ int read_scientific(InputStr* source, long double* dest_input_pointer,
     int_part = int_part * 10 + (source->str[source->curr_ind] - '0');
     source->curr_ind++;
     bytes_read++;
-    weve_read_at_least_once_successfully = true;
   }
 
   // Read fractional part
@@ -411,6 +353,10 @@ int read_scientific(InputStr* source, long double* dest_input_pointer,
       source->curr_ind++;
       bytes_read++;
     }
+  }
+
+  if (bytes_read > 0) {
+    weve_read_at_least_once_successfully = true;
   }
 
   if (weve_read_at_least_once_successfully) {
@@ -665,7 +611,7 @@ int read_octal(InputStr* source, SpecOptions* spec_opts,
 bool width_limit_reached(s21_size_t bytes_read, SpecOptions* spec_opts) {
   bool limit_reached = false;
   s21_size_t limit = spec_opts->width;
-  if (spec_opts->is_negative) {
+  if (spec_opts->is_negative || spec_opts->plus_sign_present) {
     limit -= 1;
   }
 
