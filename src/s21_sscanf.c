@@ -1,5 +1,7 @@
 #include "s21_sscanf.h"
 
+#include <wctype.h>
+
 int s21_sscanf(const char* str, const char* format, ...) {
   set_locale_for_wide_chars_sscanf();
   bool matching_failure = false;
@@ -78,7 +80,7 @@ int consume_specifier(va_list* args, InputStr* source, InputStr* fmt_input,
       break;
     }
     case 's': {
-      specifier_result = read_string(args, source, &spec_opts);
+      specifier_result = process_strings_sscanf(args, source, &spec_opts);
       break;
     }
     case 'p': {
@@ -155,7 +157,62 @@ int read_pointer(va_list* args, InputStr* source, SpecOptions* spec_opts) {
   return spec_opts->is_star == false ? weve_read_at_least_once_successfully : 0;
 }
 
-int read_string(va_list* args, InputStr* source, SpecOptions* spec_opts) {
+int process_strings_sscanf(va_list* args, InputStr* source,
+                           SpecOptions* spec_opts) {
+  bool weve_read_at_least_once_successfully = 0;
+
+  if (spec_opts->length == l) {
+    weve_read_at_least_once_successfully =
+        read_input_wide_string(args, source, spec_opts);
+  } else {
+    weve_read_at_least_once_successfully =
+        read_input_narrow_string(args, source, spec_opts);
+  }
+
+  return weve_read_at_least_once_successfully;
+}
+
+int read_input_wide_string(va_list* args, InputStr* source,
+                           SpecOptions* spec_opts) {
+  wchar_t* dest_wide_string_pointer = va_arg(*args, wchar_t*);
+
+  s21_size_t multibyte_length = 0;
+  s21_size_t char_count = 0;
+  s21_size_t start_index = source->curr_ind;
+  mbstate_t state = {0};
+
+  bool should_continue = true;
+  while (should_continue &&
+         (width_limit_reached(char_count, spec_opts) == false) &&
+         source->str[start_index + multibyte_length] != '\0') {
+    wchar_t wide_char;
+    size_t result =
+        mbrtowc(&wide_char, &source->str[start_index + multibyte_length],
+                MB_CUR_MAX, &state);
+
+    if (result == 0) {
+      // Достигнут нулевой символ
+      should_continue = false;
+    } else if (iswspace(wide_char)) {
+      should_continue = false;
+    } else {
+      multibyte_length += result;
+      char_count++;
+    }
+  }
+  char* temp_buffer = (char*)malloc(multibyte_length + 1);
+  s21_strncpy(temp_buffer, &source->str[start_index], multibyte_length);
+  temp_buffer[multibyte_length] = '\0';
+  size_t wide_len = mbstowcs(dest_wide_string_pointer, temp_buffer, char_count);
+
+  free(temp_buffer);
+  dest_wide_string_pointer[wide_len] = L'\0';
+  source->curr_ind += multibyte_length;
+  return (int)wide_len;
+}
+
+int read_input_narrow_string(va_list* args, InputStr* source,
+                             SpecOptions* spec_opts) {
   bool weve_read_at_least_once_successfully = 0;
   s21_size_t bytes_read = 0;
 
@@ -181,7 +238,6 @@ int read_string(va_list* args, InputStr* source, SpecOptions* spec_opts) {
       bytes_read++;
     }
   }
-
   return weve_read_at_least_once_successfully;
 }
 
@@ -466,21 +522,21 @@ int process_chars_sscanf(va_list* args, InputStr* source,
 
 int read_wide_char(va_list* args, InputStr* source, SpecOptions* spec_opts) {
   int read_result = 0;
-  if (spec_opts->is_star == false) {
-    wchar_t* dest_wchar_ptr = va_arg(*args, wchar_t*);
-    wchar_t wc;
-    int len = mbtowc(&wc, &source->str[source->curr_ind], MB_CUR_MAX);
-
-    if (len > 0) {
-      *dest_wchar_ptr = wc;
-      source->curr_ind += len;
-      // read_result = 1;
-
-      read_result++;
-    }
-    source->curr_ind += mblen(&source->str[source->curr_ind], MB_CUR_MAX);
+  if (spec_opts->width) {
+    ;
   }
-  // source->curr_ind++;
+  wchar_t* dest_wchar_ptr = va_arg(*args, wchar_t*);
+  wchar_t wide_char = 0;
+  int len = mbtowc(&wide_char, &source->str[source->curr_ind], MB_CUR_MAX);
+
+  if (len > 0) {
+    *dest_wchar_ptr = wide_char;
+    source->curr_ind += len;
+    read_result++;
+  } else if (len == -1) {
+    source->curr_ind++;
+  }
+
   return read_result;
 };
 
@@ -652,6 +708,8 @@ bool c_specifier_follows(InputStr* fmt_input) {
 bool is_end_of_string(InputStr* string_structure) {
   return string_structure->str[string_structure->curr_ind] == '\0';
 }
+
+bool is_end_of_string_char(char input_char) { return input_char == '\0'; }
 
 bool is_space(char input_char) {
   bool result = false;

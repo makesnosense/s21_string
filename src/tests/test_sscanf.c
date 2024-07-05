@@ -1,6 +1,6 @@
 #include <locale.h>
 #include <stdio.h>
-// #include <wchar.h>
+#include <wchar.h>
 
 #include "run_tests.h"
 
@@ -2124,6 +2124,100 @@ START_TEST(test_sscanf_nonsimple_wchar) {
 }
 END_TEST
 
+START_TEST(test_sscanf_nonsimple_wstring) {
+#if defined(__APPLE__)
+  setlocale(LC_ALL, "en_US.UTF-8");
+
+#elif defined(__linux__)
+  setlocale(LC_ALL, "C.UTF-8");
+#endif
+
+  wchar_t s21_a[50] = {0};
+  wchar_t s21_b[50] = {0};
+  wchar_t s21_d[50] = {0};
+  wchar_t s21_e[50] = {0};
+  int s21_c = 0;
+  int s21_res = 0;
+
+  wchar_t lib_a[50] = {0};
+  wchar_t lib_b[50] = {0};
+  wchar_t lib_d[50] = {0};
+  wchar_t lib_e[50] = {0};
+  int lib_c = 0;
+  int lib_res = 0;
+
+  lib_res = sscanf("молодец у мамы я", " %ls %ls %ls %ls %n", lib_a, lib_b,
+                   lib_d, lib_e, &lib_c);
+  s21_res = s21_sscanf("молодец у мамы я", " %ls %ls %ls %ls %n", s21_a, s21_b,
+                       s21_d, s21_e, &s21_c);
+
+  printf("\ns21 %ls %ls %ls %ls n: %d\n", s21_a, s21_b, s21_d, s21_e, s21_c);
+  printf("\nlib %ls %ls %ls %ls n: %d\n", lib_a, lib_b, lib_d, lib_e, lib_c);
+
+  ck_assert_int_eq(wcscmp(lib_a, s21_a), 0);
+  ck_assert_int_eq(wcscmp(lib_b, s21_b), 0);
+  ck_assert_int_eq(wcscmp(lib_d, s21_d), 0);
+  ck_assert_int_eq(wcscmp(lib_e, s21_e), 0);
+
+  ck_assert_int_eq(lib_c, s21_c);
+  ck_assert_int_eq(lib_res, s21_res);
+
+  ck_assert_int_eq(wcslen(lib_a), wcslen(s21_a));
+  ck_assert_int_eq(wcslen(lib_b), wcslen(s21_b));
+  ck_assert_int_eq(wcslen(lib_d), wcslen(s21_d));
+  ck_assert_int_eq(wcslen(lib_e), wcslen(s21_e));
+}
+END_TEST
+
+START_TEST(test_sscanf_nonsimple_width_wstring) {
+#if defined(__APPLE__)
+  setlocale(LC_ALL, "en_US.UTF-8");
+
+#elif defined(__linux__)
+  setlocale(LC_ALL, "C.UTF-8");
+#endif
+
+  wchar_t s21_a[50] = {0};
+  wchar_t s21_b[50] = {0};
+  wchar_t s21_d[50] = {0};
+  wchar_t s21_e[50] = {0};
+  int s21_c = 0;
+  int s21_res = 0;
+
+  wchar_t lib_a[50] = {0};
+  wchar_t lib_b[50] = {0};
+  wchar_t lib_d[50] = {0};
+  wchar_t lib_e[50] = {0};
+  int lib_c = 0;
+  int lib_res = 0;
+
+  lib_res = sscanf("잘했어요 엄마 정말 좋아요", " %2ls %1ls %1ls %ls %n", lib_a,
+                   lib_b, lib_d, lib_e, &lib_c);
+  s21_res = s21_sscanf("잘했어요 엄마 정말 좋아요", " %2ls %1ls %1ls %ls %n",
+                       s21_a, s21_b, s21_d, s21_e, &s21_c);
+
+  printf("\ns21 one: %ls two: %ls free: %ls fore: %ls n: %d\n", s21_a, s21_b,
+         s21_d, s21_e, s21_c);
+  printf("\nlib one: %ls two: %ls free: %ls fore: %ls n: %d\n", lib_a, lib_b,
+         lib_d, lib_e, lib_c);
+
+  printf("\ns21r %d libr %d\n", s21_res, lib_res);
+
+  ck_assert_int_eq(wcscmp(lib_a, s21_a), 0);
+  ck_assert_int_eq(wcscmp(lib_b, s21_b), 0);
+  ck_assert_int_eq(wcscmp(lib_d, s21_d), 0);
+  ck_assert_int_eq(wcscmp(lib_e, s21_e), 0);
+
+  ck_assert_int_eq(lib_c, s21_c);
+  ck_assert_int_eq(lib_res, s21_res);
+
+  ck_assert_int_eq(wcslen(lib_a), wcslen(s21_a));
+  ck_assert_int_eq(wcslen(lib_b), wcslen(s21_b));
+  ck_assert_int_eq(wcslen(lib_d), wcslen(s21_d));
+  ck_assert_int_eq(wcslen(lib_e), wcslen(s21_e));
+}
+END_TEST
+
 Suite* make_sscanf_suite() {
   Suite* sscanf_suite = suite_create("sscanf");
   TCase* tc_core;
@@ -2228,7 +2322,9 @@ Suite* make_sscanf_suite() {
   tcase_add_test(tc_core, test_sscanf_ptr_invalid_2);
   tcase_add_test(tc_core, test_sscanf_ptr_mix_width_and_suppression);
 
-  tcase_add_test(tc_problem, test_sscanf_nonsimple_wchar);
+  tcase_add_test(tc_core, test_sscanf_nonsimple_wchar);
+  tcase_add_test(tc_problem, test_sscanf_nonsimple_wstring);
+  tcase_add_test(tc_problem, test_sscanf_nonsimple_width_wstring);
 
   tcase_add_test(tc_core, test_sscanf_e_positive);
   tcase_add_test(tc_core, test_sscanf_e_negative);

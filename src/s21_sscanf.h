@@ -62,6 +62,7 @@ bool is_n_star_present(InputStr* fmt_input);
 bool c_specifier_follows(InputStr* fmt_input);
 
 bool is_end_of_string(InputStr* string_structure);
+bool is_end_of_string_char(char input_char);
 bool is_space(char input_char);
 bool is_space_specifier(InputStr* fmt_input);
 
@@ -83,6 +84,14 @@ int process_int_sscanf(va_list* args, SpecOptions* spec_opts, InputStr* source,
 int process_float_sscanf(va_list* args, SpecOptions* spec_opts,
                          InputStr* source);
 
+int process_strings_sscanf(va_list* args, InputStr* source,
+                           SpecOptions* spec_opts);
+
+int read_input_wide_string(va_list* args, InputStr* source,
+                           SpecOptions* spec_opts);
+int read_input_narrow_string(va_list* args, InputStr* source,
+                             SpecOptions* spec_opts);
+
 int read_decimal(InputStr* source, SpecOptions* spec_opts,
                  long long unsigned* dest_input_pointer,
                  bool* matching_failure);
@@ -92,7 +101,7 @@ int read_octal(InputStr* source, SpecOptions* spec_opts,
                long long unsigned* dest_input_pointer, bool* matching_failure);
 int read_float(InputStr* sourse, long double* dest_input_pointer,
                SpecOptions* spec_opts);
-int read_string(va_list* args, InputStr* source, SpecOptions* spec_opts);
+
 int read_pointer(va_list* args, InputStr* source, SpecOptions* spec_opts);
 
 void parse_width_sscanf(InputStr* fmt_input, SpecOptions* spec_opts);
