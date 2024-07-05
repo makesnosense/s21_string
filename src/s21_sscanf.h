@@ -39,6 +39,7 @@ typedef struct SpecifierOptions {
   bool is_scientific;
   bool is_hexadecimal;
   bool is_negative;
+  bool plus_sign_present;
   char next_digit;
 
 } SpecOptions;
