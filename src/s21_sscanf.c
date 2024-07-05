@@ -1,5 +1,7 @@
 #include "s21_sscanf.h"
 
+#include <wctype.h>
+
 int s21_sscanf(const char* str, const char* format, ...) {
   set_locale_for_wide_chars_sscanf();
   bool matching_failure = false;
@@ -174,37 +176,56 @@ int process_strings_sscanf(va_list* args, InputStr* source,
 int process_input_wide_string_pointer(va_list* args, InputStr* source,
                                       SpecOptions* spec_opts) {
   wchar_t* dest_wide_string_pointer = va_arg(*args, wchar_t*);
-  if (spec_opts->width) {
-    ;
+
+  s21_size_t max_chars = spec_opts->width > 0 ? spec_opts->width : 1000000;
+
+  // Находим конец широкой строки
+  s21_size_t mb_len = 0;
+  s21_size_t char_count = 0;
+  s21_size_t start_index = source->curr_ind;
+  mbstate_t state = {0};
+  bool should_continue = true;
+
+  while (should_continue && char_count < max_chars &&
+         source->str[start_index + mb_len] != '\0') {
+    wchar_t wc;
+    size_t result =
+        mbrtowc(&wc, &source->str[start_index + mb_len], MB_CUR_MAX, &state);
+
+    if (result == 0) {
+      // Достигнут нулевой символ
+      should_continue = false;
+    } else if (iswspace(wc)) {
+      should_continue = false;
+    } else {
+      mb_len += result;
+      char_count++;
+    }
   }
-  // Найдем конец широкой строки (пробел или конец строки)
-  s21_size_t wide_string_start_index = source->curr_ind;
-  s21_size_t wide_string_end_index = wide_string_start_index;
 
-  while (is_end_of_string_char(source->str[wide_string_end_index]) == false &&
-         is_space(source->str[wide_string_end_index]) == false) {
-    wide_string_end_index++;
+  char* temp = (char*)malloc(mb_len + 1);
+  if (temp == NULL) {
+    return 0;
   }
 
-  // Вычислим длину широкой строки
-  s21_size_t wide_string_length =
-      wide_string_end_index - wide_string_start_index;
+  s21_strncpy(temp, &source->str[start_index], mb_len);
+  temp[mb_len] = '\0';
 
-  // Выделим память для временного буфера
-  char* temp = (char*)malloc(wide_string_length + 1);
+  size_t wide_len = mbstowcs(dest_wide_string_pointer, temp, char_count);
 
-  // Копируем строку во временный буфер
-  s21_strncpy(temp, &source->str[wide_string_start_index], wide_string_length);
-  temp[wide_string_length] = '\0';
-
-  // Преобразуем в широкую строку
-  mbstowcs(dest_wide_string_pointer, temp, wide_string_length + 1);
-
-  // Освобождаем память
   free(temp);
 
-  source->curr_ind += wide_string_length;
-  return 1;
+  if (wide_len == (size_t)-1) {
+    return 0;
+  }
+
+  // Добавляем завершающий нулевой символ
+  dest_wide_string_pointer[wide_len] = L'\0';
+
+  // Обновляем текущий индекс в исходной строке
+  source->curr_ind += mb_len;
+
+  return (int)wide_len;  // Возвращаем количество записанных широких символов
 }
 
 int process_input_narrow_string_pointer(va_list* args, InputStr* source,

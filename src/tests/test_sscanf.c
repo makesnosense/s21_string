@@ -2191,13 +2191,15 @@ START_TEST(test_sscanf_nonsimple_width_wstring) {
   int lib_c = 0;
   int lib_res = 0;
 
-  lib_res = sscanf("молодец у мамы я", " %2ls %ls %ls %ls %n", lib_a, lib_b,
-                   lib_d, lib_e, &lib_c);
-  s21_res = s21_sscanf("молодец у мамы я", " %2ls %ls %ls %ls %n", s21_a, s21_b,
-                       s21_d, s21_e, &s21_c);
+  lib_res = sscanf("잘했어요 엄마 정말 좋아요", " %2ls %1ls %1ls %ls %n", lib_a,
+                   lib_b, lib_d, lib_e, &lib_c);
+  s21_res = s21_sscanf("잘했어요 엄마 정말 좋아요", " %2ls %1ls %1ls %ls %n",
+                       s21_a, s21_b, s21_d, s21_e, &s21_c);
 
-  printf("\ns21 %ls %ls %ls %ls n: %d\n", s21_a, s21_b, s21_d, s21_e, s21_c);
-  printf("\nlib %ls %ls %ls %ls n: %d\n", lib_a, lib_b, lib_d, lib_e, lib_c);
+  printf("\ns21 one: %ls two: %ls free: %ls fore: %ls n: %d\n", s21_a, s21_b,
+         s21_d, s21_e, s21_c);
+  printf("\nlib one: %ls two: %ls free: %ls fore: %ls n: %d\n", lib_a, lib_b,
+         lib_d, lib_e, lib_c);
 
   ck_assert_int_eq(wcscmp(lib_a, s21_a), 0);
   ck_assert_int_eq(wcscmp(lib_b, s21_b), 0);
@@ -2319,7 +2321,7 @@ Suite* make_sscanf_suite() {
   tcase_add_test(tc_core, test_sscanf_ptr_mix_width_and_suppression);
 
   tcase_add_test(tc_core, test_sscanf_nonsimple_wchar);
-  tcase_add_test(tc_problem, test_sscanf_nonsimple_wstring);
+  tcase_add_test(tc_core, test_sscanf_nonsimple_wstring);
   tcase_add_test(tc_problem, test_sscanf_nonsimple_width_wstring);
 
   tcase_add_test(tc_core, test_sscanf_e_positive);
