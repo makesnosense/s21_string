@@ -282,10 +282,18 @@ void process_floating_point_number(va_list* args, DestStr* dest,
 #if defined(__linux__)
     spec_opts->is_negative = signbit(input_floating_point_number);
 #endif
-    process_narrow_string("nan", dest, spec_opts);
+    if (spec_opts->specifier == G || spec_opts->specifier == E) {
+      process_narrow_string("NAN", dest, spec_opts);
+    } else {
+      process_narrow_string("nan", dest, spec_opts);
+    }
   } else if (isinf(input_floating_point_number)) {
     spec_opts->is_floating_point_number = false;
-    process_narrow_string("inf", dest, spec_opts);
+    if (spec_opts->specifier == G || spec_opts->specifier == E) {
+      process_narrow_string("INF", dest, spec_opts);
+    } else {
+      process_narrow_string("inf", dest, spec_opts);
+    }
   } else if (spec_opts->is_scientific) {
     process_scientific(dest, input_floating_point_number, spec_opts);
   } else if (spec_opts->is_g_spec) {
