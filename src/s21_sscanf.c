@@ -1,7 +1,5 @@
 #include "s21_sscanf.h"
 
-#include <wctype.h>
-
 int s21_sscanf(const char* str, const char* format, ...) {
   set_locale_for_wide_chars();
   bool matching_failure = false;
@@ -24,6 +22,32 @@ int s21_sscanf(const char* str, const char* format, ...) {
   }
   va_end(args);
   return result;
+}
+
+static void process_initial_space_and_n(va_list* args, InputStr* source,
+                                        InputStr* fmt_input) {
+  while (n_specifier_follows(fmt_input) || is_space_specifier(fmt_input)) {
+    if (is_space_specifier(fmt_input)) {
+      process_space(source, fmt_input);
+    } else if (n_specifier_follows(fmt_input)) {
+      bool n_star_present = is_n_star_present(fmt_input);
+      process_n(args, source, n_star_present);
+      if (n_star_present) {
+        fmt_input->curr_ind += 3;
+      } else {
+        fmt_input->curr_ind += 2;
+      }
+    }
+  }
+}
+
+static bool we_continue_processing(InputStr* fmt_input,
+                                   bool* matching_failure) {
+  bool we_continue = false;
+  if (is_end_of_string(fmt_input) == false && *matching_failure == false) {
+    we_continue = true;
+  }
+  return we_continue;
 }
 
 static void process_foreign_char_in_format(InputStr* source,
@@ -833,15 +857,6 @@ static bool is_space_specifier(InputStr* fmt_input) {
   return is_space(fmt_input->str[fmt_input->curr_ind]);
 }
 
-static bool we_continue_processing(InputStr* fmt_input,
-                                   bool* matching_failure) {
-  bool we_continue = false;
-  if (is_end_of_string(fmt_input) == false && *matching_failure == false) {
-    we_continue = true;
-  }
-  return we_continue;
-}
-
 static void process_space(InputStr* source, InputStr* fmt_input) {
   consume_space(source);
   fmt_input->curr_ind++;
@@ -850,23 +865,6 @@ static void process_space(InputStr* source, InputStr* fmt_input) {
 static void consume_space(InputStr* source) {
   while (is_space(source->str[source->curr_ind])) {
     source->curr_ind++;
-  }
-}
-
-static void process_initial_space_and_n(va_list* args, InputStr* source,
-                                        InputStr* fmt_input) {
-  while (n_specifier_follows(fmt_input) || is_space_specifier(fmt_input)) {
-    if (is_space_specifier(fmt_input)) {
-      process_space(source, fmt_input);
-    } else if (n_specifier_follows(fmt_input)) {
-      bool n_star_present = is_n_star_present(fmt_input);
-      process_n(args, source, n_star_present);
-      if (n_star_present) {
-        fmt_input->curr_ind += 3;
-      } else {
-        fmt_input->curr_ind += 2;
-      }
-    }
   }
 }
 
@@ -964,32 +962,3 @@ static void set_locale_for_wide_chars() {
 
 #endif
 }
-
-//   *value = (void*)ptr_value;
-//   return res;  // Success
-// }
-
-// bool format_string_starts_with_char_spec(InputStr* fmt_input) {
-//   bool result = false;
-//   s21_size_t fmt_len = s21_strlen(fmt_input->str);
-
-//   if (fmt_len >= 2) {
-//     if (fmt_input->str[0] == '%' && fmt_input->str[1] == 'c') {
-//       result = true;
-//     }
-//   } else if (fmt_len >= 3) {
-//     if (fmt_input->str[0] == '%' && fmt_input->str[1] == 'l' &&
-//         fmt_input->str[2] == 'c') {
-//       result = true;
-//     } else if (fmt_input->str[0] == '%' && fmt_input->str[1] == '*' &&
-//                fmt_input->str[2] == 'c') {
-//       result = true;
-//     }
-//   } else if (fmt_len >= 4) {
-//     if (fmt_input->str[0] == '%' && fmt_input->str[1] == '*' &&
-//         fmt_input->str[2] == 'l' && fmt_input->str[3] == 'c') {
-//       result = true;
-//     }
-//   }
-//   return result;
-// }
