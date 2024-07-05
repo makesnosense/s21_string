@@ -61,11 +61,9 @@ void parse_flags(const char** format, SpecOptions* spec_opts) {
       case ' ':
         spec_opts->flag_space = 1;
         break;
-      case '0':
-        if (spec_opts->flag_minus == 0) {
-          spec_opts->flag_zero = 1;
-        }
-        break;
+      case '0': {
+        spec_opts->flag_zero = 1;
+      } break;
       case '#':
         spec_opts->flag_sharp = 1;
         break;
