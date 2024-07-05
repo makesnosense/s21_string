@@ -71,7 +71,6 @@ static int consume_specifier(va_list* args, InputStr* source,
   int specifier_result = 0;
   SpecOptions spec_opts = {0};
   parse_format(fmt_input, &spec_opts);
-
   switch (fmt_input->str[fmt_input->curr_ind]) {
     case 'c': {
       specifier_result = process_chars(args, source, &spec_opts);
@@ -113,6 +112,7 @@ static int consume_specifier(va_list* args, InputStr* source,
     }
     case '%': {
       process_percent(source);
+      break;
     }
   }
   return specifier_result;
@@ -139,7 +139,6 @@ static int read_pointer(va_list* args, InputStr* source,
     bytes_read += 2;
   }
 
-  // Чтение шестнадцатеричных цифр
   while (isxdigit(source->str[source->curr_ind]) &&
          width_limit_reached(bytes_read, spec_opts) == false) {
     ptr_value *= 16;
@@ -157,7 +156,6 @@ static int read_pointer(va_list* args, InputStr* source,
     weve_read_at_least_once_successfully = true;
   }
 
-  // Преобразование ptr_value в указатель и сохранение в value
   if (spec_opts->is_star == false && bytes_read > 0) {
     void** dest_input_pointer = va_arg(*args, void**);
     *dest_input_pointer = (void*)ptr_value;
@@ -255,6 +253,24 @@ static int read_narrow_string(va_list* args, InputStr* source,
   return weve_read_at_least_once_successfully;
 }
 
+static bool is_inf(InputStr* source) {
+  bool result = false;
+  if (s21_strncmp(source->str + source->curr_ind, "inf", 3) == 0 ||
+      s21_strncmp(source->str + source->curr_ind, "INF", 3) == 0) {
+    result = true;
+  }
+  return result;
+}
+
+static bool is_nan(InputStr* source) {
+  bool result = false;
+  if (s21_strncmp(source->str + source->curr_ind, "nan", 3) == 0 ||
+      s21_strncmp(source->str + source->curr_ind, "NaN", 3) == 0) {
+    result = true;
+  }
+  return result;
+}
+
 static int process_float(va_list* args, SpecOptions* spec_opts,
                          InputStr* source) {
   int read_result = 0;
@@ -268,18 +284,21 @@ static int process_float(va_list* args, SpecOptions* spec_opts,
     source->curr_ind++;
   }
 
-  if (s21_strncmp(source->str + source->curr_ind, "inf", 3) == 0 ||
-      s21_strncmp(source->str + source->curr_ind, "INF", 3) == 0) {
+  if (is_inf(source) || is_nan(source)) {
     float* dest_input_pointer = va_arg(*args, float*);
-    *dest_input_pointer = spec_opts->is_negative ? -INFINITY : INFINITY;
-    read_result = 1;
-  }
+    float temp_small_floating_destination = 0;
 
-  else if (s21_strncmp(source->str + source->curr_ind, "nan", 3) == 0 ||
-           s21_strncmp(source->str + source->curr_ind, "NaN", 3) == 0) {
-    float* dest_input_pointer = va_arg(*args, float*);
-    *dest_input_pointer = spec_opts->is_negative ? -NAN : NAN;
-    read_result = true;
+    if (is_inf(source)) {
+      temp_small_floating_destination =
+          spec_opts->is_negative ? -INFINITY : INFINITY;
+    } else {
+      temp_small_floating_destination = spec_opts->is_negative ? -NAN : NAN;
+    }
+    if (spec_opts->is_star == false) {
+      *dest_input_pointer = temp_small_floating_destination;
+      read_result = true;
+    }
+
   } else {
     read_result = read_float(source, &temp_floating_destination, spec_opts);
     write_to_floating_point_number_pointer(args, spec_opts,
