@@ -59,9 +59,9 @@ static void process_specifier(int* sscanf_result, va_list* args,
 
 static void parse_format(InputStr* fmt_input, SpecOptions* spec_opts) {
   spec_opts->is_star = parse_suppression(fmt_input);
-  parse_width_sscanf(fmt_input, spec_opts);
-  parse_length_sscanf(fmt_input, spec_opts);
-  parse_sscanf_specifier(*fmt_input, spec_opts);
+  parse_width(fmt_input, spec_opts);
+  parse_length(fmt_input, spec_opts);
+  parse_specifier(*fmt_input, spec_opts);
   read_next_digit_in_fmt(*fmt_input, spec_opts);
 }
 
@@ -70,9 +70,10 @@ int consume_specifier(va_list* args, InputStr* source, InputStr* fmt_input,
   int specifier_result = 0;
   SpecOptions spec_opts = {0};
   parse_format(fmt_input, &spec_opts);
+
   switch (fmt_input->str[fmt_input->curr_ind]) {
     case 'c': {
-      specifier_result = process_chars_sscanf(args, source, &spec_opts);
+      specifier_result = process_chars(args, source, &spec_opts);
       break;
     }
     case 'n': {
@@ -649,7 +650,7 @@ bool width_limit_reached(s21_size_t bytes_read, SpecOptions* spec_opts) {
   return limit_reached;
 }
 
-int process_chars_sscanf(va_list* args, InputStr* source,
+static int process_chars(va_list* args, InputStr* source,
                          SpecOptions* spec_opts) {
   int specifier_result = 0;
   if (spec_opts->length == l) {
@@ -660,7 +661,8 @@ int process_chars_sscanf(va_list* args, InputStr* source,
   return specifier_result;
 }
 
-int read_wide_char(va_list* args, InputStr* source, SpecOptions* spec_opts) {
+static int read_wide_char(va_list* args, InputStr* source,
+                          SpecOptions* spec_opts) {
   int read_result = 0;
   if (spec_opts->width) {
     ;
@@ -873,23 +875,13 @@ bool parse_suppression(InputStr* fmt_input) {
   return star_present;
 }
 
-bool is_sscanf_specifier(char ch) {
+static bool is_specifier(char ch) {
   char* res = s21_strchr(VALID_SSCANF_SPECIFIERS, ch);
   return res != S21_NULL;
 }
 
-// void set_sscanf_base(SpecOptions* spec_opts) {
-//   if (spec_opts->specifier == o) {
-//     spec_opts->base = 8;
-//   } else if (spec_opts->is_hexadecimal) {
-//     spec_opts->base = 16;
-//   } else {
-//     spec_opts->base = 10;
-//   }
-// }
-
-void parse_sscanf_specifier(InputStr fmt_input, SpecOptions* spec_opts) {
-  if (is_sscanf_specifier(fmt_input.str[fmt_input.curr_ind])) {
+static void parse_specifier(InputStr fmt_input, SpecOptions* spec_opts) {
+  if (is_specifier(fmt_input.str[fmt_input.curr_ind])) {
     char current_specifier = fmt_input.str[fmt_input.curr_ind];
     switch (current_specifier) {
       case 'c': {
@@ -928,7 +920,7 @@ void parse_sscanf_specifier(InputStr fmt_input, SpecOptions* spec_opts) {
   }
 }
 
-void parse_width_sscanf(InputStr* fmt_input, SpecOptions* spec_opts) {
+void parse_width(InputStr* fmt_input, SpecOptions* spec_opts) {
   while (is_valid_digit(fmt_input->str[fmt_input->curr_ind], 10)) {
     spec_opts->width =
         spec_opts->width * 10 + (fmt_input->str[fmt_input->curr_ind] - '0');
@@ -937,13 +929,13 @@ void parse_width_sscanf(InputStr* fmt_input, SpecOptions* spec_opts) {
   }
 }
 
-bool is_length_sscanf(char ch) {
+static bool is_length(char ch) {
   char* res = s21_strchr(VALID_SSCANF_LENGTHS, ch);
   return res == S21_NULL ? false : true;
 }
 
-void parse_length_sscanf(InputStr* fmt_input, SpecOptions* spec_opts) {
-  if (is_length_sscanf(fmt_input->str[fmt_input->curr_ind])) {
+static void parse_length(InputStr* fmt_input, SpecOptions* spec_opts) {
+  if (is_length(fmt_input->str[fmt_input->curr_ind])) {
     switch (fmt_input->str[fmt_input->curr_ind]) {
       case 'L':
         spec_opts->length = L;
