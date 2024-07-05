@@ -2174,6 +2174,206 @@ START_TEST(test_sscanf_e_width) {
 }
 END_TEST
 
+START_TEST(test_sscanf_g_positive) {
+  float s21_f = 0;
+  int s21_res = 0;
+
+  float lib_f = 0;
+  int lib_res = 0;
+
+  lib_res = sscanf("Positive -> 1.234e-5", "Positive -> %g", &lib_f);
+  s21_res = s21_sscanf("Positive -> 1.234e-5", "Positive -> %g", &s21_f);
+
+  ck_assert_int_eq(lib_res, s21_res);
+  ck_assert_float_eq(lib_f, s21_f);
+}
+END_TEST
+
+START_TEST(test_sscanf_g_negative) {
+  float s21_f = 0;
+  int s21_res = 0;
+
+  float lib_f = 0;
+  int lib_res = 0;
+
+  lib_res = sscanf("Negative -> -1.234e-5", "Negative -> %g", &lib_f);
+  s21_res = s21_sscanf("Negative -> -1.234e-5", "Negative -> %g", &s21_f);
+
+  ck_assert_int_eq(lib_res, s21_res);
+  ck_assert_float_eq(lib_f, s21_f);
+}
+END_TEST
+
+START_TEST(test_sscanf_g_exponent_plus) {
+  float s21_f = 0;
+  int s21_res = 0;
+
+  float lib_f = 0;
+  int lib_res = 0;
+
+  lib_res = sscanf("1.234e+5", "%g", &lib_f);
+  s21_res = s21_sscanf("1.234e+5", "%g", &s21_f);
+
+  ck_assert_int_eq(lib_res, s21_res);
+  ck_assert_float_eq(lib_f, s21_f);
+}
+END_TEST
+
+START_TEST(test_sscanf_g_exponent_space) {
+  float s21_f = 0;
+  int s21_res = 0;
+
+  float lib_f = 0;
+  int lib_res = 0;
+
+  lib_res = sscanf("+ and ' ' -> 1.234e +5", "+ and ' ' -> %g", &lib_f);
+  s21_res = s21_sscanf("+ and ' ' -> 1.234e +5", "+ and ' ' -> %g", &s21_f);
+
+  ck_assert_int_eq(lib_res, s21_res);
+  ck_assert_float_eq(lib_f, s21_f);
+}
+END_TEST
+
+START_TEST(test_sscanf_g_inf) {
+  float s21_f = 0;
+  int s21_res = 0;
+
+  float lib_f = 0;
+  int lib_res = 0;
+
+  lib_res = sscanf("inf", "%G", &lib_f);
+  s21_res = s21_sscanf("inf", "%G", &s21_f);
+
+  printf("s21 number: %e\n", s21_f);
+  printf("lib number: %e\n\n", lib_f);
+
+  ck_assert_int_eq(lib_res, s21_res);
+  ck_assert_float_infinite(lib_f);
+  ck_assert_float_infinite(s21_f);
+}
+END_TEST
+
+START_TEST(test_sscanf_g_negative_inf) {
+  float s21_f = 0;
+  int s21_res = 0;
+
+  float lib_f = 0;
+  int lib_res = 0;
+
+  lib_res = sscanf("-inf", "%G", &lib_f);
+  s21_res = s21_sscanf("-inf", "%G", &s21_f);
+
+  printf("s21 number: %e\n", s21_f);
+  printf("lib number: %e\n\n", lib_f);
+
+  ck_assert_int_eq(lib_res, s21_res);
+  ck_assert_float_infinite(lib_f);
+  ck_assert_float_infinite(s21_f);
+}
+END_TEST
+
+START_TEST(test_sscanf_g_nan) {
+  float s21_f = 0;
+  int s21_res = 0;
+
+  float lib_f = 0;
+  int lib_res = 0;
+
+  lib_res = sscanf("nan", "%g", &lib_f);
+  s21_res = s21_sscanf("nan", "%g", &s21_f);
+
+  printf("s21 number: %e\n", s21_f);
+  printf("lib number: %e\n\n", lib_f);
+
+  ck_assert_int_eq(lib_res, s21_res);
+  ck_assert_float_nan(s21_f);
+  ck_assert_float_nan(lib_f);
+}
+END_TEST
+
+START_TEST(test_sscanf_g_negative_nan) {
+  float s21_f = 0;
+  int s21_res = 0;
+
+  float lib_f = 0;
+  int lib_res = 0;
+
+  lib_res = sscanf("-nan", "%g", &lib_f);
+  s21_res = s21_sscanf("-nan", "%g", &s21_f);
+
+  printf("s21 number: %e\n", s21_f);
+  printf("lib number: %e\n\n", lib_f);
+
+  ck_assert_int_eq(lib_res, s21_res);
+  ck_assert_float_nan(s21_f);
+  ck_assert_float_nan(lib_f);
+}
+END_TEST
+
+START_TEST(test_sscanf_g_inf_nan_mixed) {
+  float s21_f = 0;
+  int s21_res = 0;
+
+  float lib_f = 0;
+  int lib_res = 0;
+
+  lib_res = sscanf("inf+nan", "%g", &lib_f);
+  s21_res = s21_sscanf("inf+nan", "%g", &s21_f);
+
+  printf("s21 number: %e\n", s21_f);
+  printf("lib number: %e\n\n", lib_f);
+
+  ck_assert_int_eq(lib_res, s21_res);
+  ck_assert_float_infinite(lib_f);
+  ck_assert_float_infinite(s21_f);
+}
+END_TEST
+
+START_TEST(test_sscanf_g_invalid) {
+  float s21_f = 0;
+  int s21_res = 0;
+
+  float lib_f = 0;
+  int lib_res = 0;
+
+  lib_res = sscanf("abcdefg", "%g", &lib_f);
+  s21_res = s21_sscanf("abcdefg", "%g", &s21_f);
+
+  ck_assert_int_eq(lib_res, s21_res);
+  ck_assert_float_eq(lib_f, s21_f);
+}
+END_TEST
+
+START_TEST(test_sscanf_g_floating) {
+  float s21_f = 0;
+  int s21_res = 0;
+
+  float lib_f = 0;
+  int lib_res = 0;
+
+  lib_res = sscanf("1.2344", "%g", &lib_f);
+  s21_res = s21_sscanf("1.2344", "%g", &s21_f);
+
+  ck_assert_int_eq(lib_res, s21_res);
+  ck_assert_float_eq(lib_f, s21_f);
+}
+END_TEST
+
+START_TEST(test_sscanf_g_width) {
+  float s21_f = 0;
+  int s21_res = 0;
+
+  float lib_f = 0;
+  int lib_res = 0;
+
+  lib_res = sscanf("1.2344E4", "%3g", &lib_f);
+  s21_res = s21_sscanf("1.2344E4", "%3g", &s21_f);
+
+  ck_assert_int_eq(lib_res, s21_res);
+  ck_assert_float_eq(lib_f, s21_f);
+}
+END_TEST
+
 START_TEST(test_sscanf_nonsimple_wchar) {
 #if defined(__APPLE__)
   setlocale(LC_ALL, "en_US.UTF-8");
@@ -2420,6 +2620,19 @@ Suite* make_sscanf_suite() {
   tcase_add_test(tc_core, test_sscanf_e_invalid);
   tcase_add_test(tc_core, test_sscanf_e_floating);
   tcase_add_test(tc_core, test_sscanf_e_width);
+
+  tcase_add_test(tc_core, test_sscanf_g_positive);
+  tcase_add_test(tc_core, test_sscanf_g_negative);
+  tcase_add_test(tc_core, test_sscanf_g_exponent_plus);
+  tcase_add_test(tc_core, test_sscanf_g_exponent_space);
+  tcase_add_test(tc_core, test_sscanf_g_inf);
+  tcase_add_test(tc_problem, test_sscanf_g_negative_inf);
+  tcase_add_test(tc_core, test_sscanf_g_nan);
+  tcase_add_test(tc_problem, test_sscanf_g_negative_nan);
+  tcase_add_test(tc_core, test_sscanf_g_inf_nan_mixed);
+  tcase_add_test(tc_core, test_sscanf_g_invalid);
+  tcase_add_test(tc_core, test_sscanf_g_floating);
+  tcase_add_test(tc_core, test_sscanf_g_width);
 
   // tcase_add_test(tc_core, test_sscanf_unsigned);
   // tcase_add_test(tc_problem, test_sscanf_star);
