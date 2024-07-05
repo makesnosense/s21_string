@@ -87,8 +87,11 @@ static int process_unsigned(va_list* args, SpecOptions* spec_opts,
 
 static int process_int(va_list* args, SpecOptions* spec_opts, InputStr* source,
                        bool* matching_failure);
+
 static int process_float(va_list* args, SpecOptions* spec_opts,
                          InputStr* source);
+static bool is_inf(InputStr* source);
+static bool is_nan(InputStr* source);
 static int read_float(InputStr* source, long double* dest_input_pointer,
                       SpecOptions* spec_opts);
 static int read_whole_part(InputStr* source, long double* int_part,
@@ -101,7 +104,6 @@ static int read_exponent(InputStr* source, int* exponent, int* exponent_sign,
 
 static int process_strings(va_list* args, InputStr* source,
                            SpecOptions* spec_opts);
-
 static int read_wide_string(va_list* args, InputStr* source,
                             SpecOptions* spec_opts);
 static int read_narrow_string(va_list* args, InputStr* source,
