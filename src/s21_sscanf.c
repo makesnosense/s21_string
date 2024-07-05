@@ -273,67 +273,16 @@ int process_float_sscanf(va_list* args, SpecOptions* spec_opts,
     *dest_input_pointer = (source->str[source->curr_ind] == '-') ? -NAN : NAN;
     read_result = true;
   } else {
-    if (spec_opts->is_scientific) {
-      read_result =
-          read_scientific(source, &temp_floating_destination, spec_opts);
-    } else {
-      read_result = read_float(source, &temp_floating_destination, spec_opts);
-    }
-
+    read_result = read_float(source, &temp_floating_destination, spec_opts);
     write_to_floating_point_number_pointer(args, spec_opts,
                                            temp_floating_destination);
   }
+
   return spec_opts->is_star == false ? read_result : 0;
 }
 
 int read_float(InputStr* source, long double* dest_input_pointer,
                SpecOptions* spec_opts) {
-  int sign = 1;
-  long double int_part = 0;
-  long double frac_part = 0.0;
-  long long frac_div = 1;
-  bool weve_read_at_least_once_successfully = 0;
-  s21_size_t bytes_read = 0;
-  s21_size_t base = 10;
-
-  if (spec_opts->is_negative) {
-    sign = -1;
-  }
-
-  while (is_valid_digit(source->str[source->curr_ind], base) &&
-         is_space(source->str[source->curr_ind]) == false &&
-         source->str[source->curr_ind] != '\0' &&
-         width_limit_reached(bytes_read, spec_opts) == false) {
-    int_part = int_part * 10 + (source->str[source->curr_ind] - '0');
-    source->curr_ind++;
-    bytes_read++;
-    weve_read_at_least_once_successfully = true;
-  }
-
-  if (source->str[source->curr_ind] == '.') {
-    bytes_read++;
-    source->curr_ind++;
-    while (is_valid_digit(source->str[source->curr_ind], base) &&
-           is_space(source->str[source->curr_ind]) == false &&
-           source->str[source->curr_ind] != '\0' &&
-           width_limit_reached(bytes_read, spec_opts) == false) {
-      frac_part = frac_part * 10 + (source->str[source->curr_ind] - '0');
-      frac_div *= 10;
-      source->curr_ind++;
-      bytes_read++;
-    }
-  }
-
-  if (bytes_read > 0) {
-    weve_read_at_least_once_successfully = true;
-    *dest_input_pointer = sign * (int_part + (frac_part / frac_div));
-  }
-
-  return weve_read_at_least_once_successfully;
-}
-
-int read_scientific(InputStr* source, long double* dest_input_pointer,
-                    SpecOptions* spec_opts) {
   int sign = 1;
   long double mantissa = 0;
   int exponent = 0;
@@ -359,7 +308,6 @@ int read_scientific(InputStr* source, long double* dest_input_pointer,
     int_part = int_part * 10 + (source->str[source->curr_ind] - '0');
     source->curr_ind++;
     bytes_read++;
-    weve_read_at_least_once_successfully = true;
   }
 
   // Read fractional part
@@ -405,6 +353,10 @@ int read_scientific(InputStr* source, long double* dest_input_pointer,
       source->curr_ind++;
       bytes_read++;
     }
+  }
+
+  if (bytes_read > 0) {
+    weve_read_at_least_once_successfully = true;
   }
 
   if (weve_read_at_least_once_successfully) {
