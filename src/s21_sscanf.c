@@ -216,10 +216,7 @@ static int read_wide_string(va_list* args, InputStr* source,
         mbrtowc(&wide_char, &source->str[start_index + multibyte_length],
                 MB_CUR_MAX, &state);
 
-    if (result == 0) {
-      // Достигнут нулевой символ
-      should_continue = false;
-    } else if (iswspace(wide_char)) {
+    if (iswspace(wide_char)) {
       should_continue = false;
     } else {
       multibyte_length += result;
@@ -715,8 +712,6 @@ static int read_wide_char(va_list* args, InputStr* source,
     *dest_wchar_ptr = wide_char;
     source->curr_ind += len;
     read_result++;
-  } else if (len == -1) {
-    source->curr_ind++;
   }
 
   return read_result;

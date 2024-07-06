@@ -2433,7 +2433,38 @@ START_TEST(test_sscanf_g_width) {
 }
 END_TEST
 
-START_TEST(test_sscanf_nonsimple_wchar) {
+START_TEST(test_sscanf_nonsimple_wchar_p1) {
+#if defined(__APPLE__)
+  setlocale(LC_ALL, "en_US.UTF-8");
+
+#elif defined(__linux__)
+  setlocale(LC_ALL, "C.UTF-8");
+#endif
+
+  wchar_t s21_a = 0;
+  wchar_t s21_b = 0;
+  int s21_c = 0;
+  int s21_res = 0;
+
+  wchar_t lib_a = 0;
+  wchar_t lib_b = 0;
+  int lib_c = 0;
+  int lib_res = 0;
+
+  lib_res = sscanf("\xFF\xFF", " %lc %lc %n", &lib_a, &lib_b, &lib_c);
+  s21_res = s21_sscanf("\xFF\xFF", " %lc %lc %n", &s21_a, &s21_b, &s21_c);
+
+  // printf("\ns21 первый чар %lc второй чар %lc n: %d\n", s21_a, s21_b, s21_c);
+  // printf("\nlib первый чар %lc второй чар %lc n: %d\n", lib_a, lib_b, lib_c);
+
+  ck_assert_int_eq(lib_res, s21_res);
+  ck_assert_int_eq(lib_a, s21_a);
+  ck_assert_int_eq(lib_b, s21_b);
+  ck_assert_int_eq(lib_c, s21_c);
+}
+END_TEST
+
+START_TEST(test_sscanf_nonsimple_wchar_p2) {
 #if defined(__APPLE__)
   setlocale(LC_ALL, "en_US.UTF-8");
 
@@ -2665,7 +2696,8 @@ Suite* make_sscanf_suite() {
   tcase_add_test(tc_core, test_sscanf_ptr_invalid_2);
   tcase_add_test(tc_core, test_sscanf_ptr_mix_width_and_suppression);
 
-  tcase_add_test(tc_core, test_sscanf_nonsimple_wchar);
+  tcase_add_test(tc_core, test_sscanf_nonsimple_wchar_p1);
+  tcase_add_test(tc_core, test_sscanf_nonsimple_wchar_p2);
   tcase_add_test(tc_core, test_sscanf_nonsimple_wstring);
   tcase_add_test(tc_core, test_sscanf_nonsimple_width_wstring);
 
