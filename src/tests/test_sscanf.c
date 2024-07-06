@@ -1915,7 +1915,7 @@ START_TEST(test_sscanf_ptr_with_letters) {
 }
 END_TEST
 
-START_TEST(test_sscanf_ptr_lead_zero_2) {
+START_TEST(test_sscanf_ptr_lead_zero_2_lover) {
   void* s21_ptr = NULL;
   int s21_res = 0;
 
@@ -1925,6 +1925,23 @@ START_TEST(test_sscanf_ptr_lead_zero_2) {
   lib_res = sscanf("Lead zero + letters -> 0123456789abcdef",
                    "Lead zero + letters -> %p", &lib_ptr);
   s21_res = s21_sscanf("Lead zero + letters -> 0123456789abcdef",
+                       "Lead zero + letters -> %p", &s21_ptr);
+
+  ck_assert_int_eq(lib_res, s21_res);
+  ck_assert_ptr_eq(lib_ptr, s21_ptr);
+}
+END_TEST
+
+START_TEST(test_sscanf_ptr_lead_zero_2_uper) {
+  void* s21_ptr = NULL;
+  int s21_res = 0;
+
+  void* lib_ptr = NULL;
+  int lib_res = 0;
+
+  lib_res = sscanf("Lead zero + letters -> 0x123456789ABCDEF",
+                   "Lead zero + letters -> %p", &lib_ptr);
+  s21_res = s21_sscanf("Lead zero + letters -> 0x123456789ABCDEF",
                        "Lead zero + letters -> %p", &s21_ptr);
 
   ck_assert_int_eq(lib_res, s21_res);
@@ -2640,7 +2657,8 @@ Suite* make_sscanf_suite() {
   tcase_add_test(tc_core, test_sscanf_ptr_hex);
   tcase_add_test(tc_core, test_sscanf_ptr_lead_zero);
   tcase_add_test(tc_core, test_sscanf_ptr_with_letters);
-  tcase_add_test(tc_core, test_sscanf_ptr_lead_zero_2);
+  tcase_add_test(tc_core, test_sscanf_ptr_lead_zero_2_lover);
+  tcase_add_test(tc_core, test_sscanf_ptr_lead_zero_2_uper);
   tcase_add_test(tc_core, test_sscanf_ptr_whitespaces);
   tcase_add_test(tc_core, test_sscanf_ptr_invalid);
   tcase_add_test(tc_core, test_sscanf_ptr_empty);
