@@ -51,6 +51,19 @@ START_TEST(test_sprintf_ints_d) {
 }
 END_TEST
 
+START_TEST(test_sprintf_ints_d_is_star) {
+  char lib_res[500];
+  char s21_res[500];
+
+  int lib_return = 0;
+  int s21_return = 0;
+  lib_return = sprintf(lib_res, "%*d", 1, 10);
+  s21_return = s21_sprintf(s21_res, "%*d", 1, 10);
+  ck_assert_str_eq(lib_res, s21_res);
+  ck_assert_int_eq(lib_return, s21_return);
+}
+END_TEST
+
 START_TEST(test_sprintf_int_min) {
   char lib_res[500];
   char s21_res[500];
@@ -2882,6 +2895,7 @@ void add_basic_tests(TCase* tc) {
   tcase_add_test(tc, test_sprintf_int);
   tcase_add_test(tc, test_sprintf_int_0_padding);
   tcase_add_test(tc, test_sprintf_ints_d);
+  tcase_add_test(tc, test_sprintf_ints_d_is_star);
   tcase_add_test(tc, test_sprintf_ints_i);
   tcase_add_test(tc, test_sprintf_int_min);
   tcase_add_test(tc, test_sprintf_long_ints_d);
