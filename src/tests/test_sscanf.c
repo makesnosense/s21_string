@@ -2679,179 +2679,159 @@ START_TEST(test_sscanf_percent) {
 }
 END_TEST
 
+static void add_basic_tests(TCase* tc) {
+  tcase_add_test(tc, test_sscanf_simple_char);
+  tcase_add_test(tc, test_sscanf_simple_char_p1);
+  tcase_add_test(tc, test_sscanf_simple_char_p2);
+  tcase_add_test(tc, test_sscanf_char);
+  tcase_add_test(tc, test_sscanf_nonsimple_wchar_p1);
+  tcase_add_test(tc, test_sscanf_nonsimple_wchar_p2);
+  tcase_add_test(tc, test_sscanf_nonsimple_wstring);
+  tcase_add_test(tc, test_sscanf_nonsimple_width_wstring);
+  tcase_add_test(tc, test_sscanf_percent);
+  tcase_add_test(tc, test_sscanf_string);
+  tcase_add_test(tc, test_sscanf_string_suppresion);
+  tcase_add_test(tc, test_sscanf_string_width);
+  tcase_add_test(tc, test_sscanf_string_mix_width_and_suppresion);
+}
+
+void add_problematic_tests(TCase* tc) {
+  tcase_add_test(tc, test_sscanf_possible_minus_one_p1);
+  tcase_add_test(tc, test_sscanf_possible_minus_one_p2);
+  tcase_add_test(tc, test_sscanf_possible_minus_one_p3);
+  tcase_add_test(tc, test_sscanf_possible_minus_one_p4);
+  tcase_add_test(tc, test_sscanf_possible_minus_one_p5);
+  tcase_add_test(tc, test_sscanf_possible_minus_one_p6);
+  tcase_add_test(tc, test_sscanf_possible_minus_one_p7);
+  tcase_add_test(tc, test_sscanf_possible_minus_one_p8);
+  tcase_add_test(tc, test_sscanf_possible_minus_one_p9);
+  tcase_add_test(tc, test_sscanf_possible_minus_one_p10);
+  tcase_add_test(tc, test_sscanf_possible_minus_one_p11);
+  tcase_add_test(tc, test_sscanf_possible_minus_one_p12);
+  tcase_add_test(tc, test_sscanf_star_problematic);
+  tcase_add_test(tc, test_sscanf_width_p1);
+  tcase_add_test(tc, test_sscanf_width_p2);
+  tcase_add_test(tc, test_sscanf_width_p3);
+}
+
+void add_basic_spec_int(TCase* tc) {
+  tcase_add_test(tc, test_sscanf_i_p1);
+  tcase_add_test(tc, test_sscanf_i_p2);
+  tcase_add_test(tc, test_sscanf_i_p3);
+  tcase_add_test(tc, test_sscanf_i_p4);
+  tcase_add_test(tc, test_sscanf_i_p5);
+  tcase_add_test(tc, test_sscanf_i_p6);
+  tcase_add_test(tc, test_sscanf_i_p7);
+  tcase_add_test(tc, test_sscanf_i_p8);
+  tcase_add_test(tc, test_sscanf_long_i);
+  tcase_add_test(tc, test_sscanf_long_i_p2);
+  tcase_add_test(tc, test_sscanf_overflow_long_i);
+  tcase_add_test(tc, test_sscanf_owerflow_short_negative_valua_spec_i);
+  tcase_add_test(tc, test_sscanf_short_i);
+  tcase_add_test(tc, test_sscanf_overflow_short_i);
+  tcase_add_test(tc, test_sscanf_overflow_long_i);
+  tcase_add_test(tc, test_sscanf_overflow_spec_i);
+  tcase_add_test(tc, test_sscanf_int);
+  tcase_add_test(tc, test_sscanf_int_2);
+  tcase_add_test(tc, test_sscanf_int_3);
+  tcase_add_test(tc, test_sscanf_d);
+}
+
+void add_float_tests(TCase* tc) {
+  tcase_add_test(tc, test_sscanf_float);
+  tcase_add_test(tc, test_sscanf_float_2);
+  tcase_add_test(tc, test_sscanf_float_3);
+  tcase_add_test(tc, test_sscanf_long_float);
+  tcase_add_test(tc, test_sscanf_long_long_float);
+  tcase_add_test(tc, test_sscanf_overflow_long_long_float);
+  tcase_add_test(tc, test_sscanf_specific_float);
+
+  tcase_add_test(tc, test_sscanf_e_positive);
+  tcase_add_test(tc, test_sscanf_e_negative);
+  tcase_add_test(tc, test_sscanf_e_exponent_plus);
+  tcase_add_test(tc, test_sscanf_e_exponent_space);
+  tcase_add_test(tc, test_sscanf_e_inf);
+  tcase_add_test(tc, test_sscanf_e_negative_inf);
+  tcase_add_test(tc, test_sscanf_e_nan);
+  tcase_add_test(tc, test_sscanf_e_negative_nan);
+  tcase_add_test(tc, test_sscanf_e_inf_nan_mixed);
+  tcase_add_test(tc, test_sscanf_e_invalid);
+  tcase_add_test(tc, test_sscanf_e_floating);
+  tcase_add_test(tc, test_sscanf_e_width);
+
+  tcase_add_test(tc, test_sscanf_g_positive);
+  tcase_add_test(tc, test_sscanf_g_negative);
+  tcase_add_test(tc, test_sscanf_g_exponent_plus);
+  tcase_add_test(tc, test_sscanf_g_exponent_space);
+  tcase_add_test(tc, test_sscanf_g_inf);
+  tcase_add_test(tc, test_sscanf_g_negative_inf);
+  tcase_add_test(tc, test_sscanf_g_nan);
+  tcase_add_test(tc, test_sscanf_g_negative_nan);
+  tcase_add_test(tc, test_sscanf_g_inf_nan_mixed);
+  tcase_add_test(tc, test_sscanf_g_invalid);
+  tcase_add_test(tc, test_sscanf_g_floating);
+  tcase_add_test(tc, test_sscanf_g_width);
+}
+
+void add_unsigned_tests(TCase* tc) {
+  tcase_add_test(tc, test_sscanf_octal);
+  tcase_add_test(tc, test_sscanf_long_octal);
+  tcase_add_test(tc, test_sscanf_overflow_long_octal);
+  tcase_add_test(tc, test_sscanf_short_octal);
+  tcase_add_test(tc, test_sscanf_overflow_short_octal);
+  tcase_add_test(tc, test_sscanf_octal_problematic);
+
+  tcase_add_test(tc, test_sscanf_hex);
+  tcase_add_test(tc, test_sscanf_long_hex);
+  tcase_add_test(tc, test_sscanf_overflow_long_hex);
+  tcase_add_test(tc, test_sscanf_short_hex);
+  tcase_add_test(tc, test_sscanf_overflow_short_hex);
+  tcase_add_test(tc, test_sscanf_hex_problematic);
+
+  tcase_add_test(tc, test_sscanf_unsigned);
+  tcase_add_test(tc, test_sscanf_long_unsigned);
+  tcase_add_test(tc, test_sscanf_overflow_long_unsigned);
+  tcase_add_test(tc, test_sscanf_short_unsigned);
+  tcase_add_test(tc, test_sscanf_overflow_short_unsigned);
+}
+
+void add_only_linux_tests(TCase* tc) {
+  tcase_add_test(tc, test_sscanf_width_p2_linux_only);
+  tcase_add_test(tc, test_sscanf_width_p2_1_linux_only);
+  tcase_add_test(tc, test_sscanf_width_p3_linux_only);
+}
+
+void add_pointer_tests(TCase* tc) {
+  tcase_add_test(tc, test_sscanf_ptr_null);
+  tcase_add_test(tc, test_sscanf_ptr_hex);
+  tcase_add_test(tc, test_sscanf_ptr_lead_zero);
+  tcase_add_test(tc, test_sscanf_ptr_with_letters);
+  tcase_add_test(tc, test_sscanf_ptr_lead_zero_2_lover);
+  tcase_add_test(tc, test_sscanf_ptr_lead_zero_2_uper);
+  tcase_add_test(tc, test_sscanf_ptr_whitespaces);
+  tcase_add_test(tc, test_sscanf_ptr_invalid);
+  tcase_add_test(tc, test_sscanf_ptr_empty);
+  tcase_add_test(tc, test_sscanf_ptr_space);
+  tcase_add_test(tc, test_sscanf_ptr_invalid_2);
+  tcase_add_test(tc, test_sscanf_ptr_mix_width_and_suppression);
+}
+
 Suite* make_sscanf_suite() {
   Suite* sscanf_suite = suite_create("sscanf");
   TCase* tc_core;
-  TCase* tc_linux_only;
-  TCase* tc_problem;
 
   tc_core = tcase_create("Core");
-  tc_linux_only = tcase_create("linux_only");
-  tc_problem = tcase_create("scanf");
 
-  tcase_add_test(tc_core, test_sscanf_simple_char);
-  tcase_add_test(tc_core, test_sscanf_simple_char_p1);
-  tcase_add_test(tc_core, test_sscanf_simple_char_p2);
-  tcase_add_test(tc_core, test_sscanf_char);
-  tcase_add_test(tc_core, test_sscanf_possible_minus_one_p1);
-  tcase_add_test(tc_core, test_sscanf_possible_minus_one_p2);
-  tcase_add_test(tc_core, test_sscanf_possible_minus_one_p3);
-  tcase_add_test(tc_core, test_sscanf_possible_minus_one_p4);
-  tcase_add_test(tc_core, test_sscanf_possible_minus_one_p5);
-  tcase_add_test(tc_core, test_sscanf_possible_minus_one_p6);
-  tcase_add_test(tc_core, test_sscanf_possible_minus_one_p7);
-  tcase_add_test(tc_core, test_sscanf_possible_minus_one_p8);
-  tcase_add_test(tc_core, test_sscanf_possible_minus_one_p9);
-  tcase_add_test(tc_core, test_sscanf_possible_minus_one_p10);
-  tcase_add_test(tc_core, test_sscanf_possible_minus_one_p11);
-  tcase_add_test(tc_core, test_sscanf_possible_minus_one_p12);
-
-  tcase_add_test(tc_core, test_sscanf_i_p1);
-  tcase_add_test(tc_core, test_sscanf_i_p2);
-  tcase_add_test(tc_core, test_sscanf_i_p3);
-  tcase_add_test(tc_core, test_sscanf_i_p4);
-  tcase_add_test(tc_core, test_sscanf_i_p5);
-  tcase_add_test(tc_core, test_sscanf_i_p6);
-  tcase_add_test(tc_core, test_sscanf_i_p7);
-  tcase_add_test(tc_core, test_sscanf_i_p8);
-
-  tcase_add_test(tc_core, test_sscanf_width_p1);
-  tcase_add_test(tc_core, test_sscanf_width_p2);
-  tcase_add_test(tc_core, test_sscanf_width_p3);
-
-  tcase_add_test(tc_core, test_sscanf_d);
-
-  tcase_add_test(tc_linux_only, test_sscanf_width_p2_linux_only);
-  tcase_add_test(tc_linux_only, test_sscanf_width_p2_1_linux_only);
-  tcase_add_test(tc_linux_only, test_sscanf_width_p3_linux_only);
-
-  tcase_add_test(tc_core, test_sscanf_long_i);
-  tcase_add_test(tc_core, test_sscanf_long_i_p2);
-  tcase_add_test(tc_core, test_sscanf_overflow_long_i);
-
-  tcase_add_test(tc_core, test_sscanf_owerflow_short_negative_valua_spec_i);
-  tcase_add_test(tc_core, test_sscanf_short_i);
-  tcase_add_test(tc_core, test_sscanf_overflow_short_i);
-  tcase_add_test(tc_core, test_sscanf_overflow_long_i);
-  tcase_add_test(tc_core, test_sscanf_overflow_spec_i);
-
-  tcase_add_test(tc_core, test_sscanf_octal_problematic);
-  tcase_add_test(tc_core, test_sscanf_hex_problematic);
-
-  tcase_add_test(tc_core, test_sscanf_octal);
-  tcase_add_test(tc_core, test_sscanf_long_octal);
-  tcase_add_test(tc_core, test_sscanf_overflow_long_octal);
-  tcase_add_test(tc_core, test_sscanf_short_octal);
-  tcase_add_test(tc_core, test_sscanf_overflow_short_octal);
-
-  tcase_add_test(tc_core, test_sscanf_hex);
-  tcase_add_test(tc_core, test_sscanf_long_hex);
-  tcase_add_test(tc_core, test_sscanf_overflow_long_hex);
-  tcase_add_test(tc_core, test_sscanf_short_hex);
-  tcase_add_test(tc_core, test_sscanf_overflow_short_hex);
-
-  tcase_add_test(tc_core, test_sscanf_float);
-  tcase_add_test(tc_core, test_sscanf_float_2);
-  tcase_add_test(tc_core, test_sscanf_float_3);
-  tcase_add_test(tc_core, test_sscanf_long_float);
-  tcase_add_test(tc_core, test_sscanf_long_long_float);
-  tcase_add_test(tc_core, test_sscanf_overflow_long_long_float);
-  tcase_add_test(tc_problem, test_sscanf_specific_float);
-
-  tcase_add_test(tc_core, test_sscanf_unsigned);
-  tcase_add_test(tc_core, test_sscanf_long_unsigned);
-  tcase_add_test(tc_core, test_sscanf_overflow_long_unsigned);
-  tcase_add_test(tc_core, test_sscanf_short_unsigned);
-  tcase_add_test(tc_core, test_sscanf_overflow_short_unsigned);
-
-  tcase_add_test(tc_core, test_sscanf_star_problematic);
-
-  tcase_add_test(tc_core, test_sscanf_int);
-  tcase_add_test(tc_core, test_sscanf_int_2);
-  tcase_add_test(tc_core, test_sscanf_int_3);
-
-  tcase_add_test(tc_core, test_sscanf_string);
-  tcase_add_test(tc_core, test_sscanf_string_suppresion);
-  tcase_add_test(tc_core, test_sscanf_string_width);
-  tcase_add_test(tc_core, test_sscanf_string_mix_width_and_suppresion);
-
-  tcase_add_test(tc_core, test_sscanf_ptr_null);
-  tcase_add_test(tc_core, test_sscanf_ptr_hex);
-  tcase_add_test(tc_core, test_sscanf_ptr_lead_zero);
-  tcase_add_test(tc_core, test_sscanf_ptr_with_letters);
-  tcase_add_test(tc_core, test_sscanf_ptr_lead_zero_2_lover);
-  tcase_add_test(tc_core, test_sscanf_ptr_lead_zero_2_uper);
-  tcase_add_test(tc_core, test_sscanf_ptr_whitespaces);
-  tcase_add_test(tc_core, test_sscanf_ptr_invalid);
-  tcase_add_test(tc_core, test_sscanf_ptr_empty);
-  tcase_add_test(tc_core, test_sscanf_ptr_space);
-  tcase_add_test(tc_core, test_sscanf_ptr_invalid_2);
-  tcase_add_test(tc_core, test_sscanf_ptr_mix_width_and_suppression);
-
-  tcase_add_test(tc_core, test_sscanf_nonsimple_wchar_p1);
-  tcase_add_test(tc_core, test_sscanf_nonsimple_wchar_p2);
-  tcase_add_test(tc_core, test_sscanf_nonsimple_wstring);
-  tcase_add_test(tc_core, test_sscanf_nonsimple_width_wstring);
-
-  tcase_add_test(tc_core, test_sscanf_e_positive);
-  tcase_add_test(tc_core, test_sscanf_e_negative);
-  tcase_add_test(tc_core, test_sscanf_e_exponent_plus);
-  tcase_add_test(tc_core, test_sscanf_e_exponent_space);
-  tcase_add_test(tc_core, test_sscanf_e_inf);
-  tcase_add_test(tc_problem, test_sscanf_e_negative_inf);
-  tcase_add_test(tc_core, test_sscanf_e_nan);
-  tcase_add_test(tc_problem, test_sscanf_e_negative_nan);
-  tcase_add_test(tc_core, test_sscanf_e_inf_nan_mixed);
-  tcase_add_test(tc_core, test_sscanf_e_invalid);
-  tcase_add_test(tc_core, test_sscanf_e_floating);
-  tcase_add_test(tc_core, test_sscanf_e_width);
-
-  tcase_add_test(tc_core, test_sscanf_g_positive);
-  tcase_add_test(tc_core, test_sscanf_g_negative);
-  tcase_add_test(tc_core, test_sscanf_g_exponent_plus);
-  tcase_add_test(tc_core, test_sscanf_g_exponent_space);
-  tcase_add_test(tc_core, test_sscanf_g_inf);
-  tcase_add_test(tc_problem, test_sscanf_g_negative_inf);
-  tcase_add_test(tc_core, test_sscanf_g_nan);
-  tcase_add_test(tc_problem, test_sscanf_g_negative_nan);
-  tcase_add_test(tc_core, test_sscanf_g_inf_nan_mixed);
-  tcase_add_test(tc_core, test_sscanf_g_invalid);
-  tcase_add_test(tc_core, test_sscanf_g_floating);
-  tcase_add_test(tc_core, test_sscanf_g_width);
-
-  tcase_add_test(tc_core, test_sscanf_percent);
-
-  // tcase_add_test(tc_core, test_sscanf_unsigned);
-  // tcase_add_test(tc_problem, test_sscanf_star);
-  // tcase_add_test(tc_core, test_sscanf_non_valid_string);
-
-  suite_add_tcase(sscanf_suite, tc_core);
-  suite_add_tcase(sscanf_suite, tc_problem);
+  add_basic_tests(tc_core);
+  add_problematic_tests(tc_core);
+  add_basic_spec_int(tc_core);
+  add_float_tests(tc_core);
+  add_unsigned_tests(tc_core);
+  add_pointer_tests(tc_core);
 #if defined(__linux__)
-  suite_add_tcase(sscanf_suite, tc_linux_only);
+  add_only_linux_tests(tc_core);
 #endif
 
+  suite_add_tcase(sscanf_suite, tc_core);
   return sscanf_suite;
 }
-
-// START_TEST(test_sscanf_non_valid_string) {
-//   char* input_string = "  \t   \n   \r   ";
-//   char* format_string = "Unsigned 1: %u, unsigned 2: %u";
-
-//   unsigned s21_res1 = 0;
-//   unsigned s21_res2 = 0;
-//   int s21_res_res = 0;
-
-//   unsigned lib_res1 = 0;
-//   unsigned lib_res2 = 0;
-//   int lib_res_res = 0;
-
-//   lib_res_res = sscanf(input_string, format_string, &lib_res1, &lib_res2);
-//   s21_res_res = s21_sscanf(input_string, format_string, &s21_res1,
-//   &s21_res2);
-
-//   ck_assert_int_eq(lib_res_res, s21_res_res);
-//   ck_assert_int_eq(lib_res1, s21_res1);
-//   ck_assert_int_eq(lib_res2, s21_res2);
-// }
-// END_TEST
