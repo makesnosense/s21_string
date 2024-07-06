@@ -51,6 +51,19 @@ START_TEST(test_sprintf_ints_d) {
 }
 END_TEST
 
+START_TEST(test_sprintf_ints_d_is_star) {
+  char lib_res[500];
+  char s21_res[500];
+
+  int lib_return = 0;
+  int s21_return = 0;
+  lib_return = sprintf(lib_res, "%*d", 1, 10);
+  s21_return = s21_sprintf(s21_res, "%*d", 1, 10);
+  ck_assert_str_eq(lib_res, s21_res);
+  ck_assert_int_eq(lib_return, s21_return);
+}
+END_TEST
+
 START_TEST(test_sprintf_int_min) {
   char lib_res[500];
   char s21_res[500];
@@ -240,6 +253,16 @@ START_TEST(test_sprintf_float_width_precision_flag) {
       s21_sprintf(s21_res, "%-15f %+-20.1f % -10f % f", sd, sd2, sd3, sd4);
   ck_assert_str_eq(lib_res, s21_res);
   ck_assert_int_eq(lib_return, s21_return);
+}
+END_TEST
+
+START_TEST(test_sprintf_float_not_implemented) {
+  char lib_res[100];
+
+  float sd = -3.0F;
+
+  int res = s21_sprintf(lib_res, "%F", sd);
+  ck_assert_int_eq(res, 0);
 }
 END_TEST
 
@@ -1434,6 +1457,22 @@ START_TEST(test_sprintf_double_nan_inf) {
   ck_assert_str_eq(lib_res, s21_res);
 }
 END_TEST
+
+START_TEST(test_sprintf_double_NaN_INF) {
+  char lib_res[50];
+  char s21_res[50];
+
+  long double ld_value = 1.0e+4932L;
+  double inf_value = (double)ld_value;
+  double nan_value = sqrt(-1.0);
+
+  sprintf(lib_res, "%-4G %G", nan_value, inf_value);
+  s21_sprintf(s21_res, "%-4G %G", nan_value, inf_value);
+
+  ck_assert_str_eq(lib_res, s21_res);
+}
+END_TEST
+
 START_TEST(test_sprintf_sharp_double_nan_inf) {
   char lib_res[50];
   char s21_res[50];
@@ -2856,6 +2895,7 @@ void add_basic_tests(TCase* tc) {
   tcase_add_test(tc, test_sprintf_int);
   tcase_add_test(tc, test_sprintf_int_0_padding);
   tcase_add_test(tc, test_sprintf_ints_d);
+  tcase_add_test(tc, test_sprintf_ints_d_is_star);
   tcase_add_test(tc, test_sprintf_ints_i);
   tcase_add_test(tc, test_sprintf_int_min);
   tcase_add_test(tc, test_sprintf_long_ints_d);
@@ -2868,6 +2908,7 @@ void add_basic_tests(TCase* tc) {
   tcase_add_test(tc, test_sprintf_very_float);
   tcase_add_test(tc, test_sprintf_a_bit_float);
   tcase_add_test(tc, test_sprintf_float_width_precision_flag);
+  tcase_add_test(tc, test_sprintf_float_not_implemented);
   tcase_add_test(tc, test_sprintf_unsigned);
   tcase_add_test(tc, test_sprintf_unsigned_problematic);
   tcase_add_test(tc, test_sprintf_long_doubles);
@@ -2892,6 +2933,7 @@ void add_basic_tests(TCase* tc) {
   tcase_add_test(tc, test_sprintf_sharp_double_long_double);
   if (RUNNING_ON_VALGRIND == false) {
     tcase_add_test(tc, test_sprintf_double_nan_inf);
+    tcase_add_test(tc, test_sprintf_double_NaN_INF);
     tcase_add_test(tc, test_sprintf_sharp_double_nan_inf);
   };
 }
