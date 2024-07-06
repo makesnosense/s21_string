@@ -74,7 +74,6 @@ static void parse_specifier(InputStr fmt_input, SpecOptions* spec_opts);
 static void read_next_digit_in_fmt(InputStr fmt_input, SpecOptions* spec_opts);
 
 static bool n_specifier_follows(InputStr* fmt_input);
-static bool is_n_star_present(InputStr* fmt_input);
 static bool c_specifier_follows(InputStr* fmt_input);
 
 static void process_percent(InputStr* source);
@@ -88,7 +87,7 @@ static int read_wide_char(va_list* args, InputStr* source,
 static int read_narrow_char(va_list* args, InputStr* source,
                             SpecOptions* spec_opts);
 
-static void process_n(va_list* args, InputStr* source, bool n_star);
+static void process_n(va_list* args, InputStr* source);
 
 static int process_strings(va_list* args, InputStr* source,
                            SpecOptions* spec_opts);
