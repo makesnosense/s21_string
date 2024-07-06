@@ -3,6 +3,7 @@
 src/object_files/
 *.o
 src/run_tests
+clang.sh
 
 .DS_Store
 

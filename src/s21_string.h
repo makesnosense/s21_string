@@ -1,8 +1,6 @@
 #ifndef S21_STRING_H_
 #define S21_STRING_H_
 
-
-
 #define FAILURE
 #define SUCCESS
 
