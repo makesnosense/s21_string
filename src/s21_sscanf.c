@@ -714,7 +714,7 @@ static int read_wide_char(va_list* args, InputStr* source,
   }
 
   return read_result;
-};
+}
 
 static int read_narrow_char(va_list* args, InputStr* source,
                             SpecOptions* spec_opts) {
@@ -726,7 +726,7 @@ static int read_narrow_char(va_list* args, InputStr* source,
   }
   source->curr_ind++;
   return read_result;
-};
+}
 
 static s21_size_t get_octal_num_length(InputStr* source, SpecOptions* spec_opts,
                                        s21_size_t base) {

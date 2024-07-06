@@ -809,18 +809,17 @@ bool g_spec_scientific_needed(long double input_num, SpecOptions* spec_opts) {
   s21_size_t whole_part_length_after_rounding =
       get_num_length(bank_roundl(input_num), spec_opts);
 
-  /// set zero precision
   if (spec_opts->precision_set == true && spec_opts->precision == 0 &&
       whole_part_length_after_rounding > 1) {
+    // set zero precision
     result = true;
-  }
-  // not set precision
-  else if (spec_opts->precision_set == false &&
-           whole_part_length_after_rounding > DEFAULT_F_PRECISION) {
+  } else if (spec_opts->precision_set == false &&
+             whole_part_length_after_rounding > DEFAULT_F_PRECISION) {
+    // not set precision
     result = true;
-    // precision set and it's nonzero
   } else if (spec_opts->precision_set == true && spec_opts->precision != 0 &&
              whole_part_length_after_rounding > spec_opts->precision) {
+    // precision set and it's nonzero
     result = true;
   }
   return result;
@@ -1074,7 +1073,7 @@ bool g_spec_exponent_increment_check(long double input_num,
   // printf("After \n%Lf\n", input_num);
 
   return result;
-};
+}
 
 void process_g_spec_significand_part_nonzero_precision(DestStr* dest,
                                                        long double input_num,

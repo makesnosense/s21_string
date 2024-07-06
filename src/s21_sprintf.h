@@ -1,3 +1,6 @@
+#ifndef SRC_S21_SPRINTF_H_
+#define SRC_S21_SPRINTF_H_
+
 #include <ctype.h>
 #include <float.h>
 #include <limits.h>
@@ -181,3 +184,5 @@ long double bank_roundl(long double input_num);
 bool is_zero(long double input_num);
 
 void set_locale_for_wide_chars();
+
+#endif  // SRC_S21_SPRINTF_H_

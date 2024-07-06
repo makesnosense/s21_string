@@ -1,5 +1,5 @@
-#ifndef S21_SSCANF_H_
-#define S21_SSCANF_H_
+#ifndef SRC_S21_SSCANF_H_
+#define SRC_S21_SSCANF_H_
 
 #include <ctype.h>
 #include <limits.h>
@@ -42,7 +42,6 @@ typedef struct SpecifierOptions {
   bool is_negative;
   bool plus_sign_present;
   char next_digit;
-
 } SpecOptions;
 
 typedef struct InputString {
@@ -151,4 +150,4 @@ static bool is_end_of_string(InputStr* string_structure);
 static bool is_space(char input_char);
 static bool is_space_specifier(InputStr* fmt_input);
 
-#endif  // S21_SSCANF_H_
+#endif  // SRC_S21_SSCANF_H_
