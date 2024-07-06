@@ -2023,7 +2023,7 @@ END_TEST
 ( o.o )
  > ^ <
 */
-/////////various width with G-spec, GO!
+// various width with G-spec, GO!
 
 START_TEST(test_sprintf_g_spec_loop_precisions_width_4) {
   char lib_res[1000];
@@ -2224,7 +2224,7 @@ START_TEST(test_sprintf_g_spec_precision_0_many_width_4_p2) {
 }
 END_TEST
 
-//////hm
+// hm
 START_TEST(test_sprintf_g_spec_set_precision_width_4_p1) {
   char lib_res[1000];
   char s21_res[1000];
@@ -2935,7 +2935,7 @@ void add_basic_tests(TCase* tc) {
     tcase_add_test(tc, test_sprintf_double_nan_inf);
     tcase_add_test(tc, test_sprintf_double_NaN_INF);
     tcase_add_test(tc, test_sprintf_sharp_double_nan_inf);
-  };
+  }
 }
 
 void add_basic_sharp_tests(TCase* tc) {
