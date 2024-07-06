@@ -808,11 +808,6 @@ static bool c_specifier_follows(InputStr* fmt_input) {
       it_follows = true;
     }
   }
-  if (fmt_characters_remaining >= 4) {
-    if (s21_strncmp(&fmt_input->str[fmt_input->curr_ind], "%*lc", 4) == 0) {
-      it_follows = true;
-    }
-  }
   return it_follows;
 }
 
