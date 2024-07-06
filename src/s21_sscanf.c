@@ -56,13 +56,13 @@ static void process_foreign_char_in_format(InputStr* source,
   }
 }
 
-static void process_specifier(int* sscanf_result, va_list* args,
+static void process_specifier(int* ongoing_sscanf_result, va_list* args,
                               InputStr* source, InputStr* fmt_input,
                               bool* matching_failure) {
   if (n_specifier_follows(fmt_input) == false &&
       is_end_of_string(source) == true) {
-    if (*sscanf_result == 0) {
-      *sscanf_result = -1;
+    if (*ongoing_sscanf_result == 0) {
+      *ongoing_sscanf_result = -1;
     }
     *matching_failure = true;
 
@@ -75,7 +75,7 @@ static void process_specifier(int* sscanf_result, va_list* args,
         consume_specifier(args, source, fmt_input, matching_failure);
     // wide chars sometimes return -1 as result
     if (new_scanf_result != -1) {
-      *sscanf_result += new_scanf_result;
+      *ongoing_sscanf_result += new_scanf_result;
     }
     fmt_input->curr_ind++;
   }
@@ -162,18 +162,15 @@ static int read_pointer(va_list* args, InputStr* source,
     bytes_read += 2;
   }
 
-  while (isxdigit(source->str[source->curr_ind]) &&
+  while (is_valid_digit(source->str[source->curr_ind], 16) &&
          width_limit_reached(bytes_read, spec_opts) == false) {
     ptr_value *= 16;
-    if (isdigit(source->str[source->curr_ind])) {
+    if (is_valid_digit(source->str[source->curr_ind], 10)) {
       ptr_value += source->str[source->curr_ind] - '0';
-    } else if (source->str[source->curr_ind] >= 'a' &&
-               source->str[source->curr_ind] <= 'f') {
-      ptr_value += source->str[source->curr_ind] - 'a' + 10;
-    } else if (source->str[source->curr_ind] >= 'A' &&
-               source->str[source->curr_ind] <= 'F') {
-      ptr_value += source->str[source->curr_ind] - 'A' + 10;
+    } else {
+      ptr_value += (to_lower_char(source->str[source->curr_ind]) - 'a') + 10;
     }
+
     source->curr_ind++;
     bytes_read++;
     weve_read_at_least_once_successfully = true;
@@ -580,14 +577,11 @@ static int read_hex(InputStr* source, SpecOptions* spec_opts,
          hex_reading_failure == false &&
          width_limit_reached(bytes_read, spec_opts) == false) {
     if (is_valid_digit(source->str[source->curr_ind], base)) {
-      if (source->str[source->curr_ind] >= '0' &&
-          source->str[source->curr_ind] <= '9') {
+      if (is_valid_digit(source->str[source->curr_ind], 10)) {
         num = num * 16 + (source->str[source->curr_ind] - '0');
-      } else if (source->str[source->curr_ind] >= 'a' &&
-                 source->str[source->curr_ind] <= 'f') {
-        num = num * 16 + (source->str[source->curr_ind] - 'a' + 10);
       } else {
-        num = num * 16 + (source->str[source->curr_ind] - 'A' + 10);
+        num = num * 16 +
+              ((to_lower_char(source->str[source->curr_ind]) - 'a') + 10);
       }
       source->curr_ind++;
       bytes_read++;
