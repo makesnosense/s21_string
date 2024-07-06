@@ -73,6 +73,7 @@ static void process_specifier(int* sscanf_result, va_list* args,
     fmt_input->curr_ind++;
     int new_scanf_result =
         consume_specifier(args, source, fmt_input, matching_failure);
+    // wide chars sometimes return -1 as result
     if (new_scanf_result != -1) {
       *sscanf_result += new_scanf_result;
     }
@@ -89,14 +90,13 @@ static void parse_format(InputStr* fmt_input, SpecOptions* spec_opts) {
 }
 
 static int consume_specifier(va_list* args, InputStr* source,
-                             InputStr* fmt_input, bool* matching_failure) {
+                             InputStr* fmt_input, bool* m_failure) {
   int specifier_result = 0;
   SpecOptions spec_opts = {0};
   parse_format(fmt_input, &spec_opts);
   switch (fmt_input->str[fmt_input->curr_ind]) {
     case 'c': {
-      specifier_result =
-          process_chars(args, source, &spec_opts, matching_failure);
+      specifier_result = process_chars(args, source, &spec_opts, m_failure);
       break;
     }
     case 'n': {
@@ -113,16 +113,14 @@ static int consume_specifier(va_list* args, InputStr* source,
     }
     case 'i':
     case 'd': {
-      specifier_result =
-          process_int(args, &spec_opts, source, matching_failure);
+      specifier_result = process_int(args, &spec_opts, source, m_failure);
       break;
     }
     case 'x':
     case 'X':
     case 'o':
     case 'u': {
-      specifier_result =
-          process_unsigned(args, &spec_opts, source, matching_failure);
+      specifier_result = process_unsigned(args, &spec_opts, source, m_failure);
       break;
     }
     case 'g':
