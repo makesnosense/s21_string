@@ -95,16 +95,12 @@ void parse_precision(const char** format, va_list args,
 
 void parse_length(const char** format, SpecOptions* spec_opts) {
   while (is_length(**format)) {
-    switch (**format) {
-      case 'L':
-        spec_opts->length_big_l = 1;
-        break;
-      case 'l':
-        spec_opts->length_l = 1;
-        break;
-      case 'h':
-        spec_opts->length_h = 1;
-        break;
+    if (**format == 'L') {
+      spec_opts->length_big_l = true;
+    } else if (**format == 'l') {
+      spec_opts->length_l = true;
+    } else {
+      spec_opts->length_h = true;
     }
     (*format)++;
   }
