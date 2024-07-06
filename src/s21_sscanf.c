@@ -71,8 +71,11 @@ static void process_specifier(int* sscanf_result, va_list* args,
     consume_space(source);
   } else {
     fmt_input->curr_ind++;
-    *sscanf_result +=
+    int new_scanf_result =
         consume_specifier(args, source, fmt_input, matching_failure);
+    if (new_scanf_result != -1) {
+      *sscanf_result += new_scanf_result;
+    }
     fmt_input->curr_ind++;
   }
 }
@@ -92,7 +95,8 @@ static int consume_specifier(va_list* args, InputStr* source,
   parse_format(fmt_input, &spec_opts);
   switch (fmt_input->str[fmt_input->curr_ind]) {
     case 'c': {
-      specifier_result = process_chars(args, source, &spec_opts);
+      specifier_result =
+          process_chars(args, source, &spec_opts, matching_failure);
       break;
     }
     case 'n': {
@@ -688,17 +692,18 @@ static bool width_limit_reached(s21_size_t bytes_read, SpecOptions* spec_opts) {
 }
 
 static int process_chars(va_list* args, InputStr* source,
-                         SpecOptions* spec_opts) {
+                         SpecOptions* spec_opts, bool* matching_failure) {
   int specifier_result = 0;
   if (spec_opts->length == l) {
-    specifier_result = read_wide_char(args, source);
+    specifier_result = read_wide_char(args, source, matching_failure);
   } else {
     specifier_result = read_narrow_char(args, source, spec_opts);
   }
   return specifier_result;
 }
 
-static int read_wide_char(va_list* args, InputStr* source) {
+static int read_wide_char(va_list* args, InputStr* source,
+                          bool* matching_failure) {
   int read_result = 0;
   wchar_t* dest_wchar_ptr = va_arg(*args, wchar_t*);
   wchar_t wide_char = 0;
@@ -708,12 +713,11 @@ static int read_wide_char(va_list* args, InputStr* source) {
     *dest_wchar_ptr = wide_char;
     source->curr_ind += len;
     read_result++;
-  }
-#if defined(__APPLE__)
-  if (len == -1) {
+  } else if (len == -1) {
     source->curr_ind++;
+    *matching_failure = true;
+    read_result = -1;
   }
-#endif
 
   return read_result;
 };

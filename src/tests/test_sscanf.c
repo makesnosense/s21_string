@@ -2451,11 +2451,11 @@ START_TEST(test_sscanf_nonsimple_wchar_p1) {
   int lib_c = 0;
   int lib_res = 0;
 
-  lib_res = sscanf("\xFF\xFF", " %lc %lc %n", &lib_a, &lib_b, &lib_c);
-  s21_res = s21_sscanf("\xFF\xFF", " %lc %lc %n", &s21_a, &s21_b, &s21_c);
+  lib_res = sscanf("a \xFF ", " %lc %lc %n", &lib_a, &lib_b, &lib_c);
+  s21_res = s21_sscanf("a \xFF ", " %lc %lc %n", &s21_a, &s21_b, &s21_c);
 
-  // printf("\ns21 первый чар %lc второй чар %lc n: %d\n", s21_a, s21_b, s21_c);
-  // printf("\nlib первый чар %lc второй чар %lc n: %d\n", lib_a, lib_b, lib_c);
+  printf("\ns21 первый чар %lc второй чар %lc n: %d\n", s21_a, s21_b, s21_c);
+  printf("\nlib первый чар %lc второй чар %lc n: %d\n", lib_a, lib_b, lib_c);
 
   ck_assert_int_eq(lib_res, s21_res);
   ck_assert_int_eq(lib_a, s21_a);
