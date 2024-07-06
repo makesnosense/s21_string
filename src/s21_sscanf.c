@@ -911,17 +911,15 @@ static bool is_length(char ch) {
 }
 
 static void parse_length(InputStr* fmt_input, SpecOptions* spec_opts) {
-  if (is_length(fmt_input->str[fmt_input->curr_ind])) {
-    switch (fmt_input->str[fmt_input->curr_ind]) {
-      case 'L':
-        spec_opts->length = L;
-        break;
-      case 'l':
-        spec_opts->length = l;
-        break;
-      case 'h':
-        spec_opts->length = h;
-        break;
+  char current_format_char = fmt_input->str[fmt_input->curr_ind];
+
+  if (is_length(current_format_char)) {
+    if (current_format_char == 'L') {
+      spec_opts->length = L;
+    } else if (current_format_char == 'l') {
+      spec_opts->length = l;
+    } else {
+      spec_opts->length = h;
     }
     fmt_input->curr_ind++;
   }
