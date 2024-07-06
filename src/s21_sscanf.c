@@ -29,14 +29,9 @@ static void process_initial_space_and_n(va_list* args, InputStr* source,
   while (n_specifier_follows(fmt_input) || is_space_specifier(fmt_input)) {
     if (is_space_specifier(fmt_input)) {
       process_space(source, fmt_input);
-    } else if (n_specifier_follows(fmt_input)) {
-      bool n_star_present = is_n_star_present(fmt_input);
-      process_n(args, source, n_star_present);
-      if (n_star_present) {
-        fmt_input->curr_ind += 3;
-      } else {
-        fmt_input->curr_ind += 2;
-      }
+    } else {
+      process_n(args, source);
+      fmt_input->curr_ind += 2;
     }
   }
 }
@@ -101,7 +96,7 @@ static int consume_specifier(va_list* args, InputStr* source,
       break;
     }
     case 'n': {
-      process_n(args, source, spec_opts.is_star);
+      process_n(args, source);
       break;
     }
     case 's': {
@@ -463,11 +458,9 @@ static void read_next_digit_in_fmt(InputStr fmt_input, SpecOptions* spec_opts) {
   }
 }
 
-static void process_n(va_list* args, InputStr* source, bool n_star) {
-  if (n_star == false) {
-    int* num = va_arg(*args, int*);
-    *num = source->curr_ind;
-  }
+static void process_n(va_list* args, InputStr* source) {
+  int* num = va_arg(*args, int*);
+  *num = source->curr_ind;
 }
 
 static int process_unsigned(va_list* args, SpecOptions* spec_opts,
@@ -797,20 +790,6 @@ static bool n_specifier_follows(InputStr* fmt_input) {
     }
   }
   return it_follows;
-}
-
-static bool is_n_star_present(InputStr* fmt_input) {
-  bool star_present = false;
-  s21_size_t fmt_characters_remaining =
-      s21_strlen(fmt_input->str) - fmt_input->curr_ind;
-
-  if (fmt_characters_remaining >= 3) {
-    if (s21_strncmp(&fmt_input->str[fmt_input->curr_ind], "%*n", 3) == 0) {
-      star_present = true;
-    }
-  }
-
-  return star_present;
 }
 
 static bool c_specifier_follows(InputStr* fmt_input) {
