@@ -1168,9 +1168,9 @@ START_TEST(test_sscanf_octal) {
   int lib_n = 0;
   int lib_res = 0;
 
-  s21_res = s21_sscanf("0327 0327 01644 04001", "%o %o %o %o %n", &s21_a,
+  s21_res = s21_sscanf("0327 0327 01644 04001", "%o %o %o %3o %n", &s21_a,
                        &s21_b, &s21_c, &s21_d, &s21_n);
-  lib_res = sscanf("0327 0327 01644 04001", "%o %o %o %o %n", &lib_a, &lib_b,
+  lib_res = sscanf("0327 0327 01644 04001", "%o %o %o %3o %n", &lib_a, &lib_b,
                    &lib_c, &lib_d, &lib_n);
 
   // printf("lib первый чар %d второй чар %d третий: %d четыре %d n: %d res:

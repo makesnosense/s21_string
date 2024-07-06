@@ -713,7 +713,7 @@ static int read_wide_char(va_list* args, InputStr* source,
     *dest_wchar_ptr = wide_char;
     source->curr_ind += len;
     read_result++;
-  } else if (len == -1) {
+  } else {
     source->curr_ind++;
     *matching_failure = true;
     read_result = -1;
