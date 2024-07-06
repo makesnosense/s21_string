@@ -132,7 +132,7 @@ static int consume_specifier(va_list* args, InputStr* source,
       break;
     }
     case '%': {
-      process_percent(source, matching_failure);
+      process_percent(source, m_failure);
       break;
     }
   }
