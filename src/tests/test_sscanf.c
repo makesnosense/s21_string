@@ -1464,8 +1464,8 @@ START_TEST(test_sscanf_float_2) {
   float lib_b = 0;
   int lib_res = 0;
 
-  lib_res = sscanf("1844.654656 1844.654656", "%f %f", &lib_a, &lib_b);
-  s21_res = s21_sscanf("1844.654656 1844.654656", "%f %f", &s21_a, &s21_b);
+  lib_res = sscanf("+1844.654656 1844.654656", "%f %f", &lib_a, &lib_b);
+  s21_res = s21_sscanf("+1844.654656 1844.654656", "%f %f", &s21_a, &s21_b);
 
   // printf("s21 first: %f second: %f res: %d\n", s21_a, s21_b, s21_res);
   // printf("lib first: %f second: %f res: %d\n\n", lib_a, lib_b, lib_res);
