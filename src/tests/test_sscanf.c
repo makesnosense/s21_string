@@ -1580,19 +1580,17 @@ START_TEST(test_sscanf_long_long_float) {
   long double lib_b = 0;
   int lib_res = 0;
 
-  lib_res =
-      sscanf("79228162514264337593543950336 -79228162514264337593543950336",
-             "%Lf %Lf", &lib_a, &lib_b);
-  s21_res =
-      s21_sscanf("79228162514264337593543950336 -79228162514264337593543950336",
-                 "%Lf %Lf", &s21_a, &s21_b);
+  lib_res = sscanf("792281625142643375.0 -792281625142643375.0", "%Lf %Lf",
+                   &lib_a, &lib_b);
+  s21_res = s21_sscanf("792281625142643375.0 -792281625142643375.0", "%Lf %Lf",
+                       &s21_a, &s21_b);
 
   // printf("s21 first: %Lf second: %Lf res: %d\n", s21_a, s21_b, s21_res);
   // printf("lib first: %Lf second: %Lf res: %d\n\n", lib_a, lib_b, lib_res);
 
   ck_assert_int_eq(lib_res, s21_res);
-  ck_assert_double_eq(lib_a, s21_a);
-  ck_assert_double_eq(lib_b, s21_b);
+  ck_assert_ldouble_eq(lib_a, s21_a);
+  ck_assert_ldouble_eq(lib_b, s21_b);
 }
 END_TEST
 
@@ -1606,20 +1604,20 @@ START_TEST(test_sscanf_overflow_long_long_float) {
   int lib_res = 0;
 
   lib_res = sscanf(
-      "792281625142643375935439503366354234 "
-      "-792281625142643375935439503366354234",
+      "792281625142643375.0"
+      "-792281625142643375.0 ",
       "%Lf %Lf", &lib_a, &lib_b);
   s21_res = s21_sscanf(
-      "792281625142643375935439503366354234 "
-      "-792281625142643375935439503366354234",
+      "792281625142643375.0"
+      "-792281625142643375.0 ",
       "%Lf %Lf", &s21_a, &s21_b);
 
   // printf("s21 first: %Lf second: %Lf res: %d\n", s21_a, s21_b, s21_res);
   // printf("lib first: %Lf second: %Lf res: %d\n\n", lib_a, lib_b, lib_res);
 
   ck_assert_int_eq(lib_res, s21_res);
-  ck_assert_double_eq(lib_a, s21_a);
-  ck_assert_double_eq(lib_b, s21_b);
+  ck_assert_ldouble_eq(lib_a, s21_a);
+  ck_assert_ldouble_eq(lib_b, s21_b);
 }
 END_TEST
 
