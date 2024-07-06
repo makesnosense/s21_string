@@ -20,7 +20,6 @@ START_TEST(test_strcmp_first_string_longer) {
   int lib_result = 33;
 
   ck_assert_int_eq(s21_result, lib_result);
-
 }
 END_TEST
 
