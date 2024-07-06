@@ -17,7 +17,7 @@
 #define EPSILON (LDBL_EPSILON * 100)
 
 #define VALID_FLAGS "+- 0#"
-#define VALID_SPECIFIERS "cdefginsopuxEGX%"
+#define VALID_SPECIFIERS "cdefginsopuxEFGX%"
 #define VALID_LENGTHS "Llh"
 
 #define TO_ABS(x) (x) < 0 ? (-x) : (x)

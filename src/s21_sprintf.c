@@ -111,51 +111,52 @@ void parse_length(const char** format, SpecOptions* spec_opts) {
 }
 
 void parse_specifier(const char** format, SpecOptions* spec_opts) {
-  if (is_specifier(**format)) {
-    int current_specifier = **format;
-    switch (current_specifier) {
-      case 'c': {
-        spec_opts->specifier = c;
-        break;
+  int current_specifier = **format;
+  switch (current_specifier) {
+    case 'c': {
+      spec_opts->specifier = c;
+      break;
+    }
+    case 'X':
+    case 'p':
+    case 'x': {
+      if (current_specifier == 'X') {
+        spec_opts->specifier = X;
+      } else if (current_specifier == 'x') {
+        spec_opts->specifier = x;
+      } else {
+        spec_opts->specifier = p;
       }
-      case 'X':
-      case 'p':
-      case 'x': {
-        if (current_specifier == 'X') {
-          spec_opts->specifier = X;
-        } else if (current_specifier == 'x') {
-          spec_opts->specifier = x;
-        } else {
-          spec_opts->specifier = p;
-        }
-        spec_opts->is_hexadecimal = true;
-        break;
+      spec_opts->is_hexadecimal = true;
+      break;
+    }
+    case 'o': {
+      spec_opts->specifier = o;
+      break;
+    }
+    case 'f':
+    case 'g':
+    case 'G':
+    case 'e':
+    case 'E': {
+      spec_opts->is_floating_point_number = true;
+      if (current_specifier == 'g') {
+        spec_opts->specifier = g;
+        spec_opts->is_g_spec = true;
+      } else if (current_specifier == 'G') {
+        spec_opts->specifier = G;
+        spec_opts->is_g_spec = true;
+      } else if (current_specifier == 'e') {
+        spec_opts->specifier = e;
+        spec_opts->is_scientific = true;
+      } else if (current_specifier == 'E') {
+        spec_opts->specifier = E;
+        spec_opts->is_scientific = true;
       }
-      case 'o': {
-        spec_opts->specifier = o;
-        break;
-      }
-      case 'f':
-      case 'g':
-      case 'G':
-      case 'e':
-      case 'E': {
-        spec_opts->is_floating_point_number = true;
-        if (current_specifier == 'g') {
-          spec_opts->specifier = g;
-          spec_opts->is_g_spec = true;
-        } else if (current_specifier == 'G') {
-          spec_opts->specifier = G;
-          spec_opts->is_g_spec = true;
-        } else if (current_specifier == 'e') {
-          spec_opts->specifier = e;
-          spec_opts->is_scientific = true;
-        } else if (current_specifier == 'E') {
-          spec_opts->specifier = E;
-          spec_opts->is_scientific = true;
-        }
-        break;
-      }
+      break;
+    }
+    default: {
+      break;
     }
   }
 }

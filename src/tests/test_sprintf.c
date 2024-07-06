@@ -249,7 +249,7 @@ START_TEST(test_sprintf_float_not_implemented) {
   float sd = -3.0F;
 
   int res = s21_sprintf(lib_res, "%F", sd);
-  ck_assert_int_eq(res, 2);
+  ck_assert_int_eq(res, 0);
 }
 END_TEST
 
@@ -3045,6 +3045,8 @@ Suite* make_sprintf_suite() {
   add_scientific_tests(tc_core);
   add_g_spec_tests(tc_core);
   add_g_spec_width_4_tests(tc_core);
+
+  tcase_add_test(tc_problematic, test_sprintf_float_not_implemented);
 
   suite_add_tcase(sprintf_suite, tc_core);
   suite_add_tcase(sprintf_suite, tc_problematic);
