@@ -2590,6 +2590,24 @@ START_TEST(test_sscanf_nonsimple_width_wstring) {
 }
 END_TEST
 
+START_TEST(test_sscanf_percent) {
+  float s21_f = 0;
+  int s21_res = 0;
+
+  float lib_f = 0;
+  int lib_res = 0;
+
+  lib_res = sscanf("# 4323.234", "%% %g", &lib_f);
+  s21_res = s21_sscanf("# 4323.234", "%% %g", &s21_f);
+
+  // printf("s21 number: %e\n", s21_f);
+  // printf("lib number: %e\n\n", lib_f);
+
+  ck_assert_int_eq(lib_res, s21_res);
+  ck_assert_float_eq(s21_f, lib_f);
+}
+END_TEST
+
 Suite* make_sscanf_suite() {
   Suite* sscanf_suite = suite_create("sscanf");
   TCase* tc_core;
@@ -2726,6 +2744,8 @@ Suite* make_sscanf_suite() {
   tcase_add_test(tc_core, test_sscanf_g_invalid);
   tcase_add_test(tc_core, test_sscanf_g_floating);
   tcase_add_test(tc_core, test_sscanf_g_width);
+
+  tcase_add_test(tc_core, test_sscanf_percent);
 
   // tcase_add_test(tc_core, test_sscanf_unsigned);
   // tcase_add_test(tc_problem, test_sscanf_star);

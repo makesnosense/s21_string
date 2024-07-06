@@ -76,7 +76,7 @@ static void read_next_digit_in_fmt(InputStr fmt_input, SpecOptions* spec_opts);
 static bool n_specifier_follows(InputStr* fmt_input);
 static bool c_specifier_follows(InputStr* fmt_input);
 
-static void process_percent(InputStr* source);
+static void process_percent(InputStr* source, bool* matching_failure);
 static void process_space(InputStr* source, InputStr* fmt_input);
 static void consume_space(InputStr* source);
 

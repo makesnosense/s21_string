@@ -134,16 +134,18 @@ static int consume_specifier(va_list* args, InputStr* source,
       break;
     }
     case '%': {
-      process_percent(source);
+      process_percent(source, matching_failure);
       break;
     }
   }
   return specifier_result;
 }
 
-static void process_percent(InputStr* source) {
+static void process_percent(InputStr* source, bool* matching_failure) {
   if (source->str[source->curr_ind] == '%') {
     source->curr_ind++;
+  } else {
+    *matching_failure = true;
   }
 }
 
