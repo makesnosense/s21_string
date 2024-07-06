@@ -59,7 +59,7 @@ void parse_flags(const char** format, SpecOptions* spec_opts) {
       spec_opts->flag_space = true;
     } else if (**format == '0') {
       spec_opts->flag_zero = true;
-    } else if (**format == '#') {
+    } else {  // scary as hell, but we check validity of flags in is_flag above
       spec_opts->flag_sharp = true;
     }
     (*format)++;
