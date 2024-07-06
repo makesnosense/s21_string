@@ -1,13 +1,11 @@
 #include "s21_sscanf.h"
 
-#include <wctype.h>
-
 int s21_sscanf(const char* str, const char* format, ...) {
-  set_locale_for_wide_chars_sscanf();
+  set_locale_for_wide_chars();
   bool matching_failure = false;
   int result = 0;
-  va_list args;  // Список аргументов
-  va_start(args, format);  // Инициализируем список аргументов
+  va_list args;
+  va_start(args, format);
 
   InputStr source = {str, 0};
   InputStr fmt_input = {format, 0};
@@ -26,8 +24,35 @@ int s21_sscanf(const char* str, const char* format, ...) {
   return result;
 }
 
-void process_foreign_char_in_format(InputStr* source, InputStr* fmt_input,
-                                    bool* matching_failure) {
+static void process_initial_space_and_n(va_list* args, InputStr* source,
+                                        InputStr* fmt_input) {
+  while (n_specifier_follows(fmt_input) || is_space_specifier(fmt_input)) {
+    if (is_space_specifier(fmt_input)) {
+      process_space(source, fmt_input);
+    } else if (n_specifier_follows(fmt_input)) {
+      bool n_star_present = is_n_star_present(fmt_input);
+      process_n(args, source, n_star_present);
+      if (n_star_present) {
+        fmt_input->curr_ind += 3;
+      } else {
+        fmt_input->curr_ind += 2;
+      }
+    }
+  }
+}
+
+static bool we_continue_processing(InputStr* fmt_input,
+                                   bool* matching_failure) {
+  bool we_continue = false;
+  if (is_end_of_string(fmt_input) == false && *matching_failure == false) {
+    we_continue = true;
+  }
+  return we_continue;
+}
+
+static void process_foreign_char_in_format(InputStr* source,
+                                           InputStr* fmt_input,
+                                           bool* matching_failure) {
   if (fmt_input->str[fmt_input->curr_ind] != source->str[source->curr_ind]) {
     *matching_failure = true;
   } else {
@@ -65,12 +90,11 @@ static void parse_format(InputStr* fmt_input, SpecOptions* spec_opts) {
   read_next_digit_in_fmt(*fmt_input, spec_opts);
 }
 
-int consume_specifier(va_list* args, InputStr* source, InputStr* fmt_input,
-                      bool* matching_failure) {
+static int consume_specifier(va_list* args, InputStr* source,
+                             InputStr* fmt_input, bool* matching_failure) {
   int specifier_result = 0;
   SpecOptions spec_opts = {0};
   parse_format(fmt_input, &spec_opts);
-
   switch (fmt_input->str[fmt_input->curr_ind]) {
     case 'c': {
       specifier_result = process_chars(args, source, &spec_opts);
@@ -112,6 +136,7 @@ int consume_specifier(va_list* args, InputStr* source, InputStr* fmt_input,
     }
     case '%': {
       process_percent(source);
+      break;
     }
   }
   return specifier_result;
@@ -123,7 +148,8 @@ static void process_percent(InputStr* source) {
   }
 }
 
-int read_pointer(va_list* args, InputStr* source, SpecOptions* spec_opts) {
+static int read_pointer(va_list* args, InputStr* source,
+                        SpecOptions* spec_opts) {
   bool weve_read_at_least_once_successfully = 0;
   unsigned long long ptr_value = 0;
   s21_size_t bytes_read = 0;
@@ -137,7 +163,6 @@ int read_pointer(va_list* args, InputStr* source, SpecOptions* spec_opts) {
     bytes_read += 2;
   }
 
-  // Чтение шестнадцатеричных цифр
   while (isxdigit(source->str[source->curr_ind]) &&
          width_limit_reached(bytes_read, spec_opts) == false) {
     ptr_value *= 16;
@@ -155,7 +180,6 @@ int read_pointer(va_list* args, InputStr* source, SpecOptions* spec_opts) {
     weve_read_at_least_once_successfully = true;
   }
 
-  // Преобразование ptr_value в указатель и сохранение в value
   if (spec_opts->is_star == false && bytes_read > 0) {
     void** dest_input_pointer = va_arg(*args, void**);
     *dest_input_pointer = (void*)ptr_value;
@@ -253,6 +277,24 @@ static int read_narrow_string(va_list* args, InputStr* source,
   return weve_read_at_least_once_successfully;
 }
 
+static bool is_inf(InputStr* source) {
+  bool result = false;
+  if (s21_strncmp(source->str + source->curr_ind, "inf", 3) == 0 ||
+      s21_strncmp(source->str + source->curr_ind, "INF", 3) == 0) {
+    result = true;
+  }
+  return result;
+}
+
+static bool is_nan(InputStr* source) {
+  bool result = false;
+  if (s21_strncmp(source->str + source->curr_ind, "nan", 3) == 0 ||
+      s21_strncmp(source->str + source->curr_ind, "NaN", 3) == 0) {
+    result = true;
+  }
+  return result;
+}
+
 static int process_float(va_list* args, SpecOptions* spec_opts,
                          InputStr* source) {
   int read_result = 0;
@@ -266,18 +308,21 @@ static int process_float(va_list* args, SpecOptions* spec_opts,
     source->curr_ind++;
   }
 
-  if (s21_strncmp(source->str + source->curr_ind, "inf", 3) == 0 ||
-      s21_strncmp(source->str + source->curr_ind, "INF", 3) == 0) {
+  if (is_inf(source) || is_nan(source)) {
     float* dest_input_pointer = va_arg(*args, float*);
-    *dest_input_pointer = spec_opts->is_negative ? -INFINITY : INFINITY;
-    read_result = 1;
-  }
+    float temp_small_floating_destination = 0;
 
-  else if (s21_strncmp(source->str + source->curr_ind, "nan", 3) == 0 ||
-           s21_strncmp(source->str + source->curr_ind, "NaN", 3) == 0) {
-    float* dest_input_pointer = va_arg(*args, float*);
-    *dest_input_pointer = spec_opts->is_negative ? -NAN : NAN;
-    read_result = true;
+    if (is_inf(source)) {
+      temp_small_floating_destination =
+          spec_opts->is_negative ? -INFINITY : INFINITY;
+    } else {
+      temp_small_floating_destination = spec_opts->is_negative ? -NAN : NAN;
+    }
+    if (spec_opts->is_star == false) {
+      *dest_input_pointer = temp_small_floating_destination;
+      read_result = true;
+    }
+
   } else {
     read_result = read_float(source, &temp_floating_destination, spec_opts);
     write_to_floating_point_number_pointer(args, spec_opts,
@@ -395,7 +440,7 @@ static int read_float(InputStr* source, long double* dest_input_pointer,
   return weve_read_at_least_once_successfully;
 }
 
-void write_to_floating_point_number_pointer(
+static void write_to_floating_point_number_pointer(
     va_list* args, SpecOptions* spec_opts,
     long double temp_floating_destination) {
   if (spec_opts->is_star == false) {
@@ -412,13 +457,13 @@ void write_to_floating_point_number_pointer(
   }
 }
 
-void read_next_digit_in_fmt(InputStr fmt_input, SpecOptions* spec_opts) {
+static void read_next_digit_in_fmt(InputStr fmt_input, SpecOptions* spec_opts) {
   if (fmt_input.str[fmt_input.curr_ind + 1] != '\0') {
     spec_opts->next_digit = fmt_input.str[fmt_input.curr_ind + 1];
   }
 }
 
-void process_n(va_list* args, InputStr* source, bool n_star) {
+static void process_n(va_list* args, InputStr* source, bool n_star) {
   if (n_star == false) {
     int* num = va_arg(*args, int*);
     *num = source->curr_ind;
@@ -449,7 +494,7 @@ static int process_unsigned(va_list* args, SpecOptions* spec_opts,
   return spec_opts->is_star == false ? read_result : 0;
 }
 
-void write_to_unsigned_pointer(
+static void write_to_unsigned_pointer(
     va_list* args, SpecOptions* spec_opts,
     long long unsigned temp_long_long_unsigned_destination) {
   if (spec_opts->is_star == false) {
@@ -496,9 +541,9 @@ static int process_int(va_list* args, SpecOptions* spec_opts, InputStr* source,
   return spec_opts->is_star == false ? read_result : 0;
 }
 
-void write_to_integer_pointer(va_list* args, SpecOptions* spec_opts,
-                              long long unsigned temp_unsigned_destination,
-                              int sign) {
+static void write_to_integer_pointer(
+    va_list* args, SpecOptions* spec_opts,
+    long long unsigned temp_unsigned_destination, int sign) {
   if (spec_opts->is_star == false) {
     if (spec_opts->length == h) {
       short* dest_input_pointer = va_arg(*args, short*);
@@ -513,7 +558,7 @@ void write_to_integer_pointer(va_list* args, SpecOptions* spec_opts,
   }
 }
 
-bool hexadecimal_prefix_follows(InputStr* source) {
+static bool hexadecimal_prefix_follows(InputStr* source) {
   bool hexadecimal_prefix_follows = false;
   if ((s21_strncmp(&source->str[source->curr_ind], "0x", 2) == 0 ||
        s21_strncmp(&source->str[source->curr_ind], "0X", 2) == 0)) {
@@ -522,8 +567,9 @@ bool hexadecimal_prefix_follows(InputStr* source) {
   return hexadecimal_prefix_follows;
 }
 
-int read_hex(InputStr* source, SpecOptions* spec_opts,
-             long long unsigned* dest_input_pointer, bool* matching_failure) {
+static int read_hex(InputStr* source, SpecOptions* spec_opts,
+                    long long unsigned* dest_input_pointer,
+                    bool* matching_failure) {
   s21_size_t base = 16;
   bool weve_read_at_least_once_successfully = false;
   bool hex_reading_failure = false;
@@ -569,9 +615,9 @@ int read_hex(InputStr* source, SpecOptions* spec_opts,
   return weve_read_at_least_once_successfully;
 }
 
-int read_decimal(InputStr* source, SpecOptions* spec_opts,
-                 long long unsigned* dest_input_pointer,
-                 bool* matching_failure) {
+static int read_decimal(InputStr* source, SpecOptions* spec_opts,
+                        long long unsigned* dest_input_pointer,
+                        bool* matching_failure) {
   s21_size_t base = 10;
   bool weve_read_at_least_once_successfully = false;
   bool decimal_reading_failure = false;
@@ -600,8 +646,9 @@ int read_decimal(InputStr* source, SpecOptions* spec_opts,
   return weve_read_at_least_once_successfully;
 }
 
-int read_octal(InputStr* source, SpecOptions* spec_opts,
-               long long unsigned* dest_input_pointer, bool* matching_failure) {
+static int read_octal(InputStr* source, SpecOptions* spec_opts,
+                      long long unsigned* dest_input_pointer,
+                      bool* matching_failure) {
   bool weve_read_at_least_once_successfully = false;
   bool not_octal_but_we_continue_with_decimal = false;
   s21_size_t base = 8;
@@ -637,7 +684,7 @@ int read_octal(InputStr* source, SpecOptions* spec_opts,
   return weve_read_at_least_once_successfully;
 }
 
-bool width_limit_reached(s21_size_t bytes_read, SpecOptions* spec_opts) {
+static bool width_limit_reached(s21_size_t bytes_read, SpecOptions* spec_opts) {
   bool limit_reached = false;
   s21_size_t limit = spec_opts->width;
   if (spec_opts->is_negative || spec_opts->plus_sign_present) {
@@ -682,7 +729,8 @@ static int read_wide_char(va_list* args, InputStr* source,
   return read_result;
 };
 
-int read_narrow_char(va_list* args, InputStr* source, SpecOptions* spec_opts) {
+static int read_narrow_char(va_list* args, InputStr* source,
+                            SpecOptions* spec_opts) {
   int read_result = 0;
   if (spec_opts->is_star == false) {
     char* dest_char_ptr = va_arg(*args, char*);
@@ -693,8 +741,8 @@ int read_narrow_char(va_list* args, InputStr* source, SpecOptions* spec_opts) {
   return read_result;
 };
 
-s21_size_t get_octal_num_length(InputStr* source, SpecOptions* spec_opts,
-                                s21_size_t base) {
+static s21_size_t get_octal_num_length(InputStr* source, SpecOptions* spec_opts,
+                                       s21_size_t base) {
   int num_len_result = 0;
   int temp_curr_ind = source->curr_ind;
   s21_size_t bytes_read = 0;
@@ -711,7 +759,7 @@ s21_size_t get_octal_num_length(InputStr* source, SpecOptions* spec_opts,
   return num_len_result - 1;
 }
 
-bool is_valid_digit(char incoming_char, s21_size_t base) {
+static bool is_valid_digit(char incoming_char, s21_size_t base) {
   bool char_is_valid = false;
   incoming_char = to_lower_char(incoming_char);
   const char* digits = "0123456789abcdef";
@@ -723,7 +771,7 @@ bool is_valid_digit(char incoming_char, s21_size_t base) {
   return char_is_valid;
 }
 
-char to_lower_char(char incoming_char) {
+static char to_lower_char(char incoming_char) {
   char temp_incoming_char;
   if (incoming_char >= 'A' && incoming_char <= 'Z') {
     temp_incoming_char = incoming_char + ('a' - 'A');
@@ -733,18 +781,7 @@ char to_lower_char(char incoming_char) {
   return temp_incoming_char;
 }
 
-// case 'p': {
-//   void** address = va_arg(args, void**);
-//   if (parse_pointer(&input, address)) {
-//     if (!spec_opts.is_star) {
-//       result++;
-//     };
-//     fmt_input.curr_ind++;
-//     // input.curr_ind++;
-//   }
-// } break;
-
-bool n_specifier_follows(InputStr* fmt_input) {
+static bool n_specifier_follows(InputStr* fmt_input) {
   bool it_follows = false;
   s21_size_t fmt_characters_remaining =
       s21_strlen(fmt_input->str) - fmt_input->curr_ind;
@@ -762,7 +799,7 @@ bool n_specifier_follows(InputStr* fmt_input) {
   return it_follows;
 }
 
-bool is_n_star_present(InputStr* fmt_input) {
+static bool is_n_star_present(InputStr* fmt_input) {
   bool star_present = false;
   s21_size_t fmt_characters_remaining =
       s21_strlen(fmt_input->str) - fmt_input->curr_ind;
@@ -776,7 +813,7 @@ bool is_n_star_present(InputStr* fmt_input) {
   return star_present;
 }
 
-bool c_specifier_follows(InputStr* fmt_input) {
+static bool c_specifier_follows(InputStr* fmt_input) {
   bool it_follows = false;
   s21_size_t fmt_characters_remaining =
       s21_strlen(fmt_input->str) - fmt_input->curr_ind;
@@ -800,13 +837,11 @@ bool c_specifier_follows(InputStr* fmt_input) {
   return it_follows;
 }
 
-bool is_end_of_string(InputStr* string_structure) {
+static bool is_end_of_string(InputStr* string_structure) {
   return string_structure->str[string_structure->curr_ind] == '\0';
 }
 
-bool is_end_of_string_char(char input_char) { return input_char == '\0'; }
-
-bool is_space(char input_char) {
+static bool is_space(char input_char) {
   bool result = false;
   char* space_chars = "\t\n\v\f\r ";
   for (s21_size_t i = 0; i < s21_strlen(space_chars); i++) {
@@ -818,24 +853,8 @@ bool is_space(char input_char) {
   return result;
 }
 
-bool is_space_specifier(InputStr* fmt_input) {
+static bool is_space_specifier(InputStr* fmt_input) {
   return is_space(fmt_input->str[fmt_input->curr_ind]);
-}
-
-bool we_continue_processing(InputStr* fmt_input, bool* matching_failure) {
-  bool we_continue = false;
-  if (is_end_of_string(fmt_input) == false && *matching_failure == false) {
-    // printf("\n\ncurr ind %lu\n", source->curr_ind);
-    we_continue = true;
-    // if (is_end_of_string(source) == false || is_space_specifier(fmt_input))
-    // {
-    //   we_continue = true;
-    // } else {
-    //   we_continue =
-    //       n_specifier_follows(fmt_input) || c_specifier_follows(fmt_input);
-    // }
-  }
-  return we_continue;
 }
 
 static void process_space(InputStr* source, InputStr* fmt_input) {
@@ -843,30 +862,13 @@ static void process_space(InputStr* source, InputStr* fmt_input) {
   fmt_input->curr_ind++;
 }
 
-void consume_space(InputStr* source) {
+static void consume_space(InputStr* source) {
   while (is_space(source->str[source->curr_ind])) {
     source->curr_ind++;
   }
 }
 
-void process_initial_space_and_n(va_list* args, InputStr* source,
-                                 InputStr* fmt_input) {
-  while (n_specifier_follows(fmt_input) || is_space_specifier(fmt_input)) {
-    if (is_space_specifier(fmt_input)) {
-      process_space(source, fmt_input);
-    } else if (n_specifier_follows(fmt_input)) {
-      bool n_star_present = is_n_star_present(fmt_input);
-      process_n(args, source, n_star_present);
-      if (n_star_present) {
-        fmt_input->curr_ind += 3;
-      } else {
-        fmt_input->curr_ind += 2;
-      }
-    }
-  }
-}
-
-bool parse_suppression(InputStr* fmt_input) {
+static bool parse_suppression(InputStr* fmt_input) {
   bool star_present = false;
   if (fmt_input->str[fmt_input->curr_ind] == '*') {
     star_present = true;
@@ -920,7 +922,7 @@ static void parse_specifier(InputStr fmt_input, SpecOptions* spec_opts) {
   }
 }
 
-void parse_width(InputStr* fmt_input, SpecOptions* spec_opts) {
+static void parse_width(InputStr* fmt_input, SpecOptions* spec_opts) {
   while (is_valid_digit(fmt_input->str[fmt_input->curr_ind], 10)) {
     spec_opts->width =
         spec_opts->width * 10 + (fmt_input->str[fmt_input->curr_ind] - '0');
@@ -951,7 +953,7 @@ static void parse_length(InputStr* fmt_input, SpecOptions* spec_opts) {
   }
 }
 
-void set_locale_for_wide_chars_sscanf() {
+static void set_locale_for_wide_chars() {
 #if defined(__APPLE__)
   setlocale(LC_ALL, "en_US.UTF-8");
 
@@ -960,32 +962,3 @@ void set_locale_for_wide_chars_sscanf() {
 
 #endif
 }
-
-//   *value = (void*)ptr_value;
-//   return res;  // Success
-// }
-
-// bool format_string_starts_with_char_spec(InputStr* fmt_input) {
-//   bool result = false;
-//   s21_size_t fmt_len = s21_strlen(fmt_input->str);
-
-//   if (fmt_len >= 2) {
-//     if (fmt_input->str[0] == '%' && fmt_input->str[1] == 'c') {
-//       result = true;
-//     }
-//   } else if (fmt_len >= 3) {
-//     if (fmt_input->str[0] == '%' && fmt_input->str[1] == 'l' &&
-//         fmt_input->str[2] == 'c') {
-//       result = true;
-//     } else if (fmt_input->str[0] == '%' && fmt_input->str[1] == '*' &&
-//                fmt_input->str[2] == 'c') {
-//       result = true;
-//     }
-//   } else if (fmt_len >= 4) {
-//     if (fmt_input->str[0] == '%' && fmt_input->str[1] == '*' &&
-//         fmt_input->str[2] == 'l' && fmt_input->str[3] == 'c') {
-//       result = true;
-//     }
-//   }
-//   return result;
-// }
