@@ -33,7 +33,7 @@ END_TEST
 
 START_TEST(test_sscanf_simple_char_p1) {
   char* input_string = "\t\tab \t \n \f";
-  char* format_string = " %*c %*c %n";
+  char* format_string = "%*c %*c %n";
 
   int s21_a = 0;
   int s21_b = 0;
