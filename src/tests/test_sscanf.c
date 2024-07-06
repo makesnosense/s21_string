@@ -331,6 +331,26 @@ START_TEST(test_sscanf_possible_minus_one_p11) {
 }
 END_TEST
 
+START_TEST(test_sscanf_possible_minus_one_p12) {
+  int s21_a = 0;
+
+  int s21_res = 0;
+
+  int lib_a = 0;
+
+  int lib_res = 0;
+
+  lib_res = sscanf("123 ,z", "%i .k", &lib_a);
+  s21_res = s21_sscanf("123 ,z", "%i .k", &s21_a);
+
+  // printf("lib первый чар %d res: %d\n", lib_a, lib_res);
+  // printf("s21 первый чар %d res: %d\n", s21_a, s21_res);
+
+  ck_assert_int_eq(lib_res, s21_res);
+  ck_assert_int_eq(lib_a, s21_a);
+}
+END_TEST
+
 START_TEST(test_sscanf_i_p1) {
   int s21_a = 0;
   int s21_b = 0;
@@ -2545,6 +2565,7 @@ Suite* make_sscanf_suite() {
   tcase_add_test(tc_core, test_sscanf_possible_minus_one_p9);
   tcase_add_test(tc_core, test_sscanf_possible_minus_one_p10);
   tcase_add_test(tc_core, test_sscanf_possible_minus_one_p11);
+  tcase_add_test(tc_core, test_sscanf_possible_minus_one_p12);
 
   tcase_add_test(tc_core, test_sscanf_i_p1);
   tcase_add_test(tc_core, test_sscanf_i_p2);
