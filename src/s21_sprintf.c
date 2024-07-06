@@ -50,23 +50,17 @@ int is_length(char ch) {
 
 void parse_flags(const char** format, SpecOptions* spec_opts) {
   while (is_flag(**format)) {
-    switch (**format) {
-      case '+':
-        spec_opts->flag_plus = 1;
-        break;
-      case '-':
-        spec_opts->flag_minus = 1;
-        spec_opts->flag_zero = 0;
-        break;
-      case ' ':
-        spec_opts->flag_space = 1;
-        break;
-      case '0': {
-        spec_opts->flag_zero = 1;
-      } break;
-      case '#':
-        spec_opts->flag_sharp = 1;
-        break;
+    if (**format == '+') {
+      spec_opts->flag_plus = true;
+    } else if (**format == '-') {
+      spec_opts->flag_minus = true;
+      spec_opts->flag_zero = false;
+    } else if (**format == ' ') {
+      spec_opts->flag_space = true;
+    } else if (**format == '0') {
+      spec_opts->flag_zero = true;
+    } else if (**format == '#') {
+      spec_opts->flag_sharp = true;
     }
     (*format)++;
   }
