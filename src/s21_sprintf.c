@@ -50,25 +50,17 @@ int is_length(char ch) {
 
 void parse_flags(const char** format, SpecOptions* spec_opts) {
   while (is_flag(**format)) {
-    switch (**format) {
-      case '+':
-        spec_opts->flag_plus = 1;
-        break;
-      case '-':
-        spec_opts->flag_minus = 1;
-        spec_opts->flag_zero = 0;
-        break;
-      case ' ':
-        spec_opts->flag_space = 1;
-        break;
-      case '0':
-        if (spec_opts->flag_minus == 0) {
-          spec_opts->flag_zero = 1;
-        }
-        break;
-      case '#':
-        spec_opts->flag_sharp = 1;
-        break;
+    if (**format == '+') {
+      spec_opts->flag_plus = true;
+    } else if (**format == '-') {
+      spec_opts->flag_minus = true;
+      spec_opts->flag_zero = false;
+    } else if (**format == ' ') {
+      spec_opts->flag_space = true;
+    } else if (**format == '0') {
+      spec_opts->flag_zero = true;
+    } else {  // scary as hell, but we check validity of flags in is_flag above
+      spec_opts->flag_sharp = true;
     }
     (*format)++;
   }
@@ -103,67 +95,64 @@ void parse_precision(const char** format, va_list args,
 
 void parse_length(const char** format, SpecOptions* spec_opts) {
   while (is_length(**format)) {
-    switch (**format) {
-      case 'L':
-        spec_opts->length_big_l = 1;
-        break;
-      case 'l':
-        spec_opts->length_l = 1;
-        break;
-      case 'h':
-        spec_opts->length_h = 1;
-        break;
+    if (**format == 'L') {
+      spec_opts->length_big_l = true;
+    } else if (**format == 'l') {
+      spec_opts->length_l = true;
+    } else {
+      spec_opts->length_h = true;
     }
     (*format)++;
   }
 }
 
 void parse_specifier(const char** format, SpecOptions* spec_opts) {
-  if (is_specifier(**format)) {
-    int current_specifier = **format;
-    switch (current_specifier) {
-      case 'c': {
-        spec_opts->specifier = c;
-        break;
+  int current_specifier = **format;
+  switch (current_specifier) {
+    case 'c': {
+      spec_opts->specifier = c;
+      break;
+    }
+    case 'X':
+    case 'p':
+    case 'x': {
+      if (current_specifier == 'X') {
+        spec_opts->specifier = X;
+      } else if (current_specifier == 'x') {
+        spec_opts->specifier = x;
+      } else {
+        spec_opts->specifier = p;
       }
-      case 'X':
-      case 'p':
-      case 'x': {
-        if (current_specifier == 'X') {
-          spec_opts->specifier = X;
-        } else if (current_specifier == 'x') {
-          spec_opts->specifier = x;
-        } else {
-          spec_opts->specifier = p;
-        }
-        spec_opts->is_hexadecimal = true;
-        break;
+      spec_opts->is_hexadecimal = true;
+      break;
+    }
+    case 'o': {
+      spec_opts->specifier = o;
+      break;
+    }
+    case 'f':
+    case 'g':
+    case 'G':
+    case 'e':
+    case 'E': {
+      spec_opts->is_floating_point_number = true;
+      if (current_specifier == 'g') {
+        spec_opts->specifier = g;
+        spec_opts->is_g_spec = true;
+      } else if (current_specifier == 'G') {
+        spec_opts->specifier = G;
+        spec_opts->is_g_spec = true;
+      } else if (current_specifier == 'e') {
+        spec_opts->specifier = e;
+        spec_opts->is_scientific = true;
+      } else if (current_specifier == 'E') {
+        spec_opts->specifier = E;
+        spec_opts->is_scientific = true;
       }
-      case 'o': {
-        spec_opts->specifier = o;
-        break;
-      }
-      case 'f':
-      case 'g':
-      case 'G':
-      case 'e':
-      case 'E': {
-        spec_opts->is_floating_point_number = true;
-        if (current_specifier == 'g') {
-          spec_opts->specifier = g;
-          spec_opts->is_g_spec = true;
-        } else if (current_specifier == 'G') {
-          spec_opts->specifier = G;
-          spec_opts->is_g_spec = true;
-        } else if (current_specifier == 'e') {
-          spec_opts->specifier = e;
-          spec_opts->is_scientific = true;
-        } else if (current_specifier == 'E') {
-          spec_opts->specifier = E;
-          spec_opts->is_scientific = true;
-        }
-        break;
-      }
+      break;
+    }
+    default: {
+      break;
     }
   }
 }
@@ -212,8 +201,9 @@ void process_specifier(char format_char, va_list* args, DestStr* dest,
       dest->str[dest->curr_ind++] = '%';
       break;
     }
-    default:
+    default: {
       break;
+    }
   }
 }
 
@@ -282,10 +272,18 @@ void process_floating_point_number(va_list* args, DestStr* dest,
 #if defined(__linux__)
     spec_opts->is_negative = signbit(input_floating_point_number);
 #endif
-    process_narrow_string("nan", dest, spec_opts);
+    if (spec_opts->specifier == G || spec_opts->specifier == E) {
+      process_narrow_string("NAN", dest, spec_opts);
+    } else {
+      process_narrow_string("nan", dest, spec_opts);
+    }
   } else if (isinf(input_floating_point_number)) {
     spec_opts->is_floating_point_number = false;
-    process_narrow_string("inf", dest, spec_opts);
+    if (spec_opts->specifier == G || spec_opts->specifier == E) {
+      process_narrow_string("INF", dest, spec_opts);
+    } else {
+      process_narrow_string("inf", dest, spec_opts);
+    }
   } else if (spec_opts->is_scientific) {
     process_scientific(dest, input_floating_point_number, spec_opts);
   } else if (spec_opts->is_g_spec) {
@@ -327,15 +325,14 @@ void process_wide_string(va_list* args, DestStr* dest, SpecOptions* spec_opts) {
   calculate_padding(len, spec_opts);
   apply_width(dest, len, spec_opts);
   apply_flags(dest, spec_opts);
-  if (len != (size_t)-1) {
-    char* temp_str = (char*)malloc(len + 1);
-    if (temp_str) {
-      wcstombs(temp_str, input_string, len + 1);
-      s21_strcpy(dest->str + dest->curr_ind, temp_str);
-      dest->curr_ind += len;
-      free(temp_str);
-    }
+  char* temp_str = (char*)malloc(len + 1);
+  if (temp_str) {
+    wcstombs(temp_str, input_string, len + 1);
+    s21_strcpy(dest->str + dest->curr_ind, temp_str);
+    dest->curr_ind += len;
+    free(temp_str);
   }
+
   apply_minus_width(dest, spec_opts);
 }
 
@@ -1041,11 +1038,8 @@ void process_scientific_for_g_spec_not_set_precision(DestStr* dest,
                                                      SpecOptions* spec_opts) {
   int exponent = 0;
 
-  if (input_num > 1) {
-    exponent = calculate_exponent(bank_roundl(input_num));
-  } else {
-    exponent = calculate_exponent(input_num);
-  }
+  exponent = calculate_exponent(bank_roundl(input_num));
+
   input_num = scale_input_to_one_digit(bank_roundl(input_num));
 
   input_num = round_to_n_digits(input_num, MANTISSA_DIGITS);

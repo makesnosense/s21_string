@@ -10,6 +10,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <wchar.h>
+#include <wctype.h>
 
 #include "s21_string.h"
 
@@ -48,123 +49,106 @@ typedef struct InputString {
   const char* str;
   s21_size_t curr_ind;
 } InputStr;
-void process_initial_space_and_n(va_list* args, InputStr* source,
-                                 InputStr* fmt_input);
-void process_foreign_char_in_format(InputStr* source, InputStr* fmt_input,
-                                    bool* matching_failure);
-void process_specifier_sscanf(int* sscanf_result, va_list* args,
+
+static void process_initial_space_and_n(va_list* args, InputStr* source,
+                                        InputStr* fmt_input);
+
+static bool we_continue_processing(InputStr* fmt_input, bool* matching_failure);
+
+static void process_foreign_char_in_format(InputStr* source,
+                                           InputStr* fmt_input,
+                                           bool* matching_failure);
+static void process_specifier(int* sscanf_result, va_list* args,
                               InputStr* source, InputStr* fmt_input,
                               bool* matching_failure);
 
-int consume_specifier(va_list* args, InputStr* source, InputStr* fmt_input,
-                      bool* matching_failure);
+static int consume_specifier(va_list* args, InputStr* source,
+                             InputStr* fmt_input, bool* matching_failure);
 
-bool n_specifier_follows(InputStr* fmt_input);
-bool is_n_star_present(InputStr* fmt_input);
-bool c_specifier_follows(InputStr* fmt_input);
+static void parse_format(InputStr* fmt_input, SpecOptions* spec_opts);
+static void parse_width(InputStr* fmt_input, SpecOptions* spec_opts);
+static bool parse_suppression(InputStr* fmt_input);
+static void parse_length(InputStr* fmt_input, SpecOptions* spec_opts);
+static bool is_specifier(char ch);
+static void parse_specifier(InputStr fmt_input, SpecOptions* spec_opts);
+static void read_next_digit_in_fmt(InputStr fmt_input, SpecOptions* spec_opts);
 
-bool is_end_of_string(InputStr* string_structure);
-bool is_end_of_string_char(char input_char);
-bool is_space(char input_char);
-bool is_space_specifier(InputStr* fmt_input);
+static bool n_specifier_follows(InputStr* fmt_input);
+static bool c_specifier_follows(InputStr* fmt_input);
 
-bool we_continue_processing(InputStr* fmt_input, bool* matching_failure);
+static void process_percent(InputStr* source);
+static void process_space(InputStr* source, InputStr* fmt_input);
+static void consume_space(InputStr* source);
 
-void process_space(InputStr* source, InputStr* fmt_input);
-void consume_space(InputStr* source);
-
-int process_chars_sscanf(va_list* args, InputStr* source,
-                         SpecOptions* spec_opts);
-int read_narrow_char(va_list* args, InputStr* source, SpecOptions* spec_opts);
-
-void process_n(va_list* args, InputStr* source, bool n_star);
-int process_unsigned_sscanf(va_list* args, SpecOptions* spec_opts,
-                            InputStr* source, bool* matching_failure);
-
-int process_int_sscanf(va_list* args, SpecOptions* spec_opts, InputStr* source,
-                       bool* matching_failure);
-int process_float_sscanf(va_list* args, SpecOptions* spec_opts,
-                         InputStr* source);
-int read_float(InputStr* source, long double* dest_input_pointer,
-               SpecOptions* spec_opts);
-
-int process_strings_sscanf(va_list* args, InputStr* source,
-                           SpecOptions* spec_opts);
-
-int read_wide_string(va_list* args, InputStr* source, SpecOptions* spec_opts);
-int read_narrow_string(va_list* args, InputStr* source, SpecOptions* spec_opts);
-
-int read_decimal(InputStr* source, SpecOptions* spec_opts,
-                 long long unsigned* dest_input_pointer,
-                 bool* matching_failure);
-int read_hex(InputStr* source, SpecOptions* spec_opts,
-             long long unsigned* dest_input_pointer, bool* matching_failure);
-int read_octal(InputStr* source, SpecOptions* spec_opts,
-               long long unsigned* dest_input_pointer, bool* matching_failure);
-
-int read_pointer(va_list* args, InputStr* source, SpecOptions* spec_opts);
-
-void parse_width_sscanf(InputStr* fmt_input, SpecOptions* spec_opts);
-
-bool parse_suppression(InputStr* fmt_input);
-
-int source_validity_check(InputStr* source, InputStr* format_input,
+static int process_chars(va_list* args, InputStr* source,
+                         SpecOptions* spec_opts, bool* matching_failure);
+static int read_wide_char(va_list* args, InputStr* source,
                           bool* matching_failure);
+static int read_narrow_char(va_list* args, InputStr* source,
+                            SpecOptions* spec_opts);
 
-int consume_specifier(va_list* args, InputStr* source, InputStr* fmt_input,
+static void process_n(va_list* args, InputStr* source);
+
+static int process_strings(va_list* args, InputStr* source,
+                           SpecOptions* spec_opts);
+static int read_wide_string(va_list* args, InputStr* source,
+                            SpecOptions* spec_opts);
+static int read_narrow_string(va_list* args, InputStr* source,
+                              SpecOptions* spec_opts);
+
+static int read_pointer(va_list* args, InputStr* source,
+                        SpecOptions* spec_opts);
+
+static int process_int(va_list* args, SpecOptions* spec_opts, InputStr* source,
+                       bool* matching_failure);
+static int process_unsigned(va_list* args, SpecOptions* spec_opts,
+                            InputStr* source, bool* matching_failure);
+static int read_decimal(InputStr* source, SpecOptions* spec_opts,
+                        long long unsigned* dest_input_pointer,
+                        bool* matching_failure);
+static int read_hex(InputStr* source, SpecOptions* spec_opts,
+                    long long unsigned* dest_input_pointer,
+                    bool* matching_failure);
+static int read_octal(InputStr* source, SpecOptions* spec_opts,
+                      long long unsigned* dest_input_pointer,
                       bool* matching_failure);
-
-int read_wide_char(va_list* args, InputStr* source, SpecOptions* spec_opts);
-int read_narrow_char(va_list* args, InputStr* source, SpecOptions* spec_opts);
-
-void parse_width_sscanf(InputStr* fmt_input, SpecOptions* spec_opts);
-bool parse_suppression(InputStr* fmt_input);
-void parse_length_sscanf(InputStr* fmt_input, SpecOptions* spec_opts);
-void set_sscanf_base(SpecOptions* spec_opts);
-bool is_sscanf_specifier(char ch);
-void parse_sscanf_specifier(InputStr* fmt_input, SpecOptions* spec_opts);
-
-bool is_valid_digit(char incoming_char, s21_size_t base);
-
-s21_size_t get_octal_num_length(InputStr* source, SpecOptions* spec_opts,
-                                s21_size_t base);
-
-bool width_limit_reached(s21_size_t bytes_read, SpecOptions* spec_opts);
-
-void read_next_digit_in_fmt(InputStr fmt_input, SpecOptions* spec_opts);
-
-void write_to_integer_pointer(va_list* args, SpecOptions* spec_opts,
-                              long long unsigned temp_unsigned_destination,
-                              int sign);
-void write_to_unsigned_pointer(
+static s21_size_t get_octal_num_length(InputStr* source, SpecOptions* spec_opts,
+                                       s21_size_t base);
+static void write_to_unsigned_pointer(
     va_list* args, SpecOptions* spec_opts,
     long long unsigned temp_long_long_unsigned_destination);
-void write_to_floating_point_number_pointer(
+static void write_to_integer_pointer(
+    va_list* args, SpecOptions* spec_opts,
+    long long unsigned temp_unsigned_destination, int sign);
+static bool hexadecimal_prefix_follows(InputStr* source);
+
+static int process_float(va_list* args, SpecOptions* spec_opts,
+                         InputStr* source);
+static bool is_inf(InputStr* source);
+static bool is_nan(InputStr* source);
+static int read_float(InputStr* source, long double* dest_input_pointer,
+                      SpecOptions* spec_opts);
+static int read_whole_part(InputStr* source, long double* int_part,
+                           s21_size_t* bytes_read, SpecOptions* spec_opts);
+static int read_fractional_part(InputStr* source, long double* frac_part,
+                                long long* frac_div, s21_size_t* bytes_read,
+                                SpecOptions* spec_opts);
+static int read_exponent(InputStr* source, int* exponent, int* exponent_sign,
+                         s21_size_t* bytes_read, SpecOptions* spec_opts);
+static void write_to_floating_point_number_pointer(
     va_list* args, SpecOptions* spec_opts,
     long double temp_floating_destination);
 
-char to_lower_char(char incoming_char);
-bool hexadecimal_prefix_follows(InputStr* source);
+static bool is_valid_digit(char incoming_char, s21_size_t base);
 
-void set_locale_for_wide_chars_sscanf();
+static bool width_limit_reached(s21_size_t bytes_read, SpecOptions* spec_opts);
 
-// // Функция для считывания значений из буфера по формату
-// int s21_sscanf(const char *str, const char *format, ...);
+static char to_lower_char(char incoming_char);
 
-// // Функция для чтения строки
-// int read_string(const char** str, char* s, SpecOptions* opts);
+static void set_locale_for_wide_chars();
 
-// // Функция для чтения беззнакового целого числа
-// int read_unsigned_int(const char** str, unsigned int* u,
-// SpecOptions* opts);
-
-// // Функция для чтения вещественного числа
-// int read_float(InputStr* input, float* f, SpecOptions* opts);
-
-// // Функция для чтения шестнадцатеричного числа
-// int read_hex(const char** str, unsigned int* x, SpecOptions*
-// opts);
-
-// int parse_pointer(InputStr* input, void** value);
+static bool is_end_of_string(InputStr* string_structure);
+static bool is_space(char input_char);
+static bool is_space_specifier(InputStr* fmt_input);
 
 #endif  // S21_SSCANF_H_
