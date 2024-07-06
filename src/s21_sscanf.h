@@ -81,8 +81,9 @@ static void process_space(InputStr* source, InputStr* fmt_input);
 static void consume_space(InputStr* source);
 
 static int process_chars(va_list* args, InputStr* source,
-                         SpecOptions* spec_opts);
-static int read_wide_char(va_list* args, InputStr* source);
+                         SpecOptions* spec_opts, bool* matching_failure);
+static int read_wide_char(va_list* args, InputStr* source,
+                          bool* matching_failure);
 static int read_narrow_char(va_list* args, InputStr* source,
                             SpecOptions* spec_opts);
 
