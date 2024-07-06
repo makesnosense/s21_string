@@ -205,8 +205,9 @@ void process_specifier(char format_char, va_list* args, DestStr* dest,
       dest->str[dest->curr_ind++] = '%';
       break;
     }
-    default:
+    default: {
       break;
+    }
   }
 }
 
@@ -328,15 +329,14 @@ void process_wide_string(va_list* args, DestStr* dest, SpecOptions* spec_opts) {
   calculate_padding(len, spec_opts);
   apply_width(dest, len, spec_opts);
   apply_flags(dest, spec_opts);
-  if (len != (size_t)-1) {
-    char* temp_str = (char*)malloc(len + 1);
-    if (temp_str) {
-      wcstombs(temp_str, input_string, len + 1);
-      s21_strcpy(dest->str + dest->curr_ind, temp_str);
-      dest->curr_ind += len;
-      free(temp_str);
-    }
+  char* temp_str = (char*)malloc(len + 1);
+  if (temp_str) {
+    wcstombs(temp_str, input_string, len + 1);
+    s21_strcpy(dest->str + dest->curr_ind, temp_str);
+    dest->curr_ind += len;
+    free(temp_str);
   }
+
   apply_minus_width(dest, spec_opts);
 }
 
