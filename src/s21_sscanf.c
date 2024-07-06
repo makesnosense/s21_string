@@ -691,15 +691,14 @@ static int process_chars(va_list* args, InputStr* source,
                          SpecOptions* spec_opts) {
   int specifier_result = 0;
   if (spec_opts->length == l) {
-    specifier_result = read_wide_char(args, source, spec_opts);
+    specifier_result = read_wide_char(args, source);
   } else {
     specifier_result = read_narrow_char(args, source, spec_opts);
   }
   return specifier_result;
 }
 
-static int read_wide_char(va_list* args, InputStr* source,
-                          SpecOptions* spec_opts) {
+static int read_wide_char(va_list* args, InputStr* source) {
   int read_result = 0;
   wchar_t* dest_wchar_ptr = va_arg(*args, wchar_t*);
   wchar_t wide_char = 0;
