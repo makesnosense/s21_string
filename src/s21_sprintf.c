@@ -1038,11 +1038,8 @@ void process_scientific_for_g_spec_not_set_precision(DestStr* dest,
                                                      SpecOptions* spec_opts) {
   int exponent = 0;
 
-  if (input_num > 1) {
-    exponent = calculate_exponent(bank_roundl(input_num));
-  } else {
-    exponent = calculate_exponent(input_num);
-  }
+  exponent = calculate_exponent(bank_roundl(input_num));
+
   input_num = scale_input_to_one_digit(bank_roundl(input_num));
 
   input_num = round_to_n_digits(input_num, MANTISSA_DIGITS);
