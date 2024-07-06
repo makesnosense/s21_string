@@ -243,6 +243,16 @@ START_TEST(test_sprintf_float_width_precision_flag) {
 }
 END_TEST
 
+START_TEST(test_sprintf_float_not_implemented) {
+  char lib_res[100];
+
+  float sd = -3.0F;
+
+  int res = s21_sprintf(lib_res, "%F", sd);
+  ck_assert_int_eq(res, 2);
+}
+END_TEST
+
 START_TEST(test_sprintf_unsigned) {
   char lib_res[1000];
   char s21_res[1000];
@@ -2884,6 +2894,7 @@ void add_basic_tests(TCase* tc) {
   tcase_add_test(tc, test_sprintf_very_float);
   tcase_add_test(tc, test_sprintf_a_bit_float);
   tcase_add_test(tc, test_sprintf_float_width_precision_flag);
+  tcase_add_test(tc, test_sprintf_float_not_implemented);
   tcase_add_test(tc, test_sprintf_unsigned);
   tcase_add_test(tc, test_sprintf_unsigned_problematic);
   tcase_add_test(tc, test_sprintf_long_doubles);
