@@ -701,9 +701,6 @@ static int process_chars(va_list* args, InputStr* source,
 static int read_wide_char(va_list* args, InputStr* source,
                           SpecOptions* spec_opts) {
   int read_result = 0;
-  if (spec_opts->width) {
-    ;
-  }
   wchar_t* dest_wchar_ptr = va_arg(*args, wchar_t*);
   wchar_t wide_char = 0;
   int len = mbtowc(&wide_char, &source->str[source->curr_ind], MB_CUR_MAX);
@@ -713,6 +710,11 @@ static int read_wide_char(va_list* args, InputStr* source,
     source->curr_ind += len;
     read_result++;
   }
+#if defined(__APPLE__)
+  if (len == -1) {
+    source->curr_ind++;
+  }
+#endif
 
   return read_result;
 };
