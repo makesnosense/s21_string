@@ -784,11 +784,11 @@ static bool n_specifier_follows(InputStr* fmt_input) {
       it_follows = true;
     }
   }
-  if (fmt_characters_remaining >= 3) {
-    if (s21_strncmp(&fmt_input->str[fmt_input->curr_ind], "%*n", 3) == 0) {
-      it_follows = true;
-    }
-  }
+  // if (fmt_characters_remaining >= 3) {
+  //   if (s21_strncmp(&fmt_input->str[fmt_input->curr_ind], "%*n", 3) == 0) {
+  //     it_follows = true;
+  //   }
+  // }
   return it_follows;
 }
 
