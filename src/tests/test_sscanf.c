@@ -2795,7 +2795,7 @@ void add_unsigned_tests(TCase* tc) {
   tcase_add_test(tc, test_sscanf_overflow_short_unsigned);
 }
 
-void add_only_linux_tests(TCase* tc) {
+void add_linux_only_tests(TCase* tc) {
   tcase_add_test(tc, test_sscanf_width_p2_linux_only);
   tcase_add_test(tc, test_sscanf_width_p2_1_linux_only);
   tcase_add_test(tc, test_sscanf_width_p3_linux_only);
@@ -2829,7 +2829,7 @@ Suite* make_sscanf_suite() {
   add_unsigned_tests(tc_core);
   add_pointer_tests(tc_core);
 #if defined(__linux__)
-  add_only_linux_tests(tc_core);
+  add_linux_only_tests(tc_core);
 #endif
 
   suite_add_tcase(sscanf_suite, tc_core);
