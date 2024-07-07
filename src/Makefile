@@ -4,14 +4,13 @@ CFLAGS = -Wall -Wextra -Werror -std=c11
 COVERAGE_FLAGS = -fprofile-arcs -ftest-coverage
 TESTFLAGS:= -lcheck -lm
 ADDITIONAL_TEST_FLAGS = 
-# ADDITIONAL_TEST_FLAGS = -lsubunit
 
 
 
 ifeq ($(shell uname),Darwin)
 	GCOVR_THEME = --html-theme github.dark-green
 else
-	TESTFLAGS += -lm
+	ADDITIONAL_TEST_FLAGS += -lsubunit
 endif
 
 TESTS_DIR = tests
