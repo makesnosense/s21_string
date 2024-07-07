@@ -6,7 +6,6 @@ TESTFLAGS:= -lcheck -lm
 ADDITIONAL_TEST_FLAGS = 
 DISTRO:=
 
-
 ifeq ($(shell uname),Darwin)
 	GCOVR_THEME = --html-theme github.dark-green
 else
