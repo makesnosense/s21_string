@@ -2,7 +2,11 @@
 
 CFLAGS = -Wall -Wextra -Werror -std=c11
 COVERAGE_FLAGS = -fprofile-arcs -ftest-coverage
-TESTFLAGS:= -lcheck
+TESTFLAGS:= -lcheck -lm
+ADDITIONAL_TEST_FLAGS = 
+# ADDITIONAL_TEST_FLAGS = -lsubunit
+
+
 
 ifeq ($(shell uname),Darwin)
 	GCOVR_THEME = --html-theme github.dark-green
@@ -31,9 +35,9 @@ gcov_report: clean build_tests test
 	rm -f *.gcda *.gcno *.gcov
 
 build_tests: CFLAGS += $(COVERAGE_FLAGS)
-build_tests: CFLAGS += $(TESTFLAGS)
+build_tests: TESTFLAGS += $(ADDITIONAL_TEST_FLAGS)
 build_tests: clean  $(TESTS_SRC_FILES) $(STRING_LIB)
-	$(CC) $(CFLAGS) $(TESTS_SRC_FILES) $(STRING_LIB) -o run_tests
+	$(CC) $(CFLAGS) $(TESTS_SRC_FILES) $(STRING_LIB) -o run_tests $(TESTFLAGS)
 
 $(STRING_LIB): $(STRING_OBJ_FILES)
 	ar rcs $@ $^ 
