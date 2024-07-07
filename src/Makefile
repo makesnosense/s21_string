@@ -1,16 +1,17 @@
 СС = gcc
-# CFLAGS = -std=c11 -fprofile-arcs -ftest-coverage
-CFLAGS = -Wall -Wextra -Werror -std=c11 -fprofile-arcs -ftest-coverage
+
+CFLAGS = -Wall -Wextra -Werror -std=c11
+COVERAGE_FLAGS = -fprofile-arcs -ftest-coverage
 TESTFLAGS:= -lcheck
 
 ifeq ($(shell uname),Darwin)
 	GCOVR_THEME = --html-theme github.dark-green
 else
-    TESTFLAGS += $(shell pkg-config --libs check) -lm
+	TESTFLAGS += -lm
 endif
 
 TESTS_DIR = tests
-TESTS_SRC_FILES = $(filter-out $(TESTS_DIR)/test.c, $(wildcard $(TESTS_DIR)/*.c))
+TESTS_SRC_FILES = $(wildcard $(TESTS_DIR)/*.c)
 GCOV_REPORT_DIR = gcov_report
 
 STRING_SRC_FILES = $(wildcard *.c)
@@ -18,8 +19,7 @@ STRING_OBJ_DIR = object_files
 STRING_OBJ_FILES = $(patsubst %.c,$(STRING_OBJ_DIR)/%.o,$(STRING_SRC_FILES))
 STRING_LIB = s21_string.a
 
-run: clean build_tests
-	./run_tests
+all: $(STRING_LIB)
 
 test: clean build_tests
 	./run_tests
@@ -30,8 +30,10 @@ gcov_report: clean build_tests test
 	@open $(GCOV_REPORT_DIR)/gcov_report.html
 	rm -f *.gcda *.gcno *.gcov
 
-build_tests: $(TESTS_SRC_FILES) $(STRING_LIB)
-	$(CC) $(CFLAGS) $^ -o run_tests $(TESTFLAGS)
+build_tests: CFLAGS += $(COVERAGE_FLAGS)
+build_tests: CFLAGS += $(TESTFLAGS)
+build_tests: clean  $(TESTS_SRC_FILES) $(STRING_LIB)
+	$(CC) $(CFLAGS) $(TESTS_SRC_FILES) $(STRING_LIB) -o run_tests
 
 $(STRING_LIB): $(STRING_OBJ_FILES)
 	ar rcs $@ $^ 
