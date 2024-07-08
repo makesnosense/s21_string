@@ -35,5 +35,6 @@ Suite* make_to_upper_suite();
 Suite* make_to_lower_suite();
 Suite* make_sprintf_suite();
 Suite* make_sscanf_suite();
+Suite* make_external_suite();
 
 #endif
