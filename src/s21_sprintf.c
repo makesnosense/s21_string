@@ -138,11 +138,11 @@ void parse_specifier(const char** format, SpecOptions* spec_opts) {
     } else if (c_spec == 'E') {
       spec_opts->specifier = E;
       spec_opts->is_scientific = true;
-    } else if (c_spec == 'd' || c_spec == 'i') {
-      spec_opts->is_decimal_integer = true;
-    } else if (c_spec == 'u') {
-      spec_opts->specifier = u;
     }
+  } else if (c_spec == 'd' || c_spec == 'i') {
+    spec_opts->is_decimal_integer = true;
+  } else if (c_spec == 'u') {
+    spec_opts->specifier = u;
   }
 }
 
@@ -695,6 +695,19 @@ void whole_to_str(DestStr* dest, long double num, SpecOptions* spec_opts) {
 
     // Если ширина больше длины числа, добавляем пробелы в начало
     apply_width(dest, num_len, spec_opts);
+    if ((spec_opts->is_decimal_integer || spec_opts->specifier == u ||
+         spec_opts->specifier == o || spec_opts->specifier == X ||
+         spec_opts->specifier == x) &&
+        spec_opts->precision_set == true) {
+      s21_size_t prec_corr = 0;
+      if (spec_opts->precision > num_len) {
+        prec_corr = spec_opts->precision - num_len;
+      } else {
+        prec_corr = 0;
+      }
+
+      add_zeros_to_destination(dest, prec_corr);
+    }
   }
 
   if (!spec_opts->flag_zero && !spec_opts->is_g_spec &&
