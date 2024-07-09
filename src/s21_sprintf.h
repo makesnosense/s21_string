@@ -62,6 +62,7 @@ typedef struct SpecifierOptions {
   bool precision_set;  // Есть ли precision у спецификатора
   bool is_zero;        // ноль на вход
   bool is_negative;    // Является ли отр. числом
+  bool is_decimal_integer;
   bool is_floating_point_number;  // Является ли float/double
   bool is_hexadecimal;
   bool is_g_spec;
@@ -98,6 +99,7 @@ void apply_flags(DestStr* dest, SpecOptions* spec_opts);
 void calculate_padding(s21_size_t num_len, SpecOptions* spec_opts);
 void calculate_padding_not_ge_spec(s21_size_t num_len, SpecOptions* spec_opts);
 void calculate_padding_ge_spec(s21_size_t num_len, SpecOptions* spec_opts);
+void calculate_padding_dioux(s21_size_t num_len, SpecOptions* spec_opts);
 
 void apply_width(DestStr* dest, s21_size_t num_len, SpecOptions* spec_opts);
 void apply_minus_width(DestStr* dest, SpecOptions* spec_opts);
@@ -182,6 +184,7 @@ long double scale_to_one_digit_significand(long double input_num);
 void remove_trailing_zeros(DestStr* dest, SpecOptions* spec_opts);
 long double bank_roundl(long double input_num);
 bool is_zero(long double input_num);
+bool is_dioux(SpecOptions* spec_opts);
 
 void set_locale_for_wide_chars();
 
