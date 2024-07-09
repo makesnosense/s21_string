@@ -113,6 +113,7 @@ void parse_specifier(const char** format, SpecOptions* spec_opts) {
   if (c_spec == 'c') {
     spec_opts->specifier = c;
   } else if (c_spec == 'X' || c_spec == 'p' || c_spec == 'x') {
+    spec_opts->is_unsigned_type = true;
     spec_opts->is_hexadecimal = true;
     if (c_spec == 'X') {
       spec_opts->specifier = X;
@@ -122,6 +123,7 @@ void parse_specifier(const char** format, SpecOptions* spec_opts) {
       spec_opts->specifier = p;
     }
   } else if (c_spec == 'o') {
+    spec_opts->is_unsigned_type = true;
     spec_opts->specifier = o;
   } else if (c_spec == 'f' || c_spec == 'g' || c_spec == 'G' || c_spec == 'e' ||
              c_spec == 'E') {
@@ -142,6 +144,7 @@ void parse_specifier(const char** format, SpecOptions* spec_opts) {
   } else if (c_spec == 'd' || c_spec == 'i') {
     spec_opts->is_decimal_integer = true;
   } else if (c_spec == 'u') {
+    spec_opts->is_unsigned_type = true;
     spec_opts->specifier = u;
   }
 }
@@ -555,9 +558,9 @@ void apply_width(DestStr* dest, s21_size_t num_len, SpecOptions* spec_opts) {
 }
 
 void apply_flags(DestStr* dest, SpecOptions* spec_opts) {
-  if (spec_opts->is_negative) {
+  if (spec_opts->is_negative && spec_opts->is_unsigned_type == false) {
     dest->str[dest->curr_ind++] = '-';
-  } else if (spec_opts->flag_plus) {
+  } else if (spec_opts->flag_plus && spec_opts->is_unsigned_type == false) {
     dest->str[dest->curr_ind++] = '+';
   } else if (spec_opts->flag_space) {
     dest->str[dest->curr_ind++] = ' ';
