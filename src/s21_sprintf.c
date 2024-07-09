@@ -480,10 +480,10 @@ void calculate_padding_dioux(s21_size_t num_len, SpecOptions* spec_opts) {
       sharp_corr = 1;
     }
   }
-
-  flag_corr =
-      spec_opts->flag_plus || spec_opts->flag_space || spec_opts->is_negative;
-
+  if (spec_opts->is_unsigned_type == false) {
+    flag_corr =
+        spec_opts->flag_plus || spec_opts->flag_space || spec_opts->is_negative;
+  }
   if (spec_opts->precision > num_len) {
     prec_corr = spec_opts->precision - num_len;
   } else {

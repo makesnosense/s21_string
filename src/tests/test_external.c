@@ -900,15 +900,16 @@ END_TEST
 START_TEST(sprintf_test19) {
   char str1[200];
   char str2[200];
-  char *format = "%6o Privet %8o Privet %2o Privet %-5o MIR %+8o";
+  char *format = "%6o| Privet |%8o| Privet |%2o| Privet |%-5o| MIR |%+8o";
   int a = 3015;
   int b = -712;
   int c = 99;
   int d = -2939;
   int e = 0123;
-  ck_assert_int_eq(s21_sprintf(str1, format, a, b, c, d, e),
-                   sprintf(str2, format, a, b, c, d, e));
+  int s21_res = s21_sprintf(str1, format, a, b, c, d, e);
+  int lib_res = sprintf(str2, format, a, b, c, d, e);
   ck_assert_str_eq(str1, str2);
+  ck_assert_int_eq(s21_res, lib_res);
 }
 END_TEST
 
