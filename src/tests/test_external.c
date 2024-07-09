@@ -770,7 +770,7 @@ END_TEST
 START_TEST(sprintf_test10) {
   char str1[100] = {0};
   char str2[100] = {0};
-  char *format = "|%-10.5c|Test |%+3.3d| Test %-5.8d Test %-8d Test %-d";
+  char *format = "|%-010.5d|Test |%+3.3d| Test %-5.8d Test %-8d Test %-d";
   int a = 56;
   int b = -47;
   int c = +43436;
