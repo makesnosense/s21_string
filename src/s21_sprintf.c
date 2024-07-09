@@ -109,52 +109,39 @@ void parse_length(const char** format, SpecOptions* spec_opts) {
 }
 
 void parse_specifier(const char** format, SpecOptions* spec_opts) {
-  int current_specifier = **format;
-  switch (current_specifier) {
-    case 'c': {
-      spec_opts->specifier = c;
-      break;
+  int c_spec = **format;
+  if (c_spec == 'c') {
+    spec_opts->specifier = c;
+  } else if (c_spec == 'X' || c_spec == 'p' || c_spec == 'x') {
+    spec_opts->is_hexadecimal = true;
+    if (c_spec == 'X') {
+      spec_opts->specifier = X;
+    } else if (c_spec == 'x') {
+      spec_opts->specifier = x;
+    } else {
+      spec_opts->specifier = p;
     }
-    case 'X':
-    case 'p':
-    case 'x': {
-      if (current_specifier == 'X') {
-        spec_opts->specifier = X;
-      } else if (current_specifier == 'x') {
-        spec_opts->specifier = x;
-      } else {
-        spec_opts->specifier = p;
-      }
-      spec_opts->is_hexadecimal = true;
-      break;
-    }
-    case 'o': {
-      spec_opts->specifier = o;
-      break;
-    }
-    case 'f':
-    case 'g':
-    case 'G':
-    case 'e':
-    case 'E': {
-      spec_opts->is_floating_point_number = true;
-      if (current_specifier == 'g') {
-        spec_opts->specifier = g;
-        spec_opts->is_g_spec = true;
-      } else if (current_specifier == 'G') {
-        spec_opts->specifier = G;
-        spec_opts->is_g_spec = true;
-      } else if (current_specifier == 'e') {
-        spec_opts->specifier = e;
-        spec_opts->is_scientific = true;
-      } else if (current_specifier == 'E') {
-        spec_opts->specifier = E;
-        spec_opts->is_scientific = true;
-      }
-      break;
-    }
-    default: {
-      break;
+  } else if (c_spec == 'o') {
+    spec_opts->specifier = o;
+  } else if (c_spec == 'f' || c_spec == 'g' || c_spec == 'G' || c_spec == 'e' ||
+             c_spec == 'E') {
+    spec_opts->is_floating_point_number = true;
+    if (c_spec == 'g') {
+      spec_opts->specifier = g;
+      spec_opts->is_g_spec = true;
+    } else if (c_spec == 'G') {
+      spec_opts->specifier = G;
+      spec_opts->is_g_spec = true;
+    } else if (c_spec == 'e') {
+      spec_opts->specifier = e;
+      spec_opts->is_scientific = true;
+    } else if (c_spec == 'E') {
+      spec_opts->specifier = E;
+      spec_opts->is_scientific = true;
+    } else if (c_spec == 'd' || c_spec == 'i') {
+      spec_opts->is_decimal_integer = true;
+    } else if (c_spec == 'u') {
+      spec_opts->specifier = u;
     }
   }
 }
@@ -472,6 +459,20 @@ void calculate_padding(s21_size_t num_len, SpecOptions* spec_opts) {
     calculate_padding_not_ge_spec(num_len, spec_opts);
   }
 }
+
+// void calculate_padding_dioux(s21_size_t num_len, SpecOptions* spec_opts) {
+//   int flag_corr = 0;  // Коррекция кол-ва пробелов
+
+//   int padding_to_add = 0;
+
+//   flag_corr =
+//       spec_opts->flag_plus || spec_opts->flag_space ||
+//       spec_opts->is_negative;
+
+//   padding_to_add = spec_opts->width - num_len - flag_corr;
+
+//   spec_opts->padding = (padding_to_add > 0) ? (s21_size_t)padding_to_add : 0;
+// }
 
 void calculate_padding_not_ge_spec(s21_size_t num_len, SpecOptions* spec_opts) {
   int flag_corr = 0;  // Коррекция кол-ва пробелов

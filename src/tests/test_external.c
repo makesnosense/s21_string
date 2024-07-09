@@ -770,7 +770,7 @@ END_TEST
 START_TEST(sprintf_test10) {
   char str1[100] = {0};
   char str2[100] = {0};
-  char *format = "|%-10.5c|Test |%+3.3d| Test %-5.8d Test %-8d Test %-d";
+  char *format = "|%-010.5d|Test |%+3.3d| Test %-5.8d Test %-8d Test %-d";
   int a = 56;
   int b = -47;
   int c = +43436;
@@ -779,8 +779,8 @@ START_TEST(sprintf_test10) {
 
   int s21_res = s21_sprintf(str1, format, a, b, c, d, e);
   int lib_res = sprintf(str2, format, a, b, c, d, e);
-  // printf("\n\ns21 %s\n", str1);
-  // printf("\n\nlib %s\n", str2);
+  printf("\n\ns21 %s\n", str1);
+  printf("\n\nlib %s\n", str2);
 
   ck_assert_int_eq(s21_res, lib_res);
   ck_assert_pstr_eq(str1, str2);
