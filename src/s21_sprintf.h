@@ -66,6 +66,7 @@ typedef struct SpecifierOptions {
   bool is_floating_point_number;  // Является ли float/double
   bool is_hexadecimal;
   bool is_g_spec;
+  bool is_unsigned_type;
   Specifier specifier;
   bool is_scientific;
 } SpecOptions;
