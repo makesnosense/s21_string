@@ -184,6 +184,7 @@ long double scale_to_one_digit_significand(long double input_num);
 void remove_trailing_zeros(DestStr* dest, SpecOptions* spec_opts);
 long double bank_roundl(long double input_num);
 bool is_zero(long double input_num);
+bool is_dioux(SpecOptions* spec_opts);
 
 void set_locale_for_wide_chars();
 
