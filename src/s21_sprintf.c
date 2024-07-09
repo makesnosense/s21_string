@@ -458,14 +458,14 @@ void add_zeros_to_destination(DestStr* dest, s21_size_t n_zeros_to_add) {
 void calculate_padding(s21_size_t num_len, SpecOptions* spec_opts) {
   if (spec_opts->is_g_spec || spec_opts->is_scientific) {
     calculate_padding_ge_spec(num_len, spec_opts);
-  } else if (is_dioux(spec_opts) == true) {
-    calculate_padding_dioux(num_len, spec_opts);
+  } else if (is_diopux(spec_opts) == true) {
+    calculate_padding_diopux(num_len, spec_opts);
   } else {
     calculate_padding_not_ge_spec(num_len, spec_opts);
   }
 }
 
-void calculate_padding_dioux(s21_size_t num_len, SpecOptions* spec_opts) {
+void calculate_padding_diopux(s21_size_t num_len, SpecOptions* spec_opts) {
   int flag_corr = 0;  // Коррекция кол-ва пробелов
   int prec_corr = 0;  // Коррекция кол-ва пробелов
   int sharp_corr = 0;
@@ -479,7 +479,10 @@ void calculate_padding_dioux(s21_size_t num_len, SpecOptions* spec_opts) {
     } else if (spec_opts->specifier == o && spec_opts->is_zero == false) {
       sharp_corr = 1;
     }
+  } else if (spec_opts->specifier == p) {
+    sharp_corr = 2;
   }
+
   if (spec_opts->is_unsigned_type == false) {
     flag_corr =
         spec_opts->flag_plus || spec_opts->flag_space || spec_opts->is_negative;
@@ -510,8 +513,6 @@ void calculate_padding_not_ge_spec(s21_size_t num_len, SpecOptions* spec_opts) {
     } else if (spec_opts->specifier == o && spec_opts->is_zero == false) {
       sharp_corr = 1;
     }
-  } else if (spec_opts->specifier == p) {
-    sharp_corr = 2;
   }
 
   flag_corr =
@@ -681,10 +682,10 @@ void apply_minus_width(DestStr* dest, SpecOptions* spec_opts) {
   }
 }
 
-bool is_dioux(SpecOptions* spec_opts) {
+bool is_diopux(SpecOptions* spec_opts) {
   bool result = (spec_opts->is_decimal_integer || spec_opts->specifier == u ||
                  spec_opts->specifier == o || spec_opts->specifier == X ||
-                 spec_opts->specifier == x);
+                 spec_opts->specifier == x || spec_opts->specifier == p);
 
   return result;
 }
@@ -711,7 +712,7 @@ void whole_to_str(DestStr* dest, long double num, SpecOptions* spec_opts) {
     apply_flags(dest, spec_opts);
   }
 
-  if (is_dioux(spec_opts) == true && spec_opts->precision_set == true) {
+  if (is_diopux(spec_opts) == true && spec_opts->precision_set == true) {
     s21_size_t prec_corr = 0;
     if (spec_opts->precision > num_len) {
       prec_corr = spec_opts->precision - num_len;
@@ -1219,6 +1220,18 @@ void pointer_to_str(DestStr* dest, void* ptr, SpecOptions* spec_opts) {
   apply_flags(dest, spec_opts);
   dest->str[dest->curr_ind++] = '0';
   dest->str[dest->curr_ind++] = 'x';
+
+  if (is_diopux(spec_opts) == true && spec_opts->precision_set == true) {
+    s21_size_t prec_corr = 0;
+    s21_size_t pointer_len = get_num_length(address, spec_opts);
+    if (spec_opts->precision > pointer_len) {
+      prec_corr = spec_opts->precision - pointer_len;
+    } else {
+      prec_corr = 0;
+    }
+
+    add_zeros_to_destination(dest, prec_corr);
+  }
 
   itoa(dest, address, spec_opts);
 
