@@ -67,7 +67,8 @@ void parse_flags(const char** format, SpecOptions* spec_opts) {
 }
 
 void parse_width(const char** format, va_list args, SpecOptions* spec_opts) {
-  while (**format != '.' && !is_specifier(**format) && !is_length(**format)) {
+  while (**format != '.' && !is_specifier(**format) && !is_length(**format) &&
+         (isdigit(**format) || **format == '*')) {
     if (isdigit(**format)) {
       spec_opts->width = spec_opts->width * 10 + (**format - '0');
     } else if (**format == '*') {
@@ -79,7 +80,8 @@ void parse_width(const char** format, va_list args, SpecOptions* spec_opts) {
 
 void parse_precision(const char** format, va_list args,
                      SpecOptions* spec_opts) {
-  while (!is_specifier(**format) && !is_length(**format)) {
+  while (!is_specifier(**format) && !is_length(**format) &&
+         ((isdigit(**format) || **format == '*') || **format == '.')) {
     if (isdigit(**format)) {
       spec_opts->precision = spec_opts->precision * 10 + (**format - '0');
       spec_opts->precision_set = 1;
@@ -159,51 +161,56 @@ void parse_specifier(const char** format, SpecOptions* spec_opts) {
 
 void process_specifier(char format_char, va_list* args, DestStr* dest,
                        SpecOptions* spec_opts) {
-  switch (format_char) {
-    case 'c': {
-      process_chars(args, dest, spec_opts);
-      break;
+  if (is_specifier(format_char) == true) {
+    // printf("\n\nhere %c\n\n", format_char);
+    switch (format_char) {
+      case 'c': {
+        process_chars(args, dest, spec_opts);
+        break;
+      }
+      case 's': {
+        process_strings(args, dest, spec_opts);
+        break;
+      }
+      case 'i':
+      case 'd': {
+        process_int(args, dest, spec_opts);
+        break;
+      }
+      case 'x':
+      case 'X':
+      case 'o':
+      case 'u': {
+        process_unsigned(args, dest, spec_opts);
+        break;
+      }
+      case 'n': {
+        int* counter_n = va_arg(*args, int*);
+        *counter_n = s21_strlen(dest->str);
+        break;
+      }
+      case 'f':
+      case 'e':
+      case 'E':
+      case 'g':
+      case 'G': {
+        process_floating_point_number(args, dest, spec_opts);
+        break;
+      }
+      case 'p': {
+        process_pointer(args, dest, spec_opts);
+        break;
+      }
+      case '%': {
+        dest->str[dest->curr_ind++] = '%';
+        break;
+      }
+      default: {
+        break;
+      }
     }
-    case 's': {
-      process_strings(args, dest, spec_opts);
-      break;
-    }
-    case 'i':
-    case 'd': {
-      process_int(args, dest, spec_opts);
-      break;
-    }
-    case 'x':
-    case 'X':
-    case 'o':
-    case 'u': {
-      process_unsigned(args, dest, spec_opts);
-      break;
-    }
-    case 'n': {
-      int* counter_n = va_arg(*args, int*);
-      *counter_n = s21_strlen(dest->str);
-      break;
-    }
-    case 'f':
-    case 'e':
-    case 'E':
-    case 'g':
-    case 'G': {
-      process_floating_point_number(args, dest, spec_opts);
-      break;
-    }
-    case 'p': {
-      process_pointer(args, dest, spec_opts);
-      break;
-    }
-    case '%': {
-      dest->str[dest->curr_ind++] = '%';
-      break;
-    }
-    default: {
-      break;
-    }
+  } else {
+    return;
   }
 }
 
@@ -311,12 +318,16 @@ void process_strings(va_list* args, DestStr* dest, SpecOptions* spec_opts) {
 void process_narrow_string(char* input_string, DestStr* dest,
                            SpecOptions* spec_opts) {
   s21_size_t string_length = s21_strlen(input_string);
-  calculate_padding(string_length, spec_opts);
-  apply_width(dest, string_length, spec_opts);
-  apply_flags(dest, spec_opts);
-  s21_strcpy(dest->str + dest->curr_ind, input_string);
-  dest->curr_ind += s21_strlen(input_string);
-  apply_minus_width(dest, spec_opts);
+  if (input_string == 0x0) {
+    ;
+  } else {
+    calculate_padding(string_length, spec_opts);
+    apply_width(dest, string_length, spec_opts);
+    apply_flags(dest, spec_opts);
+    s21_strcpy(dest->str + dest->curr_ind, input_string);
+    dest->curr_ind += s21_strlen(input_string);
+    apply_minus_width(dest, spec_opts);
+  }
 }
 
 void process_wide_string(va_list* args, DestStr* dest, SpecOptions* spec_opts) {

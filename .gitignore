@@ -15,3 +15,7 @@ src/s21_sscanf_dir/
 CPPLINT.cfg
 
 clang_all.sh
+misc/eng/images/GOTO.png
+src/tests/test/a.out
+src/tests/test/main.c
+src/logfile.txt
