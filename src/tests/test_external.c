@@ -11899,7 +11899,7 @@ Suite *make_external_suite() {
   tcase_add_test(tc_act, machelch_sprintf_x_test1);
   tcase_add_test(tc_act, machelch_sprintf_x_test2);
   tcase_add_test(tc_act, machelch_sprintf_u_test1);
-  tcase_add_test(tc_core, machelch_sprintf_error_test1);  // seg
+  tcase_add_test(tc_act, machelch_sprintf_error_test1);  // seg
   tcase_add_test(tc_act, sscanf_EOF1);
   tcase_add_test(tc_act, sscanf_EOF2);
   tcase_add_test(tc_act, sscanf_EOF3);
@@ -12153,7 +12153,7 @@ Suite *make_external_suite() {
   tcase_add_test(tc_act, sprintf_35_f);
   tcase_add_test(tc_act, sprintf_36_f);
   tcase_add_test(tc_act, sprintf_37_f);
-  tcase_add_test(tc_core, sprintf_38_f);  // seg
+  tcase_add_test(tc_act, sprintf_38_f);  // seg
   tcase_add_test(tc_act, sprintf_39_f);
   tcase_add_test(tc_act, sprintf_40_f);
   tcase_add_test(tc_act, sprintf_41_f);

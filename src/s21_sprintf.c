@@ -161,56 +161,51 @@ void parse_specifier(const char** format, SpecOptions* spec_opts) {
 
 void process_specifier(char format_char, va_list* args, DestStr* dest,
                        SpecOptions* spec_opts) {
-  if (is_specifier(format_char) == true) {
-    // printf("\n\nhere %c\n\n", format_char);
-    switch (format_char) {
-      case 'c': {
-        process_chars(args, dest, spec_opts);
-        break;
-      }
-      case 's': {
-        process_strings(args, dest, spec_opts);
-        break;
-      }
-      case 'i':
-      case 'd': {
-        process_int(args, dest, spec_opts);
-        break;
-      }
-      case 'x':
-      case 'X':
-      case 'o':
-      case 'u': {
-        process_unsigned(args, dest, spec_opts);
-        break;
-      }
-      case 'n': {
-        int* counter_n = va_arg(*args, int*);
-        *counter_n = s21_strlen(dest->str);
-        break;
-      }
-      case 'f':
-      case 'e':
-      case 'E':
-      case 'g':
-      case 'G': {
-        process_floating_point_number(args, dest, spec_opts);
-        break;
-      }
-      case 'p': {
-        process_pointer(args, dest, spec_opts);
-        break;
-      }
-      case '%': {
-        dest->str[dest->curr_ind++] = '%';
-        break;
-      }
-      default: {
-        break;
-      }
+  switch (format_char) {
+    case 'c': {
+      process_chars(args, dest, spec_opts);
+      break;
     }
-  } else {
-    return;
+    case 's': {
+      process_strings(args, dest, spec_opts);
+      break;
+    }
+    case 'i':
+    case 'd': {
+      process_int(args, dest, spec_opts);
+      break;
+    }
+    case 'x':
+    case 'X':
+    case 'o':
+    case 'u': {
+      process_unsigned(args, dest, spec_opts);
+      break;
+    }
+    case 'n': {
+      int* counter_n = va_arg(*args, int*);
+      *counter_n = s21_strlen(dest->str);
+      break;
+    }
+    case 'f':
+    case 'e':
+    case 'E':
+    case 'g':
+    case 'G': {
+      process_floating_point_number(args, dest, spec_opts);
+      break;
+    }
+    case 'p': {
+      process_pointer(args, dest, spec_opts);
+      break;
+    }
+    case '%': {
+      dest->str[dest->curr_ind++] = '%';
+      break;
+    }
+    default: {
+      break;
+    }
   }
 }
 
@@ -593,10 +588,14 @@ void floating_point_number_to_str(DestStr* dest, long double input_num,
 
     int fraction_digits_written = itoa(dest, fraction_part, spec_opts);
 
-    s21_size_t zeros_to_add_on_the_right =
+    int zeros_to_add_on_the_right =
         spec_opts->precision - (zeros_to_insert + fraction_digits_written);
 
-    add_zeros_to_destination(dest, zeros_to_add_on_the_right);
+    s21_size_t safe_zeros_to_add_on_the_right =
+        (zeros_to_add_on_the_right > 0) ? (s21_size_t)zeros_to_add_on_the_right
+                                        : 0;
+
+    add_zeros_to_destination(dest, safe_zeros_to_add_on_the_right);
 
     if (!spec_opts->is_g_spec && !spec_opts->is_scientific) {
       apply_minus_width(dest, spec_opts);
