@@ -798,8 +798,9 @@ void process_scientific(DestStr* dest, long double input_num,
   }
 
   calculate_padding(scientific_temp_dest.curr_ind, spec_opts);
-  apply_flags(dest, spec_opts);
+
   apply_width(dest, scientific_temp_dest.curr_ind, spec_opts);
+  apply_flags(dest, spec_opts);
   s21_strcpy(dest->str + dest->curr_ind, scientific_temp_dest.str);
 
   dest->curr_ind += scientific_temp_dest.curr_ind;
