@@ -455,24 +455,45 @@ void add_zeros_to_destination(DestStr* dest, s21_size_t n_zeros_to_add) {
 void calculate_padding(s21_size_t num_len, SpecOptions* spec_opts) {
   if (spec_opts->is_g_spec || spec_opts->is_scientific) {
     calculate_padding_ge_spec(num_len, spec_opts);
+  } else if (spec_opts->is_decimal_integer || spec_opts->specifier == u ||
+             spec_opts->specifier == o || spec_opts->specifier == X ||
+             spec_opts->specifier == x) {
+    calculate_padding_dioux(num_len, spec_opts);
   } else {
     calculate_padding_not_ge_spec(num_len, spec_opts);
   }
 }
 
-// void calculate_padding_dioux(s21_size_t num_len, SpecOptions* spec_opts) {
-//   int flag_corr = 0;  // Коррекция кол-ва пробелов
+void calculate_padding_dioux(s21_size_t num_len, SpecOptions* spec_opts) {
+  int flag_corr = 0;  // Коррекция кол-ва пробелов
+  int prec_corr = 0;  // Коррекция кол-ва пробелов
+  int sharp_corr = 0;
 
-//   int padding_to_add = 0;
+  int padding_to_add = 0;
 
-//   flag_corr =
-//       spec_opts->flag_plus || spec_opts->flag_space ||
-//       spec_opts->is_negative;
+  // sharp correction
+  if (spec_opts->flag_sharp) {
+    if (spec_opts->is_hexadecimal && spec_opts->is_zero == false) {
+      sharp_corr = 2;
+    } else if (spec_opts->specifier == o && spec_opts->is_zero == false) {
+      sharp_corr = 1;
+    }
+  }
 
-//   padding_to_add = spec_opts->width - num_len - flag_corr;
+  flag_corr =
+      spec_opts->flag_plus || spec_opts->flag_space || spec_opts->is_negative;
 
-//   spec_opts->padding = (padding_to_add > 0) ? (s21_size_t)padding_to_add : 0;
-// }
+  if (spec_opts->precision > num_len) {
+    prec_corr = spec_opts->precision - num_len;
+  } else {
+    prec_corr = 0;
+  }
+
+  padding_to_add =
+      spec_opts->width - num_len - flag_corr - prec_corr - sharp_corr;
+
+  spec_opts->padding = (padding_to_add > 0) ? (s21_size_t)padding_to_add : 0;
+}
 
 void calculate_padding_not_ge_spec(s21_size_t num_len, SpecOptions* spec_opts) {
   int flag_corr = 0;  // Коррекция кол-ва пробелов
@@ -671,9 +692,11 @@ void whole_to_str(DestStr* dest, long double num, SpecOptions* spec_opts) {
 
   if (!spec_opts->is_g_spec && !spec_opts->is_scientific) {
     calculate_padding(num_len, spec_opts);
+
     // Если ширина больше длины числа, добавляем пробелы в начало
     apply_width(dest, num_len, spec_opts);
   }
+
   if (!spec_opts->flag_zero && !spec_opts->is_g_spec &&
       !spec_opts->is_scientific) {
     apply_flags(dest, spec_opts);
