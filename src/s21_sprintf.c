@@ -455,9 +455,7 @@ void add_zeros_to_destination(DestStr* dest, s21_size_t n_zeros_to_add) {
 void calculate_padding(s21_size_t num_len, SpecOptions* spec_opts) {
   if (spec_opts->is_g_spec || spec_opts->is_scientific) {
     calculate_padding_ge_spec(num_len, spec_opts);
-  } else if (spec_opts->is_decimal_integer || spec_opts->specifier == u ||
-             spec_opts->specifier == o || spec_opts->specifier == X ||
-             spec_opts->specifier == x) {
+  } else if (is_dioux(spec_opts) == true) {
     calculate_padding_dioux(num_len, spec_opts);
   } else {
     calculate_padding_not_ge_spec(num_len, spec_opts);
@@ -680,6 +678,14 @@ void apply_minus_width(DestStr* dest, SpecOptions* spec_opts) {
   }
 }
 
+bool is_dioux(SpecOptions* spec_opts) {
+  bool result = (spec_opts->is_decimal_integer || spec_opts->specifier == u ||
+                 spec_opts->specifier == o || spec_opts->specifier == X ||
+                 spec_opts->specifier == x);
+
+  return result;
+}
+
 void whole_to_str(DestStr* dest, long double num, SpecOptions* spec_opts) {
   num = TO_ABS(num);
 
@@ -695,24 +701,22 @@ void whole_to_str(DestStr* dest, long double num, SpecOptions* spec_opts) {
 
     // Если ширина больше длины числа, добавляем пробелы в начало
     apply_width(dest, num_len, spec_opts);
-    if ((spec_opts->is_decimal_integer || spec_opts->specifier == u ||
-         spec_opts->specifier == o || spec_opts->specifier == X ||
-         spec_opts->specifier == x) &&
-        spec_opts->precision_set == true) {
-      s21_size_t prec_corr = 0;
-      if (spec_opts->precision > num_len) {
-        prec_corr = spec_opts->precision - num_len;
-      } else {
-        prec_corr = 0;
-      }
-
-      add_zeros_to_destination(dest, prec_corr);
-    }
   }
 
   if (!spec_opts->flag_zero && !spec_opts->is_g_spec &&
       !spec_opts->is_scientific) {
     apply_flags(dest, spec_opts);
+  }
+
+  if (is_dioux(spec_opts) == true && spec_opts->precision_set == true) {
+    s21_size_t prec_corr = 0;
+    if (spec_opts->precision > num_len) {
+      prec_corr = spec_opts->precision - num_len;
+    } else {
+      prec_corr = 0;
+    }
+
+    add_zeros_to_destination(dest, prec_corr);
   }
 
   itoa(dest, num, spec_opts);
