@@ -184,7 +184,7 @@ void process_specifier(char format_char, va_list* args, DestStr* dest,
     }
     case 'n': {
       int* counter_n = va_arg(*args, int*);
-      *counter_n = s21_strlen(dest->str);
+      *counter_n = dest->curr_ind;
       break;
     }
     case 'f':
