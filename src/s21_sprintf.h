@@ -99,6 +99,7 @@ void apply_flags(DestStr* dest, SpecOptions* spec_opts);
 void calculate_padding(s21_size_t num_len, SpecOptions* spec_opts);
 void calculate_padding_not_ge_spec(s21_size_t num_len, SpecOptions* spec_opts);
 void calculate_padding_ge_spec(s21_size_t num_len, SpecOptions* spec_opts);
+void calculate_padding_dioux(s21_size_t num_len, SpecOptions* spec_opts);
 
 void apply_width(DestStr* dest, s21_size_t num_len, SpecOptions* spec_opts);
 void apply_minus_width(DestStr* dest, SpecOptions* spec_opts);
