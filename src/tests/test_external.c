@@ -633,8 +633,8 @@ START_TEST(insert_test) {
 END_TEST
 
 START_TEST(sprintf_test1) {
-  char str1[100];
-  char str2[100];
+  char str1[100] = {0};
+  char str2[100] = {0};
   char *format = "%c Test %c Test %c Test %c Test %c";
   int a = 9;
   int b = 10;
@@ -648,8 +648,8 @@ START_TEST(sprintf_test1) {
 END_TEST
 
 START_TEST(sprintf_test2) {
-  char str1[100];
-  char str2[100];
+  char str1[100] = {0};
+  char str2[100] = {0};
   char *format = "%d Test %d Test %d Test %d Test %d";
   int a = 9;
   int b = 10;
@@ -663,8 +663,8 @@ START_TEST(sprintf_test2) {
 END_TEST
 
 START_TEST(sprintf_test3) {
-  char str1[100];
-  char str2[100];
+  char str1[100] = {0};
+  char str2[100] = {0};
   char *format = "%c Test %c Test %c Test %c Test %c";
   int a = -56;
   int b = -47;
@@ -678,8 +678,8 @@ START_TEST(sprintf_test3) {
 END_TEST
 
 START_TEST(sprintf_test4) {
-  char str1[100];
-  char str2[100];
+  char str1[100] = {0};
+  char str2[100] = {0};
   char *format = "%d Test %d Test %d Test %d Test %d";
   int a = -56;
   int b = -47;
@@ -693,8 +693,8 @@ START_TEST(sprintf_test4) {
 END_TEST
 
 START_TEST(sprintf_test5) {
-  char str1[100];
-  char str2[100];
+  char str1[100] = {0};
+  char str2[100] = {0};
   char *format = "%dTest%dTest%dTest%dTest%d";
   int a = -56;
   int b = -47;
@@ -708,8 +708,8 @@ START_TEST(sprintf_test5) {
 END_TEST
 
 START_TEST(sprintf_test6) {
-  char str1[100];
-  char str2[100];
+  char str1[100] = {0};
+  char str2[100] = {0};
   char *format = "%2dTest%1dTest%4dTest%dTest%d";
   int a = -56;
   int b = -47;
@@ -723,8 +723,8 @@ START_TEST(sprintf_test6) {
 END_TEST
 
 START_TEST(sprintf_test7) {
-  char str1[100];
-  char str2[100];
+  char str1[100] = {0};
+  char str2[100] = {0};
   char *format = "%-2dTest%+1dTest%-4dTest%dTest%d";
   int a = -56;
   int b = -47;
@@ -738,8 +738,8 @@ START_TEST(sprintf_test7) {
 END_TEST
 
 START_TEST(sprintf_test8) {
-  char str1[100];
-  char str2[100];
+  char str1[100] = {0};
+  char str2[100] = {0};
   char *format = "%10d Test %3d Test %-d Test %d Test %-d";
   int a = -56;
   int b = -47;
@@ -753,8 +753,8 @@ START_TEST(sprintf_test8) {
 END_TEST
 
 START_TEST(sprintf_test9) {
-  char str1[100];
-  char str2[100];
+  char str1[100] = {0};
+  char str2[100] = {0};
   char *format = "%+10d Test %+3d Test %-5d Test %-8d Test %-d";
   int a = 56;
   int b = -47;
@@ -768,8 +768,8 @@ START_TEST(sprintf_test9) {
 END_TEST
 
 START_TEST(sprintf_test10) {
-  char str1[100];
-  char str2[100];
+  char str1[100] = {0};
+  char str2[100] = {0};
   char *format = "%-10.5c Test %+3.3d Test %-5.8d Test %-8d Test %-d";
   int a = 56;
   int b = -47;
@@ -783,8 +783,8 @@ START_TEST(sprintf_test10) {
 END_TEST
 
 START_TEST(sprintf_test11) {
-  char str1[100];
-  char str2[100];
+  char str1[100] = {0};
+  char str2[100] = {0};
   char *format = "%s Privet %d Poka %c";
   char *a = "S dnem pobedy!!!";
   int b = -47;
@@ -796,8 +796,8 @@ START_TEST(sprintf_test11) {
 END_TEST
 
 START_TEST(sprintf_test12) {
-  char str1[100];
-  char str2[100];
+  char str1[100] = {0};
+  char str2[100] = {0};
   char *format = "%s Privet %d Poka %c";
   char *a = "S dnem pobedy!!!\0";
   int b = -47;
@@ -809,8 +809,8 @@ START_TEST(sprintf_test12) {
 END_TEST
 
 START_TEST(sprintf_test13) {
-  char str1[100];
-  char str2[100];
+  char str1[100] = {0};
+  char str2[100] = {0};
   char *format = "%s Privet %d Poka %c";
   char *a = "S dnem pobedy!!!\t";
   int b = -47;
@@ -822,8 +822,8 @@ START_TEST(sprintf_test13) {
 END_TEST
 
 START_TEST(sprintf_test14) {
-  char str1[100];
-  char str2[100];
+  char str1[100] = {0};
+  char str2[100] = {0};
   char *format = "%s Privet %d Poka %c";
   char *a = "S dnem pobedy!!!\n";
   int b = -47;
@@ -835,8 +835,8 @@ START_TEST(sprintf_test14) {
 END_TEST
 
 START_TEST(sprintf_test15) {
-  char str1[100];
-  char str2[100];
+  char str1[100] = {0};
+  char str2[100] = {0};
   char *format = "%s Privet %c Poka %d";
   char *a = "S dnem pobedy!!!\t";
   int b = -47;
@@ -968,8 +968,8 @@ START_TEST(sprintf_test23) {
 END_TEST
 
 START_TEST(sprintf_test24) {
-  char str1[100];
-  char str2[100];
+  char str1[100] = {0};
+  char str2[100] = {0};
   char *format = "%li Privet %li Privet %hi MIR %hi";
   long int a = 3088676977373646;
   signed long b = -125;
@@ -982,8 +982,8 @@ START_TEST(sprintf_test24) {
 END_TEST
 
 START_TEST(sprintf_test25) {
-  char str1[100];
-  char str2[100];
+  char str1[100] = {0};
+  char str2[100] = {0};
   char *format = "%10.9i Privet %-.9i Privet %+8i MIR %.i";
   long int a = 3088676977373646;
   signed long b = -125;
@@ -996,8 +996,8 @@ START_TEST(sprintf_test25) {
 END_TEST
 
 START_TEST(sprintf_test26) {
-  char str1[100];
-  char str2[100];
+  char str1[100] = {0};
+  char str2[100] = {0};
   char *format = "%f Privet %5lf Privet %5.f";
   double a = -764231539.;
   ck_assert_int_eq(s21_sprintf(str1, format, a, a, a),
@@ -1007,8 +1007,8 @@ START_TEST(sprintf_test26) {
 END_TEST
 
 START_TEST(sprintf_test27) {
-  char str1[100];
-  char str2[100];
+  char str1[100] = {0};
+  char str2[100] = {0};
   char *format = "%#f Privet %#lf Privet %-#.f";
   double a = -764231539.;
   ck_assert_int_eq(s21_sprintf(str1, format, a, a, a),
@@ -1018,8 +1018,8 @@ START_TEST(sprintf_test27) {
 END_TEST
 
 START_TEST(sprintf_test28) {
-  char str1[100];
-  char str2[100];
+  char str1[100] = {0};
+  char str2[100] = {0};
   char *format = "%e Privet %5e Privet %5.e";
   double a = -764231539.;
   ck_assert_int_eq(s21_sprintf(str1, format, a, a, a),
@@ -1029,8 +1029,8 @@ START_TEST(sprintf_test28) {
 END_TEST
 
 START_TEST(sprintf_test29) {
-  char str1[100];
-  char str2[100];
+  char str1[100] = {0};
+  char str2[100] = {0};
   char *format = "%3.6e Privet %55e Privet %5.0e";
   double a = -45687936567.56564;
   ck_assert_int_eq(s21_sprintf(str1, format, a, a, a),
@@ -1040,8 +1040,8 @@ START_TEST(sprintf_test29) {
 END_TEST
 
 START_TEST(shiraleo_sprintf_test_01) {
-  char str1[100];
-  char str2[100];
+  char str1[100] = {0};
+  char str2[100] = {0};
   char *format = "3.6< Privet %55e Privet %5.0e";
   double a = -45687936567.56564;
   ck_assert_int_eq(s21_sprintf(str1, format, a, a, a),
@@ -1051,8 +1051,8 @@ START_TEST(shiraleo_sprintf_test_01) {
 END_TEST
 
 START_TEST(shiraleo_sprintf_test_02) {
-  char str1[100];
-  char str2[100];
+  char str1[100] = {0};
+  char str2[100] = {0};
   char *format = "3.6< Privet %55.*e Privet %5.0e";
   double a = -45687936567.56564;
   int b = 3;
@@ -1063,8 +1063,8 @@ START_TEST(shiraleo_sprintf_test_02) {
 END_TEST
 
 START_TEST(shiraleo_sprintf_test_03) {
-  char str1[100];
-  char str2[100];
+  char str1[100] = {0};
+  char str2[100] = {0};
   char *format = "3.6< Privet %55.3i Privet %*.0i";
   int a = -4568;
   ck_assert_int_eq(s21_sprintf(str1, format, a, 14, a),
@@ -1074,8 +1074,8 @@ START_TEST(shiraleo_sprintf_test_03) {
 END_TEST
 
 START_TEST(shiraleo_sprintf_test_04) {
-  char str1[100];
-  char str2[100];
+  char str1[100] = {0};
+  char str2[100] = {0};
   char *format = "Number: %13.6d Pointer to number: %15.3p Pointer value:%*.0x";
   int a = -4568;
   int *p = &a;
@@ -1086,8 +1086,8 @@ START_TEST(shiraleo_sprintf_test_04) {
 END_TEST
 
 START_TEST(shiraleo_sprintf_test_05) {
-  char str1[100];
-  char str2[100];
+  char str1[100] = {0};
+  char str2[100] = {0};
   char *format = "Number: %13.6d Pointer to number: %15.3p Null char:%*.0c";
   int a = -4568;
   int *p = 0;
@@ -1099,8 +1099,8 @@ START_TEST(shiraleo_sprintf_test_05) {
 END_TEST
 
 START_TEST(shiraleo_sprintf_test_06) {
-  char str1[100];
-  char str2[100];
+  char str1[100] = {0};
+  char str2[100] = {0};
   char *format =
       "Number: % 013.6d Pointer to number: %+15.3p Null char:%*.0c Text:%10.5s";
   int a = -4568;
@@ -1114,8 +1114,8 @@ START_TEST(shiraleo_sprintf_test_06) {
 END_TEST
 
 START_TEST(shiraleo_sprintf_test_07) {
-  char str1[100];
-  char str2[100];
+  char str1[100] = {0};
+  char str2[100] = {0};
   char *format =
       "Number: %013d Pointer to number: % 0#17X Null char:%*.0s Text:%10.5s";
   int a = -4568;
@@ -1129,8 +1129,8 @@ START_TEST(shiraleo_sprintf_test_07) {
 END_TEST
 
 START_TEST(shiraleo_sprintf_test_08) {
-  char str1[100];
-  char str2[100];
+  char str1[100] = {0};
+  char str2[100] = {0};
   char *format =
       "Number: % 013ld Pointer to number: % 0#17X Hex:% #015hx Text:%+10i";
   int a = 4568;
@@ -1142,8 +1142,8 @@ START_TEST(shiraleo_sprintf_test_08) {
 END_TEST
 
 START_TEST(shiraleo_sprintf_test_09) {
-  char str1[100];
-  char str2[100];
+  char str1[100] = {0};
+  char str2[100] = {0};
   char *format = "Number: %013f Big number: % 0#17X Exp:%+10.5e % #10.5E";
   float a = -456.8;
   double b = 0;
@@ -1155,8 +1155,8 @@ END_TEST
 
 START_TEST(shiraleo_sprintf_test_10) {
   // setlocale(LC_ALL, "");
-  char str1[100];
-  char str2[100];
+  char str1[100] = {0};
+  char str2[100] = {0};
   char *format = "This is a simple wide char %43ls";
   wchar_t w[] = L"森我爱菠萝";
   ck_assert_int_eq(s21_sprintf(str1, format, w), sprintf(str2, format, w));
@@ -1374,8 +1374,8 @@ START_TEST(teenybir_sprintf_c_test2) {
 END_TEST
 
 START_TEST(sprintf_alignment_test1) {
-  char str1[100];
-  char str2[100];
+  char str1[100] = {0};
+  char str2[100] = {0};
   char *format = "%-10lu";
   unsigned long int a = 0;
   ck_assert_int_eq(s21_sprintf(str1, format, a), sprintf(str2, format, a));
@@ -1384,8 +1384,8 @@ START_TEST(sprintf_alignment_test1) {
 END_TEST
 
 START_TEST(sprintf_alignment_test2) {
-  char str1[100];
-  char str2[100];
+  char str1[100] = {0};
+  char str2[100] = {0};
   char *format = "%-10s world!";
   char *a = "Hello";
   ck_assert_int_eq(s21_sprintf(str1, format, a), sprintf(str2, format, a));
@@ -1394,8 +1394,8 @@ START_TEST(sprintf_alignment_test2) {
 END_TEST
 
 START_TEST(sprintf_alignment_test3) {
-  char str1[100];
-  char str2[100];
+  char str1[100] = {0};
+  char str2[100] = {0};
   char *format = "%-10c world!";
   char a = 'A';
   ck_assert_int_eq(s21_sprintf(str1, format, a), sprintf(str2, format, a));
@@ -1406,8 +1406,8 @@ START_TEST(sprintf_alignment_test3) {
 END_TEST
 
 START_TEST(sprintf_precision_test1) {
-  char str1[100];
-  char str2[100];
+  char str1[100] = {0};
+  char str2[100] = {0};
   char *format = "%*.*f";
   int width = 10;
   int prec = 5;
@@ -1467,8 +1467,8 @@ START_TEST(sprintf_nothing_test1) {
 END_TEST
 
 START_TEST(sprintf_p_test1) {
-  char str1[100];
-  char str2[100];
+  char str1[100] = {0};
+  char str2[100] = {0};
   char *format = "NULL pointer: %p";
   void *ptr = NULL;
   ck_assert_int_eq(s21_sprintf(str1, format, ptr), sprintf(str2, format, ptr));
@@ -1490,8 +1490,8 @@ START_TEST(sprintf_p_test2) {
 END_TEST
 
 START_TEST(sprintf_n_test1) {
-  char str1[100];
-  char str2[100];
+  char str1[100] = {0};
+  char str2[100] = {0};
   int n1 = 0, n2 = 0;
   char *format = "%nHello World!";
   s21_sprintf(str1, format, &n1);
@@ -1502,8 +1502,8 @@ START_TEST(sprintf_n_test1) {
 END_TEST
 
 START_TEST(sprintf_n_test2) {
-  char str1[100];
-  char str2[100];
+  char str1[100] = {0};
+  char str2[100] = {0};
   int n1 = 0, n2 = 0;
   char *format = "Hello%n World!";
   s21_sprintf(str1, format, &n1);
@@ -3996,8 +3996,8 @@ START_TEST(sscanf_hard5) {
 END_TEST
 
 START_TEST(sprintf_1_c) {
-  char str1[100];
-  char str2[100];
+  char str1[100] = {0};
+  char str2[100] = {0};
   char *str3 = "%c Test %c Test %c Test %c Test %c";
   int a = 9;
   int b = 10;
@@ -4011,8 +4011,8 @@ START_TEST(sprintf_1_c) {
 END_TEST
 
 START_TEST(sprintf_2_c) {
-  char str1[100];
-  char str2[100];
+  char str1[100] = {0};
+  char str2[100] = {0};
   char *str3 = "%c Test %c Test %c Test %c Test %c";
   int a = -6;
   int b = -10;
@@ -4026,8 +4026,8 @@ START_TEST(sprintf_2_c) {
 END_TEST
 
 START_TEST(sprintf_3_c) {
-  char str1[100];
-  char str2[100];
+  char str1[100] = {0};
+  char str2[100] = {0};
   char *str3 = "%c Test %c Test %c Test %c Test %c";
   int a = 60;
   int b = 50;
@@ -4041,8 +4041,8 @@ START_TEST(sprintf_3_c) {
 END_TEST
 
 START_TEST(sprintf_4_c) {
-  char str1[100];
-  char str2[100];
+  char str1[100] = {0};
+  char str2[100] = {0};
   char *str3 = "%c Test %c Test %c Test %c Test %c";
   int a = 60;
   int b = 50;
@@ -4056,8 +4056,8 @@ START_TEST(sprintf_4_c) {
 END_TEST
 
 START_TEST(sprintf_5_c) {
-  char str1[100];
-  char str2[100];
+  char str1[100] = {0};
+  char str2[100] = {0};
   char *str3 = "%c Test %c Test %c Test %c Test %c";
   char a = 0;
   ck_assert_int_eq(sprintf(str1, str3, a, a, a, a, a),
@@ -4067,8 +4067,8 @@ START_TEST(sprintf_5_c) {
 END_TEST
 
 START_TEST(sprintf_6_c) {
-  char str1[100];
-  char str2[100];
+  char str1[100] = {0};
+  char str2[100] = {0};
   char *str3 = "%05c Test % 5c Test %lc Test";
   int a = 70;
   unsigned long int b = 70;
@@ -4079,8 +4079,8 @@ START_TEST(sprintf_6_c) {
 END_TEST
 
 START_TEST(sprintf_7_c) {
-  char str1[100];
-  char str2[100];
+  char str1[100] = {0};
+  char str2[100] = {0};
   char *str3 = "%-010c Test % -10c Test %-lc";
   int a = 74;
   unsigned long int b = 74;
@@ -4091,8 +4091,8 @@ START_TEST(sprintf_7_c) {
 END_TEST
 
 START_TEST(sprintf_8_c) {
-  char str1[100];
-  char str2[100];
+  char str1[100] = {0};
+  char str2[100] = {0};
   char *str3 = "%+010.5c Test % +10.5c Test %-10lc Test %-10lc Test %+10lc";
   char a = 92;
   unsigned long int b = 92;
@@ -4104,8 +4104,8 @@ START_TEST(sprintf_8_c) {
 END_TEST
 
 START_TEST(sprintf_9_c) {
-  char str1[100];
-  char str2[100];
+  char str1[100] = {0};
+  char str2[100] = {0};
   char *str3 = "%6.4c Test %-6.4c Test %4.10lc Test %-4.10lc Test %-0lc";
   int a = 10;
   unsigned long int b = 10;
@@ -4117,8 +4117,8 @@ START_TEST(sprintf_9_c) {
 END_TEST
 
 START_TEST(sprintf_10_c) {
-  char str1[100];
-  char str2[100];
+  char str1[100] = {0};
+  char str2[100] = {0};
   char *str3 = "%6.4c Test %-6.4c Test %4.10lc Test %-4.10lc Test %-0lc";
   int a = -10;
   unsigned long int b = 10;
@@ -4130,8 +4130,8 @@ START_TEST(sprintf_10_c) {
 END_TEST
 
 START_TEST(sprintf_11_c) {
-  char str1[100];
-  char str2[100];
+  char str1[100] = {0};
+  char str2[100] = {0};
   char *str3 = "%#c Test %#c Test %#c Test %#c Test %#c";
   ck_assert_int_eq(sprintf(str1, str3, ' ', 'n', '5', '%', '\\'),
                    s21_sprintf(str2, str3, ' ', 'n', '5', '%', '\\'));
@@ -4140,8 +4140,8 @@ START_TEST(sprintf_11_c) {
 END_TEST
 
 START_TEST(sprintf_12_c) {
-  char str1[100];
-  char str2[100];
+  char str1[100] = {0};
+  char str2[100] = {0};
   char *str3 = "%c Test %c Test %c Test %c Test %c";
   ck_assert_int_eq(sprintf(str1, str3, '\n', '\0', '\0', '\0', 'c'),
                    s21_sprintf(str2, str3, '\n', '\0', '\0', '\0', 'c'));
@@ -4150,8 +4150,8 @@ START_TEST(sprintf_12_c) {
 END_TEST
 
 START_TEST(sprintf_13_c) {
-  char str1[100];
-  char str2[100];
+  char str1[100] = {0};
+  char str2[100] = {0};
   char *str3 = "%c Test %c Test %c Test %c Test %c";
   ck_assert_int_eq(sprintf(str1, str3, 'b', '4', '#', '@', '\0'),
                    s21_sprintf(str2, str3, 'b', '4', '#', '@', '\0'));
@@ -4160,8 +4160,8 @@ START_TEST(sprintf_13_c) {
 END_TEST
 
 START_TEST(sprintf_14_c) {
-  char str1[100];
-  char str2[100];
+  char str1[100] = {0};
+  char str2[100] = {0};
   char *str3 = "%c Test %c Test %c Test %c Test %c";
   ck_assert_int_eq(sprintf(str1, str3, 'Y', 'G', 123, '\0', 'J'),
                    s21_sprintf(str2, str3, 'Y', 'G', 123, '\0', 'J'));
@@ -4214,8 +4214,8 @@ START_TEST(sprintf_18_c) {
 END_TEST
 
 START_TEST(sprintf_19_c) {
-  char str1[100];
-  char str2[100];
+  char str1[100] = {0};
+  char str2[100] = {0};
   char *str3 = "%c Test %lc Test %hc";
   int a = 3;
   unsigned long int b = 103;
@@ -4227,8 +4227,8 @@ START_TEST(sprintf_19_c) {
 END_TEST
 
 START_TEST(sprintf_20_c) {
-  char str1[100];
-  char str2[100];
+  char str1[100] = {0};
+  char str2[100] = {0};
   char *str3 = "TEST %lc right now\n";
   int a = 266;
   ck_assert_int_eq(sprintf(str1, str3, a), s21_sprintf(str2, str3, a));
@@ -4237,8 +4237,8 @@ START_TEST(sprintf_20_c) {
 END_TEST
 
 START_TEST(sprintf_21_c) {
-  char str1[100];
-  char str2[100];
+  char str1[100] = {0};
+  char str2[100] = {0};
   char *str3 = "%lc This is the Test right now\n";
   int a = 1156;
   ck_assert_int_eq(sprintf(str1, str3, a), s21_sprintf(str2, str3, a));
@@ -4249,8 +4249,8 @@ START_TEST(sprintf_21_c) {
 END_TEST
 
 START_TEST(sprintf_2_signed) {
-  char str1[100];
-  char str2[100];
+  char str1[100] = {0};
+  char str2[100] = {0};
   char *str3 = "%d Test %d Test %d";
   int val = 012;
   int val2 = -017;
@@ -4264,8 +4264,8 @@ START_TEST(sprintf_2_signed) {
 END_TEST
 
 START_TEST(sprintf_3_signed) {
-  char str1[100];
-  char str2[100];
+  char str1[100] = {0};
+  char str2[100] = {0};
   char *str3 = "%d Test %d Test %d";
   int val = 3015;
   int val2 = 712;
@@ -4279,8 +4279,8 @@ START_TEST(sprintf_3_signed) {
 END_TEST
 
 START_TEST(sprintf_4_signed) {
-  char str1[100];
-  char str2[100];
+  char str1[100] = {0};
+  char str2[100] = {0};
   char *str3 = "%ld Test %ld Test %hd GOD %hd";
   long int val = 3088675747373646;
   long val2 = 33030030303;
@@ -4295,8 +4295,8 @@ START_TEST(sprintf_4_signed) {
 END_TEST
 
 START_TEST(sprintf_5_signed) {
-  char str1[100];
-  char str2[100];
+  char str1[100] = {0};
+  char str2[100] = {0};
   char *str3 = "%3d Test %5d Test %10d";
   int val = -3015;
   int val2 = -11234;
@@ -4531,8 +4531,8 @@ START_TEST(sprintf_19_signed) {
 END_TEST
 
 START_TEST(sprintf_1_e) {
-  char str1[100];
-  char str2[100];
+  char str1[100] = {0};
+  char str2[100] = {0};
   char *str3 = "%e Test %5e Test %5.e";
   double num = -764231539.;
   ck_assert_int_eq(sprintf(str1, str3, num, num, num),
@@ -4542,8 +4542,8 @@ START_TEST(sprintf_1_e) {
 END_TEST
 
 START_TEST(sprintf_2_e) {
-  char str1[100];
-  char str2[100];
+  char str1[100] = {0};
+  char str2[100] = {0};
   char *str3 = "%e\n%.e\n%4e\n%4.e\n%5.10e!";
   double num = -764231539.;
   ck_assert_int_eq(sprintf(str1, str3, num, num, num, num, num),
@@ -4553,8 +4553,8 @@ START_TEST(sprintf_2_e) {
 END_TEST
 
 START_TEST(sprintf_3_e) {
-  char str1[100];
-  char str2[100];
+  char str1[100] = {0};
+  char str2[100] = {0};
   char *str3 = "%#e\n%#.e\n%#5.e\n%#.0e\n%#0.0e!";
   double num = -665695342471359.;
   ck_assert_int_eq(sprintf(str1, str3, num, num, num, num, num),
@@ -4978,8 +4978,8 @@ START_TEST(sprintf_39_e) {
 END_TEST
 
 START_TEST(sprintf_40_e) {
-  char str1[100];
-  char str2[100];
+  char str1[100] = {0};
+  char str2[100] = {0};
   char *str3 = "%.e\n%.2e\n%.5E\n%.9E\n%.13E!";
   double num = -2599999999.;
   ck_assert_int_eq(sprintf(str1, str3, num, num, num, num, num),
@@ -6131,8 +6131,8 @@ START_TEST(sprintf_1_hex) {
 END_TEST
 
 START_TEST(sprintf_2_hex) {
-  char str1[100];
-  char str2[100];
+  char str1[100] = {0};
+  char str2[100] = {0};
   char *str3 = "%x Test %x Test %x";
   int val = 0x7a4;
   int val2 = 0x91ba123f;
@@ -6146,8 +6146,8 @@ START_TEST(sprintf_2_hex) {
 END_TEST
 
 START_TEST(sprintf_3_hex) {
-  char str1[100];
-  char str2[100];
+  char str1[100] = {0};
+  char str2[100] = {0};
   char *str3 = "%x Test %x Test %x";
   int val = 0x3015;
   int val2 = 0x712;
@@ -6161,8 +6161,8 @@ START_TEST(sprintf_3_hex) {
 END_TEST
 
 START_TEST(sprintf_4_hex) {
-  char str1[100];
-  char str2[100];
+  char str1[100] = {0};
+  char str2[100] = {0};
   char *str3 = "%lx Test %lx Test %hx GOD %hx";
   long int val = 3088675747373646;
   long val2 = 33030030303;
@@ -6177,8 +6177,8 @@ START_TEST(sprintf_4_hex) {
 END_TEST
 
 START_TEST(sprintf_5_hex) {
-  char str1[100];
-  char str2[100];
+  char str1[100] = {0};
+  char str2[100] = {0};
   char *str3 = "%3x Test %5x Test %10x";
   int val = 3015;
   int val2 = 01234;
@@ -6398,8 +6398,8 @@ START_TEST(sprintf_1_HEX) {
 END_TEST
 
 START_TEST(sprintf_2_HEX) {
-  char str1[100];
-  char str2[100];
+  char str1[100] = {0};
+  char str2[100] = {0};
   char *str3 = "%X Test %X Test %X";
   int val = 0X7a4;
   int val2 = 0X9112312f;
@@ -6413,8 +6413,8 @@ START_TEST(sprintf_2_HEX) {
 END_TEST
 
 START_TEST(sprintf_3_HEX) {
-  char str1[100];
-  char str2[100];
+  char str1[100] = {0};
+  char str2[100] = {0};
   char *str3 = "%X Test %X Test %X";
   int val = 0X3015;
   int val2 = 0X712;
@@ -6428,8 +6428,8 @@ START_TEST(sprintf_3_HEX) {
 END_TEST
 
 START_TEST(sprintf_4_HEX) {
-  char str1[100];
-  char str2[100];
+  char str1[100] = {0};
+  char str2[100] = {0};
   char *str3 = "%lX Test %lX Test %hX GOD %hX";
   unsigned long int val = 3088675747373646;
   unsigned long int val2 = 33030030303;
@@ -6444,8 +6444,8 @@ START_TEST(sprintf_4_HEX) {
 END_TEST
 
 START_TEST(sprintf_5_HEX) {
-  char str1[100];
-  char str2[100];
+  char str1[100] = {0};
+  char str2[100] = {0};
   char *str3 = "%3X Test %5X Test %10X";
   int val = 3015;
   int val2 = 01234;
@@ -6655,8 +6655,8 @@ START_TEST(sprintf_1_signed_i) {
 END_TEST
 
 START_TEST(sprintf_2_signed_i) {
-  char str1[100];
-  char str2[100];
+  char str1[100] = {0};
+  char str2[100] = {0};
   char *str3 = "%d Test %d Test %d";
   int val = 012;
   int val2 = -017;
@@ -6670,8 +6670,8 @@ START_TEST(sprintf_2_signed_i) {
 END_TEST
 
 START_TEST(sprintf_3_signed_i) {
-  char str1[100];
-  char str2[100];
+  char str1[100] = {0};
+  char str2[100] = {0};
   char *str3 = "%i Test %i Test %i";
   int val = 3015;
   int val2 = 712;
@@ -6685,8 +6685,8 @@ START_TEST(sprintf_3_signed_i) {
 END_TEST
 
 START_TEST(sprintf_4_signed_i) {
-  char str1[100];
-  char str2[100];
+  char str1[100] = {0};
+  char str2[100] = {0};
   char *str3 = "%li Test %li Test %hi GOD %hi";
   long int val = 3088675747373646;
   signed long val2 = -125;
@@ -6701,8 +6701,8 @@ START_TEST(sprintf_4_signed_i) {
 END_TEST
 
 START_TEST(sprintf_5_signed_i) {
-  char str1[100];
-  char str2[100];
+  char str1[100] = {0};
+  char str2[100] = {0};
   char *str3 = "%3i Test %5i Test %10i";
   int val = -3015;
   int val2 = -11234;
@@ -6923,8 +6923,8 @@ START_TEST(sprintf_1_n) {
 END_TEST
 
 START_TEST(sprintf_2_n) {
-  char str1[100];
-  char str2[100];
+  char str1[100] = {0};
+  char str2[100] = {0};
   char *str3 = "Test %o T%nest %o%n";
   int val = 012;
   int val2 = 017;
@@ -6938,8 +6938,8 @@ START_TEST(sprintf_2_n) {
 END_TEST
 
 START_TEST(sprintf_3_n) {
-  char str1[100];
-  char str2[100];
+  char str1[100] = {0};
+  char str2[100] = {0};
   char *str3 = "%o Test %o Te%-+#nst %o";
   int val = 3015;
   int val2 = 712;
@@ -6953,8 +6953,8 @@ START_TEST(sprintf_3_n) {
 END_TEST
 
 START_TEST(sprintf_4_n) {
-  char str1[100];
-  char str2[100];
+  char str1[100] = {0};
+  char str2[100] = {0};
   char *str3 = "%lo Test %lo Test %ho%34.23n";
   long int val = 3088675747373646;
   unsigned long int val2 = 33030030303;
@@ -6984,8 +6984,8 @@ START_TEST(sprintf_1_octal) {
 END_TEST
 
 START_TEST(sprintf_2_octal) {
-  char str1[100];
-  char str2[100];
+  char str1[100] = {0};
+  char str2[100] = {0};
   char *str3 = "%o Test %o Test %o";
   int val = 012;
   int val2 = 017;
@@ -6999,8 +6999,8 @@ START_TEST(sprintf_2_octal) {
 END_TEST
 
 START_TEST(sprintf_3_octal) {
-  char str1[100];
-  char str2[100];
+  char str1[100] = {0};
+  char str2[100] = {0};
   char *str3 = "%o Test %o Test %o";
   int val = 3015;
   int val2 = 712;
@@ -7014,8 +7014,8 @@ START_TEST(sprintf_3_octal) {
 END_TEST
 
 START_TEST(sprintf_4_octal) {
-  char str1[100];
-  char str2[100];
+  char str1[100] = {0};
+  char str2[100] = {0};
   char *str3 = "%lo Test %lo Test %ho GOD %ho";
   long int val = 3088675747373646;
   unsigned long int val2 = 33030030303;
@@ -7030,8 +7030,8 @@ START_TEST(sprintf_4_octal) {
 END_TEST
 
 START_TEST(sprintf_5_octal) {
-  char str1[100];
-  char str2[100];
+  char str1[100] = {0};
+  char str2[100] = {0};
   char *str3 = "%3o Test %5o Test %10o";
   int val = 3015;
   int val2 = 01234;
@@ -7259,8 +7259,8 @@ START_TEST(sprintf_1_percent) {
 END_TEST
 
 START_TEST(sprintf_2_percent) {
-  char str1[100];
-  char str2[100];
+  char str1[100] = {0};
+  char str2[100] = {0};
   char *str3 = "Test %o Tes%%%%t %o";
   int val = 012;
   int val2 = 017;
@@ -7271,8 +7271,8 @@ START_TEST(sprintf_2_percent) {
 END_TEST
 
 START_TEST(sprintf_3_percent) {
-  char str1[100];
-  char str2[100];
+  char str1[100] = {0};
+  char str2[100] = {0};
   char *str3 = "%o Te%%st %o Test %o";
   int val = 3015;
   int val2 = 712;
@@ -7298,8 +7298,8 @@ START_TEST(sprintf_1_pointer) {
 END_TEST
 
 START_TEST(sprintf_2_pointer) {
-  char str1[100];
-  char str2[100];
+  char str1[100] = {0};
+  char str2[100] = {0};
   char *str3 = "%p Test %p Test %p";
   char *val = "0p7a4";
   char *val2 = "0p91ba123f";
@@ -7313,8 +7313,8 @@ START_TEST(sprintf_2_pointer) {
 END_TEST
 
 START_TEST(sprintf_3_pointer) {
-  char str1[100];
-  char str2[100];
+  char str1[100] = {0};
+  char str2[100] = {0};
   char *str3 = "%p Test %p Test %p";
   char *val = "0p3015";
   char *val2 = "0p712";
@@ -7328,8 +7328,8 @@ START_TEST(sprintf_3_pointer) {
 END_TEST
 
 START_TEST(sprintf_4_pointer) {
-  char str1[100];
-  char str2[100];
+  char str1[100] = {0};
+  char str2[100] = {0};
   char *str3 = "%p Test %p Test %p GOD %p";
   long int *val = (void *)3088675747373646;
   long long int *val2 = (void *)33030030303;
@@ -7344,8 +7344,8 @@ START_TEST(sprintf_4_pointer) {
 END_TEST
 
 START_TEST(sprintf_5_pointer) {
-  char str1[100];
-  char str2[100];
+  char str1[100] = {0};
+  char str2[100] = {0};
   char *str3 = "%3p Test %5p Test %12p";
   char *val = "3015";
   char *val2 = "01234";
@@ -7543,8 +7543,8 @@ START_TEST(sprintf_1_string) {
 END_TEST
 
 START_TEST(sprintf_2_string) {
-  char str1[100];
-  char str2[100];
+  char str1[100] = {0};
+  char str2[100] = {0};
   char *str3 = "%s Test %s Test %s";
   char *val = "I'm so tired";
   char *val2 = "Who invented this?";
@@ -7558,8 +7558,8 @@ START_TEST(sprintf_2_string) {
 END_TEST
 
 START_TEST(sprintf_3_string) {
-  char str1[100];
-  char str2[100];
+  char str1[100] = {0};
+  char str2[100] = {0};
   char *str3 = "%s Test %s Test %s";
   char *val = "Don't need this test";
   char *val2 = "Just for the kicks";
@@ -7573,8 +7573,8 @@ START_TEST(sprintf_3_string) {
 END_TEST
 
 START_TEST(sprintf_4_string) {
-  char str1[100];
-  char str2[100];
+  char str1[100] = {0};
+  char str2[100] = {0};
   char *str3 = "Test %ls Test2";
   wchar_t *val = L"3wtf80";
   sprintf(str1, str3, val);
@@ -7771,8 +7771,8 @@ START_TEST(sprintf_15_string) {
 END_TEST
 
 START_TEST(sprintf_16_string) {
-  char str1[100];
-  char str2[100];
+  char str1[100] = {0};
+  char str2[100] = {0};
   char *str3 = "%s %s %s %% %d";
   char *val = "This";
   char *val2 = "\0";
@@ -7813,8 +7813,8 @@ START_TEST(sprintf_1_unsigned) {
 END_TEST
 
 START_TEST(sprintf_2_unsigned) {
-  char str1[100];
-  char str2[100];
+  char str1[100] = {0};
+  char str2[100] = {0};
   char *str3 = "%u Test %u Test %u";
   unsigned int val = 012;
   unsigned int val2 = 017;
@@ -7828,8 +7828,8 @@ START_TEST(sprintf_2_unsigned) {
 END_TEST
 
 START_TEST(sprintf_3_unsigned) {
-  char str1[100];
-  char str2[100];
+  char str1[100] = {0};
+  char str2[100] = {0};
   char *str3 = "%u Test %u Test %u";
   unsigned int val = 3015;
   unsigned int val2 = 712;
@@ -7843,8 +7843,8 @@ START_TEST(sprintf_3_unsigned) {
 END_TEST
 
 START_TEST(sprintf_4_unsigned) {
-  char str1[100];
-  char str2[100];
+  char str1[100] = {0};
+  char str2[100] = {0};
   char *str3 = "%lu Test %lu Test %hu GOD %hu";
   long unsigned int val = 3088675747373646;
   long unsigned val2 = 33030030303;
@@ -7859,8 +7859,8 @@ START_TEST(sprintf_4_unsigned) {
 END_TEST
 
 START_TEST(sprintf_5_unsigned) {
-  char str1[100];
-  char str2[100];
+  char str1[100] = {0};
+  char str2[100] = {0};
   char *str3 = "%3u Test %5u Test %10u";
   unsigned int val = 3015;
   unsigned int val2 = 01234;
@@ -11237,8 +11237,8 @@ START_TEST(sscanf_spec_real_21) {
 END_TEST
 
 START_TEST(sscanf_spec_real_22) {
-  char format[] = "%Lf %Lf %Lf %Lf";
-  char str[] = "inf nan -inf +inf";
+  char format[] = "%Lf %Lf %Lf %Lf\0";
+  char str[] = "inf nan -inf +inf\0";
   long double d1, d2;
   long double q1 = 0, q2 = 0;
   long double z1 = 0, z2 = 0;
@@ -11776,10 +11776,10 @@ START_TEST(sscanf_spec_lx_11) {
 }
 END_TEST
 
-Suite* make_external_suite() {
-  Suite* external_suite = suite_create("external");
-  TCase* tc_core;
-  TCase* tc_act;
+Suite *make_external_suite() {
+  Suite *external_suite = suite_create("external");
+  TCase *tc_core;
+  TCase *tc_act;
 
   tc_core = tcase_create("Core");
   tc_act = tcase_create("actually_run");
@@ -11802,794 +11802,794 @@ Suite* make_external_suite() {
   tcase_add_test(tc_act, s21_to_lower_test);
   tcase_add_test(tc_act, trim_test);
   tcase_add_test(tc_act, insert_test);
-  tcase_add_test(tc_core, sprintf_test1);
-  tcase_add_test(tc_core, sprintf_test2);
-  tcase_add_test(tc_core, sprintf_test3);
-  tcase_add_test(tc_core, sprintf_test4);
-  tcase_add_test(tc_core, sprintf_test5);
-  tcase_add_test(tc_core, sprintf_test6);
-  tcase_add_test(tc_core, sprintf_test7);
-  tcase_add_test(tc_core, sprintf_test8);
-  tcase_add_test(tc_core, sprintf_test9);
-  tcase_add_test(tc_core, sprintf_test10);
-  tcase_add_test(tc_core, sprintf_test11);
-  tcase_add_test(tc_core, sprintf_test12);
-  tcase_add_test(tc_core, sprintf_test13);
-  tcase_add_test(tc_core, sprintf_test14);
-  tcase_add_test(tc_core, sprintf_test15);
-  tcase_add_test(tc_core, sprintf_test16);
-  tcase_add_test(tc_core, sprintf_test17);
-  tcase_add_test(tc_core, sprintf_test18);
-  tcase_add_test(tc_core, sprintf_test19);
-  tcase_add_test(tc_core, sprintf_test20);
-  tcase_add_test(tc_core, sprintf_test21);
-  tcase_add_test(tc_core, sprintf_test22);
-  tcase_add_test(tc_core, sprintf_test23);
-  tcase_add_test(tc_core, sprintf_test24);
-  tcase_add_test(tc_core, sprintf_test25);
-  tcase_add_test(tc_core, sprintf_test26);
-  tcase_add_test(tc_core, sprintf_test27);
-  tcase_add_test(tc_core, sprintf_test28);
-  tcase_add_test(tc_core, sprintf_test29);
-  tcase_add_test(tc_core, shiraleo_sprintf_test_01);
-  tcase_add_test(tc_core, shiraleo_sprintf_test_02);
-  tcase_add_test(tc_core, shiraleo_sprintf_test_03);
-  tcase_add_test(tc_core, shiraleo_sprintf_test_04);
-  tcase_add_test(tc_core, shiraleo_sprintf_test_05);
-  tcase_add_test(tc_core, shiraleo_sprintf_test_06);
-  tcase_add_test(tc_core, shiraleo_sprintf_test_07);
-  tcase_add_test(tc_core, shiraleo_sprintf_test_08);
-  tcase_add_test(tc_core, shiraleo_sprintf_test_09);
-  tcase_add_test(tc_core, shiraleo_sprintf_test_10);
-  tcase_add_test(tc_core, teenybir_sprintf_e_test1);
-  tcase_add_test(tc_core, teenybir_sprintf_e_test2);
-  tcase_add_test(tc_core, teenybir_sprintf_e_test3);
-  tcase_add_test(tc_core, teenybir_sprintf_e_test4);
-  tcase_add_test(tc_core, teenybir_sprintf_e_test5);
-  tcase_add_test(tc_core, teenybir_sprintf_le_test1);
-  tcase_add_test(tc_core, teenybir_sprintf_le_test2);
-  tcase_add_test(tc_core, teenybir_sprintf_f_test1);
-  tcase_add_test(tc_core, teenybir_sprintf_f_test2);
-  tcase_add_test(tc_core, teenybir_sprintf_f_test3);
-  tcase_add_test(tc_core, teenybir_sprintf_f_test4);
-  tcase_add_test(tc_core, teenybir_sprintf_f_test5);
-  tcase_add_test(tc_core, teenybir_sprintf_lf_test2);
-  tcase_add_test(tc_core, teenybir_sprintf_x_test1);
-  tcase_add_test(tc_core, teenybir_sprintf_x_test2);
-  tcase_add_test(tc_core, teenybir_sprintf_X_test3);
-  tcase_add_test(tc_core, teenybir_sprintf_c_test1);
-  tcase_add_test(tc_core, teenybir_sprintf_c_test2);
-  tcase_add_test(tc_core, sprintf_alignment_test1);
-  tcase_add_test(tc_core, sprintf_alignment_test2);
-  tcase_add_test(tc_core, sprintf_alignment_test3);
-  tcase_add_test(tc_core, sprintf_precision_test1);
-  tcase_add_test(tc_core, teenybir_sprintf_s_test1);
-  tcase_add_test(tc_core, teenybir_sprintf_s_test2);
-  tcase_add_test(tc_core, sprintf_percent_test1);
-  tcase_add_test(tc_core, sprintf_nothing_test1);
-  tcase_add_test(tc_core, sprintf_p_test1);
-  tcase_add_test(tc_core, sprintf_p_test2);
-  tcase_add_test(tc_core, sprintf_n_test1);
-  tcase_add_test(tc_core, sprintf_n_test2);
-  tcase_add_test(tc_core, machelch_sprintf_gG_test1);
-  tcase_add_test(tc_core, machelch_sprintf_gG_test2);
-  tcase_add_test(tc_core, machelch_sprintf_gG_test3);
-  tcase_add_test(tc_core, machelch_sprintf_gG_test4);
-  tcase_add_test(tc_core, machelch_sprintf_gG_test5);
-  tcase_add_test(tc_core, machelch_sprintf_gG_test6);
-  tcase_add_test(tc_core, machelch_sprintf_gG_test7);
-  tcase_add_test(tc_core, machelch_sprintf_gG_test8);
-  tcase_add_test(tc_core, machelch_sprintf_gG_test9);
-  tcase_add_test(tc_core, machelch_sprintf_gG_test10);
-  tcase_add_test(tc_core, machelch_sprintf_gG_test11);
-  tcase_add_test(tc_core, machelch_sprintf_gG_test12);
-  tcase_add_test(tc_core, machelch_sprintf_gG_test13);
-  tcase_add_test(tc_core, machelch_sprintf_gG_test14);
-  tcase_add_test(tc_core, machelch_sprintf_gG_test15);
-  tcase_add_test(tc_core, machelch_sprintf_gG_test16);
-  tcase_add_test(tc_core, machelch_sprintf_n_test1);
-  tcase_add_test(tc_core, machelch_sprintf_p_test1);
-  tcase_add_test(tc_core, machelch_sprintf_p_test2);
-  tcase_add_test(tc_core, machelch_sprintf_s_test1);
-  tcase_add_test(tc_core, machelch_sprintf_d_test1);
-  tcase_add_test(tc_core, machelch_sprintf_s_test2);
-  tcase_add_test(tc_core, machelch_sprintf_d_test2);
-  tcase_add_test(tc_core, machelch_sprintf_d_test3);
-  tcase_add_test(tc_core, machelch_sprintf_s_test4);
-  tcase_add_test(tc_core, machelch_sprintf_x_test1);
-  tcase_add_test(tc_core, machelch_sprintf_x_test2);
-  tcase_add_test(tc_core, machelch_sprintf_u_test1);
-  tcase_add_test(tc_core, machelch_sprintf_error_test1);
-  tcase_add_test(tc_core, sscanf_EOF1);
-  tcase_add_test(tc_core, sscanf_EOF2);
-  tcase_add_test(tc_core, sscanf_EOF3);
-  tcase_add_test(tc_core, sscanf_only_chars1);
-  tcase_add_test(tc_core, sscanf_only_chars2);
-  tcase_add_test(tc_core, sscanf_only_chars3);
-  tcase_add_test(tc_core, sscanf_only_chars4);
-  tcase_add_test(tc_core, sscanf_only_chars5);
-  tcase_add_test(tc_core, sscanf_special_symbols_as_chars1);
-  tcase_add_test(tc_core, sscanf_special_symbols_as_chars2);
-  tcase_add_test(tc_core, sscanf_special_symbols_as_chars3);
-  tcase_add_test(tc_core, sscanf_chars_flags1);
-  tcase_add_test(tc_core, sscanf_chars_flags2);
-  tcase_add_test(tc_core, sscanf_chars_flags3);
-  tcase_add_test(tc_core, sscanf_chars_flags4);
-  tcase_add_test(tc_core, sscanf_chars_flags5);
-  tcase_add_test(tc_core, sscanf_chars_aster1);
-  tcase_add_test(tc_core, sscanf_chars_aster2);
-  tcase_add_test(tc_core, sscanf_only_ints1);
-  tcase_add_test(tc_core, sscanf_only_ints2);
-  tcase_add_test(tc_core, sscanf_ints_nwidth1);
-  tcase_add_test(tc_core, sscanf_ints_nwidth2);
-  tcase_add_test(tc_core, sscanf_ints_nwidth3);
-  tcase_add_test(tc_core, sscanf_ints_nwidth4);
-  tcase_add_test(tc_core, sscanf_ints_astwidth1);
-  tcase_add_test(tc_core, sscanf_ints_astwidth2);
-  tcase_add_test(tc_core, sscanf_ints_astwidth3);
-  tcase_add_test(tc_core, sscanf_ints_astwidth4);
-  tcase_add_test(tc_core, sscanf_signed_ints1);
-  tcase_add_test(tc_core, sscanf_signed_ints2);
-  tcase_add_test(tc_core, sscanf_signed_ints3);
-  tcase_add_test(tc_core, sscanf_signed_ints4);
-  tcase_add_test(tc_core, sscanf_spec_i_int1);
-  tcase_add_test(tc_core, sscanf_spec_i_int2);
-  tcase_add_test(tc_core, sscanf_spec_i_int3);
-  tcase_add_test(tc_core, sscanf_spec_i_int4);
-  tcase_add_test(tc_core, sscanf_spec_i_hex1);
-  tcase_add_test(tc_core, sscanf_spec_i_hex2);
-  tcase_add_test(tc_core, sscanf_spec_i_oct1);
-  tcase_add_test(tc_core, sscanf_spec_i_oct2);
-  tcase_add_test(tc_core, sscanf_strings1);
-  tcase_add_test(tc_core, sscanf_strings_mixed3);
-  tcase_add_test(tc_core, sscanf_strings2);
-  tcase_add_test(tc_core, sscanf_strings3);
-  tcase_add_test(tc_core, sscanf_strings4);
-  tcase_add_test(tc_core, sscanf_strings5);
-  tcase_add_test(tc_core, sscanf_strings6);
-  tcase_add_test(tc_core, sscanf_strings_mixed1);
-  tcase_add_test(tc_core, sscanf_strings_mixed2);
-  tcase_add_test(tc_core, sscanf_n1);
-  tcase_add_test(tc_core, sscanf_n2);
-  tcase_add_test(tc_core, sscanf_n3);
-  tcase_add_test(tc_core, sscanf_n4);
-  tcase_add_test(tc_core, sscanf_n5);
-  tcase_add_test(tc_core, sscanf_floats1);
-  tcase_add_test(tc_core, sscanf_floats2);
-  tcase_add_test(tc_core, sscanf_floats3);
-  tcase_add_test(tc_core, sscanf_floats4);
-  tcase_add_test(tc_core, sscanf_floats5);
-  tcase_add_test(tc_core, sscanf_floats_sci1);
-  tcase_add_test(tc_core, sscanf_floats_sci2);
-  tcase_add_test(tc_core, sscanf_floats_sci3);
-  tcase_add_test(tc_core, sscanf_floats_sci4);
-  tcase_add_test(tc_core, sscanf_floats_sci5);
-  tcase_add_test(tc_core, sscanf_uint1);
-  tcase_add_test(tc_core, sscanf_uint2);
-  tcase_add_test(tc_core, sscanf_uint3);
-  tcase_add_test(tc_core, sscanf_uint4);
-  tcase_add_test(tc_core, sscanf_uint5);
-  tcase_add_test(tc_core, sscanf_uint6);
-  tcase_add_test(tc_core, sscanf_upeer_hex_base_version);
-  tcase_add_test(tc_core, sscanf_upeer_hex_overflow);
-  tcase_add_test(tc_core, sscanf_upeer_hex_0x);
-  tcase_add_test(tc_core, sscanf_upeer_hex_0X);
-  tcase_add_test(tc_core, sscanf_upeer_hex_empty);
-  tcase_add_test(tc_core, sscanf_upeer_hex_fail);
-  tcase_add_test(tc_core, sscanf_upeer_hex_spaces_tabs_sns);
-  tcase_add_test(tc_core, sscanf_upeer_hex_short);
-  tcase_add_test(tc_core, sscanf_upeer_hex_long);
-  tcase_add_test(tc_core, sscanf_upeer_hex_2x);
-  tcase_add_test(tc_core, sscanf_upeer_hex_star);
-  tcase_add_test(tc_core, sscanf_upeer_hex_nohex);
-  tcase_add_test(tc_core, sscanf_upeer_hex_lower);
-  tcase_add_test(tc_core, sscanf_upeer_hex_sign);
-  tcase_add_test(tc_core, sscanf_lower_hex_base_version);
-  tcase_add_test(tc_core, sscanf_lower_hex_overflow);
-  tcase_add_test(tc_core, sscanf_lower_hex_0x);
-  tcase_add_test(tc_core, sscanf_lower_hex_0X);
-  tcase_add_test(tc_core, sscanf_lower_hex_empty);
-  tcase_add_test(tc_core, sscanf_lower_hex_fail);
-  tcase_add_test(tc_core, sscanf_lower_hex_spaces_tabs_sns);
-  tcase_add_test(tc_core, sscanf_lower_hex_short);
-  tcase_add_test(tc_core, sscanf_lower_hex_long);
-  tcase_add_test(tc_core, sscanf_lower_hex_2x);
-  tcase_add_test(tc_core, sscanf_lower_hex_star);
-  tcase_add_test(tc_core, sscanf_lower_hex_nohex);
-  tcase_add_test(tc_core, sscanf_lower_hex_lower);
-  tcase_add_test(tc_core, sscanf_lower_hex_sign);
-  tcase_add_test(tc_core, sscanf_upper_hex_len);
-  tcase_add_test(tc_core, sscanf_lower_hex_len);
-  tcase_add_test(tc_core, sscanf_octal_base_version);
-  tcase_add_test(tc_core, sscanf_octal_overflow);
-  tcase_add_test(tc_core, sscanf_octal_0x);
-  tcase_add_test(tc_core, sscanf_octal_0X);
-  tcase_add_test(tc_core, sscanf_octal_empty);
-  tcase_add_test(tc_core, sscanf_octal_fail);
-  tcase_add_test(tc_core, sscanf_octal_spaces_tabs_sns);
-  tcase_add_test(tc_core, sscanf_octal_short);
-  tcase_add_test(tc_core, sscanf_octal_long);
-  tcase_add_test(tc_core, sscanf_octal_2x);
-  tcase_add_test(tc_core, sscanf_octal_star);
-  tcase_add_test(tc_core, sscanf_octal_nohex);
-  tcase_add_test(tc_core, sscanf_octal_lower);
-  tcase_add_test(tc_core, sscanf_octal_sign);
-  tcase_add_test(tc_core, sscanf_octal_len);
-  tcase_add_test(tc_core, sscanf_buff1);
-  tcase_add_test(tc_core, sscanf_buff2);
-  tcase_add_test(tc_core, sscanf_pointer1);
-  tcase_add_test(tc_core, sscanf_pointer2);
-  tcase_add_test(tc_core, sscanf_pointer3);
-  tcase_add_test(tc_core, sscanf_pointer4);
-  tcase_add_test(tc_core, sscanf_hard1);
-  tcase_add_test(tc_core, sscanf_buff3);
-  tcase_add_test(tc_core, sscanf_perc1);
-  tcase_add_test(tc_core, sscanf_perc2);
-  tcase_add_test(tc_core, sscanf_perc3);
-  tcase_add_test(tc_core, sscanf_perc4);
-  tcase_add_test(tc_core, sscanf_perc5);
-  tcase_add_test(tc_core, sscanf_mixed_ptrs1);
-  tcase_add_test(tc_core, sscanf_mixed_ptrs2);
-  tcase_add_test(tc_core, sscanf_mixed_ptrs3);
-  tcase_add_test(tc_core, sscanf_mixed_ptrs4);
-  tcase_add_test(tc_core, sscanf_hard3);
-  tcase_add_test(tc_core, sscanf_hard4);
-  tcase_add_test(tc_core, sscanf_hard5);
-  tcase_add_test(tc_core, sprintf_1_c);
-  tcase_add_test(tc_core, sprintf_2_c);
-  tcase_add_test(tc_core, sprintf_3_c);
-  tcase_add_test(tc_core, sprintf_4_c);
-  tcase_add_test(tc_core, sprintf_5_c);
-  tcase_add_test(tc_core, sprintf_6_c);
-  tcase_add_test(tc_core, sprintf_7_c);
-  tcase_add_test(tc_core, sprintf_8_c);
-  tcase_add_test(tc_core, sprintf_9_c);
-  tcase_add_test(tc_core, sprintf_10_c);
-  tcase_add_test(tc_core, sprintf_11_c);
-  tcase_add_test(tc_core, sprintf_12_c);
-  tcase_add_test(tc_core, sprintf_13_c);
-  tcase_add_test(tc_core, sprintf_14_c);
-  tcase_add_test(tc_core, sprintf_15_c);
-  tcase_add_test(tc_core, sprintf_16_c);
-  tcase_add_test(tc_core, sprintf_17_c);
-  tcase_add_test(tc_core, sprintf_18_c);
-  tcase_add_test(tc_core, sprintf_19_c);
-  tcase_add_test(tc_core, sprintf_20_c);
-  tcase_add_test(tc_core, sprintf_21_c);
-  tcase_add_test(tc_core, sprintf_2_signed);
-  tcase_add_test(tc_core, sprintf_3_signed);
-  tcase_add_test(tc_core, sprintf_4_signed);
-  tcase_add_test(tc_core, sprintf_5_signed);
-  tcase_add_test(tc_core, sprintf_6_signed);
-  tcase_add_test(tc_core, sprintf_7_signed);
-  tcase_add_test(tc_core, sprintf_8_signed);
-  tcase_add_test(tc_core, sprintf_9_signed);
-  tcase_add_test(tc_core, sprintf_10_signed);
-  tcase_add_test(tc_core, sprintf_11_signed);
-  tcase_add_test(tc_core, sprintf_12_signed);
-  tcase_add_test(tc_core, sprintf_13_signed);
-  tcase_add_test(tc_core, sprintf_14_signed);
-  tcase_add_test(tc_core, sprintf_15_signed);
-  tcase_add_test(tc_core, sprintf_16_signed);
-  tcase_add_test(tc_core, sprintf_17_signed);
-  tcase_add_test(tc_core, sprintf_19_signed);
-  tcase_add_test(tc_core, sprintf_1_e);
-  tcase_add_test(tc_core, sprintf_2_e);
-  tcase_add_test(tc_core, sprintf_3_e);
-  tcase_add_test(tc_core, sprintf_4_e);
-  tcase_add_test(tc_core, sprintf_5_e);
-  tcase_add_test(tc_core, sprintf_6_e);
-  tcase_add_test(tc_core, sprintf_7_e);
-  tcase_add_test(tc_core, sprintf_8_e);
-  tcase_add_test(tc_core, sprintf_9_e);
-  tcase_add_test(tc_core, sprintf_10_e);
-  tcase_add_test(tc_core, sprintf_11_e);
-  tcase_add_test(tc_core, sprintf_12_e);
-  tcase_add_test(tc_core, sprintf_13_e);
-  tcase_add_test(tc_core, sprintf_14_e);
-  tcase_add_test(tc_core, sprintf_15_e);
-  tcase_add_test(tc_core, sprintf_16_e);
-  tcase_add_test(tc_core, sprintf_17_e);
-  tcase_add_test(tc_core, sprintf_18_e);
-  tcase_add_test(tc_core, sprintf_19_e);
-  tcase_add_test(tc_core, sprintf_20_e);
-  tcase_add_test(tc_core, sprintf_21_e);
-  tcase_add_test(tc_core, sprintf_22_e);
-  tcase_add_test(tc_core, sprintf_23_e);
-  tcase_add_test(tc_core, sprintf_24_e);
-  tcase_add_test(tc_core, sprintf_25_e);
-  tcase_add_test(tc_core, sprintf_26_e);
-  tcase_add_test(tc_core, sprintf_27_e);
-  tcase_add_test(tc_core, sprintf_28_e);
-  tcase_add_test(tc_core, sprintf_29_e);
-  tcase_add_test(tc_core, sprintf_30_e);
-  tcase_add_test(tc_core, sprintf_31_e);
-  tcase_add_test(tc_core, sprintf_32_e);
-  tcase_add_test(tc_core, sprintf_33_e);
-  tcase_add_test(tc_core, sprintf_34_e);
-  tcase_add_test(tc_core, sprintf_35_e);
-  tcase_add_test(tc_core, sprintf_36_e);
-  tcase_add_test(tc_core, sprintf_37_e);
-  tcase_add_test(tc_core, sprintf_38_e);
-  tcase_add_test(tc_core, sprintf_39_e);
-  tcase_add_test(tc_core, sprintf_40_e);
-  tcase_add_test(tc_core, sprintf_41_e);
-  tcase_add_test(tc_core, sprintf_42_e);
-  tcase_add_test(tc_core, sprintf_43_e);
-  tcase_add_test(tc_core, sprintf_44_e);
-  tcase_add_test(tc_core, sprintf_1_f);
-  tcase_add_test(tc_core, sprintf_2_f);
-  tcase_add_test(tc_core, sprintf_3_f);
-  tcase_add_test(tc_core, sprintf_4_f);
-  tcase_add_test(tc_core, sprintf_5_f);
-  tcase_add_test(tc_core, sprintf_6_f);
-  tcase_add_test(tc_core, sprintf_7_f);
-  tcase_add_test(tc_core, sprintf_8_f);
-  tcase_add_test(tc_core, sprintf_9_f);
-  tcase_add_test(tc_core, sprintf_10_f);
-  tcase_add_test(tc_core, sprintf_11_f);
-  tcase_add_test(tc_core, sprintf_12_f);
-  tcase_add_test(tc_core, sprintf_13_f);
-  tcase_add_test(tc_core, sprintf_14_f);
-  tcase_add_test(tc_core, sprintf_15_f);
-  tcase_add_test(tc_core, sprintf_16_f);
-  tcase_add_test(tc_core, sprintf_17_f);
-  tcase_add_test(tc_core, sprintf_18_f);
-  tcase_add_test(tc_core, sprintf_19_f);
-  tcase_add_test(tc_core, sprintf_20_f);
-  tcase_add_test(tc_core, sprintf_21_f);
-  tcase_add_test(tc_core, sprintf_22_f);
-  tcase_add_test(tc_core, sprintf_23_f);
-  tcase_add_test(tc_core, sprintf_24_f);
-  tcase_add_test(tc_core, sprintf_25_f);
-  tcase_add_test(tc_core, sprintf_26_f);
-  tcase_add_test(tc_core, sprintf_27_f);
-  tcase_add_test(tc_core, sprintf_28_f);
-  tcase_add_test(tc_core, sprintf_30_f);
-  tcase_add_test(tc_core, sprintf_31_f);
-  tcase_add_test(tc_core, sprintf_32_f);
-  tcase_add_test(tc_core, sprintf_33_f);
-  tcase_add_test(tc_core, sprintf_34_f);
-  tcase_add_test(tc_core, sprintf_35_f);
-  tcase_add_test(tc_core, sprintf_36_f);
-  tcase_add_test(tc_core, sprintf_37_f);
-  tcase_add_test(tc_core, sprintf_38_f);
-  tcase_add_test(tc_core, sprintf_39_f);
-  tcase_add_test(tc_core, sprintf_40_f);
-  tcase_add_test(tc_core, sprintf_41_f);
-  tcase_add_test(tc_core, sprintf_42_f);
-  tcase_add_test(tc_core, sprintf_43_f);
-  tcase_add_test(tc_core, sprintf_44_f);
-  tcase_add_test(tc_core, sprintf_45_f);
-  tcase_add_test(tc_core, sprintf_46_f);
-  tcase_add_test(tc_core, sprintf_47_f);
-  tcase_add_test(tc_core, sprintf_50_f);
-  tcase_add_test(tc_core, sprintf_51_f);
-  tcase_add_test(tc_core, sscanf_spec_ls_1);
-  tcase_add_test(tc_core, sscanf_spec_lc_2);
-  tcase_add_test(tc_core, sprintf_52_f);
-  tcase_add_test(tc_core, sprintf_54_f);
-  tcase_add_test(tc_core, sprintf_1_g);
-  tcase_add_test(tc_core, sprintf_2_g);
-  tcase_add_test(tc_core, sprintf_3_g);
-  tcase_add_test(tc_core, sprintf_4_g);
-  tcase_add_test(tc_core, sprintf_5_g);
-  tcase_add_test(tc_core, sprintf_6_g);
-  tcase_add_test(tc_core, sprintf_7_g);
-  tcase_add_test(tc_core, sprintf_8_g);
-  tcase_add_test(tc_core, sprintf_9_g);
-  tcase_add_test(tc_core, sprintf_10_g);
-  tcase_add_test(tc_core, sprintf_11_g);
-  tcase_add_test(tc_core, sprintf_12_g);
-  tcase_add_test(tc_core, sprintf_13_g);
-  tcase_add_test(tc_core, sprintf_14_g);
-  tcase_add_test(tc_core, sprintf_15_g);
-  tcase_add_test(tc_core, sprintf_16_g);
-  tcase_add_test(tc_core, sprintf_17_g);
-  tcase_add_test(tc_core, sprintf_18_g);
-  tcase_add_test(tc_core, sprintf_19_g);
-  tcase_add_test(tc_core, sprintf_20_g);
-  tcase_add_test(tc_core, sprintf_21_g);
-  tcase_add_test(tc_core, sprintf_22_g);
-  tcase_add_test(tc_core, sprintf_23_g);
-  tcase_add_test(tc_core, sprintf_24_g);
-  tcase_add_test(tc_core, sprintf_25_g);
-  tcase_add_test(tc_core, sprintf_26_g);
-  tcase_add_test(tc_core, sprintf_27_g);
-  tcase_add_test(tc_core, sprintf_28_g);
-  tcase_add_test(tc_core, sprintf_29_g);
-  tcase_add_test(tc_core, sprintf_30_g);
-  tcase_add_test(tc_core, sprintf_31_g);
-  tcase_add_test(tc_core, sprintf_32_g);
-  tcase_add_test(tc_core, sprintf_33_g);
-  tcase_add_test(tc_core, sprintf_34_g);
-  tcase_add_test(tc_core, sprintf_35_g);
-  tcase_add_test(tc_core, sprintf_36_g);
-  tcase_add_test(tc_core, sprintf_37_g);
-  tcase_add_test(tc_core, sprintf_38_g);
-  tcase_add_test(tc_core, sprintf_39_g);
-  tcase_add_test(tc_core, sprintf_40_g);
-  tcase_add_test(tc_core, sprintf_41_g);
-  tcase_add_test(tc_core, sprintf_42_g);
-  tcase_add_test(tc_core, sprintf_43_g);
-  tcase_add_test(tc_core, sprintf_45_g);
-  tcase_add_test(tc_core, sprintf_1_hex);
-  tcase_add_test(tc_core, sprintf_2_hex);
-  tcase_add_test(tc_core, sprintf_3_hex);
-  tcase_add_test(tc_core, sprintf_4_hex);
-  tcase_add_test(tc_core, sprintf_5_hex);
-  tcase_add_test(tc_core, sprintf_6_hex);
-  tcase_add_test(tc_core, sprintf_7_hex);
-  tcase_add_test(tc_core, sprintf_8_hex);
-  tcase_add_test(tc_core, sprintf_9_hex);
-  tcase_add_test(tc_core, sprintf_10_hex);
-  tcase_add_test(tc_core, sprintf_11_hex);
-  tcase_add_test(tc_core, sprintf_12_hex);
-  tcase_add_test(tc_core, sprintf_13_hex);
-  tcase_add_test(tc_core, sprintf_14_hex);
-  tcase_add_test(tc_core, sprintf_15_hex);
-  tcase_add_test(tc_core, sprintf_16_hex);
-  tcase_add_test(tc_core, sprintf_17_hex);
-  tcase_add_test(tc_core, sprintf_1_HEX);
-  tcase_add_test(tc_core, sprintf_2_HEX);
-  tcase_add_test(tc_core, sprintf_3_HEX);
-  tcase_add_test(tc_core, sprintf_4_HEX);
-  tcase_add_test(tc_core, sprintf_5_HEX);
-  tcase_add_test(tc_core, sprintf_6_HEX);
-  tcase_add_test(tc_core, sprintf_7_HEX);
-  tcase_add_test(tc_core, sprintf_8_HEX);
-  tcase_add_test(tc_core, sprintf_9_HEX);
-  tcase_add_test(tc_core, sprintf_10_HEX);
-  tcase_add_test(tc_core, sprintf_11_HEX);
-  tcase_add_test(tc_core, sprintf_12_HEX);
-  tcase_add_test(tc_core, sprintf_13_HEX);
-  tcase_add_test(tc_core, sprintf_14_HEX);
-  tcase_add_test(tc_core, sprintf_15_HEX);
-  tcase_add_test(tc_core, sprintf_16_HEX);
-  tcase_add_test(tc_core, sprintf_1_signed_i);
-  tcase_add_test(tc_core, sprintf_2_signed_i);
-  tcase_add_test(tc_core, sprintf_3_signed_i);
-  tcase_add_test(tc_core, sprintf_4_signed_i);
-  tcase_add_test(tc_core, sprintf_5_signed_i);
-  tcase_add_test(tc_core, sprintf_6_signed_i);
-  tcase_add_test(tc_core, sprintf_7_signed_i);
-  tcase_add_test(tc_core, sprintf_8_signed_i);
-  tcase_add_test(tc_core, sprintf_9_signed_i);
-  tcase_add_test(tc_core, sprintf_10_signed_i);
-  tcase_add_test(tc_core, sprintf_11_signed_i);
-  tcase_add_test(tc_core, sprintf_12_signed_i);
-  tcase_add_test(tc_core, sprintf_13_signed_i);
-  tcase_add_test(tc_core, sprintf_14_signed_i);
-  tcase_add_test(tc_core, sprintf_15_signed_i);
-  tcase_add_test(tc_core, sprintf_16_signed_i);
-  tcase_add_test(tc_core, sprintf_17_signed_i);
-  tcase_add_test(tc_core, sprintf_1_n);
-  tcase_add_test(tc_core, sprintf_2_n);
-  tcase_add_test(tc_core, sprintf_3_n);
-  tcase_add_test(tc_core, sprintf_4_n);
-  tcase_add_test(tc_core, sprintf_1_octal);
-  tcase_add_test(tc_core, sprintf_2_octal);
-  tcase_add_test(tc_core, sprintf_3_octal);
-  tcase_add_test(tc_core, sprintf_4_octal);
-  tcase_add_test(tc_core, sprintf_5_octal);
-  tcase_add_test(tc_core, sprintf_6_octal);
-  tcase_add_test(tc_core, sprintf_7_octal);
-  tcase_add_test(tc_core, sprintf_8_octal);
-  tcase_add_test(tc_core, sprintf_9_octal);
-  tcase_add_test(tc_core, sprintf_10_octal);
-  tcase_add_test(tc_core, sprintf_11_octal);
-  tcase_add_test(tc_core, sprintf_12_octal);
-  tcase_add_test(tc_core, sprintf_13_octal);
-  tcase_add_test(tc_core, sprintf_14_octal);
-  tcase_add_test(tc_core, sprintf_15_octal);
-  tcase_add_test(tc_core, sprintf_16_octal);
-  tcase_add_test(tc_core, sprintf_17_octal);
-  tcase_add_test(tc_core, sprintf_18_octal);
-  tcase_add_test(tc_core, sprintf_1_percent);
-  tcase_add_test(tc_core, sprintf_2_percent);
-  tcase_add_test(tc_core, sprintf_3_percent);
-  tcase_add_test(tc_core, sprintf_1_pointer);
-  tcase_add_test(tc_core, sprintf_2_pointer);
-  tcase_add_test(tc_core, sprintf_3_pointer);
-  tcase_add_test(tc_core, sprintf_4_pointer);
-  tcase_add_test(tc_core, sprintf_5_pointer);
-  tcase_add_test(tc_core, sprintf_6_pointer);
-  tcase_add_test(tc_core, sprintf_7_pointer);
-  tcase_add_test(tc_core, sprintf_8_pointer);
-  tcase_add_test(tc_core, sprintf_9_pointer);
-  tcase_add_test(tc_core, sprintf_10_pointer);
-  tcase_add_test(tc_core, sprintf_11_pointer);
-  tcase_add_test(tc_core, sprintf_12_pointer);
-  tcase_add_test(tc_core, sprintf_13_pointer);
-  tcase_add_test(tc_core, sprintf_14_pointer);
-  tcase_add_test(tc_core, sprintf_15_pointer);
-  tcase_add_test(tc_core, sprintf_1_string);
-  tcase_add_test(tc_core, sprintf_2_string);
-  tcase_add_test(tc_core, sprintf_3_string);
-  tcase_add_test(tc_core, sprintf_4_string);
-  tcase_add_test(tc_core, sprintf_5_string);
-  tcase_add_test(tc_core, sprintf_6_string);
-  tcase_add_test(tc_core, sprintf_7_string);
-  tcase_add_test(tc_core, sprintf_8_string);
-  tcase_add_test(tc_core, sprintf_9_string);
-  tcase_add_test(tc_core, sprintf_10_string);
-  tcase_add_test(tc_core, sprintf_11_string);
-  tcase_add_test(tc_core, sprintf_12_string);
-  tcase_add_test(tc_core, sprintf_13_string);
-  tcase_add_test(tc_core, sprintf_14_string);
-  tcase_add_test(tc_core, sprintf_15_string);
-  tcase_add_test(tc_core, sprintf_16_string);
-  tcase_add_test(tc_core, sprintf_17_string);
-  tcase_add_test(tc_core, sprintf_1_unsigned);
-  tcase_add_test(tc_core, sprintf_2_unsigned);
-  tcase_add_test(tc_core, sprintf_3_unsigned);
-  tcase_add_test(tc_core, sprintf_4_unsigned);
-  tcase_add_test(tc_core, sprintf_5_unsigned);
-  tcase_add_test(tc_core, sprintf_6_unsigned);
-  tcase_add_test(tc_core, sprintf_7_unsigned);
-  tcase_add_test(tc_core, sprintf_8_unsigned);
-  tcase_add_test(tc_core, sprintf_9_unsigned);
-  tcase_add_test(tc_core, sprintf_10_unsigned);
-  tcase_add_test(tc_core, sprintf_11_unsigned);
-  tcase_add_test(tc_core, sprintf_12_unsigned);
-  tcase_add_test(tc_core, sprintf_13_unsigned);
-  tcase_add_test(tc_core, sprintf_14_unsigned);
-  tcase_add_test(tc_core, sprintf_15_unsigned);
-  tcase_add_test(tc_core, sprintf_16_unsigned);
-  tcase_add_test(tc_core, sprintf_17_unsigned);
-  tcase_add_test(tc_core, sscanf_spec_c_2);
-  tcase_add_test(tc_core, sscanf_spec_c_4);
-  tcase_add_test(tc_core, sscanf_spec_c_5);
-  tcase_add_test(tc_core, sscanf_spec_c_6);
-  tcase_add_test(tc_core, sscanf_spec_c_7);
-  tcase_add_test(tc_core, sscanf_spec_c_8);
-  tcase_add_test(tc_core, sscanf_spec_hd_1);
-  tcase_add_test(tc_core, sscanf_spec_hd_2);
-  tcase_add_test(tc_core, sscanf_spec_hd_3);
-  tcase_add_test(tc_core, sscanf_spec_hd_4);
-  tcase_add_test(tc_core, sscanf_spec_hd_5);
-  tcase_add_test(tc_core, sscanf_spec_hd_6);
-  tcase_add_test(tc_core, sscanf_spec_hd_7);
-  tcase_add_test(tc_core, sscanf_spec_hd_8);
-  tcase_add_test(tc_core, sscanf_spec_hd_9);
-  tcase_add_test(tc_core, sscanf_spec_hd_10);
-  tcase_add_test(tc_core, sscanf_spec_hd_11);
-  tcase_add_test(tc_core, sscanf_spec_hd_12);
-  tcase_add_test(tc_core, sscanf_spec_hd_13);
-  tcase_add_test(tc_core, sscanf_spec_hd_14);
-  tcase_add_test(tc_core, sscanf_spec_hd_15);
-  tcase_add_test(tc_core, sscanf_spec_hd_16);
-  tcase_add_test(tc_core, sscanf_spec_hd_17);
-  tcase_add_test(tc_core, sscanf_spec_hd_18);
-  tcase_add_test(tc_core, sscanf_spec_hd_19);
-  tcase_add_test(tc_core, sscanf_spec_hd_20);
-  tcase_add_test(tc_core, sscanf_spec_hd_21);
-  tcase_add_test(tc_core, sscanf_spec_hd_22);
-  tcase_add_test(tc_core, sscanf_spec_hd_23);
-  tcase_add_test(tc_core, sscanf_spec_hd_24);
-  tcase_add_test(tc_core, sscanf_spec_hd_25);
-  tcase_add_test(tc_core, sscanf_spec_d_1);
-  tcase_add_test(tc_core, sscanf_spec_d_2);
-  tcase_add_test(tc_core, sscanf_spec_d_3);
-  tcase_add_test(tc_core, sscanf_spec_d_4);
-  tcase_add_test(tc_core, sscanf_spec_d_5);
-  tcase_add_test(tc_core, sscanf_spec_d_6);
-  tcase_add_test(tc_core, sscanf_spec_d_7);
-  tcase_add_test(tc_core, sscanf_spec_d_8);
-  tcase_add_test(tc_core, sscanf_spec_d_9);
-  tcase_add_test(tc_core, sscanf_spec_d_10);
-  tcase_add_test(tc_core, sscanf_spec_d_11);
-  tcase_add_test(tc_core, sscanf_spec_d_12);
-  tcase_add_test(tc_core, sscanf_spec_d_13);
-  tcase_add_test(tc_core, sscanf_spec_d_14);
-  tcase_add_test(tc_core, sscanf_spec_d_15);
-  tcase_add_test(tc_core, sscanf_spec_d_16);
-  tcase_add_test(tc_core, sscanf_spec_d_17);
-  tcase_add_test(tc_core, sscanf_spec_d_18);
-  tcase_add_test(tc_core, sscanf_spec_d_19);
-  tcase_add_test(tc_core, sscanf_spec_d_20);
-  tcase_add_test(tc_core, sscanf_spec_d_21);
-  tcase_add_test(tc_core, sscanf_spec_d_22);
-  tcase_add_test(tc_core, sscanf_spec_d_23);
-  tcase_add_test(tc_core, sscanf_spec_d_24);
-  tcase_add_test(tc_core, sscanf_spec_d_25);
-  tcase_add_test(tc_core, sscanf_spec_ld_1);
-  tcase_add_test(tc_core, sscanf_spec_ld_2);
-  tcase_add_test(tc_core, sscanf_spec_ld_3);
-  tcase_add_test(tc_core, sscanf_spec_ld_4);
-  tcase_add_test(tc_core, sscanf_spec_ld_5);
-  tcase_add_test(tc_core, sscanf_spec_ld_6);
-  tcase_add_test(tc_core, sscanf_spec_ld_7);
-  tcase_add_test(tc_core, sscanf_spec_ld_8);
-  tcase_add_test(tc_core, sscanf_spec_ld_9);
-  tcase_add_test(tc_core, sscanf_spec_ld_10);
-  tcase_add_test(tc_core, sscanf_spec_ld_11);
-  tcase_add_test(tc_core, sscanf_spec_ld_12);
-  tcase_add_test(tc_core, sscanf_spec_ld_13);
-  tcase_add_test(tc_core, sscanf_spec_ld_14);
-  tcase_add_test(tc_core, sscanf_spec_ld_15);
-  tcase_add_test(tc_core, sscanf_spec_ld_16);
-  tcase_add_test(tc_core, sscanf_spec_ld_17);
-  tcase_add_test(tc_core, sscanf_spec_ld_18);
-  tcase_add_test(tc_core, sscanf_spec_ld_19);
-  tcase_add_test(tc_core, sscanf_spec_ld_20);
-  tcase_add_test(tc_core, sscanf_spec_ld_21);
-  tcase_add_test(tc_core, sscanf_spec_ld_22);
-  tcase_add_test(tc_core, sscanf_spec_ld_23);
-  tcase_add_test(tc_core, sscanf_spec_ld_24);
-  tcase_add_test(tc_core, sscanf_spec_ld_25);
-  tcase_add_test(tc_core, sscanf_empty_1);
-  tcase_add_test(tc_core, sscanf_empty_2);
-  tcase_add_test(tc_core, sscanf_empty_3);
-  tcase_add_test(tc_core, sscanf_empty_4);
-  tcase_add_test(tc_core, sscanf_empty_5);
-  tcase_add_test(tc_core, sscanf_empty_6);
-  tcase_add_test(tc_core, sscanf_empty_7);
-  tcase_add_test(tc_core, sscanf_spec_hi_dec_1);
-  tcase_add_test(tc_core, sscanf_spec_hi_dec_2);
-  tcase_add_test(tc_core, sscanf_spec_hi_dec_3);
-  tcase_add_test(tc_core, sscanf_spec_hi_dec_4);
-  tcase_add_test(tc_core, sscanf_spec_hi_dec_5);
-  tcase_add_test(tc_core, sscanf_spec_hi_dec_6);
-  tcase_add_test(tc_core, sscanf_spec_hi_dec_7);
-  tcase_add_test(tc_core, sscanf_spec_hi_dec_8);
-  tcase_add_test(tc_core, sscanf_spec_hi_oct_1);
-  tcase_add_test(tc_core, sscanf_spec_hi_oct_2);
-  tcase_add_test(tc_core, sscanf_spec_hi_oct_3);
-  tcase_add_test(tc_core, sscanf_spec_hi_oct_4);
-  tcase_add_test(tc_core, sscanf_spec_hi_oct_5);
-  tcase_add_test(tc_core, sscanf_spec_hi_oct_6);
-  tcase_add_test(tc_core, sscanf_spec_hi_oct_7);
-  tcase_add_test(tc_core, sscanf_spec_hi_oct_8);
-  tcase_add_test(tc_core, sscanf_spec_hi_hex_1);
-  tcase_add_test(tc_core, sscanf_spec_hi_hex_2);
-  tcase_add_test(tc_core, sscanf_spec_hi_hex_3);
-  tcase_add_test(tc_core, sscanf_spec_hi_hex_5);
-  tcase_add_test(tc_core, sscanf_spec_hi_hex_6);
-  tcase_add_test(tc_core, sscanf_spec_hi_hex_7);
-  tcase_add_test(tc_core, sscanf_spec_hi_hex_8);
-  tcase_add_test(tc_core, sscanf_spec_i_dec_1);
-  tcase_add_test(tc_core, sscanf_spec_i_dec_2);
-  tcase_add_test(tc_core, sscanf_spec_i_dec_3);
-  tcase_add_test(tc_core, sscanf_spec_i_dec_4);
-  tcase_add_test(tc_core, sscanf_spec_i_dec_5);
-  tcase_add_test(tc_core, sscanf_spec_i_dec_6);
-  tcase_add_test(tc_core, sscanf_spec_i_dec_7);
-  tcase_add_test(tc_core, sscanf_spec_i_dec_8);
-  tcase_add_test(tc_core, sscanf_spec_i_oct_1);
-  tcase_add_test(tc_core, sscanf_spec_i_oct_2);
-  tcase_add_test(tc_core, sscanf_spec_i_oct_3);
-  tcase_add_test(tc_core, sscanf_spec_i_oct_4);
-  tcase_add_test(tc_core, sscanf_spec_i_oct_5);
-  tcase_add_test(tc_core, sscanf_spec_i_oct_6);
-  tcase_add_test(tc_core, sscanf_spec_i_oct_7);
-  tcase_add_test(tc_core, sscanf_spec_i_oct_8);
-  tcase_add_test(tc_core, sscanf_spec_i_hex_1);
-  tcase_add_test(tc_core, sscanf_spec_i_hex_2);
-  tcase_add_test(tc_core, sscanf_spec_i_hex_3);
-  tcase_add_test(tc_core, sscanf_spec_i_hex_5);
-  tcase_add_test(tc_core, sscanf_spec_i_hex_6);
-  tcase_add_test(tc_core, sscanf_spec_i_hex_7);
-  tcase_add_test(tc_core, sscanf_spec_i_hex_8);
-  tcase_add_test(tc_core, sscanf_spec_li_dec_1);
-  tcase_add_test(tc_core, sscanf_spec_li_dec_2);
-  tcase_add_test(tc_core, sscanf_spec_li_dec_3);
-  tcase_add_test(tc_core, sscanf_spec_li_dec_4);
-  tcase_add_test(tc_core, sscanf_spec_li_dec_5);
-  tcase_add_test(tc_core, sscanf_spec_li_dec_6);
-  tcase_add_test(tc_core, sscanf_spec_li_dec_7);
-  tcase_add_test(tc_core, sscanf_spec_li_dec_8);
-  tcase_add_test(tc_core, sscanf_spec_li_oct_1);
-  tcase_add_test(tc_core, sscanf_spec_li_oct_2);
-  tcase_add_test(tc_core, sscanf_spec_li_oct_3);
-  tcase_add_test(tc_core, sscanf_spec_li_oct_4);
-  tcase_add_test(tc_core, sscanf_spec_li_oct_5);
-  tcase_add_test(tc_core, sscanf_spec_li_oct_6);
-  tcase_add_test(tc_core, sscanf_spec_li_oct_7);
-  tcase_add_test(tc_core, sscanf_spec_li_oct_8);
-  tcase_add_test(tc_core, sscanf_spec_li_hex_1);
-  tcase_add_test(tc_core, sscanf_spec_li_hex_2);
-  tcase_add_test(tc_core, sscanf_spec_li_hex_3);
-  tcase_add_test(tc_core, sscanf_spec_li_hex_5);
-  tcase_add_test(tc_core, sscanf_spec_li_hex_6);
-  tcase_add_test(tc_core, sscanf_spec_li_hex_7);
-  tcase_add_test(tc_core, sscanf_spec_li_hex_8);
-  tcase_add_test(tc_core, sscanf_spec_n_1);
-  tcase_add_test(tc_core, sscanf_spec_n_2);
-  tcase_add_test(tc_core, sscanf_spec_n_3);
-  tcase_add_test(tc_core, sscanf_spec_n_4);
-  tcase_add_test(tc_core, sscanf_spec_n_5);
-  tcase_add_test(tc_core, sscanf_spec_n_6);
-  tcase_add_test(tc_core, sscanf_spec_n_7);
-  tcase_add_test(tc_core, sscanf_spec_n_8);
-  tcase_add_test(tc_core, sscanf_spec_n_9);
-  tcase_add_test(tc_core, sscanf_spec_n_10);
-  tcase_add_test(tc_core, sscanf_spec_ho_1);
-  tcase_add_test(tc_core, sscanf_spec_ho_2);
-  tcase_add_test(tc_core, sscanf_spec_ho_3);
-  tcase_add_test(tc_core, sscanf_spec_ho_4);
-  tcase_add_test(tc_core, sscanf_spec_ho_5);
-  tcase_add_test(tc_core, sscanf_spec_ho_6);
-  tcase_add_test(tc_core, sscanf_spec_o_1);
-  tcase_add_test(tc_core, sscanf_spec_o_2);
-  tcase_add_test(tc_core, sscanf_spec_o_3);
-  tcase_add_test(tc_core, sscanf_spec_o_4);
-  tcase_add_test(tc_core, sscanf_spec_o_5);
-  tcase_add_test(tc_core, sscanf_spec_o_6);
-  tcase_add_test(tc_core, sscanf_spec_lo_1);
-  tcase_add_test(tc_core, sscanf_spec_lo_2);
-  tcase_add_test(tc_core, sscanf_spec_lo_3);
-  tcase_add_test(tc_core, sscanf_spec_lo_4);
-  tcase_add_test(tc_core, sscanf_spec_lo_5);
-  tcase_add_test(tc_core, sscanf_spec_lo_6);
-  tcase_add_test(tc_core, sscanf_spec_p_1);
-  tcase_add_test(tc_core, sscanf_spec_p_2);
-  tcase_add_test(tc_core, sscanf_spec_p_3);
-  tcase_add_test(tc_core, sscanf_spec_p_4);
-  tcase_add_test(tc_core, sscanf_spec_p_5);
-  tcase_add_test(tc_core, sscanf_spec_p_6);
-  tcase_add_test(tc_core, sscanf_spec_p_7);
-  tcase_add_test(tc_core, sscanf_spec_p_8);
-  tcase_add_test(tc_core, sscanf_spec_p_9);
-  tcase_add_test(tc_core, sscanf_spec_p_10);
-  tcase_add_test(tc_core, sscanf_spec_p_11);
-  tcase_add_test(tc_core, sscanf_spec_p_12);
-  tcase_add_test(tc_core, sscanf_spec_p_13);
-  tcase_add_test(tc_core, sscanf_spec_p_14);
-  tcase_add_test(tc_core, sscanf_spec_p_15);
-  tcase_add_test(tc_core, sscanf_spec_real_1);
-  tcase_add_test(tc_core, sscanf_spec_real_2);
-  tcase_add_test(tc_core, sscanf_spec_real_3);
-  tcase_add_test(tc_core, sscanf_spec_real_4);
-  tcase_add_test(tc_core, sscanf_spec_real_5);
-  tcase_add_test(tc_core, sscanf_spec_real_6);
-  tcase_add_test(tc_core, sscanf_spec_real_7);
-  tcase_add_test(tc_core, sscanf_spec_real_8);
-  tcase_add_test(tc_core, sscanf_spec_real_9);
-  tcase_add_test(tc_core, sscanf_spec_real_10);
-  tcase_add_test(tc_core, sscanf_spec_real_11);
-  tcase_add_test(tc_core, sscanf_spec_real_12);
-  tcase_add_test(tc_core, sscanf_spec_real_13);
-  tcase_add_test(tc_core, sscanf_spec_real_14);
-  tcase_add_test(tc_core, sscanf_spec_real_15);
-  tcase_add_test(tc_core, sscanf_spec_real_18);
-  tcase_add_test(tc_core, sscanf_spec_real_19);
-  tcase_add_test(tc_core, sscanf_spec_real_20);
-  tcase_add_test(tc_core, sscanf_spec_real_21);
-  tcase_add_test(tc_core, sscanf_spec_real_22);
-  tcase_add_test(tc_core, sscanf_spec_hx_1);
-  tcase_add_test(tc_core, sscanf_spec_hx_2);
-  tcase_add_test(tc_core, sscanf_spec_hx_3);
-  tcase_add_test(tc_core, sscanf_spec_hx_4);
-  tcase_add_test(tc_core, sscanf_spec_hx_5);
-  tcase_add_test(tc_core, sscanf_spec_hx_6);
-  tcase_add_test(tc_core, sscanf_spec_hx_7);
-  tcase_add_test(tc_core, sscanf_spec_hx_8);
-  tcase_add_test(tc_core, sscanf_spec_hx_9);
-  tcase_add_test(tc_core, sscanf_spec_hx_10);
-  tcase_add_test(tc_core, sscanf_spec_hx_11);
-  tcase_add_test(tc_core, sscanf_spec_x_1);
-  tcase_add_test(tc_core, sscanf_spec_x_2);
-  tcase_add_test(tc_core, sscanf_spec_x_3);
-  tcase_add_test(tc_core, sscanf_spec_x_4);
-  tcase_add_test(tc_core, sscanf_spec_x_5);
-  tcase_add_test(tc_core, sscanf_spec_x_6);
-  tcase_add_test(tc_core, sscanf_spec_x_7);
-  tcase_add_test(tc_core, sscanf_spec_x_8);
-  tcase_add_test(tc_core, sscanf_spec_x_9);
-  tcase_add_test(tc_core, sscanf_spec_x_10);
-  tcase_add_test(tc_core, sscanf_spec_x_11);
-  tcase_add_test(tc_core, sscanf_spec_lx_1);
-  tcase_add_test(tc_core, sscanf_spec_lx_2);
-  tcase_add_test(tc_core, sscanf_spec_lx_3);
-  tcase_add_test(tc_core, sscanf_spec_lx_4);
-  tcase_add_test(tc_core, sscanf_spec_lx_5);
-  tcase_add_test(tc_core, sscanf_spec_lx_6);
-  tcase_add_test(tc_core, sscanf_spec_lx_7);
-  tcase_add_test(tc_core, sscanf_spec_lx_8);
-  tcase_add_test(tc_core, sscanf_spec_lx_9);
-  tcase_add_test(tc_core, sscanf_spec_lx_10);
-  tcase_add_test(tc_core, sscanf_spec_lx_11);
+  tcase_add_test(tc_act, sprintf_test1);
+  tcase_add_test(tc_act, sprintf_test2);
+  tcase_add_test(tc_act, sprintf_test3);
+  tcase_add_test(tc_act, sprintf_test4);
+  tcase_add_test(tc_act, sprintf_test5);
+  tcase_add_test(tc_act, sprintf_test6);
+  tcase_add_test(tc_act, sprintf_test7);
+  tcase_add_test(tc_act, sprintf_test8);
+  tcase_add_test(tc_act, sprintf_test9);
+  tcase_add_test(tc_act, sprintf_test10);
+  tcase_add_test(tc_act, sprintf_test11);
+  tcase_add_test(tc_act, sprintf_test12);
+  tcase_add_test(tc_act, sprintf_test13);
+  tcase_add_test(tc_act, sprintf_test14);
+  tcase_add_test(tc_act, sprintf_test15);
+  tcase_add_test(tc_act, sprintf_test16);
+  tcase_add_test(tc_act, sprintf_test17);
+  tcase_add_test(tc_act, sprintf_test18);
+  tcase_add_test(tc_act, sprintf_test19);
+  tcase_add_test(tc_act, sprintf_test20);
+  tcase_add_test(tc_act, sprintf_test21);
+  tcase_add_test(tc_act, sprintf_test22);
+  tcase_add_test(tc_act, sprintf_test23);
+  tcase_add_test(tc_act, sprintf_test24);
+  tcase_add_test(tc_act, sprintf_test25);
+  tcase_add_test(tc_act, sprintf_test26);
+  tcase_add_test(tc_act, sprintf_test27);
+  tcase_add_test(tc_act, sprintf_test28);
+  tcase_add_test(tc_act, sprintf_test29);
+  tcase_add_test(tc_act, shiraleo_sprintf_test_01);
+  tcase_add_test(tc_act, shiraleo_sprintf_test_02);
+  tcase_add_test(tc_act, shiraleo_sprintf_test_03);
+  tcase_add_test(tc_act, shiraleo_sprintf_test_04);
+  tcase_add_test(tc_act, shiraleo_sprintf_test_05);
+  tcase_add_test(tc_act, shiraleo_sprintf_test_06);
+  tcase_add_test(tc_act, shiraleo_sprintf_test_07);  // seg?
+  tcase_add_test(tc_act, shiraleo_sprintf_test_08);
+  tcase_add_test(tc_act, shiraleo_sprintf_test_09);
+  tcase_add_test(tc_act, shiraleo_sprintf_test_10);
+  tcase_add_test(tc_act, teenybir_sprintf_e_test1);
+  tcase_add_test(tc_act, teenybir_sprintf_e_test2);
+  tcase_add_test(tc_act, teenybir_sprintf_e_test3);
+  tcase_add_test(tc_act, teenybir_sprintf_e_test4);
+  tcase_add_test(tc_act, teenybir_sprintf_e_test5);
+  tcase_add_test(tc_act, teenybir_sprintf_le_test1);
+  tcase_add_test(tc_act, teenybir_sprintf_le_test2);
+  tcase_add_test(tc_act, teenybir_sprintf_f_test1);
+  tcase_add_test(tc_act, teenybir_sprintf_f_test2);
+  tcase_add_test(tc_act, teenybir_sprintf_f_test3);
+  tcase_add_test(tc_act, teenybir_sprintf_f_test4);
+  tcase_add_test(tc_act, teenybir_sprintf_f_test5);
+  tcase_add_test(tc_act, teenybir_sprintf_lf_test2);
+  tcase_add_test(tc_act, teenybir_sprintf_x_test1);
+  tcase_add_test(tc_act, teenybir_sprintf_x_test2);
+  tcase_add_test(tc_act, teenybir_sprintf_X_test3);
+  tcase_add_test(tc_act, teenybir_sprintf_c_test1);
+  tcase_add_test(tc_act, teenybir_sprintf_c_test2);
+  tcase_add_test(tc_act, sprintf_alignment_test1);
+  tcase_add_test(tc_act, sprintf_alignment_test2);
+  tcase_add_test(tc_act, sprintf_alignment_test3);
+  tcase_add_test(tc_act, sprintf_precision_test1);
+  tcase_add_test(tc_act, teenybir_sprintf_s_test1);
+  tcase_add_test(tc_act, teenybir_sprintf_s_test2);
+  tcase_add_test(tc_act, sprintf_percent_test1);
+  tcase_add_test(tc_act, sprintf_nothing_test1);
+  tcase_add_test(tc_act, sprintf_p_test1);
+  tcase_add_test(tc_act, sprintf_p_test2);
+  tcase_add_test(tc_act, sprintf_n_test1);
+  tcase_add_test(tc_act, sprintf_n_test2);
+  tcase_add_test(tc_act, machelch_sprintf_gG_test1);
+  tcase_add_test(tc_act, machelch_sprintf_gG_test2);
+  tcase_add_test(tc_act, machelch_sprintf_gG_test3);
+  tcase_add_test(tc_act, machelch_sprintf_gG_test4);
+  tcase_add_test(tc_act, machelch_sprintf_gG_test5);
+  tcase_add_test(tc_act, machelch_sprintf_gG_test6);
+  tcase_add_test(tc_act, machelch_sprintf_gG_test7);
+  tcase_add_test(tc_act, machelch_sprintf_gG_test8);
+  tcase_add_test(tc_act, machelch_sprintf_gG_test9);
+  tcase_add_test(tc_act, machelch_sprintf_gG_test10);
+  tcase_add_test(tc_act, machelch_sprintf_gG_test11);
+  tcase_add_test(tc_act, machelch_sprintf_gG_test12);
+  tcase_add_test(tc_act, machelch_sprintf_gG_test13);
+  tcase_add_test(tc_act, machelch_sprintf_gG_test14);
+  tcase_add_test(tc_act, machelch_sprintf_gG_test15);
+  tcase_add_test(tc_act, machelch_sprintf_gG_test16);
+  tcase_add_test(tc_act, machelch_sprintf_n_test1);
+  tcase_add_test(tc_act, machelch_sprintf_p_test1);
+  tcase_add_test(tc_act, machelch_sprintf_p_test2);
+  tcase_add_test(tc_act, machelch_sprintf_s_test1);  // seg ?
+  tcase_add_test(tc_act, machelch_sprintf_d_test1);
+  tcase_add_test(tc_act, machelch_sprintf_s_test2);
+  tcase_add_test(tc_act, machelch_sprintf_d_test2);
+  tcase_add_test(tc_act, machelch_sprintf_d_test3);
+  tcase_add_test(tc_act, machelch_sprintf_s_test4);
+  tcase_add_test(tc_act, machelch_sprintf_x_test1);
+  tcase_add_test(tc_act, machelch_sprintf_x_test2);
+  tcase_add_test(tc_act, machelch_sprintf_u_test1);
+  tcase_add_test(tc_core, machelch_sprintf_error_test1);  // seg
+  tcase_add_test(tc_act, sscanf_EOF1);
+  tcase_add_test(tc_act, sscanf_EOF2);
+  tcase_add_test(tc_act, sscanf_EOF3);
+  tcase_add_test(tc_act, sscanf_only_chars1);
+  tcase_add_test(tc_act, sscanf_only_chars2);
+  tcase_add_test(tc_act, sscanf_only_chars3);
+  tcase_add_test(tc_act, sscanf_only_chars4);
+  tcase_add_test(tc_act, sscanf_only_chars5);
+  tcase_add_test(tc_act, sscanf_special_symbols_as_chars1);
+  tcase_add_test(tc_act, sscanf_special_symbols_as_chars2);
+  tcase_add_test(tc_act, sscanf_special_symbols_as_chars3);
+  tcase_add_test(tc_act, sscanf_chars_flags1);
+  tcase_add_test(tc_act, sscanf_chars_flags2);
+  tcase_add_test(tc_act, sscanf_chars_flags3);
+  tcase_add_test(tc_act, sscanf_chars_flags4);
+  tcase_add_test(tc_act, sscanf_chars_flags5);
+  tcase_add_test(tc_act, sscanf_chars_aster1);
+  tcase_add_test(tc_act, sscanf_chars_aster2);
+  tcase_add_test(tc_act, sscanf_only_ints1);
+  tcase_add_test(tc_act, sscanf_only_ints2);
+  tcase_add_test(tc_act, sscanf_ints_nwidth1);
+  tcase_add_test(tc_act, sscanf_ints_nwidth2);
+  tcase_add_test(tc_act, sscanf_ints_nwidth3);
+  tcase_add_test(tc_act, sscanf_ints_nwidth4);
+  tcase_add_test(tc_act, sscanf_ints_astwidth1);
+  tcase_add_test(tc_act, sscanf_ints_astwidth2);
+  tcase_add_test(tc_act, sscanf_ints_astwidth3);
+  tcase_add_test(tc_act, sscanf_ints_astwidth4);
+  tcase_add_test(tc_act, sscanf_signed_ints1);
+  tcase_add_test(tc_act, sscanf_signed_ints2);
+  tcase_add_test(tc_act, sscanf_signed_ints3);
+  tcase_add_test(tc_act, sscanf_signed_ints4);
+  tcase_add_test(tc_act, sscanf_spec_i_int1);
+  tcase_add_test(tc_act, sscanf_spec_i_int2);  // norm
+  tcase_add_test(tc_act, sscanf_spec_i_int3);
+  tcase_add_test(tc_act, sscanf_spec_i_int4);
+  tcase_add_test(tc_act, sscanf_spec_i_hex1);
+  tcase_add_test(tc_act, sscanf_spec_i_hex2);
+  tcase_add_test(tc_act, sscanf_spec_i_oct1);
+  tcase_add_test(tc_act, sscanf_spec_i_oct2);
+  tcase_add_test(tc_act, sscanf_strings1);
+  tcase_add_test(tc_act, sscanf_strings_mixed3);
+  tcase_add_test(tc_act, sscanf_strings2);
+  tcase_add_test(tc_act, sscanf_strings3);
+  tcase_add_test(tc_act, sscanf_strings4);
+  tcase_add_test(tc_act, sscanf_strings5);
+  tcase_add_test(tc_act, sscanf_strings6);
+  tcase_add_test(tc_act, sscanf_strings_mixed1);
+  tcase_add_test(tc_act, sscanf_strings_mixed2);
+  tcase_add_test(tc_act, sscanf_n1);
+  tcase_add_test(tc_act, sscanf_n2);
+  tcase_add_test(tc_act, sscanf_n3);
+  tcase_add_test(tc_act, sscanf_n4);
+  tcase_add_test(tc_act, sscanf_n5);
+  tcase_add_test(tc_act, sscanf_floats1);
+  tcase_add_test(tc_act, sscanf_floats2);
+  tcase_add_test(tc_act, sscanf_floats3);
+  tcase_add_test(tc_act, sscanf_floats4);
+  tcase_add_test(tc_act, sscanf_floats5);
+  tcase_add_test(tc_act, sscanf_floats_sci1);
+  tcase_add_test(tc_act, sscanf_floats_sci2);
+  tcase_add_test(tc_act, sscanf_floats_sci3);
+  tcase_add_test(tc_act, sscanf_floats_sci4);
+  tcase_add_test(tc_act, sscanf_floats_sci5);
+  tcase_add_test(tc_act, sscanf_uint1);
+  tcase_add_test(tc_act, sscanf_uint2);
+  tcase_add_test(tc_act, sscanf_uint3);
+  tcase_add_test(tc_act, sscanf_uint4);
+  tcase_add_test(tc_act, sscanf_uint5);  // norm
+  tcase_add_test(tc_act, sscanf_uint6);
+  tcase_add_test(tc_act, sscanf_upeer_hex_base_version);
+  tcase_add_test(tc_act, sscanf_upeer_hex_overflow);
+  tcase_add_test(tc_act, sscanf_upeer_hex_0x);
+  tcase_add_test(tc_act, sscanf_upeer_hex_0X);
+  tcase_add_test(tc_act, sscanf_upeer_hex_empty);
+  tcase_add_test(tc_act, sscanf_upeer_hex_fail);
+  tcase_add_test(tc_act, sscanf_upeer_hex_spaces_tabs_sns);
+  tcase_add_test(tc_act, sscanf_upeer_hex_short);
+  tcase_add_test(tc_act, sscanf_upeer_hex_long);
+  tcase_add_test(tc_act, sscanf_upeer_hex_2x);
+  tcase_add_test(tc_act, sscanf_upeer_hex_star);
+  tcase_add_test(tc_act, sscanf_upeer_hex_nohex);
+  tcase_add_test(tc_act, sscanf_upeer_hex_lower);
+  tcase_add_test(tc_act, sscanf_upeer_hex_sign);
+  tcase_add_test(tc_act, sscanf_lower_hex_base_version);
+  tcase_add_test(tc_act, sscanf_lower_hex_overflow);
+  tcase_add_test(tc_act, sscanf_lower_hex_0x);
+  tcase_add_test(tc_act, sscanf_lower_hex_0X);
+  tcase_add_test(tc_act, sscanf_lower_hex_empty);
+  tcase_add_test(tc_act, sscanf_lower_hex_fail);
+  tcase_add_test(tc_act, sscanf_lower_hex_spaces_tabs_sns);
+  tcase_add_test(tc_act, sscanf_lower_hex_short);
+  tcase_add_test(tc_act, sscanf_lower_hex_long);
+  tcase_add_test(tc_act, sscanf_lower_hex_2x);
+  tcase_add_test(tc_act, sscanf_lower_hex_star);
+  tcase_add_test(tc_act, sscanf_lower_hex_nohex);
+  tcase_add_test(tc_act, sscanf_lower_hex_lower);
+  tcase_add_test(tc_act, sscanf_lower_hex_sign);
+  tcase_add_test(tc_act, sscanf_upper_hex_len);
+  tcase_add_test(tc_act, sscanf_lower_hex_len);
+  tcase_add_test(tc_act, sscanf_octal_base_version);
+  tcase_add_test(tc_act, sscanf_octal_overflow);
+  tcase_add_test(tc_act, sscanf_octal_0x);
+  tcase_add_test(tc_act, sscanf_octal_0X);
+  tcase_add_test(tc_act, sscanf_octal_empty);
+  tcase_add_test(tc_act, sscanf_octal_fail);  // norm
+  tcase_add_test(tc_act, sscanf_octal_spaces_tabs_sns);
+  tcase_add_test(tc_act, sscanf_octal_short);
+  tcase_add_test(tc_act, sscanf_octal_long);
+  tcase_add_test(tc_act, sscanf_octal_2x);
+  tcase_add_test(tc_act, sscanf_octal_star);
+  tcase_add_test(tc_act, sscanf_octal_nohex);
+  tcase_add_test(tc_act, sscanf_octal_lower);
+  tcase_add_test(tc_act, sscanf_octal_sign);
+  tcase_add_test(tc_act, sscanf_octal_len);
+  tcase_add_test(tc_act, sscanf_buff1);
+  tcase_add_test(tc_act, sscanf_buff2);
+  tcase_add_test(tc_act, sscanf_pointer1);
+  tcase_add_test(tc_act, sscanf_pointer2);
+  tcase_add_test(tc_act, sscanf_pointer3);
+  tcase_add_test(tc_act, sscanf_pointer4);
+  tcase_add_test(tc_act, sscanf_hard1);
+  tcase_add_test(tc_act, sscanf_buff3);
+  tcase_add_test(tc_act, sscanf_perc1);
+  tcase_add_test(tc_act, sscanf_perc2);
+  tcase_add_test(tc_act, sscanf_perc3);
+  tcase_add_test(tc_act, sscanf_perc4);
+  tcase_add_test(tc_act, sscanf_perc5);
+  tcase_add_test(tc_act, sscanf_mixed_ptrs1);
+  tcase_add_test(tc_act, sscanf_mixed_ptrs2);
+  tcase_add_test(tc_act, sscanf_mixed_ptrs3);
+  tcase_add_test(tc_act, sscanf_mixed_ptrs4);
+  tcase_add_test(tc_act, sscanf_hard3);
+  tcase_add_test(tc_act, sscanf_hard4);
+  tcase_add_test(tc_act, sscanf_hard5);
+  tcase_add_test(tc_act, sprintf_1_c);
+  tcase_add_test(tc_act, sprintf_2_c);
+  tcase_add_test(tc_act, sprintf_3_c);
+  tcase_add_test(tc_act, sprintf_4_c);
+  tcase_add_test(tc_act, sprintf_5_c);
+  tcase_add_test(tc_act, sprintf_6_c);
+  tcase_add_test(tc_act, sprintf_7_c);
+  tcase_add_test(tc_act, sprintf_8_c);
+  tcase_add_test(tc_act, sprintf_9_c);
+  tcase_add_test(tc_act, sprintf_10_c);
+  tcase_add_test(tc_act, sprintf_11_c);
+  tcase_add_test(tc_act, sprintf_12_c);
+  tcase_add_test(tc_act, sprintf_13_c);
+  tcase_add_test(tc_act, sprintf_14_c);  // norm
+  tcase_add_test(tc_act, sprintf_15_c);
+  tcase_add_test(tc_act, sprintf_16_c);
+  tcase_add_test(tc_act, sprintf_17_c);
+  tcase_add_test(tc_act, sprintf_18_c);
+  tcase_add_test(tc_act, sprintf_19_c);
+  tcase_add_test(tc_act, sprintf_20_c);
+  tcase_add_test(tc_act, sprintf_21_c);
+  tcase_add_test(tc_act, sprintf_2_signed);
+  tcase_add_test(tc_act, sprintf_3_signed);
+  tcase_add_test(tc_act, sprintf_4_signed);
+  tcase_add_test(tc_act, sprintf_5_signed);
+  tcase_add_test(tc_act, sprintf_6_signed);
+  tcase_add_test(tc_act, sprintf_7_signed);
+  tcase_add_test(tc_act, sprintf_8_signed);
+  tcase_add_test(tc_act, sprintf_9_signed);
+  tcase_add_test(tc_act, sprintf_10_signed);
+  tcase_add_test(tc_act, sprintf_11_signed);
+  tcase_add_test(tc_act, sprintf_12_signed);
+  tcase_add_test(tc_act, sprintf_13_signed);
+  tcase_add_test(tc_act, sprintf_14_signed);
+  tcase_add_test(tc_act, sprintf_15_signed);
+  tcase_add_test(tc_act, sprintf_16_signed);
+  tcase_add_test(tc_act, sprintf_17_signed);
+  tcase_add_test(tc_act, sprintf_19_signed);
+  tcase_add_test(tc_act, sprintf_1_e);
+  tcase_add_test(tc_act, sprintf_2_e);
+  tcase_add_test(tc_act, sprintf_3_e);
+  tcase_add_test(tc_act, sprintf_4_e);
+  tcase_add_test(tc_act, sprintf_5_e);
+  tcase_add_test(tc_act, sprintf_6_e);
+  tcase_add_test(tc_act, sprintf_7_e);
+  tcase_add_test(tc_act, sprintf_8_e);
+  tcase_add_test(tc_act, sprintf_9_e);
+  tcase_add_test(tc_act, sprintf_10_e);
+  tcase_add_test(tc_act, sprintf_11_e);
+  tcase_add_test(tc_act, sprintf_12_e);
+  tcase_add_test(tc_act, sprintf_13_e);
+  tcase_add_test(tc_act, sprintf_14_e);
+  tcase_add_test(tc_act, sprintf_15_e);
+  tcase_add_test(tc_act, sprintf_16_e);
+  tcase_add_test(tc_act, sprintf_17_e);
+  tcase_add_test(tc_act, sprintf_18_e);
+  tcase_add_test(tc_act, sprintf_19_e);
+  tcase_add_test(tc_act, sprintf_20_e);
+  tcase_add_test(tc_act, sprintf_21_e);
+  tcase_add_test(tc_act, sprintf_22_e);
+  tcase_add_test(tc_act, sprintf_23_e);
+  tcase_add_test(tc_act, sprintf_24_e);
+  tcase_add_test(tc_act, sprintf_25_e);
+  tcase_add_test(tc_act, sprintf_26_e);
+  tcase_add_test(tc_act, sprintf_27_e);
+  tcase_add_test(tc_act, sprintf_28_e);
+  tcase_add_test(tc_act, sprintf_29_e);
+  tcase_add_test(tc_act, sprintf_30_e);
+  tcase_add_test(tc_act, sprintf_31_e);
+  tcase_add_test(tc_act, sprintf_32_e);
+  tcase_add_test(tc_act, sprintf_33_e);
+  tcase_add_test(tc_act, sprintf_34_e);
+  tcase_add_test(tc_act, sprintf_35_e);
+  tcase_add_test(tc_act, sprintf_36_e);
+  tcase_add_test(tc_act, sprintf_37_e);
+  tcase_add_test(tc_act, sprintf_38_e);
+  tcase_add_test(tc_act, sprintf_39_e);
+  tcase_add_test(tc_act, sprintf_40_e);
+  tcase_add_test(tc_act, sprintf_41_e);
+  tcase_add_test(tc_act, sprintf_42_e);
+  tcase_add_test(tc_act, sprintf_43_e);
+  tcase_add_test(tc_act, sprintf_44_e);  // norm
+  tcase_add_test(tc_act, sprintf_1_f);
+  tcase_add_test(tc_act, sprintf_2_f);
+  tcase_add_test(tc_act, sprintf_3_f);
+  tcase_add_test(tc_act, sprintf_4_f);
+  tcase_add_test(tc_act, sprintf_5_f);
+  tcase_add_test(tc_act, sprintf_6_f);
+  tcase_add_test(tc_act, sprintf_7_f);
+  tcase_add_test(tc_act, sprintf_8_f);
+  tcase_add_test(tc_act, sprintf_9_f);
+  tcase_add_test(tc_act, sprintf_10_f);
+  tcase_add_test(tc_act, sprintf_11_f);
+  tcase_add_test(tc_act, sprintf_12_f);
+  tcase_add_test(tc_act, sprintf_13_f);
+  tcase_add_test(tc_act, sprintf_14_f);
+  tcase_add_test(tc_act, sprintf_15_f);
+  tcase_add_test(tc_act, sprintf_16_f);
+  tcase_add_test(tc_act, sprintf_17_f);
+  tcase_add_test(tc_act, sprintf_18_f);
+  tcase_add_test(tc_act, sprintf_19_f);
+  tcase_add_test(tc_act, sprintf_20_f);
+  tcase_add_test(tc_act, sprintf_21_f);
+  tcase_add_test(tc_act, sprintf_22_f);
+  tcase_add_test(tc_act, sprintf_23_f);
+  tcase_add_test(tc_act, sprintf_24_f);
+  tcase_add_test(tc_act, sprintf_25_f);
+  tcase_add_test(tc_act, sprintf_26_f);
+  tcase_add_test(tc_act, sprintf_27_f);
+  tcase_add_test(tc_act, sprintf_28_f);
+  tcase_add_test(tc_act, sprintf_30_f);
+  tcase_add_test(tc_act, sprintf_31_f);
+  tcase_add_test(tc_act, sprintf_32_f);
+  tcase_add_test(tc_act, sprintf_33_f);
+  tcase_add_test(tc_act, sprintf_34_f);
+  tcase_add_test(tc_act, sprintf_35_f);
+  tcase_add_test(tc_act, sprintf_36_f);
+  tcase_add_test(tc_act, sprintf_37_f);
+  tcase_add_test(tc_core, sprintf_38_f);  // seg
+  tcase_add_test(tc_act, sprintf_39_f);
+  tcase_add_test(tc_act, sprintf_40_f);
+  tcase_add_test(tc_act, sprintf_41_f);
+  tcase_add_test(tc_act, sprintf_42_f);
+  tcase_add_test(tc_act, sprintf_43_f);
+  tcase_add_test(tc_act, sprintf_44_f);
+  tcase_add_test(tc_act, sprintf_45_f);
+  tcase_add_test(tc_act, sprintf_46_f);
+  tcase_add_test(tc_act, sprintf_47_f);
+  tcase_add_test(tc_act, sprintf_50_f);
+  tcase_add_test(tc_act, sprintf_51_f);
+  tcase_add_test(tc_act, sscanf_spec_ls_1);
+  tcase_add_test(tc_act, sscanf_spec_lc_2);
+  tcase_add_test(tc_core, sprintf_52_f);  // seg
+  tcase_add_test(tc_act, sprintf_54_f);
+  tcase_add_test(tc_act, sprintf_1_g);
+  tcase_add_test(tc_act, sprintf_2_g);
+  tcase_add_test(tc_act, sprintf_3_g);
+  tcase_add_test(tc_act, sprintf_4_g);
+  tcase_add_test(tc_act, sprintf_5_g);
+  tcase_add_test(tc_act, sprintf_6_g);
+  tcase_add_test(tc_act, sprintf_7_g);
+  tcase_add_test(tc_act, sprintf_8_g);
+  tcase_add_test(tc_act, sprintf_9_g);
+  tcase_add_test(tc_act, sprintf_10_g);
+  tcase_add_test(tc_act, sprintf_11_g);
+  tcase_add_test(tc_act, sprintf_12_g);
+  tcase_add_test(tc_act, sprintf_13_g);
+  tcase_add_test(tc_act, sprintf_14_g);
+  tcase_add_test(tc_act, sprintf_15_g);
+  tcase_add_test(tc_act, sprintf_16_g);
+  tcase_add_test(tc_act, sprintf_17_g);
+  tcase_add_test(tc_act, sprintf_18_g);
+  tcase_add_test(tc_act, sprintf_19_g);
+  tcase_add_test(tc_act, sprintf_20_g);
+  tcase_add_test(tc_act, sprintf_21_g);
+  tcase_add_test(tc_act, sprintf_22_g);
+  tcase_add_test(tc_act, sprintf_23_g);
+  tcase_add_test(tc_act, sprintf_24_g);
+  tcase_add_test(tc_act, sprintf_25_g);
+  tcase_add_test(tc_act, sprintf_26_g);
+  tcase_add_test(tc_act, sprintf_27_g);
+  tcase_add_test(tc_act, sprintf_28_g);
+  tcase_add_test(tc_act, sprintf_29_g);
+  tcase_add_test(tc_act, sprintf_30_g);
+  tcase_add_test(tc_act, sprintf_31_g);
+  tcase_add_test(tc_act, sprintf_32_g);
+  tcase_add_test(tc_act, sprintf_33_g);
+  tcase_add_test(tc_act, sprintf_34_g);
+  tcase_add_test(tc_act, sprintf_35_g);
+  tcase_add_test(tc_act, sprintf_36_g);  // norm
+  tcase_add_test(tc_act, sprintf_37_g);
+  tcase_add_test(tc_act, sprintf_38_g);
+  tcase_add_test(tc_act, sprintf_39_g);
+  tcase_add_test(tc_act, sprintf_40_g);
+  tcase_add_test(tc_act, sprintf_41_g);
+  tcase_add_test(tc_act, sprintf_42_g);
+  tcase_add_test(tc_act, sprintf_43_g);
+  tcase_add_test(tc_act, sprintf_45_g);
+  tcase_add_test(tc_act, sprintf_1_hex);
+  tcase_add_test(tc_act, sprintf_2_hex);
+  tcase_add_test(tc_act, sprintf_3_hex);
+  tcase_add_test(tc_act, sprintf_4_hex);
+  tcase_add_test(tc_act, sprintf_5_hex);
+  tcase_add_test(tc_act, sprintf_6_hex);
+  tcase_add_test(tc_act, sprintf_7_hex);
+  tcase_add_test(tc_act, sprintf_8_hex);
+  tcase_add_test(tc_act, sprintf_9_hex);
+  tcase_add_test(tc_act, sprintf_10_hex);
+  tcase_add_test(tc_act, sprintf_11_hex);
+  tcase_add_test(tc_act, sprintf_12_hex);
+  tcase_add_test(tc_act, sprintf_13_hex);
+  tcase_add_test(tc_act, sprintf_14_hex);
+  tcase_add_test(tc_act, sprintf_15_hex);
+  tcase_add_test(tc_act, sprintf_16_hex);
+  tcase_add_test(tc_act, sprintf_17_hex);
+  tcase_add_test(tc_act, sprintf_1_HEX);
+  tcase_add_test(tc_act, sprintf_2_HEX);
+  tcase_add_test(tc_act, sprintf_3_HEX);
+  tcase_add_test(tc_act, sprintf_4_HEX);
+  tcase_add_test(tc_act, sprintf_5_HEX);
+  tcase_add_test(tc_act, sprintf_6_HEX);
+  tcase_add_test(tc_act, sprintf_7_HEX);
+  tcase_add_test(tc_act, sprintf_8_HEX);
+  tcase_add_test(tc_act, sprintf_9_HEX);
+  tcase_add_test(tc_act, sprintf_10_HEX);
+  tcase_add_test(tc_act, sprintf_11_HEX);
+  tcase_add_test(tc_act, sprintf_12_HEX);
+  tcase_add_test(tc_act, sprintf_13_HEX);
+  tcase_add_test(tc_act, sprintf_14_HEX);
+  tcase_add_test(tc_act, sprintf_15_HEX);
+  tcase_add_test(tc_act, sprintf_16_HEX);
+  tcase_add_test(tc_act, sprintf_1_signed_i);
+  tcase_add_test(tc_act, sprintf_2_signed_i);
+  tcase_add_test(tc_act, sprintf_3_signed_i);
+  tcase_add_test(tc_act, sprintf_4_signed_i);
+  tcase_add_test(tc_act, sprintf_5_signed_i);
+  tcase_add_test(tc_act, sprintf_6_signed_i);
+  tcase_add_test(tc_act, sprintf_7_signed_i);
+  tcase_add_test(tc_act, sprintf_8_signed_i);
+  tcase_add_test(tc_act, sprintf_9_signed_i);
+  tcase_add_test(tc_act, sprintf_10_signed_i);
+  tcase_add_test(tc_act, sprintf_11_signed_i);
+  tcase_add_test(tc_act, sprintf_12_signed_i);
+  tcase_add_test(tc_act, sprintf_13_signed_i);
+  tcase_add_test(tc_act, sprintf_14_signed_i);
+  tcase_add_test(tc_act, sprintf_15_signed_i);
+  tcase_add_test(tc_act, sprintf_16_signed_i);
+  tcase_add_test(tc_act, sprintf_17_signed_i);
+  tcase_add_test(tc_act, sprintf_1_n);
+  tcase_add_test(tc_act, sprintf_2_n);
+  tcase_add_test(tc_act, sprintf_3_n);
+  tcase_add_test(tc_act, sprintf_4_n);
+  tcase_add_test(tc_act, sprintf_1_octal);
+  tcase_add_test(tc_act, sprintf_2_octal);
+  tcase_add_test(tc_act, sprintf_3_octal);
+  tcase_add_test(tc_act, sprintf_4_octal);
+  tcase_add_test(tc_act, sprintf_5_octal);
+  tcase_add_test(tc_act, sprintf_6_octal);
+  tcase_add_test(tc_act, sprintf_7_octal);
+  tcase_add_test(tc_act, sprintf_8_octal);
+  tcase_add_test(tc_act, sprintf_9_octal);
+  tcase_add_test(tc_act, sprintf_10_octal);
+  tcase_add_test(tc_act, sprintf_11_octal);
+  tcase_add_test(tc_act, sprintf_12_octal);
+  tcase_add_test(tc_act, sprintf_13_octal);
+  tcase_add_test(tc_act, sprintf_14_octal);
+  tcase_add_test(tc_act, sprintf_15_octal);
+  tcase_add_test(tc_act, sprintf_16_octal);
+  tcase_add_test(tc_act, sprintf_17_octal);
+  tcase_add_test(tc_act, sprintf_18_octal);
+  tcase_add_test(tc_act, sprintf_1_percent);
+  tcase_add_test(tc_act, sprintf_2_percent);
+  tcase_add_test(tc_act, sprintf_3_percent);
+  tcase_add_test(tc_act, sprintf_1_pointer);
+  tcase_add_test(tc_act, sprintf_2_pointer);
+  tcase_add_test(tc_act, sprintf_3_pointer);
+  tcase_add_test(tc_act, sprintf_4_pointer);
+  tcase_add_test(tc_act, sprintf_5_pointer);
+  tcase_add_test(tc_act, sprintf_6_pointer);
+  tcase_add_test(tc_act, sprintf_7_pointer);
+  tcase_add_test(tc_act, sprintf_8_pointer);
+  tcase_add_test(tc_act, sprintf_9_pointer);
+  tcase_add_test(tc_act, sprintf_10_pointer);
+  tcase_add_test(tc_act, sprintf_11_pointer);
+  tcase_add_test(tc_act, sprintf_12_pointer);
+  tcase_add_test(tc_act, sprintf_13_pointer);
+  tcase_add_test(tc_act, sprintf_14_pointer);
+  tcase_add_test(tc_act, sprintf_15_pointer);
+  tcase_add_test(tc_act, sprintf_1_string);
+  tcase_add_test(tc_act, sprintf_2_string);
+  tcase_add_test(tc_act, sprintf_3_string);
+  tcase_add_test(tc_act, sprintf_4_string);
+  tcase_add_test(tc_act, sprintf_5_string);
+  tcase_add_test(tc_act, sprintf_6_string);
+  tcase_add_test(tc_act, sprintf_7_string);
+  tcase_add_test(tc_act, sprintf_8_string);
+  tcase_add_test(tc_act, sprintf_9_string);
+  tcase_add_test(tc_core, sprintf_10_string);  // seg
+  tcase_add_test(tc_act, sprintf_11_string);
+  tcase_add_test(tc_act, sprintf_12_string);
+  tcase_add_test(tc_core, sprintf_13_string);  // seg
+  tcase_add_test(tc_act, sprintf_14_string);
+  tcase_add_test(tc_act, sprintf_15_string);
+  tcase_add_test(tc_act, sprintf_16_string);
+  tcase_add_test(tc_core, sprintf_17_string);  // seg
+  tcase_add_test(tc_act, sprintf_1_unsigned);
+  tcase_add_test(tc_act, sprintf_2_unsigned);
+  tcase_add_test(tc_act, sprintf_3_unsigned);
+  tcase_add_test(tc_act, sprintf_4_unsigned);
+  tcase_add_test(tc_act, sprintf_5_unsigned);
+  tcase_add_test(tc_act, sprintf_6_unsigned);
+  tcase_add_test(tc_act, sprintf_7_unsigned);
+  tcase_add_test(tc_act, sprintf_8_unsigned);
+  tcase_add_test(tc_act, sprintf_9_unsigned);
+  tcase_add_test(tc_act, sprintf_10_unsigned);
+  tcase_add_test(tc_act, sprintf_11_unsigned);
+  tcase_add_test(tc_act, sprintf_12_unsigned);
+  tcase_add_test(tc_act, sprintf_13_unsigned);
+  tcase_add_test(tc_act, sprintf_14_unsigned);
+  tcase_add_test(tc_act, sprintf_15_unsigned);
+  tcase_add_test(tc_act, sprintf_16_unsigned);
+  tcase_add_test(tc_act, sprintf_17_unsigned);
+  tcase_add_test(tc_act, sscanf_spec_c_2);
+  tcase_add_test(tc_act, sscanf_spec_c_4);
+  tcase_add_test(tc_act, sscanf_spec_c_5);
+  tcase_add_test(tc_act, sscanf_spec_c_6);
+  tcase_add_test(tc_act, sscanf_spec_c_7);
+  tcase_add_test(tc_act, sscanf_spec_c_8);
+  tcase_add_test(tc_act, sscanf_spec_hd_1);
+  tcase_add_test(tc_act, sscanf_spec_hd_2);
+  tcase_add_test(tc_act, sscanf_spec_hd_3);
+  tcase_add_test(tc_act, sscanf_spec_hd_4);
+  tcase_add_test(tc_act, sscanf_spec_hd_5);
+  tcase_add_test(tc_act, sscanf_spec_hd_6);
+  tcase_add_test(tc_act, sscanf_spec_hd_7);
+  tcase_add_test(tc_act, sscanf_spec_hd_8);
+  tcase_add_test(tc_act, sscanf_spec_hd_9);
+  tcase_add_test(tc_act, sscanf_spec_hd_10);
+  tcase_add_test(tc_act, sscanf_spec_hd_11);
+  tcase_add_test(tc_act, sscanf_spec_hd_12);
+  tcase_add_test(tc_act, sscanf_spec_hd_13);
+  tcase_add_test(tc_act, sscanf_spec_hd_14);
+  tcase_add_test(tc_act, sscanf_spec_hd_15);
+  tcase_add_test(tc_act, sscanf_spec_hd_16);
+  tcase_add_test(tc_act, sscanf_spec_hd_17);
+  tcase_add_test(tc_act, sscanf_spec_hd_18);
+  tcase_add_test(tc_act, sscanf_spec_hd_19);
+  tcase_add_test(tc_act, sscanf_spec_hd_20);
+  tcase_add_test(tc_act, sscanf_spec_hd_21);
+  tcase_add_test(tc_act, sscanf_spec_hd_22);
+  tcase_add_test(tc_act, sscanf_spec_hd_23);
+  tcase_add_test(tc_act, sscanf_spec_hd_24);
+  tcase_add_test(tc_act, sscanf_spec_hd_25);
+  tcase_add_test(tc_act, sscanf_spec_d_1);
+  tcase_add_test(tc_act, sscanf_spec_d_2);
+  tcase_add_test(tc_act, sscanf_spec_d_3);
+  tcase_add_test(tc_act, sscanf_spec_d_4);
+  tcase_add_test(tc_act, sscanf_spec_d_5);
+  tcase_add_test(tc_act, sscanf_spec_d_6);
+  tcase_add_test(tc_act, sscanf_spec_d_7);
+  tcase_add_test(tc_act, sscanf_spec_d_8);
+  tcase_add_test(tc_act, sscanf_spec_d_9);
+  tcase_add_test(tc_act, sscanf_spec_d_10);
+  tcase_add_test(tc_act, sscanf_spec_d_11);
+  tcase_add_test(tc_act, sscanf_spec_d_12);
+  tcase_add_test(tc_act, sscanf_spec_d_13);
+  tcase_add_test(tc_act, sscanf_spec_d_14);
+  tcase_add_test(tc_act, sscanf_spec_d_15);
+  tcase_add_test(tc_act, sscanf_spec_d_16);
+  tcase_add_test(tc_act, sscanf_spec_d_17);
+  tcase_add_test(tc_act, sscanf_spec_d_18);
+  tcase_add_test(tc_act, sscanf_spec_d_19);
+  tcase_add_test(tc_act, sscanf_spec_d_20);
+  tcase_add_test(tc_act, sscanf_spec_d_21);
+  tcase_add_test(tc_act, sscanf_spec_d_22);
+  tcase_add_test(tc_act, sscanf_spec_d_23);
+  tcase_add_test(tc_act, sscanf_spec_d_24);
+  tcase_add_test(tc_act, sscanf_spec_d_25);
+  tcase_add_test(tc_act, sscanf_spec_ld_1);
+  tcase_add_test(tc_act, sscanf_spec_ld_2);
+  tcase_add_test(tc_act, sscanf_spec_ld_3);
+  tcase_add_test(tc_act, sscanf_spec_ld_4);
+  tcase_add_test(tc_act, sscanf_spec_ld_5);
+  tcase_add_test(tc_act, sscanf_spec_ld_6);
+  tcase_add_test(tc_act, sscanf_spec_ld_7);
+  tcase_add_test(tc_act, sscanf_spec_ld_8);
+  tcase_add_test(tc_act, sscanf_spec_ld_9);
+  tcase_add_test(tc_act, sscanf_spec_ld_10);
+  tcase_add_test(tc_act, sscanf_spec_ld_11);
+  tcase_add_test(tc_act, sscanf_spec_ld_12);
+  tcase_add_test(tc_act, sscanf_spec_ld_13);
+  tcase_add_test(tc_act, sscanf_spec_ld_14);
+  tcase_add_test(tc_act, sscanf_spec_ld_15);
+  tcase_add_test(tc_act, sscanf_spec_ld_16);
+  tcase_add_test(tc_act, sscanf_spec_ld_17);
+  tcase_add_test(tc_act, sscanf_spec_ld_18);
+  tcase_add_test(tc_act, sscanf_spec_ld_19);
+  tcase_add_test(tc_act, sscanf_spec_ld_20);
+  tcase_add_test(tc_act, sscanf_spec_ld_21);
+  tcase_add_test(tc_act, sscanf_spec_ld_22);
+  tcase_add_test(tc_act, sscanf_spec_ld_23);
+  tcase_add_test(tc_act, sscanf_spec_ld_24);
+  tcase_add_test(tc_act, sscanf_spec_ld_25);
+  tcase_add_test(tc_act, sscanf_empty_1);
+  tcase_add_test(tc_act, sscanf_empty_2);
+  tcase_add_test(tc_act, sscanf_empty_3);
+  tcase_add_test(tc_act, sscanf_empty_4);
+  tcase_add_test(tc_act, sscanf_empty_5);
+  tcase_add_test(tc_act, sscanf_empty_6);
+  tcase_add_test(tc_act, sscanf_empty_7);
+  tcase_add_test(tc_act, sscanf_spec_hi_dec_1);
+  tcase_add_test(tc_act, sscanf_spec_hi_dec_2);
+  tcase_add_test(tc_act, sscanf_spec_hi_dec_3);
+  tcase_add_test(tc_act, sscanf_spec_hi_dec_4);
+  tcase_add_test(tc_act, sscanf_spec_hi_dec_5);
+  tcase_add_test(tc_act, sscanf_spec_hi_dec_6);
+  tcase_add_test(tc_act, sscanf_spec_hi_dec_7);
+  tcase_add_test(tc_act, sscanf_spec_hi_dec_8);
+  tcase_add_test(tc_act, sscanf_spec_hi_oct_1);
+  tcase_add_test(tc_act, sscanf_spec_hi_oct_2);
+  tcase_add_test(tc_act, sscanf_spec_hi_oct_3);
+  tcase_add_test(tc_act, sscanf_spec_hi_oct_4);
+  tcase_add_test(tc_act, sscanf_spec_hi_oct_5);
+  tcase_add_test(tc_act, sscanf_spec_hi_oct_6);
+  tcase_add_test(tc_act, sscanf_spec_hi_oct_7);
+  tcase_add_test(tc_act, sscanf_spec_hi_oct_8);
+  tcase_add_test(tc_act, sscanf_spec_hi_hex_1);
+  tcase_add_test(tc_act, sscanf_spec_hi_hex_2);
+  tcase_add_test(tc_act, sscanf_spec_hi_hex_3);
+  tcase_add_test(tc_act, sscanf_spec_hi_hex_5);
+  tcase_add_test(tc_act, sscanf_spec_hi_hex_6);
+  tcase_add_test(tc_act, sscanf_spec_hi_hex_7);
+  tcase_add_test(tc_act, sscanf_spec_hi_hex_8);
+  tcase_add_test(tc_act, sscanf_spec_i_dec_1);
+  tcase_add_test(tc_act, sscanf_spec_i_dec_2);
+  tcase_add_test(tc_act, sscanf_spec_i_dec_3);
+  tcase_add_test(tc_act, sscanf_spec_i_dec_4);
+  tcase_add_test(tc_act, sscanf_spec_i_dec_5);
+  tcase_add_test(tc_act, sscanf_spec_i_dec_6);
+  tcase_add_test(tc_act, sscanf_spec_i_dec_7);
+  tcase_add_test(tc_act, sscanf_spec_i_dec_8);
+  tcase_add_test(tc_act, sscanf_spec_i_oct_1);
+  tcase_add_test(tc_act, sscanf_spec_i_oct_2);
+  tcase_add_test(tc_act, sscanf_spec_i_oct_3);
+  tcase_add_test(tc_act, sscanf_spec_i_oct_4);
+  tcase_add_test(tc_act, sscanf_spec_i_oct_5);
+  tcase_add_test(tc_act, sscanf_spec_i_oct_6);
+  tcase_add_test(tc_act, sscanf_spec_i_oct_7);
+  tcase_add_test(tc_act, sscanf_spec_i_oct_8);
+  tcase_add_test(tc_act, sscanf_spec_i_hex_1);
+  tcase_add_test(tc_act, sscanf_spec_i_hex_2);
+  tcase_add_test(tc_act, sscanf_spec_i_hex_3);
+  tcase_add_test(tc_act, sscanf_spec_i_hex_5);
+  tcase_add_test(tc_act, sscanf_spec_i_hex_6);
+  tcase_add_test(tc_act, sscanf_spec_i_hex_7);
+  tcase_add_test(tc_act, sscanf_spec_i_hex_8);
+  tcase_add_test(tc_act, sscanf_spec_li_dec_1);
+  tcase_add_test(tc_act, sscanf_spec_li_dec_2);
+  tcase_add_test(tc_act, sscanf_spec_li_dec_3);
+  tcase_add_test(tc_act, sscanf_spec_li_dec_4);
+  tcase_add_test(tc_act, sscanf_spec_li_dec_5);
+  tcase_add_test(tc_act, sscanf_spec_li_dec_6);
+  tcase_add_test(tc_act, sscanf_spec_li_dec_7);
+  tcase_add_test(tc_act, sscanf_spec_li_dec_8);
+  tcase_add_test(tc_act, sscanf_spec_li_oct_1);
+  tcase_add_test(tc_act, sscanf_spec_li_oct_2);
+  tcase_add_test(tc_act, sscanf_spec_li_oct_3);
+  tcase_add_test(tc_act, sscanf_spec_li_oct_4);
+  tcase_add_test(tc_act, sscanf_spec_li_oct_5);
+  tcase_add_test(tc_act, sscanf_spec_li_oct_6);
+  tcase_add_test(tc_act, sscanf_spec_li_oct_7);
+  tcase_add_test(tc_act, sscanf_spec_li_oct_8);
+  tcase_add_test(tc_act, sscanf_spec_li_hex_1);
+  tcase_add_test(tc_act, sscanf_spec_li_hex_2);
+  tcase_add_test(tc_act, sscanf_spec_li_hex_3);
+  tcase_add_test(tc_act, sscanf_spec_li_hex_5);
+  tcase_add_test(tc_act, sscanf_spec_li_hex_6);
+  tcase_add_test(tc_act, sscanf_spec_li_hex_7);
+  tcase_add_test(tc_act, sscanf_spec_li_hex_8);
+  tcase_add_test(tc_act, sscanf_spec_n_1);
+  tcase_add_test(tc_act, sscanf_spec_n_2);
+  tcase_add_test(tc_act, sscanf_spec_n_3);
+  tcase_add_test(tc_act, sscanf_spec_n_4);
+  tcase_add_test(tc_act, sscanf_spec_n_5);
+  tcase_add_test(tc_act, sscanf_spec_n_6);
+  tcase_add_test(tc_act, sscanf_spec_n_7);
+  tcase_add_test(tc_act, sscanf_spec_n_8);
+  tcase_add_test(tc_act, sscanf_spec_n_9);
+  tcase_add_test(tc_act, sscanf_spec_n_10);
+  tcase_add_test(tc_act, sscanf_spec_ho_1);
+  tcase_add_test(tc_act, sscanf_spec_ho_2);
+  tcase_add_test(tc_act, sscanf_spec_ho_3);
+  tcase_add_test(tc_act, sscanf_spec_ho_4);
+  tcase_add_test(tc_act, sscanf_spec_ho_5);
+  tcase_add_test(tc_act, sscanf_spec_ho_6);
+  tcase_add_test(tc_act, sscanf_spec_o_1);
+  tcase_add_test(tc_act, sscanf_spec_o_2);
+  tcase_add_test(tc_act, sscanf_spec_o_3);
+  tcase_add_test(tc_act, sscanf_spec_o_4);
+  tcase_add_test(tc_act, sscanf_spec_o_5);
+  tcase_add_test(tc_act, sscanf_spec_o_6);
+  tcase_add_test(tc_act, sscanf_spec_lo_1);
+  tcase_add_test(tc_act, sscanf_spec_lo_2);
+  tcase_add_test(tc_act, sscanf_spec_lo_3);
+  tcase_add_test(tc_act, sscanf_spec_lo_4);
+  tcase_add_test(tc_act, sscanf_spec_lo_5);
+  tcase_add_test(tc_act, sscanf_spec_lo_6);
+  tcase_add_test(tc_act, sscanf_spec_p_1);
+  tcase_add_test(tc_act, sscanf_spec_p_2);
+  tcase_add_test(tc_act, sscanf_spec_p_3);
+  tcase_add_test(tc_act, sscanf_spec_p_4);
+  tcase_add_test(tc_act, sscanf_spec_p_5);
+  tcase_add_test(tc_act, sscanf_spec_p_6);
+  tcase_add_test(tc_act, sscanf_spec_p_7);
+  tcase_add_test(tc_act, sscanf_spec_p_8);
+  tcase_add_test(tc_act, sscanf_spec_p_9);
+  tcase_add_test(tc_act, sscanf_spec_p_10);
+  tcase_add_test(tc_act, sscanf_spec_p_11);
+  tcase_add_test(tc_act, sscanf_spec_p_12);
+  tcase_add_test(tc_act, sscanf_spec_p_13);
+  tcase_add_test(tc_act, sscanf_spec_p_14);
+  tcase_add_test(tc_act, sscanf_spec_p_15);
+  tcase_add_test(tc_act, sscanf_spec_real_1);
+  tcase_add_test(tc_act, sscanf_spec_real_2);
+  tcase_add_test(tc_act, sscanf_spec_real_3);
+  tcase_add_test(tc_act, sscanf_spec_real_4);
+  tcase_add_test(tc_act, sscanf_spec_real_5);
+  tcase_add_test(tc_act, sscanf_spec_real_6);
+  tcase_add_test(tc_act, sscanf_spec_real_7);
+  tcase_add_test(tc_act, sscanf_spec_real_8);
+  tcase_add_test(tc_act, sscanf_spec_real_9);
+  tcase_add_test(tc_act, sscanf_spec_real_10);
+  tcase_add_test(tc_act, sscanf_spec_real_11);
+  tcase_add_test(tc_act, sscanf_spec_real_12);
+  tcase_add_test(tc_act, sscanf_spec_real_13);
+  tcase_add_test(tc_act, sscanf_spec_real_14);
+  tcase_add_test(tc_act, sscanf_spec_real_15);
+  tcase_add_test(tc_act, sscanf_spec_real_18);
+  tcase_add_test(tc_act, sscanf_spec_real_19);
+  tcase_add_test(tc_act, sscanf_spec_real_20);
+  tcase_add_test(tc_act, sscanf_spec_real_21);
+  tcase_add_test(tc_act, sscanf_spec_real_22);
+  tcase_add_test(tc_act, sscanf_spec_hx_1);
+  tcase_add_test(tc_act, sscanf_spec_hx_2);
+  tcase_add_test(tc_act, sscanf_spec_hx_3);
+  tcase_add_test(tc_act, sscanf_spec_hx_4);
+  tcase_add_test(tc_act, sscanf_spec_hx_5);
+  tcase_add_test(tc_act, sscanf_spec_hx_6);
+  tcase_add_test(tc_act, sscanf_spec_hx_7);
+  tcase_add_test(tc_act, sscanf_spec_hx_8);
+  tcase_add_test(tc_act, sscanf_spec_hx_9);
+  tcase_add_test(tc_act, sscanf_spec_hx_10);
+  tcase_add_test(tc_act, sscanf_spec_hx_11);
+  tcase_add_test(tc_act, sscanf_spec_x_1);
+  tcase_add_test(tc_act, sscanf_spec_x_2);
+  tcase_add_test(tc_act, sscanf_spec_x_3);
+  tcase_add_test(tc_act, sscanf_spec_x_4);
+  tcase_add_test(tc_act, sscanf_spec_x_5);
+  tcase_add_test(tc_act, sscanf_spec_x_6);
+  tcase_add_test(tc_act, sscanf_spec_x_7);
+  tcase_add_test(tc_act, sscanf_spec_x_8);
+  tcase_add_test(tc_act, sscanf_spec_x_9);
+  tcase_add_test(tc_act, sscanf_spec_x_10);
+  tcase_add_test(tc_act, sscanf_spec_x_11);
+  tcase_add_test(tc_act, sscanf_spec_lx_1);
+  tcase_add_test(tc_act, sscanf_spec_lx_2);
+  tcase_add_test(tc_act, sscanf_spec_lx_3);
+  tcase_add_test(tc_act, sscanf_spec_lx_4);
+  tcase_add_test(tc_act, sscanf_spec_lx_5);
+  tcase_add_test(tc_act, sscanf_spec_lx_6);
+  tcase_add_test(tc_act, sscanf_spec_lx_7);
+  tcase_add_test(tc_act, sscanf_spec_lx_8);
+  tcase_add_test(tc_act, sscanf_spec_lx_9);
+  tcase_add_test(tc_act, sscanf_spec_lx_10);
+  tcase_add_test(tc_act, sscanf_spec_lx_11);
 
   suite_add_tcase(external_suite, tc_core);
   suite_add_tcase(external_suite, tc_act);
