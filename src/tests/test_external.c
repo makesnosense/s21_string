@@ -1141,7 +1141,7 @@ START_TEST(shiraleo_sprintf_test_08) {
   char str1[100] = {0};
   char str2[100] = {0};
   char *format =
-      "Number: % 013ld Pointer to number: % 0#17X Hex:% #015hx Text:%+10i";
+      "Number: % 013ld Pointer to number: % 0#17X Hex:% 0#15hx Text:%+10i";
   int a = 4568;
   int *p = 0;
   ck_assert_int_eq(s21_sprintf(str1, format, a, p, a, a),
@@ -11785,9 +11785,11 @@ Suite *make_external_suite() {
   Suite *external_suite = suite_create("external");
   TCase *tc_core;
   TCase *tc_act;
+  TCase *one_test;
 
   tc_core = tcase_create("Core");
   tc_act = tcase_create("actually_run");
+  one_test = tcase_create("prob");
 
   tcase_add_test(tc_core, memchr_test);
   tcase_add_test(tc_core, memcmp_test);
@@ -11843,10 +11845,10 @@ Suite *make_external_suite() {
   tcase_add_test(tc_core, shiraleo_sprintf_test_06);          // problem
   tcase_add_test(tc_core, shiraleo_sprintf_test_06_problem);  // problem
 
-  tcase_add_test(tc_core, shiraleo_sprintf_test_07);  // problem
-  tcase_add_test(tc_core, shiraleo_sprintf_test_08);  // problem
-  tcase_add_test(tc_core, shiraleo_sprintf_test_09);  // problem
-  tcase_add_test(tc_core, shiraleo_sprintf_test_10);  // problem
+  tcase_add_test(tc_core, shiraleo_sprintf_test_07);   // problem
+  tcase_add_test(one_test, shiraleo_sprintf_test_08);  // problem
+  tcase_add_test(tc_core, shiraleo_sprintf_test_09);   // problem
+  tcase_add_test(tc_core, shiraleo_sprintf_test_10);   // problem
   tcase_add_test(tc_core, teenybir_sprintf_e_test1);
   tcase_add_test(tc_core, teenybir_sprintf_e_test2);
   tcase_add_test(tc_core, teenybir_sprintf_e_test3);
@@ -12609,6 +12611,7 @@ Suite *make_external_suite() {
 
   suite_add_tcase(external_suite, tc_core);
   suite_add_tcase(external_suite, tc_act);
+  suite_add_tcase(external_suite, one_test);
 
   return external_suite;
 }
