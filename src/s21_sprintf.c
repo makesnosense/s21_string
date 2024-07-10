@@ -12,10 +12,12 @@ int s21_sprintf(char* str, const char* format, ...) {
       s21_memset(&spec_opts, 0, sizeof(spec_opts));
       parse_format(&format, args, &spec_opts);
       set_base(&spec_opts);
-      set_padding_char(&spec_opts);
       set_exponent_char(&spec_opts);
+      set_padding_char(&spec_opts);
       process_specifier(*format, &args, &dest, &spec_opts);
-      turn_off_zero_flag_when_precision_set(&spec_opts);
+
+      // turn_off_zero_flag_when_precision_set(&spec_opts);
+
     } else {
       dest.str[dest.curr_ind++] = *format;
     }
@@ -150,11 +152,11 @@ void parse_specifier(const char** format, SpecOptions* spec_opts) {
   }
 }
 
-void turn_off_zero_flag_when_precision_set(SpecOptions* spec_opts) {
-  if ((spec_opts->is_unsigned_type || spec_opts->is_decimal_integer) &&
-      spec_opts->precision_set == true) {
-    spec_opts->flag_zero = false;
-  }
+bool integer_with_precision_set(SpecOptions* spec_opts) {
+  bool result =
+      ((spec_opts->is_unsigned_type || spec_opts->is_decimal_integer) &&
+       spec_opts->precision_set == true);
+  return result;
 }
 
 void process_specifier(char format_char, va_list* args, DestStr* dest,
@@ -408,7 +410,7 @@ void set_base(SpecOptions* spec_opts) {
 }
 
 void set_padding_char(SpecOptions* spec_opts) {
-  if (spec_opts->flag_zero) {
+  if (spec_opts->flag_zero && integer_with_precision_set(spec_opts) == false) {
     spec_opts->padding_char = '0';
   } else {
     spec_opts->padding_char = ' ';
@@ -495,15 +497,22 @@ void calculate_padding_diopux(s21_size_t num_len, SpecOptions* spec_opts) {
     flag_corr =
         spec_opts->flag_plus || spec_opts->flag_space || spec_opts->is_negative;
   }
+
   if (spec_opts->precision > num_len) {
     prec_corr = spec_opts->precision - num_len;
   } else {
     prec_corr = 0;
   }
 
-  padding_to_add =
-      spec_opts->width - num_len - flag_corr - prec_corr - sharp_corr;
-
+  if (integer_with_precision_set(spec_opts)) {
+    s21_size_t zeroes_we_will_add =
+        (spec_opts->precision > num_len) ? spec_opts->precision - num_len : 0;
+    padding_to_add = spec_opts->width - num_len - zeroes_we_will_add -
+                     flag_corr - sharp_corr;
+  } else {
+    padding_to_add =
+        spec_opts->width - num_len - flag_corr - prec_corr - sharp_corr;
+  }
   spec_opts->padding = (padding_to_add > 0) ? (s21_size_t)padding_to_add : 0;
 }
 
@@ -710,8 +719,9 @@ void whole_to_str(DestStr* dest, long double num, SpecOptions* spec_opts) {
 
   if (!spec_opts->is_g_spec && !spec_opts->is_scientific) {
     calculate_padding(num_len, spec_opts);
-    printf("привет");
     // Если ширина больше длины числа, добавляем пробелы в начало
+    // printf("|%lu %lu %lu %lu\n", num_len, spec_opts->precision,
+    //        spec_opts->width, spec_opts->padding);
     apply_width(dest, num_len, spec_opts);
   }
 
@@ -719,16 +729,16 @@ void whole_to_str(DestStr* dest, long double num, SpecOptions* spec_opts) {
       !spec_opts->is_scientific) {
     apply_flags(dest, spec_opts);
   }
-  // if (is_diopux(spec_opts) == true && spec_opts->precision_set == true) {
-  //   s21_size_t prec_corr = 0;
-  //   if (spec_opts->precision > num_len) {
-  //     prec_corr = spec_opts->precision - num_len;
-  //   } else {
-  //     prec_corr = 0;
-  //   }
+  if (is_diopux(spec_opts) == true && spec_opts->precision_set == true) {
+    s21_size_t prec_corr = 0;
+    if (spec_opts->precision > num_len) {
+      prec_corr = spec_opts->precision - num_len;
+    } else {
+      prec_corr = 0;
+    }
 
-  //   add_zeros_to_destination(dest, prec_corr);
-  // }
+    add_zeros_to_destination(dest, prec_corr);
+  }
 
   itoa(dest, num, spec_opts);
 
