@@ -45,7 +45,7 @@ END_TEST
 
 Suite* make_strerror_suite() {
   Suite* suite = suite_create("strerror");
-  TCase* tc = tcase_create("core");
+  TCase* tc = tcase_create("Core");
 
   tcase_add_loop_test(tc, test_strerror, 0, ERR_COUNT);
   tcase_add_test(tc, test_strerror_unknown);
