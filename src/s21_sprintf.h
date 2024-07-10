@@ -186,7 +186,7 @@ void remove_trailing_zeros(DestStr* dest, SpecOptions* spec_opts);
 long double bank_roundl(long double input_num);
 bool is_zero(long double input_num);
 bool is_diopux(SpecOptions* spec_opts);
-
+void turn_off_zero_flag_when_precision_set(SpecOptions* spec_opts);
 void set_locale_for_wide_chars();
 
 #endif  // SRC_S21_SPRINTF_H_
