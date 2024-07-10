@@ -1,5 +1,5 @@
-#ifndef _RUN_TESTS_H_
-#define _RUN_TESTS_H_
+#ifndef SRC_TESTS_RUN_TESTS_H_
+#define SRC_TESTS_RUN_TESTS_H_
 
 #include <check.h>
 #include <stdlib.h>
@@ -37,4 +37,4 @@ Suite* make_sprintf_suite();
 Suite* make_sscanf_suite();
 Suite* make_external_suite();
 
-#endif
+#endif  // SRC_TESTS_RUN_TESTS_H_
