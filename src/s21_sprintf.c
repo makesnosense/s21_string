@@ -15,6 +15,7 @@ int s21_sprintf(char* str, const char* format, ...) {
       set_padding_char(&spec_opts);
       set_exponent_char(&spec_opts);
       process_specifier(*format, &args, &dest, &spec_opts);
+      turn_off_zero_flag_when_precision_set(&spec_opts);
     } else {
       dest.str[dest.curr_ind++] = *format;
     }
@@ -146,6 +147,13 @@ void parse_specifier(const char** format, SpecOptions* spec_opts) {
   } else if (c_spec == 'u') {
     spec_opts->is_unsigned_type = true;
     spec_opts->specifier = u;
+  }
+}
+
+void turn_off_zero_flag_when_precision_set(SpecOptions* spec_opts) {
+  if ((spec_opts->is_unsigned_type || spec_opts->is_decimal_integer) &&
+      spec_opts->precision_set == true) {
+    spec_opts->flag_zero = false;
   }
 }
 
@@ -702,7 +710,7 @@ void whole_to_str(DestStr* dest, long double num, SpecOptions* spec_opts) {
 
   if (!spec_opts->is_g_spec && !spec_opts->is_scientific) {
     calculate_padding(num_len, spec_opts);
-
+    printf("привет");
     // Если ширина больше длины числа, добавляем пробелы в начало
     apply_width(dest, num_len, spec_opts);
   }
@@ -711,17 +719,16 @@ void whole_to_str(DestStr* dest, long double num, SpecOptions* spec_opts) {
       !spec_opts->is_scientific) {
     apply_flags(dest, spec_opts);
   }
+  // if (is_diopux(spec_opts) == true && spec_opts->precision_set == true) {
+  //   s21_size_t prec_corr = 0;
+  //   if (spec_opts->precision > num_len) {
+  //     prec_corr = spec_opts->precision - num_len;
+  //   } else {
+  //     prec_corr = 0;
+  //   }
 
-  if (is_diopux(spec_opts) == true && spec_opts->precision_set == true) {
-    s21_size_t prec_corr = 0;
-    if (spec_opts->precision > num_len) {
-      prec_corr = spec_opts->precision - num_len;
-    } else {
-      prec_corr = 0;
-    }
-
-    add_zeros_to_destination(dest, prec_corr);
-  }
+  //   add_zeros_to_destination(dest, prec_corr);
+  // }
 
   itoa(dest, num, spec_opts);
 
