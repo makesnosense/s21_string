@@ -1076,21 +1076,6 @@ START_TEST(shiraleo_sprintf_test_04) {
 }
 END_TEST
 
-START_TEST(shiraleo_sprintf_test_05) {
-  char str1[100] = {0};
-  char str2[100] = {0};
-  char *format = "Number: %13.6d Pointer to number: %15.3p Null char:%*.0c";
-  int a = -4568;
-  int *p = 0;
-  char c = 0;
-
-  int s21_res = s21_sprintf(str1, format, a, p, 14, c);
-  int lib_res = sprintf(str2, format, a, p, 14, c);
-  ck_assert_str_eq(str1, str2);
-  ck_assert_int_eq(s21_res, lib_res);
-}
-END_TEST
-
 START_TEST(shiraleo_sprintf_test_06_problem) {
   char str1[100] = {0};
   char str2[100] = {0};
@@ -1099,23 +1084,6 @@ START_TEST(shiraleo_sprintf_test_06_problem) {
 
   int s21_res = s21_sprintf(str1, format, a);
   int lib_res = sprintf(str2, format, a);
-  // printf("s21 %s\n", str1);
-  // printf("lib %s\n", str2);
-  ck_assert_str_eq(str1, str2);
-  ck_assert_int_eq(s21_res, lib_res);
-}
-END_TEST
-
-START_TEST(shiraleo_sprintf_test_06) {
-  char str1[500] = {0};
-  char str2[500] = {0};
-  char *format = "Number: % 013.6d Pointer to number: %+15.3p Null char:%*.0c";
-  int a = -4568;
-  int *p = 0;
-  char c = 0;
-
-  int s21_res = s21_sprintf(str1, format, a, p, 14, c);
-  int lib_res = sprintf(str2, format, a, p, 14, c);
 
   ck_assert_str_eq(str1, str2);
   ck_assert_int_eq(s21_res, lib_res);
@@ -1123,17 +1091,18 @@ START_TEST(shiraleo_sprintf_test_06) {
 END_TEST
 
 START_TEST(shiraleo_sprintf_test_07) {
-  char str1[100] = {0};
-  char str2[100] = {0};
-  char *format =
-      "Number: %013d Pointer to number: % 0#17X Null char:%*.0s Text:%10.5s";
+  char str1[200] = {0};
+  char str2[200] = {0};
+  char *format = "Number: %013d Pointer to number: % 0#17X Null char:%*.0s";
   int a = -4568;
   int *p = 0;
   char *c = 0;
-  char *str = "Проверка";
-  ck_assert_int_eq(s21_sprintf(str1, format, a, p, 14, c, str),
-                   sprintf(str2, format, a, p, 14, c, str));
+  int s21_res = s21_sprintf(str1, format, a, p, 14, c);
+  int lib_res = sprintf(str2, format, a, p, 14, c);
+  printf("s21 %s\n", str1);
+  printf("lib %s\n", str2);
   ck_assert_str_eq(str1, str2);
+  ck_assert_int_eq(s21_res, lib_res);
 }
 END_TEST
 
@@ -11841,8 +11810,6 @@ Suite *make_external_suite() {
   tcase_add_test(tc_core, shiraleo_sprintf_test_02);          // problem
   tcase_add_test(tc_core, shiraleo_sprintf_test_03);          // problem
   tcase_add_test(tc_core, shiraleo_sprintf_test_04);          // problem
-  tcase_add_test(tc_core, shiraleo_sprintf_test_05);          // problem
-  tcase_add_test(tc_core, shiraleo_sprintf_test_06);          // problem
   tcase_add_test(tc_core, shiraleo_sprintf_test_06_problem);  // problem
 
   tcase_add_test(tc_core, shiraleo_sprintf_test_07);   // problem

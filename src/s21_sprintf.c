@@ -486,6 +486,8 @@ void calculate_padding_diopux(s21_size_t num_len, SpecOptions* spec_opts) {
       sharp_corr = 2;
     } else if (spec_opts->specifier == o && spec_opts->is_zero == false) {
       sharp_corr = 1;
+    } else if (spec_opts->is_hexadecimal && spec_opts->is_zero == true) {
+      sharp_corr = 0;
     }
   } else if (spec_opts->specifier == p) {
     sharp_corr = 2;
@@ -578,16 +580,17 @@ void apply_flags(DestStr* dest, SpecOptions* spec_opts) {
     dest->str[dest->curr_ind++] = '-';
   } else if (spec_opts->flag_plus && spec_opts->is_unsigned_type == false) {
     dest->str[dest->curr_ind++] = '+';
-  } else if (spec_opts->flag_space) {
+  } else if (spec_opts->flag_space && !spec_opts->is_hexadecimal &&
+             !spec_opts->is_zero) {
     dest->str[dest->curr_ind++] = ' ';
   }
   if (spec_opts->flag_sharp) {
     if (spec_opts->specifier == o) {
       dest->str[dest->curr_ind++] = '0';
-    } else if (spec_opts->specifier == x) {
+    } else if (spec_opts->specifier == x && !spec_opts->is_zero) {
       dest->str[dest->curr_ind++] = '0';
       dest->str[dest->curr_ind++] = 'x';
-    } else if (spec_opts->specifier == X) {
+    } else if (spec_opts->specifier == X && !spec_opts->is_zero) {
       dest->str[dest->curr_ind++] = '0';
       dest->str[dest->curr_ind++] = 'X';
     } else if (spec_opts->is_floating_point_number &&
