@@ -312,7 +312,11 @@ void process_narrow_string(char* input_string, DestStr* dest,
                            SpecOptions* spec_opts) {
   s21_size_t string_length = s21_strlen(input_string);
   if (input_string == 0x0) {
-    ;
+    printf("\n%lu\n", string_length);
+    calculate_padding(0, spec_opts);
+    apply_width(dest, 0, spec_opts);
+    apply_flags(dest, spec_opts);
+    apply_minus_width(dest, spec_opts);
   } else {
     calculate_padding(string_length, spec_opts);
     apply_width(dest, string_length, spec_opts);
