@@ -12,9 +12,10 @@ int s21_sprintf(char* str, const char* format, ...) {
       s21_memset(&spec_opts, 0, sizeof(spec_opts));
       parse_format(&format, args, &spec_opts);
       set_base(&spec_opts);
-      set_padding_char(&spec_opts);
       set_exponent_char(&spec_opts);
+      set_padding_char(&spec_opts);
       process_specifier(*format, &args, &dest, &spec_opts);
+
     } else {
       dest.str[dest.curr_ind++] = *format;
     }
@@ -113,6 +114,7 @@ void parse_specifier(const char** format, SpecOptions* spec_opts) {
   if (c_spec == 'c') {
     spec_opts->specifier = c;
   } else if (c_spec == 'X' || c_spec == 'p' || c_spec == 'x') {
+    spec_opts->is_unsigned_type = true;
     spec_opts->is_hexadecimal = true;
     if (c_spec == 'X') {
       spec_opts->specifier = X;
@@ -122,6 +124,7 @@ void parse_specifier(const char** format, SpecOptions* spec_opts) {
       spec_opts->specifier = p;
     }
   } else if (c_spec == 'o') {
+    spec_opts->is_unsigned_type = true;
     spec_opts->specifier = o;
   } else if (c_spec == 'f' || c_spec == 'g' || c_spec == 'G' || c_spec == 'e' ||
              c_spec == 'E') {
@@ -142,8 +145,16 @@ void parse_specifier(const char** format, SpecOptions* spec_opts) {
   } else if (c_spec == 'd' || c_spec == 'i') {
     spec_opts->is_decimal_integer = true;
   } else if (c_spec == 'u') {
+    spec_opts->is_unsigned_type = true;
     spec_opts->specifier = u;
   }
+}
+
+bool integer_with_precision_set(SpecOptions* spec_opts) {
+  bool result =
+      ((spec_opts->is_unsigned_type || spec_opts->is_decimal_integer) &&
+       spec_opts->precision_set == true);
+  return result;
 }
 
 void process_specifier(char format_char, va_list* args, DestStr* dest,
@@ -297,12 +308,24 @@ void process_strings(va_list* args, DestStr* dest, SpecOptions* spec_opts) {
   }
 }
 
+void process_null_narrow_string(DestStr* dest, SpecOptions* spec_opts) {
+  const char* null_string = "(null)";
+  s21_size_t characters_to_print =
+      spec_opts->precision_set ? spec_opts->precision : 6;
+  for (s21_size_t i = 0; i < characters_to_print; i++)
+    dest->str[dest->curr_ind++] = null_string[i];
+}
+
 void process_narrow_string(char* input_string, DestStr* dest,
                            SpecOptions* spec_opts) {
-  s21_size_t string_length = s21_strlen(input_string);
   if (input_string == 0x0) {
-    ;
+    calculate_padding(spec_opts->precision, spec_opts);
+    apply_width(dest, spec_opts->precision, spec_opts);
+    apply_flags(dest, spec_opts);
+    process_null_narrow_string(dest, spec_opts);
+    apply_minus_width(dest, spec_opts);
   } else {
+    s21_size_t string_length = s21_strlen(input_string);
     calculate_padding(string_length, spec_opts);
     apply_width(dest, string_length, spec_opts);
     apply_flags(dest, spec_opts);
@@ -397,7 +420,7 @@ void set_base(SpecOptions* spec_opts) {
 }
 
 void set_padding_char(SpecOptions* spec_opts) {
-  if (spec_opts->flag_zero) {
+  if (spec_opts->flag_zero && integer_with_precision_set(spec_opts) == false) {
     spec_opts->padding_char = '0';
   } else {
     spec_opts->padding_char = ' ';
@@ -455,14 +478,14 @@ void add_zeros_to_destination(DestStr* dest, s21_size_t n_zeros_to_add) {
 void calculate_padding(s21_size_t num_len, SpecOptions* spec_opts) {
   if (spec_opts->is_g_spec || spec_opts->is_scientific) {
     calculate_padding_ge_spec(num_len, spec_opts);
-  } else if (is_dioux(spec_opts) == true) {
-    calculate_padding_dioux(num_len, spec_opts);
+  } else if (is_diopux(spec_opts) == true) {
+    calculate_padding_diopux(num_len, spec_opts);
   } else {
     calculate_padding_not_ge_spec(num_len, spec_opts);
   }
 }
 
-void calculate_padding_dioux(s21_size_t num_len, SpecOptions* spec_opts) {
+void calculate_padding_diopux(s21_size_t num_len, SpecOptions* spec_opts) {
   int flag_corr = 0;  // Коррекция кол-ва пробелов
   int prec_corr = 0;  // Коррекция кол-ва пробелов
   int sharp_corr = 0;
@@ -475,11 +498,17 @@ void calculate_padding_dioux(s21_size_t num_len, SpecOptions* spec_opts) {
       sharp_corr = 2;
     } else if (spec_opts->specifier == o && spec_opts->is_zero == false) {
       sharp_corr = 1;
+    } else if (spec_opts->is_hexadecimal && spec_opts->is_zero == true) {
+      sharp_corr = 0;
     }
+  } else if (spec_opts->specifier == p) {
+    sharp_corr = 2;
   }
 
-  flag_corr =
-      spec_opts->flag_plus || spec_opts->flag_space || spec_opts->is_negative;
+  if (spec_opts->is_unsigned_type == false) {
+    flag_corr =
+        spec_opts->flag_plus || spec_opts->flag_space || spec_opts->is_negative;
+  }
 
   if (spec_opts->precision > num_len) {
     prec_corr = spec_opts->precision - num_len;
@@ -487,9 +516,15 @@ void calculate_padding_dioux(s21_size_t num_len, SpecOptions* spec_opts) {
     prec_corr = 0;
   }
 
-  padding_to_add =
-      spec_opts->width - num_len - flag_corr - prec_corr - sharp_corr;
-
+  if (integer_with_precision_set(spec_opts)) {
+    s21_size_t zeroes_we_will_add =
+        (spec_opts->precision > num_len) ? spec_opts->precision - num_len : 0;
+    padding_to_add = spec_opts->width - num_len - zeroes_we_will_add -
+                     flag_corr - sharp_corr;
+  } else {
+    padding_to_add =
+        spec_opts->width - num_len - flag_corr - prec_corr - sharp_corr;
+  }
   spec_opts->padding = (padding_to_add > 0) ? (s21_size_t)padding_to_add : 0;
 }
 
@@ -507,8 +542,6 @@ void calculate_padding_not_ge_spec(s21_size_t num_len, SpecOptions* spec_opts) {
     } else if (spec_opts->specifier == o && spec_opts->is_zero == false) {
       sharp_corr = 1;
     }
-  } else if (spec_opts->specifier == p) {
-    sharp_corr = 2;
   }
 
   flag_corr =
@@ -555,19 +588,21 @@ void apply_width(DestStr* dest, s21_size_t num_len, SpecOptions* spec_opts) {
 }
 
 void apply_flags(DestStr* dest, SpecOptions* spec_opts) {
-  if (spec_opts->is_negative) {
+  if (spec_opts->is_negative && spec_opts->is_unsigned_type == false) {
     dest->str[dest->curr_ind++] = '-';
-  } else if (spec_opts->flag_plus) {
+  } else if (spec_opts->flag_plus && spec_opts->is_unsigned_type == false) {
     dest->str[dest->curr_ind++] = '+';
-  } else if (spec_opts->flag_space) {
+  } else if (spec_opts->flag_space && !spec_opts->is_hexadecimal &&
+             !spec_opts->is_zero) {
     dest->str[dest->curr_ind++] = ' ';
-  } else if (spec_opts->flag_sharp) {
+  }
+  if (spec_opts->flag_sharp) {
     if (spec_opts->specifier == o) {
       dest->str[dest->curr_ind++] = '0';
-    } else if (spec_opts->specifier == x) {
+    } else if (spec_opts->specifier == x && !spec_opts->is_zero) {
       dest->str[dest->curr_ind++] = '0';
       dest->str[dest->curr_ind++] = 'x';
-    } else if (spec_opts->specifier == X) {
+    } else if (spec_opts->specifier == X && !spec_opts->is_zero) {
       dest->str[dest->curr_ind++] = '0';
       dest->str[dest->curr_ind++] = 'X';
     } else if (spec_opts->is_floating_point_number &&
@@ -650,6 +685,12 @@ int itoa(DestStr* dest, long double input_num, SpecOptions* spec_opts) {
     digits = "0123456789ABCDEF";
   }
 
+  // if ((spec_opts->specifier == x || spec_opts->specifier == X) &&
+  //     spec_opts->flag_sharp == true) {
+  //   dest->str[dest->curr_ind++] = '0';
+  //   dest->str[dest->curr_ind++] = 'x';
+  // }
+
   s21_size_t l_index = dest->curr_ind;
 
   if (input_num == 0) {
@@ -678,10 +719,10 @@ void apply_minus_width(DestStr* dest, SpecOptions* spec_opts) {
   }
 }
 
-bool is_dioux(SpecOptions* spec_opts) {
+bool is_diopux(SpecOptions* spec_opts) {
   bool result = (spec_opts->is_decimal_integer || spec_opts->specifier == u ||
                  spec_opts->specifier == o || spec_opts->specifier == X ||
-                 spec_opts->specifier == x);
+                 spec_opts->specifier == x || spec_opts->specifier == p);
 
   return result;
 }
@@ -692,23 +733,26 @@ void whole_to_str(DestStr* dest, long double num, SpecOptions* spec_opts) {
   s21_size_t num_len = get_num_length(num, spec_opts);
 
   if (spec_opts->flag_zero && !spec_opts->is_g_spec &&
-      !spec_opts->is_scientific) {
+      !spec_opts->is_scientific &&
+      integer_with_precision_set(spec_opts) == false) {
+    // printf("\n\n\n\n\n\n %d\n\n\n\n\n", spec_opts->flag_sharp);
     apply_flags(dest, spec_opts);
   }
 
   if (!spec_opts->is_g_spec && !spec_opts->is_scientific) {
     calculate_padding(num_len, spec_opts);
-
     // Если ширина больше длины числа, добавляем пробелы в начало
+    // printf("|%lu %lu %lu %lu\n", num_len, spec_opts->precision,
+    //        spec_opts->width, spec_opts->padding);
     apply_width(dest, num_len, spec_opts);
   }
 
-  if (!spec_opts->flag_zero && !spec_opts->is_g_spec &&
-      !spec_opts->is_scientific) {
+  if ((!spec_opts->flag_zero && !spec_opts->is_g_spec &&
+       !spec_opts->is_scientific) ||
+      integer_with_precision_set(spec_opts)) {
     apply_flags(dest, spec_opts);
   }
-
-  if (is_dioux(spec_opts) == true && spec_opts->precision_set == true) {
+  if (is_diopux(spec_opts) == true && spec_opts->precision_set == true) {
     s21_size_t prec_corr = 0;
     if (spec_opts->precision > num_len) {
       prec_corr = spec_opts->precision - num_len;
@@ -795,8 +839,9 @@ void process_scientific(DestStr* dest, long double input_num,
   }
 
   calculate_padding(scientific_temp_dest.curr_ind, spec_opts);
-  apply_flags(dest, spec_opts);
+
   apply_width(dest, scientific_temp_dest.curr_ind, spec_opts);
+  apply_flags(dest, spec_opts);
   s21_strcpy(dest->str + dest->curr_ind, scientific_temp_dest.str);
 
   dest->curr_ind += scientific_temp_dest.curr_ind;
@@ -1215,6 +1260,18 @@ void pointer_to_str(DestStr* dest, void* ptr, SpecOptions* spec_opts) {
   apply_flags(dest, spec_opts);
   dest->str[dest->curr_ind++] = '0';
   dest->str[dest->curr_ind++] = 'x';
+
+  if (is_diopux(spec_opts) == true && spec_opts->precision_set == true) {
+    s21_size_t prec_corr = 0;
+    s21_size_t pointer_len = get_num_length(address, spec_opts);
+    if (spec_opts->precision > pointer_len) {
+      prec_corr = spec_opts->precision - pointer_len;
+    } else {
+      prec_corr = 0;
+    }
+
+    add_zeros_to_destination(dest, prec_corr);
+  }
 
   itoa(dest, address, spec_opts);
 
