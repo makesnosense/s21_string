@@ -16,8 +16,6 @@ int s21_sprintf(char* str, const char* format, ...) {
       set_padding_char(&spec_opts);
       process_specifier(*format, &args, &dest, &spec_opts);
 
-      // turn_off_zero_flag_when_precision_set(&spec_opts);
-
     } else {
       dest.str[dest.curr_ind++] = *format;
     }
@@ -713,7 +711,8 @@ void whole_to_str(DestStr* dest, long double num, SpecOptions* spec_opts) {
   s21_size_t num_len = get_num_length(num, spec_opts);
 
   if (spec_opts->flag_zero && !spec_opts->is_g_spec &&
-      !spec_opts->is_scientific) {
+      !spec_opts->is_scientific &&
+      integer_with_precision_set(spec_opts) == false) {
     apply_flags(dest, spec_opts);
   }
 
@@ -725,8 +724,9 @@ void whole_to_str(DestStr* dest, long double num, SpecOptions* spec_opts) {
     apply_width(dest, num_len, spec_opts);
   }
 
-  if (!spec_opts->flag_zero && !spec_opts->is_g_spec &&
-      !spec_opts->is_scientific) {
+  if ((!spec_opts->flag_zero && !spec_opts->is_g_spec &&
+       !spec_opts->is_scientific) ||
+      integer_with_precision_set(spec_opts)) {
     apply_flags(dest, spec_opts);
   }
   if (is_diopux(spec_opts) == true && spec_opts->precision_set == true) {
