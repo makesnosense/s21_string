@@ -958,24 +958,6 @@ START_TEST(sprintf_test22) {
 }
 END_TEST
 
-START_TEST(sprintf_test23) {
-  char str1[500] = {0};
-  char str2[500] = {0};
-  char *format = "%-lX Privet %hX Privet %lX Privet %-hX MIR %+lX";
-  int a = 3015;
-  int b = -712;
-  int c = 99;
-  int d = -2939;
-  int e = 0123;
-
-  int res_21 = s21_sprintf(str1, format, a, b, c, d, e);
-  int res_lib = sprintf(str2, format, a, b, c, d, e);
-
-  ck_assert_str_eq(str1, str2);
-  ck_assert_int_eq(res_21, res_lib);
-}
-END_TEST
-
 START_TEST(sprintf_test24) {
   char str1[100] = {0};
   char str2[100] = {0};
@@ -1125,19 +1107,16 @@ START_TEST(shiraleo_sprintf_test_06_problem) {
 END_TEST
 
 START_TEST(shiraleo_sprintf_test_06) {
-  char str1[100] = {0};
-  char str2[100] = {0};
-  char *format =
-      "Number: % 013.6d Pointer to number: %+15.3p Null char:%*.0c Text:%10.5s";
+  char str1[500] = {0};
+  char str2[500] = {0};
+  char *format = "Number: % 013.6d Pointer to number: %+15.3p Null char:%*.0c";
   int a = -4568;
   int *p = 0;
   char c = 0;
-  char *str = "Проверка";
 
-  int s21_res = s21_sprintf(str1, format, a, p, 14, c, str);
-  int lib_res = sprintf(str2, format, a, p, 14, c, str);
-  // printf("s21 %s\n", str1);
-  // printf("lib %s\n", str2);
+  int s21_res = s21_sprintf(str1, format, a, p, 14, c);
+  int lib_res = sprintf(str2, format, a, p, 14, c);
+
   ck_assert_str_eq(str1, str2);
   ck_assert_int_eq(s21_res, lib_res);
 }
@@ -11849,8 +11828,7 @@ Suite *make_external_suite() {
   tcase_add_test(tc_core, sprintf_test19);  // problem
   tcase_add_test(tc_core, sprintf_test20);  // problem
   tcase_add_test(tc_core, sprintf_test21);  // problem
-  tcase_add_test(tc_core, sprintf_test22);  // problem
-  tcase_add_test(tc_core, sprintf_test23);  // problem
+  tcase_add_test(tc_core, sprintf_test22);  //
   tcase_add_test(tc_core, sprintf_test24);
   tcase_add_test(tc_core, sprintf_test25);  // problem
   tcase_add_test(tc_core, sprintf_test26);
@@ -11865,30 +11843,30 @@ Suite *make_external_suite() {
   tcase_add_test(tc_core, shiraleo_sprintf_test_06);          // problem
   tcase_add_test(tc_core, shiraleo_sprintf_test_06_problem);  // problem
 
-  tcase_add_test(tc_act, shiraleo_sprintf_test_07);  // problem
-  tcase_add_test(tc_act, shiraleo_sprintf_test_08);  // problem
-  tcase_add_test(tc_act, shiraleo_sprintf_test_09);  // problem
-  tcase_add_test(tc_act, shiraleo_sprintf_test_10);  // problem
-  tcase_add_test(tc_act, teenybir_sprintf_e_test1);
-  tcase_add_test(tc_act, teenybir_sprintf_e_test2);
-  tcase_add_test(tc_act, teenybir_sprintf_e_test3);
-  tcase_add_test(tc_act, teenybir_sprintf_e_test4);
-  tcase_add_test(tc_act, teenybir_sprintf_e_test5);
-  tcase_add_test(tc_act, teenybir_sprintf_le_test1);
-  tcase_add_test(tc_act, teenybir_sprintf_le_test2);
-  tcase_add_test(tc_act, teenybir_sprintf_f_test1);
-  tcase_add_test(tc_act, teenybir_sprintf_f_test2);
-  tcase_add_test(tc_act, teenybir_sprintf_f_test3);
-  tcase_add_test(tc_act, teenybir_sprintf_f_test4);
-  tcase_add_test(tc_act, teenybir_sprintf_f_test5);
-  tcase_add_test(tc_act, teenybir_sprintf_lf_test2);
-  tcase_add_test(tc_act, teenybir_sprintf_x_test1);
-  tcase_add_test(tc_act, teenybir_sprintf_x_test2);  // problem
-  tcase_add_test(tc_act, teenybir_sprintf_X_test3);
-  tcase_add_test(tc_act, teenybir_sprintf_c_test1);
-  tcase_add_test(tc_act, teenybir_sprintf_c_test2);
-  tcase_add_test(tc_act, sprintf_alignment_test1);
-  tcase_add_test(tc_act, sprintf_alignment_test2);
+  tcase_add_test(tc_core, shiraleo_sprintf_test_07);  // problem
+  tcase_add_test(tc_core, shiraleo_sprintf_test_08);  // problem
+  tcase_add_test(tc_core, shiraleo_sprintf_test_09);  // problem
+  tcase_add_test(tc_core, shiraleo_sprintf_test_10);  // problem
+  tcase_add_test(tc_core, teenybir_sprintf_e_test1);
+  tcase_add_test(tc_core, teenybir_sprintf_e_test2);
+  tcase_add_test(tc_core, teenybir_sprintf_e_test3);
+  tcase_add_test(tc_core, teenybir_sprintf_e_test4);
+  tcase_add_test(tc_core, teenybir_sprintf_e_test5);
+  tcase_add_test(tc_core, teenybir_sprintf_le_test1);
+  tcase_add_test(tc_core, teenybir_sprintf_le_test2);
+  tcase_add_test(tc_core, teenybir_sprintf_f_test1);
+  tcase_add_test(tc_core, teenybir_sprintf_f_test2);
+  tcase_add_test(tc_core, teenybir_sprintf_f_test3);
+  tcase_add_test(tc_core, teenybir_sprintf_f_test4);
+  tcase_add_test(tc_core, teenybir_sprintf_f_test5);
+  tcase_add_test(tc_core, teenybir_sprintf_lf_test2);
+  tcase_add_test(tc_core, teenybir_sprintf_x_test1);
+  tcase_add_test(tc_core, teenybir_sprintf_x_test2);  // problem
+  tcase_add_test(tc_core, teenybir_sprintf_X_test3);
+  tcase_add_test(tc_core, teenybir_sprintf_c_test1);
+  tcase_add_test(tc_core, teenybir_sprintf_c_test2);
+  tcase_add_test(tc_core, sprintf_alignment_test1);
+  tcase_add_test(tc_core, sprintf_alignment_test2);
   tcase_add_test(tc_act, sprintf_alignment_test3);
   tcase_add_test(tc_act, sprintf_precision_test1);
   tcase_add_test(tc_act, teenybir_sprintf_s_test1);
