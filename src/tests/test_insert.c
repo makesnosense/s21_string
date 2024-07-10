@@ -33,6 +33,26 @@ START_TEST(test_insert_empty_src) {
 }
 END_TEST
 
+START_TEST(test_insert_to_null_src) {
+  const char* src = S21_NULL;
+  const char* str = "Hello";
+  s21_size_t start_index = 0;
+  char* s21_result = s21_insert(src, str, start_index);
+  ck_assert_ptr_null(s21_result);
+  free(s21_result);
+}
+END_TEST
+
+START_TEST(test_insert_null_src) {
+  const char* src = "Hello, world!";
+  const char* str = NULL;
+  s21_size_t start_index = 0;
+  char* s21_result = s21_insert(src, str, start_index);
+  ck_assert_ptr_null(s21_result);
+  free(s21_result);
+}
+END_TEST
+
 START_TEST(test_insert_start_index_zero) {
   const char* src = "world!";
   const char* str = "Hello, ";
@@ -87,6 +107,8 @@ Suite* make_insert_suite() {
   tcase_add_test(tc_core, test_insert_start_index_out_of_range);
   tcase_add_test(tc_core, test_insert_start_index_out_of_range_below);
 
+  tcase_add_test(tc_core, test_insert_null_src);
+  tcase_add_test(tc_core, test_insert_to_null_src);
   suite_add_tcase(insert_suite, tc_core);
   return insert_suite;
 }
