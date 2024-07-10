@@ -580,7 +580,8 @@ void apply_flags(DestStr* dest, SpecOptions* spec_opts) {
     dest->str[dest->curr_ind++] = '+';
   } else if (spec_opts->flag_space) {
     dest->str[dest->curr_ind++] = ' ';
-  } else if (spec_opts->flag_sharp) {
+  }
+  if (spec_opts->flag_sharp) {
     if (spec_opts->specifier == o) {
       dest->str[dest->curr_ind++] = '0';
     } else if (spec_opts->specifier == x) {
@@ -669,6 +670,12 @@ int itoa(DestStr* dest, long double input_num, SpecOptions* spec_opts) {
     digits = "0123456789ABCDEF";
   }
 
+  // if ((spec_opts->specifier == x || spec_opts->specifier == X) &&
+  //     spec_opts->flag_sharp == true) {
+  //   dest->str[dest->curr_ind++] = '0';
+  //   dest->str[dest->curr_ind++] = 'x';
+  // }
+
   s21_size_t l_index = dest->curr_ind;
 
   if (input_num == 0) {
@@ -713,6 +720,7 @@ void whole_to_str(DestStr* dest, long double num, SpecOptions* spec_opts) {
   if (spec_opts->flag_zero && !spec_opts->is_g_spec &&
       !spec_opts->is_scientific &&
       integer_with_precision_set(spec_opts) == false) {
+    // printf("\n\n\n\n\n\n %d\n\n\n\n\n", spec_opts->flag_sharp);
     apply_flags(dest, spec_opts);
   }
 
