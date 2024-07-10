@@ -308,16 +308,24 @@ void process_strings(va_list* args, DestStr* dest, SpecOptions* spec_opts) {
   }
 }
 
+void process_null_narrow_string(DestStr* dest, SpecOptions* spec_opts) {
+  const char* null_string = "(null)";
+  s21_size_t characters_to_print =
+      spec_opts->precision_set ? spec_opts->precision : 6;
+  for (s21_size_t i = 0; i < characters_to_print; i++)
+    dest->str[dest->curr_ind++] = null_string[i];
+}
+
 void process_narrow_string(char* input_string, DestStr* dest,
                            SpecOptions* spec_opts) {
-  s21_size_t string_length = s21_strlen(input_string);
   if (input_string == 0x0) {
-    printf("\n%lu\n", string_length);
-    calculate_padding(0, spec_opts);
-    apply_width(dest, 0, spec_opts);
+    calculate_padding(spec_opts->precision, spec_opts);
+    apply_width(dest, spec_opts->precision, spec_opts);
     apply_flags(dest, spec_opts);
+    process_null_narrow_string(dest, spec_opts);
     apply_minus_width(dest, spec_opts);
   } else {
+    s21_size_t string_length = s21_strlen(input_string);
     calculate_padding(string_length, spec_opts);
     apply_width(dest, string_length, spec_opts);
     apply_flags(dest, spec_opts);
