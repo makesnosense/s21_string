@@ -1,6 +1,6 @@
 # s21_string+
 
-Partial reimplementation of the string.h library (with additions) executed as a practice project at School 21 (formerly 42.fr).
+Partial reimplementation of the string.h library (with additions) executed as a practice project at School 21 (formerly 42.fr)
 
 ### string.h Types
 
