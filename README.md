@@ -28,32 +28,14 @@ size_t strspn(const char *str1, const char *str2)
 char* strstr(const char *haystack, const char *needle)
 char* strtok(char *str, const char *delim)
 ```
-1. void *memchr(const void *str, int c, size_t n)
-2. int memcmp(const void *str1, const void *str2, size_t n)
-3. void *memcpy(void *dest, const void *src, size_t n)
-4. void *memmove(void *dest, const void *src, size_t n)
-5. void *memset(void *str, int c, size_t n)
-6. char *strcat(char *dest, const char *src)
-7. char *strncat(char *dest, const char *src, size_t n)
-8. char *strchr(const char *str, int c)
-9. int strcmp(const char *str1, const char *str2)
-10. int strncmp(const char *str1, const char *str2, size_t n)
-11. char *strcpy(char *dest, const char *src)
-12. char *strncpy(char *dest, const char *src, size_t n)
-13. size_t strcspn(const char *str1, const char *str2)
-14. char *strerror(int errnum)
-15. size_t strlen(const char *str)
-16. char *strpbrk(const char *str1, const char *str2)
-17. char *strrchr(const char *str, int c)
-18. size_t strspn(const char *str1, const char *str2)
-19. char *strstr(const char *haystack, const char *needle)
-20. char *strtok(char *str, const char *delim)
 
 ### string processing functions inspired by C# string class methods.
-1. void *to_upper(const char *str)
-2. void *to_lower(const char *str)
-3. void *insert(const char *src, const char *str, size_t start_index) 
-4. void *trim(const char *src, const char *trim_chars)
+```c
+void* to_upper(const char *str)
+void* to_lower(const char *str)
+void* insert(const char *src, const char *str, size_t start_index) 
+void* trim(const char *src, const char *trim_chars)
+```
 
 ### sprintf and sscanf
 
