@@ -6,7 +6,7 @@ Partial reimplementation of the string.h library (with additions) executed as a 
 ### string.h Functions
 
 Implemented string.h functions:
-```
+```c
 void *memchr(const void *str, int c, size_t n)
 int memcmp(const void *str1, const void *str2, size_t n)
 void *memcpy(void *dest, const void *src, size_t n)
