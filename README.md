@@ -2,6 +2,7 @@
 
 Partial reimplementation of the string.h library (with additions) executed as a practice project at School 21 (formerly 42.fr)
 
+*N.B.: The definition and use of s21_size_t type is part of the educational project requirements.*
 
 ### string.h Functions
 
