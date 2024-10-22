@@ -37,3 +37,104 @@ void* to_lower(const char *str)
 void* insert(const char *src, const char *str, size_t start_index) 
 void* trim(const char *src, const char *trim_chars)
 ```
+
+### s21_sprintf
+The s21_sprintf function formats and stores a series of characters and values into the string str according to the format string format.
+```c
+int s21_sprintf(char* str, const char* format, ...);
+```
+A format specifier has the following structure:  
+`%[flags][width][.precision][length]specifier`
+
+#### `sprintf` specifiers
+
+| Specifier | Output Description |
+|-----------|--------------------|
+| c         | Character          |
+| d         | Signed decimal integer |
+| i         | Signed integer (decimal, octal, or hexadecimal) |
+| e         | Scientific notation (mantissa/exponent) |
+| E         | Scientific notation (mantissa/exponent) using E |
+| f         | Decimal floating point |
+| g         | Shortest representation of decimal floating point |
+| G         | Shortest representation of decimal floating point using E |
+| o         | Unsigned octal     |
+| s         | String of characters |
+| u         | Unsigned decimal integer |
+| x         | Unsigned hexadecimal integer (lowercase) |
+| X         | Unsigned hexadecimal integer (uppercase) |
+| p         | Pointer address    |
+| n         | Number of characters printed |
+| %         | Percent character   |
+
+#### `sprintf` flags
+
+| Flag | Description |
+|------|-------------|
+| -    | Left-justify within the field width |
+| +    | Include sign for positive numbers |
+| (space) | Insert a space for positive numbers |
+| #    | Alternate form for certain specifiers |
+| 0    | Zero-padding for numbers |
+
+#### `sprintf` width
+
+|-------|-------------|
+| (number) | Minimum number of characters to print |
+| *     | Width specified as an additional integer argument |
+
+#### `sprintf` precision
+| Precision | Description |
+|-----------|-------------|
+| .number  | Minimum digits for integers; decimal places for floats |
+| .*       | Precision specified as an additional integer argument |
+
+#### `sprintf` length
+| Length | Description |
+|--------|-------------|
+| h      | Interpreted as short int |
+| l      | Interpreted as long int or wide character |
+| L      | Interpreted as long double |
+
+### s21_sscanf
+The s21_sscanf function reads data from the string str according to the format string format and assigns the values to the provided variables.
+```c
+int s21_sscanf(const char* str, const char* format, ...);
+```
+A format specifier has the following structure:  
+`%[*][width][length]specifier`
+
+#### `sscanf` specifiers
+
+| Specifier | Output Description |
+|-----------|--------------------|
+| c         | Character          |
+| d         | Signed decimal integer |
+| i         | Signed integer (decimal, octal, or hexadecimal) |
+| e         | Decimal or scientific notation |
+| E         | Decimal or scientific notation (mantissa/exponent) |
+| f         | Decimal floating point |
+| g         | Decimal or scientific notation |
+| G         | Decimal or scientific notation |
+| o         | Unsigned octal     |
+| s         | String of characters |
+| u         | Unsigned decimal integer |
+| x         | Unsigned hexadecimal integer (any case) |
+| X         | Unsigned hexadecimal integer (uppercase) |
+| p         | Pointer address    |
+| n         | Number of characters scanned |
+| %         | Percent character   |
+
+#### `sscanf` width
+| Width | Description |
+|-------|-------------|
+| (number) | Minimum number of characters to read |
+| *     | Suppresses assignment of read data |
+
+
+#### `sscanf` length
+| Length | Description |
+|--------|-------------|
+| h      | Interpreted as short int |
+| l      | Interpreted as long int or wide character |
+| L      | Interpreted as long double |
