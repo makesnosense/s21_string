@@ -78,10 +78,11 @@ A format specifier has the following structure:
 | 0    | Zero-padding for numbers |
 
 #### `sprintf` width
-
+| Width | Description |
 |-------|-------------|
 | (number) | Minimum number of characters to print |
 | *     | Width specified as an additional integer argument |
+
 
 #### `sprintf` precision
 | Precision | Description |
