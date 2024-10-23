@@ -1,4 +1,4 @@
- s21_string+
+# s21_string
 
 Partial reimplementation of the string.h library (with additions) executed as a practice project at School 21 (formerly 42.fr)
 
