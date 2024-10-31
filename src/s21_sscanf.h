@@ -34,7 +34,7 @@ typedef enum Length { LENGTH_NOT_SET, h, l, L } Length;
 typedef struct SpecifierOptions {
   s21_size_t width;
   bool width_set;
-  bool is_star;  // Флаг подавления считывания
+  bool is_star;  // flag to suppress reading
   SscanfSpecifier specifier;
   Length length;
   bool is_scientific;

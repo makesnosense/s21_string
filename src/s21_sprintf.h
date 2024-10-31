@@ -45,25 +45,25 @@ typedef enum Specifier {
 } Specifier;
 
 typedef struct SpecifierOptions {
-  bool flag_plus;        // Флаг '+'
-  bool flag_minus;       // Флаг '-'
-  bool flag_space;       // Флаг ' '
-  bool flag_zero;        // флаг '0'
-  bool flag_sharp;       // флаг '#'
-  s21_size_t width;      // Ширина *.
-  s21_size_t precision;  // Точность .*
-  s21_size_t padding;    // Количество пробелов для width
+  bool flag_plus;
+  bool flag_minus;
+  bool flag_space;
+  bool flag_zero;
+  bool flag_sharp;
+  s21_size_t width;      // width *.
+  s21_size_t precision;  // precision .*
+  s21_size_t padding;    // n spaces for width
   long double base;
   int padding_char;
   int exponent_char;
-  bool length_l;       // Длина l
-  bool length_h;       // Длина h
-  bool length_big_l;   // Длина L
-  bool precision_set;  // Есть ли precision у спецификатора
-  bool is_zero;        // ноль на вход
-  bool is_negative;    // Является ли отр. числом
+  bool length_l;
+  bool length_h;
+  bool length_big_l;
+  bool precision_set;  // if precision is set
+  bool is_zero;
+  bool is_negative;
   bool is_decimal_integer;
-  bool is_floating_point_number;  // Является ли float/double
+  bool is_floating_point_number;
   bool is_hexadecimal;
   bool is_g_spec;
   bool is_unsigned_type;

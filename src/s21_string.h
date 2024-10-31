@@ -18,9 +18,8 @@
 
 typedef long unsigned s21_size_t;
 
-// Выполняет поиск первого вхождения символа c (беззнаковый тип) в первых n
-// байтах строки,
-// на которую указывает аргумент str.
+// Finds the first occurrence of (unsigned char) c in the initial count n (each
+// interpreted as unsigned char) of the object pointed to by str.
 void* s21_memchr(const void* str, int c, s21_size_t n);
 
 // Сравнивает первые n байтов str1 и str2.
