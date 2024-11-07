@@ -22,10 +22,11 @@ typedef long unsigned s21_size_t;
 // interpreted as unsigned char) of the object pointed to by str.
 void* s21_memchr(const void* str, int c, s21_size_t n);
 
-// Сравнивает первые n байтов str1 и str2.
+// Compares the first n bytes of the memory areas str1 and str2.
 int s21_memcmp(const void* str1, const void* str2, s21_size_t n);
 
-// Копирует n символов из src в dest.
+// Copies n bytes from memory area src to memory area dest.
+// The memory areas must not overlap.
 void* s21_memcpy(void* dest, const void* src, s21_size_t n);
 
 // Еще одна функция для копирования n символов из src в dest.
