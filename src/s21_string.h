@@ -29,11 +29,14 @@ int s21_memcmp(const void* str1, const void* str2, s21_size_t n);
 // The memory areas must not overlap.
 void* s21_memcpy(void* dest, const void* src, s21_size_t n);
 
-// Еще одна функция для копирования n символов из src в dest.
+// Copies n bytes from memory area src to memory area dest.
+// The memory areas may overlap: copying takes place as though the bytes in src
+// are first copied into a temporary array that does not overlap src or dest,
+// and the bytes are then copied from the temporary array to dest.
 void* s21_memmove(void* dest, const void* src, s21_size_t n);
 
-// Копирует символ c (беззнаковый тип) в первые n символов строки, на которую
-// указывает аргумент str.
+// Fills the first n bytes of the memory area pointed to by str
+// with the constant byte c.
 void* s21_memset(void* str, int c, s21_size_t n);
 
 // Добавляет строку, на которую указывает src, в конец строки, на которую
