@@ -39,12 +39,11 @@ void* s21_memmove(void* dest, const void* src, s21_size_t n);
 // with the constant byte c.
 void* s21_memset(void* str, int c, s21_size_t n);
 
-// Добавляет строку, на которую указывает src, в конец строки, на которую
-// указывает dest.
+// Appends the src string to the dest string, overwriting the terminating null
+// byte ('\0') at the end of dest, and then adds a terminating null byte.
 char* s21_strcat(char* dest, const char* src);
 
-// Добавляет строку, на которую указывает src, в конец строки, на которую
-// указывает dest, длиной до n символов.
+// Similar to strcat, except that it will use at most n bytes from src.
 char* s21_strncat(char* dest, const char* src, s21_size_t n);
 
 // Выполняет поиск первого вхождения символа c (беззнаковый тип) в строке, на
