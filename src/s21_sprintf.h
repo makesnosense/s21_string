@@ -163,20 +163,17 @@ long long int ingest_int(va_list* args, SpecOptions* spec_opts);
 long long unsigned ingest_unsinged(va_list* args, SpecOptions* spec_opts);
 long double ingest_floating_point_number(va_list* args, SpecOptions* spec_opts);
 
-// Функция записывает целое число в строку dest
 int itoa(DestStr* dest, long double input_num, SpecOptions* spec_opts);
 void reverse_num(DestStr* dest, s21_size_t l_index, s21_size_t r_index);
 
 void floating_point_number_to_str(DestStr* dest, long double input_num,
                                   SpecOptions* spec_opts);
 void whole_to_str(DestStr* dest, long double num, SpecOptions* spec_opts);
-void fraction_to_str(DestStr* dest, long double num, SpecOptions* spec_opts);
 void pointer_to_str(DestStr* dest, void* ptr, SpecOptions* spec_opts);
 
 long double round_to_n_digits(long double input_num, s21_size_t n_digits);
 long double multiply_by_10_n_times(long double input_num, s21_size_t n);
 long double divide_by_10_n_times(long double input_num, s21_size_t n);
-long long scale_input_and_calculate_exponent(long double* input_num);
 long long calculate_exponent(long double input_num);
 long double scale_input_to_one_digit(long double input_num);
 long double scale_input_to_n_digits(long double input_num, s21_size_t n);
@@ -186,7 +183,6 @@ void remove_trailing_zeros(DestStr* dest, SpecOptions* spec_opts);
 long double bank_roundl(long double input_num);
 bool is_zero(long double input_num);
 bool is_diopux(SpecOptions* spec_opts);
-void turn_off_zero_flag_when_precision_set(SpecOptions* spec_opts);
 void set_locale_for_wide_chars();
 
 #endif  // SRC_S21_SPRINTF_H_
