@@ -46,16 +46,20 @@ char* s21_strcat(char* dest, const char* src);
 // Similar to strcat, except that it will use at most n bytes from src.
 char* s21_strncat(char* dest, const char* src, s21_size_t n);
 
-// Выполняет поиск первого вхождения символа c (беззнаковый тип) в строке, на
-// которую указывает аргумент str.
+// Returns a pointer to the first occurrence of the character c
+// in the string str.
 char* s21_strchr(const char* str, int c);
 
-// Сравнивает строку, на которую указывает str1, со строкой, на которую
-// указывает
-//  str2.
+// Compares the two strings str1 and str2.  The comparison is done using
+// unsigned characters.
+// Returns an integer indicating the result of the comparison:
+// 0, if the str1 and str2 are equal;
+// a negative value if str1 is less than str2;
+// a positive value if str1 is greater than str2.
 int s21_strcmp(const char* str1, const char* str2);
 
-// Сравнивает не более первых n байтов str1 и str2.
+// Similar to strcmp, except it compares only the first (at most)
+// n bytes of str1 and str2.
 int s21_strncmp(const char* str1, const char* str2, s21_size_t n);
 
 // Копирует строку, на которую указывает src, в dest.
