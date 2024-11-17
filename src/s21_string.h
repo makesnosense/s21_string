@@ -62,7 +62,8 @@ int s21_strcmp(const char* str1, const char* str2);
 // n bytes of str1 and str2.
 int s21_strncmp(const char* str1, const char* str2, s21_size_t n);
 
-// Копирует строку, на которую указывает src, в dest.
+// Copies the string pointed to by src,
+// into a string at the buffer pointed to by dest
 char* s21_strcpy(char* dest, const char* src);
 
 // Копирует до n символов из строки, на которую указывает src, в dest.
