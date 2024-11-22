@@ -66,11 +66,13 @@ int s21_strncmp(const char* str1, const char* str2, s21_size_t n);
 // into a string at the buffer pointed to by dest
 char* s21_strcpy(char* dest, const char* src);
 
-// Копирует до n символов из строки, на которую указывает src, в dest.
+// Copies at most n characters of the character array pointed to by src
+// to character array pointed to by dest.
 char* s21_strncpy(char* dest, const char* src, s21_size_t n);
 
-// Вычисляет длину начального сегмента str1, который полностью состоит из
-// символов, не входящих в str2.
+// Returns the length of the maximum initial segment of the null-terminated byte
+// string pointed to by str1, that consists of only the characters not found in
+// the null-terminated byte string pointed to by str2.
 s21_size_t s21_strcspn(const char* str1, const char* str2);
 
 // Выполняет поиск во внутреннем массиве номера ошибки errnum и возвращает
