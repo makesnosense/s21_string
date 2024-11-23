@@ -83,8 +83,9 @@ char* s21_strerror(int errnum);
 // up to the first null terminating character.
 s21_size_t s21_strlen(const char* str);
 
-// Находит первый символ в строке str1, который соответствует любому символу,
-// указанному в str2.
+// Scans the null-terminated byte string pointed to by str1 for any character
+// from the null-terminated byte string pointed to by str2, and returns a
+// pointer to that character.
 char* s21_strpbrk(const char* str1, const char* str2);
 
 // Выполняет поиск последнего вхождения символа c (беззнаковый тип) в строке, на
