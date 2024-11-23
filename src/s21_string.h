@@ -75,14 +75,12 @@ char* s21_strncpy(char* dest, const char* src, s21_size_t n);
 // the null-terminated byte string pointed to by str2.
 s21_size_t s21_strcspn(const char* str1, const char* str2);
 
-// Выполняет поиск во внутреннем массиве номера ошибки errnum и возвращает
-// указатель на строку с сообщением об ошибке.
-// Нужно объявить макросы, содержащие массивы сообщений об ошибке для
-// операционных систем mac и linux. Описания ошибок есть в оригинальной
-// библиотеке. Проверка текущей ОС осуществляется с помощью директив.
+// Returns a pointer to a string that describes the error code
+// passed in the argument errnum.
 char* s21_strerror(int errnum);
 
-// Вычисляет длину строки str, не включая завершающий нулевой символ.
+// Returns the length of a string, which is the number of characters
+// up to the first null terminating character.
 s21_size_t s21_strlen(const char* str);
 
 // Находит первый символ в строке str1, который соответствует любому символу,
