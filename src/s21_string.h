@@ -88,12 +88,14 @@ s21_size_t s21_strlen(const char* str);
 // pointer to that character.
 char* s21_strpbrk(const char* str1, const char* str2);
 
-// Выполняет поиск последнего вхождения символа c (беззнаковый тип) в строке, на
-// которую указывает аргумент str.
+// Finds the last occurrence of c (after conversion to char as if by (char)c)
+// in the null-terminated byte string pointed to by str (each character
+// interpreted as unsigned char).
 char* s21_strrchr(const char* str, int c);
 
-// Вычисляет длину начального сегмента str1, который полностью состоит из
-// символов str2.
+// Returns the length of the maximum initial segment (span) of the
+// null-terminated byte string pointed to by str1, that consists of only the
+// characters found in the null-terminated byte string pointed to by str2.
 s21_size_t s21_strspn(const char* str1, const char* str2);
 
 // Находит первое вхождение всей строки needle (не включая завершающий нулевой
