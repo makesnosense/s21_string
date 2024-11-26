@@ -98,12 +98,13 @@ char* s21_strrchr(const char* str, int c);
 // characters found in the null-terminated byte string pointed to by str2.
 s21_size_t s21_strspn(const char* str1, const char* str2);
 
-// Находит первое вхождение всей строки needle (не включая завершающий нулевой
-// символ),
-// которая появляется в строке haystack.
+// Finds the first occurrence of the null-terminated byte string pointed to by
+// needle in the null-terminated byte string pointed to by haystack.
 char* s21_strstr(const char* haystack, const char* needle);
 
-// Разбивает строку str на ряд токенов, разделенных delim.
+// Function breaks a string str into a sequence of zero or more nonempty tokens.
+// The delim argument specifies a set of bytes that delimit the tokens in the
+// parsed string.
 char* s21_strtok(char* str, const char* delim);
 
 // дополнительные функции
