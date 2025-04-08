@@ -30,7 +30,7 @@ char* strstr(const char *haystack, const char *needle)
 char* strtok(char *str, const char *delim)
 ```
 
-### string processing functions inspired by C# string class methods.
+### string processing functions inspired by C# string class methods
 ```c
 void* to_upper(const char *str)
 void* to_lower(const char *str)
