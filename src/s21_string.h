@@ -107,21 +107,17 @@ char* s21_strstr(const char* haystack, const char* needle);
 // parsed string.
 char* s21_strtok(char* str, const char* delim);
 
-// дополнительные функции
-
-// Возвращает копию строки (str), преобразованной в верхний регистр. В случае
-// какой-либо ошибки следует вернуть
-// значение NULL
+// Returns a copy of the string (str) converted to uppercase.
+// In case of any error, returns NULL value.
 void* s21_to_upper(const char* str);
 
-// Возвращает копию строки (str), преобразованной в нижний регистр. В случае
-// какой-либо
-// ошибки следует вернуть значение NULL
+// Returns a copy of the string (str) converted to lowercase.
+// In case of any error, returns NULL value.
 void* s21_to_lower(const char* str);
 
-// Возвращает новую строку, в которой указанная строка (str) вставлена
-// в указанную позицию (start_index) в данной строке (src).
-//  В случае какой-либо ошибки следует вернуть значение NULL
+// Returns a new string in which the specified string (str) is inserted
+// at the specified position (start_index) in the given string (src).
+// In case of any error, returns NULL
 void* s21_insert(const char* src, const char* str, s21_size_t start_index);
 
 // Возвращает новую строку, в которой удаляются все начальные и конечные
