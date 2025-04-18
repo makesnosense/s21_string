@@ -120,15 +120,16 @@ void* s21_to_lower(const char* str);
 // In case of any error, returns NULL
 void* s21_insert(const char* src, const char* str, s21_size_t start_index);
 
-// Возвращает новую строку, в которой удаляются все начальные и конечные
-// вхождения набора
-// заданных символов (trim_chars) из данной строки (src).
-// В случае какой-либо ошибки следует вернуть значение NULL
+// Returns a new string in which 
+// all leading and trailing occurrences of 
+// a set of specified characters (trim_chars) 
+// are removed from the given string (src).
+// In case of any error, NULL is returned
 void* s21_trim(const char* src, const char* trim_chars);
 
 int s21_sscanf(const char* str, const char* format, ...);
 
-// Отправляет форматированный вывод в строку, на которую указывает str.
+// Sends formatted output to the string pointed to by str.
 int s21_sprintf(char* str, const char* format, ...);
 
 #endif  // SRC_S21_STRING_H_
