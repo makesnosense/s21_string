@@ -230,10 +230,8 @@ void process_chars(va_list* args, DestStr* dest, SpecOptions* spec_opts) {
 void process_narrow_char(va_list* args, DestStr* dest, SpecOptions* spec_opts) {
   char input_char = va_arg(*args, int);
   int num_len = get_num_length(input_char, spec_opts);
-  // Если ширина больше длины числа, добавляем пробелы в начало
   calculate_padding(num_len, spec_opts);
   apply_width(dest, num_len, spec_opts);
-  // Обрабатываем флаги
   apply_flags(dest, spec_opts);
   dest->str[dest->curr_ind++] = input_char;
   apply_minus_width(dest, spec_opts);
@@ -355,19 +353,19 @@ void process_wide_string(va_list* args, DestStr* dest, SpecOptions* spec_opts) {
 long long int ingest_int(va_list* args, SpecOptions* spec_opts) {
   long long int input_int = 0;
   long long int absolute_input = 0;
-  if (spec_opts->length_h) {  // обрабатываем short
+  if (spec_opts->length_h) {
     input_int = va_arg(*args, int);
     absolute_input = TO_ABS(input_int);
     if (absolute_input > SHRT_MAX) {
       input_int = (short)+(input_int);
     }
-  } else if (spec_opts->length_l) {  // обрабатываем long
+  } else if (spec_opts->length_l) {
     absolute_input = TO_ABS(input_int);
     input_int = va_arg(*args, long int);
     if (absolute_input > LONG_MAX) {
       input_int = (long)+(input_int);
     }
-  } else {  // обрабатываем простой int
+  } else {
     input_int = va_arg(*args, int);
     absolute_input = TO_ABS(input_int);
     if (absolute_input > INT_MAX) {
