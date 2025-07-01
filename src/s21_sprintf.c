@@ -390,12 +390,12 @@ long double ingest_floating_point_number(va_list* args,
 long long unsigned ingest_unsinged(va_list* args, SpecOptions* spec_opts) {
   long long unsigned input_unsingned = 0;
 
-  if (spec_opts->length_h) {  // обрабатываем short
+  if (spec_opts->length_h) {
     input_unsingned = va_arg(*args, unsigned);
     if (input_unsingned > USHRT_MAX) {
       input_unsingned = (short unsigned)+(input_unsingned);
     }
-  } else if (spec_opts->length_l) {  // обрабатываем long
+  } else if (spec_opts->length_l) {
     input_unsingned = va_arg(*args, long unsigned);
   } else {
     input_unsingned = va_arg(*args, unsigned);
@@ -484,8 +484,8 @@ void calculate_padding(s21_size_t num_len, SpecOptions* spec_opts) {
 }
 
 void calculate_padding_diopux(s21_size_t num_len, SpecOptions* spec_opts) {
-  int flag_corr = 0;  // Коррекция кол-ва пробелов
-  int prec_corr = 0;  // Коррекция кол-ва пробелов
+  int flag_corr = 0;
+  int prec_corr = 0;
   int sharp_corr = 0;
 
   int padding_to_add = 0;
@@ -527,8 +527,8 @@ void calculate_padding_diopux(s21_size_t num_len, SpecOptions* spec_opts) {
 }
 
 void calculate_padding_not_ge_spec(s21_size_t num_len, SpecOptions* spec_opts) {
-  int flag_corr = 0;  // Коррекция кол-ва пробелов
-  int prec_corr = 0;  // Коррекция кол-ва пробелов
+  int flag_corr = 0;
+  int prec_corr = 0;
   int sharp_corr = 0;
 
   int padding_to_add = 0;
@@ -563,7 +563,7 @@ void calculate_padding_not_ge_spec(s21_size_t num_len, SpecOptions* spec_opts) {
 }
 
 void calculate_padding_ge_spec(s21_size_t num_len, SpecOptions* spec_opts) {
-  int flag_corr = 0;  // Коррекция кол-ва пробелов
+  int flag_corr = 0;
 
   int padding_to_add = 0;
 
@@ -577,7 +577,6 @@ void calculate_padding_ge_spec(s21_size_t num_len, SpecOptions* spec_opts) {
 
 void apply_width(DestStr* dest, s21_size_t num_len, SpecOptions* spec_opts) {
   if (spec_opts->width > num_len) {
-    // Если флаг '-' == 0
     if (!spec_opts->flag_minus) {
       for (s21_size_t i = 0; i < spec_opts->padding; i++)
         dest->str[dest->curr_ind++] = spec_opts->padding_char;
@@ -619,13 +618,13 @@ void floating_point_number_to_str(DestStr* dest, long double input_num,
 
   s21_size_t zeros_to_insert = 0;
 
-  // Set default precision if we didn't parse one
+  // set default precision if we didn't parse one
   set_needed_precision(spec_opts);
 
   fraction_part = modfl(input_num, &whole_part);
 
   whole_to_str(dest, whole_part, spec_opts);
-  // Если не спарсили .0 - выводим дробную часть
+
   if (!(spec_opts->precision_set && !spec_opts->precision)) {
     dest->str[dest->curr_ind++] = '.';
 
@@ -683,12 +682,6 @@ int itoa(DestStr* dest, long double input_num, SpecOptions* spec_opts) {
     digits = "0123456789ABCDEF";
   }
 
-  // if ((spec_opts->specifier == x || spec_opts->specifier == X) &&
-  //     spec_opts->flag_sharp == true) {
-  //   dest->str[dest->curr_ind++] = '0';
-  //   dest->str[dest->curr_ind++] = 'x';
-  // }
-
   s21_size_t l_index = dest->curr_ind;
 
   if (input_num == 0) {
@@ -733,15 +726,12 @@ void whole_to_str(DestStr* dest, long double num, SpecOptions* spec_opts) {
   if (spec_opts->flag_zero && !spec_opts->is_g_spec &&
       !spec_opts->is_scientific &&
       integer_with_precision_set(spec_opts) == false) {
-    // printf("\n\n\n\n\n\n %d\n\n\n\n\n", spec_opts->flag_sharp);
     apply_flags(dest, spec_opts);
   }
 
   if (!spec_opts->is_g_spec && !spec_opts->is_scientific) {
     calculate_padding(num_len, spec_opts);
-    // Если ширина больше длины числа, добавляем пробелы в начало
-    // printf("|%lu %lu %lu %lu\n", num_len, spec_opts->precision,
-    //        spec_opts->width, spec_opts->padding);
+
     apply_width(dest, num_len, spec_opts);
   }
 
@@ -829,7 +819,7 @@ void process_scientific(DestStr* dest, long double input_num,
   DestStr scientific_temp_dest = {scientific_temp_buffer, 0};
 
   input_num = TO_ABS(input_num);
-  // set_needed_precision(spec_opts);
+
   if (spec_opts->is_zero) {
     process_scientific_zero_input(&scientific_temp_dest, spec_opts);
   } else {
@@ -856,7 +846,6 @@ void add_scientific_e_part(long long exponent, DestStr* dest,
   } else {
     dest->str[dest->curr_ind++] = '+';
   }
-  // экспонента имеет как минимум два знака
   if (exponent < 10) {
     dest->str[dest->curr_ind++] = '0';
   }
@@ -954,14 +943,11 @@ void process_g_spec(DestStr* dest, long double input_num,
 
 void process_g_spec_zero_precision(DestStr* dest, long double input_num,
                                    SpecOptions* spec_opts) {
-  // whole_part_length 0 or 1
-
   input_num = scale_to_one_digit_significand(input_num);
 
   s21_size_t decimal_digits_to_round_to = 0;
 
-  if (floorl(input_num) == 0) {  //  я заменил roundl на floorl. в этом условии
-                                 //  не нужен правильно округлённый input_num
+  if (floorl(input_num) == 0) {
     decimal_digits_to_round_to = 1;
   }
 
@@ -996,7 +982,6 @@ void process_g_spec_not_set_precision_sharp_on(DestStr* dest,
 
   needed_decimal_places = DEFAULT_F_PRECISION - whole_part_length;
 
-  // whole_part_length always <= DEFAULT_F_PRECISION
   fraction_part = multiply_by_10_n_times(fraction_part, needed_decimal_places);
   fraction_part = bank_roundl(fraction_part);
 
@@ -1150,21 +1135,14 @@ bool g_spec_exponent_increment_check(long double input_num,
                                      SpecOptions* spec_opts) {
   bool result = false;
 
-  // printf("Precision \n%lu\n", spec_opts->precision);
-  // long double initial_input_num = input_num;
-  // printf("Initial \n%Lf\n", input_num);
-
   input_num = scale_input_to_n_digits(input_num, spec_opts->precision);
 
   long double initial_input_num = input_num;
-  // printf("Initial 2\n%Lf\n", initial_input_num);
   input_num = bank_roundl(input_num);
   if (get_num_length_simple(initial_input_num) !=
       get_num_length_simple(input_num)) {
     result = true;
   }
-
-  // printf("After \n%Lf\n", input_num);
 
   return result;
 }
@@ -1193,7 +1171,6 @@ void process_g_spec_significand_part_nonzero_precision(DestStr* dest,
     dest->str[dest->curr_ind++] = '.';
 
     fraction_part *= pow(10, spec_opts->precision - whole_part_length);
-    // printf("\n\n\n%Lf\n\n\n", fraction_part);
     itoa(dest, bank_roundl(fraction_part), spec_opts);
 
     if (input_num != 0.0) {
@@ -1233,8 +1210,6 @@ void process_scientific_for_g_spec_precision_set(DestStr* dest,
   } else {
     process_g_spec_significand_part_nonzero_precision(dest, input_num,
                                                       spec_opts);
-
-    // remove_trailing_zeros(dest, spec_opts);
   }
 
   if (dest->str[dest->curr_ind - 1] == '0') {
@@ -1345,8 +1320,7 @@ void remove_trailing_zeros(DestStr* dest, SpecOptions* spec_opts) {
     dest->str[dest->curr_ind - 1] = '\0';
     dest->curr_ind--;
   }
-  if (dest->str[dest->curr_ind - 1] == '.' &&
-      spec_opts->flag_sharp == false) {  // ВРЕМЕННО !!!
+  if (dest->str[dest->curr_ind - 1] == '.' && spec_opts->flag_sharp == false) {
     dest->str[dest->curr_ind - 1] = '\0';
     dest->curr_ind--;
   }

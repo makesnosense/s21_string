@@ -153,10 +153,6 @@ static int read_pointer(va_list* args, InputStr* source,
   unsigned long long ptr_value = 0;
   s21_size_t bytes_read = 0;
 
-  // while (is_space(source->str[source->curr_ind]) == true) {
-  //   source->curr_ind++;
-  // }
-
   if (hexadecimal_prefix_follows(source)) {
     source->curr_ind += 2;
     bytes_read += 2;
@@ -778,11 +774,7 @@ static bool n_specifier_follows(InputStr* fmt_input) {
       it_follows = true;
     }
   }
-  // if (fmt_characters_remaining >= 3) {
-  //   if (s21_strncmp(&fmt_input->str[fmt_input->curr_ind], "%*n", 3) == 0) {
-  //     it_follows = true;
-  //   }
-  // }
+
   return it_follows;
 }
 
