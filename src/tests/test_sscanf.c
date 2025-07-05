@@ -21,9 +21,6 @@ START_TEST(test_sscanf_simple_char) {
   lib_res = sscanf(input_string, format_string, &lib_a, &lib_b, &lib_c);
   s21_res = s21_sscanf(input_string, format_string, &s21_a, &s21_b, &s21_c);
 
-  // printf("первый чар %c второй чар %c n: %d\n", lib_a, lib_b, lib_c);
-  // printf("первый чар %c второй чар %c n: %d\n", s21_a, s21_b, s21_c);
-
   ck_assert_int_eq(lib_res, s21_res);
   ck_assert_int_eq(lib_a, s21_a);
   ck_assert_int_eq(lib_b, s21_b);
@@ -47,9 +44,6 @@ START_TEST(test_sscanf_simple_char_p1) {
 
   lib_res = sscanf(input_string, format_string, &lib_a, &lib_b, &lib_c);
   s21_res = s21_sscanf(input_string, format_string, &s21_a, &s21_b, &s21_c);
-
-  // printf("первый чар %c второй чар %c n: %d\n", lib_a, lib_b, lib_c);
-  // printf("первый чар %c второй чар %c n: %d\n", s21_a, s21_b, s21_c);
 
   ck_assert_int_eq(lib_res, s21_res);
   ck_assert_int_eq(lib_a, s21_a);

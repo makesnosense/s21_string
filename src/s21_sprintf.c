@@ -1227,9 +1227,8 @@ void pointer_to_str(DestStr* dest, void* ptr, SpecOptions* spec_opts) {
   long long num_len = get_num_length(address, spec_opts);
 
   calculate_padding(num_len, spec_opts);
-  apply_width(dest, num_len,
-              spec_opts);  // мы добовляем двойку что бы покрыть два
-                           // дополнительных символа
+  apply_width(dest, num_len, spec_opts);
+
   apply_flags(dest, spec_opts);
   dest->str[dest->curr_ind++] = '0';
   dest->str[dest->curr_ind++] = 'x';

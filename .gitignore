@@ -7,11 +7,9 @@ clang.sh
 
 .DS_Store
 
-// Папки для разработки
 src/s21_sprintf_dir/
 src/s21_sscanf_dir/
 
-// Файл с настройками формата
 CPPLINT.cfg
 
 clang_all.sh
