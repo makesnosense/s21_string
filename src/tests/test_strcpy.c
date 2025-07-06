@@ -2,7 +2,7 @@
 
 START_TEST(test_strcpy_empty) {
   char src[] = "";
-  char dest[10];  // Больше, чем достаточно для пустой строки
+  char dest[10];
 
   char* result = s21_strcpy(dest, src);
   ck_assert_str_eq(dest, src);

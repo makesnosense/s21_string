@@ -67,9 +67,6 @@ START_TEST(test_sscanf_simple_char_p2) {
   lib_res = sscanf(input_string, format_string, &lib_a, &lib_c);
   s21_res = s21_sscanf(input_string, format_string, &s21_a, &s21_c);
 
-  // printf("первый чар %c второй чар %c n: %d\n", lib_a, lib_b, lib_c);
-  // printf("первый чар %c второй чар %c n: %d\n", s21_a, s21_b, s21_c);
-
   ck_assert_int_eq(lib_res, s21_res);
   ck_assert_int_eq(lib_a, s21_a);
   ck_assert_int_eq(lib_c, s21_c);
@@ -128,11 +125,6 @@ START_TEST(test_sscanf_possible_minus_one_p1) {
   lib_res = sscanf(input_string, format_string, &lib_a, &lib_b, &lib_c);
   s21_res = s21_sscanf(input_string, format_string, &s21_a, &s21_b, &s21_c);
 
-  // printf("первый чар %c второй чар %c n: %d res: %d\n", lib_a, lib_b, lib_c,
-  //        lib_res);
-  // printf("первый чар  %c второй чар %c n: %d res: %d\n", s21_a, s21_b, s21_c,
-  //        s21_res);
-
   ck_assert_int_eq(lib_res, s21_res);
   ck_assert_int_eq(lib_a, s21_a);
   ck_assert_int_eq(lib_b, s21_b);
@@ -153,9 +145,6 @@ START_TEST(test_sscanf_possible_minus_one_p2) {
 
   s21_res = s21_sscanf(" ", " %n%n%c", &s21_a, &s21_b, &s21_c);
   lib_res = sscanf(" ", " %n%n%c", &lib_a, &lib_b, &lib_c);
-
-  // printf("наша %d %d %c res: %d\n", s21_a, s21_b, s21_c, s21_res);
-  // printf("__их %d %d %c res: %d\n", lib_a, lib_b, lib_c, lib_res);
 
   ck_assert_int_eq(lib_res, s21_res);
   ck_assert_int_eq(lib_a, s21_a);
@@ -178,9 +167,6 @@ START_TEST(test_sscanf_possible_minus_one_p3) {
   s21_res = s21_sscanf("     \t\n", " %n %n %c", &s21_a, &s21_b, &s21_c);
   lib_res = sscanf("     \t\n", " %n %n %c", &lib_a, &lib_b, &lib_c);
 
-  // printf("наша %d %d %c res: %d\n", s21_a, s21_b, s21_c, s21_res);
-  // printf("__их %d %d %c res: %d\n", lib_a, lib_b, lib_c, lib_res);
-
   ck_assert_int_eq(lib_res, s21_res);
   ck_assert_int_eq(lib_a, s21_a);
   ck_assert_int_eq(lib_b, s21_b);
@@ -201,9 +187,6 @@ START_TEST(test_sscanf_possible_minus_one_p4) {
 
   s21_res = s21_sscanf("     \t\n", "%n %n %c", &s21_a, &s21_b, &s21_c);
   lib_res = sscanf("     \t\n", "%n %n %c", &lib_a, &lib_b, &lib_c);
-
-  // printf("наша %d %d %c res: %d\n", s21_a, s21_b, s21_c, s21_res);
-  // printf("__их %d %d %c res: %d\n", lib_a, lib_b, lib_c, lib_res);
 
   ck_assert_int_eq(lib_res, s21_res);
   ck_assert_int_eq(lib_a, s21_a);
@@ -226,9 +209,6 @@ START_TEST(test_sscanf_possible_minus_one_p5) {
   s21_res = s21_sscanf("     \t\n", "%n%n%c", &s21_a, &s21_b, &s21_c);
   lib_res = sscanf("     \t\n", "%n%n%c", &lib_a, &lib_b, &lib_c);
 
-  // printf("наша %d %d %c res: %d\n", s21_a, s21_b, s21_c, s21_res);
-  // printf("__их %d %d %c res: %d\n", lib_a, lib_b, lib_c, lib_res);
-
   ck_assert_int_eq(lib_res, s21_res);
   ck_assert_int_eq(lib_a, s21_a);
   ck_assert_int_eq(lib_b, s21_b);
@@ -249,13 +229,6 @@ START_TEST(test_sscanf_possible_minus_one_p6) {
 
   lib_res = sscanf("\t\t\t\n\fz", " %c %c %n", &lib_a, &lib_b, &lib_c);
   s21_res = s21_sscanf("\t\t\t\n\fz", " %c %c %n", &s21_a, &s21_b, &s21_c);
-
-  // printf("lin первый чар %c второй чар %c n: %d res: %d\n", lib_a, lib_b,
-  // lib_c,
-  //        lib_res);
-  // printf("s21 первый чар %c второй чар %c n: %d res: %d\n", s21_a, s21_b,
-  // s21_c,
-  //        s21_res);
 
   ck_assert_int_eq(lib_res, s21_res);
   ck_assert_int_eq(lib_a, s21_a);
@@ -278,9 +251,6 @@ START_TEST(test_sscanf_possible_minus_one_p7) {
   lib_res = sscanf(" ", "%n%c ", &lib_a, &lib_b);
   s21_res = s21_sscanf(" ", "%n%c ", &s21_a, &s21_b);
 
-  // printf("первый чар %c второй чар %c res: %d\n", lib_a, lib_b, lib_res);
-  // printf("первый чар  %c второй чар %c res: %d\n", s21_a, s21_b, s21_res);
-
   ck_assert_int_eq(lib_res, s21_res);
   ck_assert_int_eq(lib_a, s21_a);
   ck_assert_int_eq(lib_b, s21_b);
@@ -300,9 +270,6 @@ START_TEST(test_sscanf_possible_minus_one_p8) {
 
   lib_res = sscanf(" 8", "%n%d ", &lib_a, &lib_b);
   s21_res = s21_sscanf(" 8", "%n%d ", &s21_a, &s21_b);
-
-  // printf("lib первый чар %d второй чар %d res: %d\n", lib_a, lib_b, lib_res);
-  // printf("s21 первый чар %d второй чар %d res: %d\n", s21_a, s21_b, s21_res);
 
   ck_assert_int_eq(lib_res, s21_res);
   ck_assert_int_eq(lib_a, s21_a);
@@ -324,9 +291,6 @@ START_TEST(test_sscanf_possible_minus_one_p9) {
   lib_res = sscanf("   ", "%n%d", &lib_a, &lib_b);
   s21_res = s21_sscanf("   ", "%n%d", &s21_a, &s21_b);
 
-  // printf("lib первый чар %d второй чар %d res: %d\n", lib_a, lib_b, lib_res);
-  // printf("s21 первый чар %d второй чар %d res: %d\n", s21_a, s21_b, s21_res);
-
   ck_assert_int_eq(lib_res, s21_res);
   ck_assert_int_eq(lib_a, s21_a);
   ck_assert_int_eq(lib_b, s21_b);
@@ -347,9 +311,6 @@ START_TEST(test_sscanf_possible_minus_one_p10) {
   lib_res = sscanf("", "%n%d", &lib_a, &lib_b);
   s21_res = s21_sscanf("", "%n%d", &s21_a, &s21_b);
 
-  // printf("lib первый чар %d второй чар %d res: %d\n", lib_a, lib_b, lib_res);
-  // printf("s21 первый чар %d второй чар %d res: %d\n", s21_a, s21_b, s21_res);
-
   ck_assert_int_eq(lib_res, s21_res);
   ck_assert_int_eq(lib_a, s21_a);
   ck_assert_int_eq(lib_b, s21_b);
@@ -368,9 +329,6 @@ START_TEST(test_sscanf_possible_minus_one_p11) {
   lib_res = sscanf("", "%n", &lib_a);
   s21_res = s21_sscanf("", "%n", &s21_a);
 
-  // printf("lib первый чар %d res: %d\n", lib_a, lib_res);
-  // printf("s21 первый чар %d res: %d\n", s21_a, s21_res);
-
   ck_assert_int_eq(lib_res, s21_res);
   ck_assert_int_eq(lib_a, s21_a);
 }
@@ -387,9 +345,6 @@ START_TEST(test_sscanf_possible_minus_one_p12) {
 
   lib_res = sscanf("123 ,z", "%i .k", &lib_a);
   s21_res = s21_sscanf("123 ,z", "%i .k", &s21_a);
-
-  // printf("lib первый чар %d res: %d\n", lib_a, lib_res);
-  // printf("s21 первый чар %d res: %d\n", s21_a, s21_res);
 
   ck_assert_int_eq(lib_res, s21_res);
   ck_assert_int_eq(lib_a, s21_a);
@@ -413,13 +368,6 @@ START_TEST(test_sscanf_i_p1) {
                        &s21_n);
   lib_res =
       sscanf("0123 0123 123", "%i %i %i %n", &lib_a, &lib_b, &lib_c, &lib_n);
-
-  // printf("первый чар %d второй чар %d третий: %d n: %d res: %d\n", lib_a,
-  // lib_b,
-  //        lib_c, lib_n, lib_res);
-  // printf("первый чар %d второй чар %d третий: %d n: %d res: %d\n", s21_a,
-  // s21_b,
-  //        s21_c, s21_n, s21_res);
 
   ck_assert_int_eq(s21_n, lib_n);
   ck_assert_int_eq(lib_res, s21_res);
@@ -447,13 +395,6 @@ START_TEST(test_sscanf_i_p2) {
   lib_res =
       sscanf("0x123 0123 123", "%i %i %i %n", &lib_a, &lib_b, &lib_c, &lib_n);
 
-  // printf("первый чар %d второй чар %d третий: %d n: %d res: %d\n", lib_a,
-  // lib_b,
-  //        lib_c, lib_n, lib_res);
-  // printf("первый чар %d второй чар %d третий: %d n: %d res: %d\n", s21_a,
-  // s21_b,
-  //        s21_c, s21_n, s21_res);
-
   ck_assert_int_eq(s21_n, lib_n);
   ck_assert_int_eq(lib_res, s21_res);
   ck_assert_int_eq(s21_a, lib_a);
@@ -478,13 +419,6 @@ START_TEST(test_sscanf_i_p3) {
   s21_res =
       s21_sscanf("0 0 123", "%i %d %i %n", &s21_a, &s21_b, &s21_c, &s21_n);
   lib_res = sscanf("0 0 123", "%i %d %i %n", &lib_a, &lib_b, &lib_c, &lib_n);
-
-  // printf("первый чар %d второй чар %d третий: %d n: %d res: %d\n", lib_a,
-  // lib_b,
-  //        lib_c, lib_n, lib_res);
-  // printf("первый чар %d второй чар %d третий: %d n: %d res: %d\n", s21_a,
-  // s21_b,
-  //        s21_c, s21_n, s21_res);
 
   ck_assert_int_eq(s21_n, lib_n);
   ck_assert_int_eq(lib_res, s21_res);
@@ -512,11 +446,6 @@ START_TEST(test_sscanf_i_p4) {
   lib_res =
       sscanf("23254 06789 123", "%d %i %i %n", &lib_a, &lib_b, &lib_c, &lib_n);
 
-  // printf("lib первый чар %d второй чар %d третий: %d n: %d res: %d\n", lib_a,
-  //        lib_b, lib_c, lib_n, lib_res);
-  // printf("s21 первый чар %d второй чар %d третий: %d n: %d res: %d\n", s21_a,
-  //        s21_b, s21_c, s21_n, s21_res);
-
   ck_assert_int_eq(s21_n, lib_n);
   ck_assert_int_eq(lib_res, s21_res);
   ck_assert_int_eq(s21_a, lib_a);
@@ -542,13 +471,6 @@ START_TEST(test_sscanf_i_p5) {
                        &s21_c, &s21_n);
   lib_res = sscanf("23254 067345 0x123", "%i %i %i %n", &lib_a, &lib_b, &lib_c,
                    &lib_n);
-
-  // printf("первый чар %d второй чар %d третий: %d n: %d res: %d\n", lib_a,
-  // lib_b,
-  //        lib_c, lib_n, lib_res);
-  // printf("первый чар %d второй чар %d третий: %d n: %d res: %d\n", s21_a,
-  // s21_b,
-  //        s21_c, s21_n, s21_res);
 
   ck_assert_int_eq(lib_res, s21_res);
   ck_assert_int_eq(s21_a, lib_a);
@@ -576,13 +498,6 @@ START_TEST(test_sscanf_i_p6) {
                        &s21_b, &s21_c, &s21_d, &s21_n);
   lib_res = sscanf("23254 06733 0x12x3 15", "%d %i %i %i %n", &lib_a, &lib_b,
                    &lib_c, &lib_d, &lib_n);
-
-  // printf(
-  //     "lib первый чар %d второй чар %d третий: %d четверты %d n: %d res:
-  //     %d\n", lib_a, lib_b, lib_c, lib_d, lib_n, lib_res);
-  // printf(
-  //     "s21 первый чар %d второй чар %d третий: %d четверты %d n: %d res:
-  //     %d\n", s21_a, s21_b, s21_c, s21_d, s21_n, s21_res);
 
   ck_assert_int_eq(lib_res, s21_res);
   ck_assert_int_eq(s21_a, lib_a);
@@ -613,13 +528,6 @@ START_TEST(test_sscanf_i_p7) {
   lib_res = sscanf("23254 06733 0y12 15", "%d %i %i %i %n", &lib_a, &lib_b,
                    &lib_c, &lib_d, &lib_n);
 
-  // printf(
-  //     "lib первый чар %d второй чар %d третий: %d четверты %d n: %d res:
-  //     %d\n", lib_a, lib_b, lib_c, lib_d, lib_n, lib_res);
-  // printf(
-  //     "s21 первый чар %d второй чар %d третий: %d четверты %d n: %d res:
-  //     %d\n", s21_a, s21_b, s21_c, s21_d, s21_n, s21_res);
-
   ck_assert_int_eq(lib_res, s21_res);
   ck_assert_int_eq(s21_a, lib_a);
   ck_assert_int_eq(s21_b, lib_b);
@@ -647,13 +555,6 @@ START_TEST(test_sscanf_i_p8) {
   lib_res = sscanf("23254 -06733 -0x123", "%10d %7i %4i %n", &lib_a, &lib_b,
                    &lib_c, &lib_n);
 
-  // printf("первый чар %d второй чар %d третий: %d n: %d res: %d\n", lib_a,
-  // lib_b,
-  //        lib_c, lib_n, lib_res);
-  // printf("первый чар %d второй чар %d третий: %d n: %d res: %d\n", s21_a,
-  // s21_b,
-  //        s21_c, s21_n, s21_res);
-
   ck_assert_int_eq(lib_res, s21_res);
   ck_assert_int_eq(s21_a, lib_a);
   ck_assert_int_eq(s21_b, lib_b);
@@ -679,11 +580,6 @@ START_TEST(test_sscanf_width_p1) {
                        &s21_b, &s21_c, &s21_n);
   lib_res = sscanf("23254 -0673342 -0x12357", "%d %i %4i %n", &lib_a, &lib_b,
                    &lib_c, &lib_n);
-
-  // printf("lib первый чар %d второй чар %d третий: %d n: %d res: %d\n", lib_a,
-  //        lib_b, lib_c, lib_n, lib_res);
-  // printf("s21 первый чар %d второй чар %d третий: %d n: %d res: %d\n", s21_a,
-  //        s21_b, s21_c, s21_n, s21_res);
 
   ck_assert_int_eq(lib_res, s21_res);
   ck_assert_int_eq(s21_a, lib_a);
@@ -711,11 +607,6 @@ START_TEST(test_sscanf_width_p2) {
   lib_res = sscanf("23254 -0673342 -0x2357", "%d %i %5i %n", &lib_a, &lib_b,
                    &lib_c, &lib_n);
 
-  // printf("lib первый чар %d второй чар %d третий: %d n: %d res: %d\n", lib_a,
-  //        lib_b, lib_c, lib_n, lib_res);
-  // printf("s21 первый чар %d второй чар %d третий: %d n: %d res: %d\n", s21_a,
-  //        s21_b, s21_c, s21_n, s21_res);
-
   ck_assert_int_eq(lib_res, s21_res);
   ck_assert_int_eq(s21_a, lib_a);
   ck_assert_int_eq(s21_b, lib_b);
@@ -742,11 +633,6 @@ START_TEST(test_sscanf_width_p2_linux_only) {
   lib_res = sscanf("23254 -0673342 -0xz2357", "%d %i %3i %n", &lib_a, &lib_b,
                    &lib_c, &lib_n);
 
-  // printf("lib первый чар %d второй чар %d третий: %d n: %d res: %d\n", lib_a,
-  //        lib_b, lib_c, lib_n, lib_res);
-  // printf("s21 первый чар %d второй чар %d третий: %d n: %d res: %d\n", s21_a,
-  //        s21_b, s21_c, s21_n, s21_res);
-
   ck_assert_int_eq(lib_res, s21_res);
   ck_assert_int_eq(s21_a, lib_a);
   ck_assert_int_eq(s21_b, lib_b);
@@ -772,11 +658,6 @@ START_TEST(test_sscanf_width_p2_1_linux_only) {
                        &s21_c, &s21_n);
   lib_res = sscanf("23254 -0673342 -0x2357", "%d %i %3i %n", &lib_a, &lib_b,
                    &lib_c, &lib_n);
-
-  // printf("lib первый чар %d второй чар %d третий: %d n: %d res: %d\n", lib_a,
-  //        lib_b, lib_c, lib_n, lib_res);
-  // printf("s21 первый чар %d второй чар %d третий: %d n: %d res: %d\n", s21_a,
-  //        s21_b, s21_c, s21_n, s21_res);
 
   ck_assert_int_eq(lib_res, s21_res);
   ck_assert_int_eq(s21_a, lib_a);
@@ -807,17 +688,6 @@ START_TEST(test_sscanf_width_p3) {
                        &s21_a, &s21_b, &s21_c, &s21_d, &s21_e, &s21_n);
   lib_res = sscanf("23254 -0673342 -0xz2357 0x664532", "%d %i %4i %i %i %n",
                    &lib_a, &lib_b, &lib_c, &lib_d, &lib_e, &lib_n);
-
-  // printf(
-  //     "lib первый чар %d второй чар %d третий: %d четвёртый: %c пять: %d n:
-  //     %d " "res: "
-  //     "%d\n",
-  //     lib_a, lib_b, lib_c, lib_d, lib_e, lib_n, lib_res);
-  // printf(
-  //     "s21 первый чар %d второй чар %d третий: %d четвёртый: %c пять: %d n:
-  //     %d " "res: "
-  //     "%d\n",
-  //     s21_a, s21_b, s21_c, s21_d, s21_e, s21_n, s21_res);
 
   ck_assert_int_eq(s21_n, lib_n);
   ck_assert_int_eq(lib_res, s21_res);
@@ -851,17 +721,6 @@ START_TEST(test_sscanf_width_p3_linux_only) {
   lib_res = sscanf("23254 -0673342 -0xz2357 0x664532", "%d %i %4i %c %i %n",
                    &lib_a, &lib_b, &lib_c, &lib_d, &lib_e, &lib_n);
 
-  // printf(
-  //     "lib первый чар %d второй чар %d третий: %d четвёртый: %c пять: %d n:
-  //     %d " "res: "
-  //     "%d\n",
-  //     lib_a, lib_b, lib_c, lib_d, lib_e, lib_n, lib_res);
-  // printf(
-  //     "s21 первый чар %d второй чар %d третий: %d четвёртый: %c пять: %d n:
-  //     %d " "res: "
-  //     "%d\n",
-  //     s21_a, s21_b, s21_c, s21_d, s21_e, s21_n, s21_res);
-
   ck_assert_int_eq(s21_n, lib_n);
   ck_assert_int_eq(lib_res, s21_res);
   ck_assert_int_eq(s21_a, lib_a);
@@ -889,13 +748,6 @@ START_TEST(test_sscanf_d) {
                        &s21_n);
   lib_res =
       sscanf("12345 0789 123", "%d %d %d %n", &lib_a, &lib_b, &lib_c, &lib_n);
-
-  // printf("первый чар %d второй чар %d третий: %d n: %d res: %d\n", lib_a,
-  // lib_b,
-  //        lib_c, lib_n, lib_res);
-  // printf("первый чар %d второй чар %d третий: %d n: %d res: %d\n", s21_a,
-  // s21_b,
-  //        s21_c, s21_n, s21_res);
 
   ck_assert_int_eq(lib_res, s21_res);
   ck_assert_int_eq(s21_a, lib_a);
@@ -926,15 +778,6 @@ START_TEST(test_sscanf_long_i) {
   lib_res =
       sscanf("2147483647 -21474836489 017777777777 0x7fffffff",
              "%li %li %li %li %n", &lib_a, &lib_b, &lib_c, &lib_d, &lib_n);
-
-  // printf(
-  //     "lib первый чар %ld второй чар %ld третий: %ld четыре %ld  n: %d res: "
-  //     "%d\n",
-  //     lib_a, lib_b, lib_c, lib_d, lib_n, lib_res);
-  // printf(
-  //     "s21 первый чар %ld второй чар %ld третий: %ld четыре %ld n: %d res: "
-  //     "%d\n",
-  //     s21_a, s21_b, s21_c, s21_d, s21_n, s21_res);
 
   ck_assert_int_eq(lib_res, s21_res);
   ck_assert_int_eq(s21_a, lib_a);
@@ -967,15 +810,6 @@ START_TEST(test_sscanf_long_i_p2) {
       sscanf("-234235 -2147483 -0177777777 -0x7fffff", "%li %li %li %li %n",
              &lib_a, &lib_b, &lib_c, &lib_d, &lib_n);
 
-  // printf(
-  //     "lib первый чар %ld второй чар %ld третий: %ld четыре %ld  n: %d res: "
-  //     "%d\n",
-  //     lib_a, lib_b, lib_c, lib_d, lib_n, lib_res);
-  // printf(
-  //     "s21 первый чар %ld второй чар %ld третий: %ld четыре %ld n: %d res: "
-  //     "%d\n",
-  //     s21_a, s21_b, s21_c, s21_d, s21_n, s21_res);
-
   ck_assert_int_eq(lib_res, s21_res);
   ck_assert_int_eq(s21_a, lib_a);
   ck_assert_int_eq(s21_b, lib_b);
@@ -1007,15 +841,6 @@ START_TEST(test_sscanf_overflow_long_i) {
       sscanf("214748364155 -2147483649 020000000001 0x80000001",
              "%li %li %li %li %n", &lib_a, &lib_b, &lib_c, &lib_d, &lib_n);
 
-  // printf(
-  //     "lib первый чар %ld второй чар %ld третий: %ld четыре %ld  n: %d res: "
-  //     "%d\n",
-  //     lib_a, lib_b, lib_c, lib_d, lib_n, lib_res);
-  // printf(
-  //     "s21 первый чар %ld второй чар %ld третий: %ld четыре %ld n: %d res: "
-  //     "%d\n",
-  //     s21_a, s21_b, s21_c, s21_d, s21_n, s21_res);
-
   ck_assert_int_eq(lib_res, s21_res);
   ck_assert_int_eq(s21_a, lib_a);
   ck_assert_int_eq(s21_b, lib_b);
@@ -1045,9 +870,6 @@ START_TEST(test_sscanf_owerflow_short_negative_valua_spec_i) {
   lib_res = sscanf("-0100002 0x8fa2 -70000", "%hi %hi %hi %n", &lib_a, &lib_b,
                    &lib_c, &lib_n);
 
-  // printf("lib первый чар %hd n: %d res: %d\n", lib_a, lib_n, lib_res);
-  // printf("s21 первый чар %hd n: %d res: %d\n", s21_a, s21_n, s21_res);
-
   ck_assert_int_eq(lib_res, s21_res);
   ck_assert_int_eq(s21_a, lib_a);
   ck_assert_int_eq(s21_n, lib_n);
@@ -1073,11 +895,6 @@ START_TEST(test_sscanf_short_i) {
                        &s21_a, &s21_b, &s21_c, &s21_d, &s21_n);
   lib_res = sscanf("32767 -32768 077777, 0x7fff", "%hi %hi %hi, %hi %n", &lib_a,
                    &lib_b, &lib_c, &lib_d, &lib_n);
-
-  // printf("первый чар %d второй чар %d третий: %d четыре %d  n: %d res: %d\n",
-  //        lib_a, lib_b, lib_c, lib_d, lib_n, lib_res);
-  // printf("первый чар %d второй чар %d третий: %d четыре %d n: %d res: %d\n",
-  //        s21_a, s21_b, s21_c, s21_d, s21_n, s21_res);
 
   ck_assert_int_eq(lib_res, s21_res);
   ck_assert_int_eq(s21_a, lib_a);
@@ -1109,13 +926,6 @@ START_TEST(test_sscanf_overflow_short_i) {
   lib_res = sscanf("2147883677 -3279999 0100001 0x8001", "%hi %hi %hi %hi %n",
                    &lib_a, &lib_b, &lib_c, &lib_d, &lib_n);
 
-  // printf(
-  //     "lib первый чар %d второй чар %d третий: %d четыре %d  n: %d res:
-  //     %d\n", lib_a, lib_b, lib_c, lib_d, lib_n, lib_res);
-  // printf("s21 первый чар %d второй чар %d третий: %d четыре %d n: %d res:
-  // %d\n",
-  //        s21_a, s21_b, s21_c, s21_d, s21_n, s21_res);
-
   ck_assert_int_eq(lib_res, s21_res);
   ck_assert_int_eq(s21_a, lib_a);
   ck_assert_int_eq(s21_b, lib_b);
@@ -1146,13 +956,6 @@ START_TEST(test_sscanf_overflow_spec_i) {
   lib_res = sscanf("2147883677, -020000000537 0x802626ff -0x802626ff",
                    "%i, %i %i %i %n", &lib_a, &lib_b, &lib_c, &lib_d, &lib_n);
 
-  // printf(
-  //     "lib первый чар %d второй чар %d третий: %d четыре %d  n: %d res:
-  //     %d\n", lib_a, lib_b, lib_c, lib_d, lib_n, lib_res);
-  // printf("s21 первый чар %d второй чар %d третий: %d четыре %d n: %d res:
-  // %d\n",
-  //        s21_a, s21_b, s21_c, s21_d, s21_n, s21_res);
-
   ck_assert_int_eq(lib_res, s21_res);
   ck_assert_int_eq(s21_a, lib_a);
   ck_assert_int_eq(s21_b, lib_b);
@@ -1181,13 +984,6 @@ START_TEST(test_sscanf_octal_problematic) {
                        &s21_b, &s21_c, &s21_d, &s21_n);
   lib_res = sscanf("0327 03273549 01644 04001", "%o %o %o %o %n", &lib_a,
                    &lib_b, &lib_c, &lib_d, &lib_n);
-
-  // printf("lib первый чар %d второй чар %d третий: %d четыре %d n: %d res:
-  // %d\n",
-  //        lib_a, lib_b, lib_c, lib_d, lib_n, lib_res);
-  // printf("s21 первый чар %d второй чар %d третий: %d четыре %d n: %d res:
-  // %d\n",
-  //        s21_a, s21_b, s21_c, s21_d, s21_n, s21_res);
 
   ck_assert_int_eq(lib_res, s21_res);
   ck_assert_uint_eq(s21_a, lib_a);
@@ -1218,13 +1014,6 @@ START_TEST(test_sscanf_octal) {
   lib_res = sscanf("0327 0327 01644 04001", "%o %o %o %3o %n", &lib_a, &lib_b,
                    &lib_c, &lib_d, &lib_n);
 
-  // printf("lib первый чар %d второй чар %d третий: %d четыре %d n: %d res:
-  // %d\n",
-  //        lib_a, lib_b, lib_c, lib_d, lib_n, lib_res);
-  // printf("s21 первый чар %d второй чар %d третий: %d четыре %d n: %d res:
-  // %d\n",
-  //        s21_a, s21_b, s21_c, s21_d, s21_n, s21_res);
-
   ck_assert_int_eq(lib_res, s21_res);
   ck_assert_uint_eq(s21_a, lib_a);
   ck_assert_uint_eq(s21_b, lib_b);
@@ -1247,9 +1036,6 @@ START_TEST(test_sscanf_long_octal) {
   s21_res = s21_sscanf("037777777777", "%lo %n", &s21_a, &s21_n);
   lib_res = sscanf("037777777777", "%lo %n", &lib_a, &lib_n);
 
-  // printf("lib первый чар %ld n: %d res: %d\n", lib_a, lib_n, lib_res);
-  // printf("s21 первый чар %ld n: %d res: %d\n", s21_a, s21_n, s21_res);
-
   ck_assert_int_eq(lib_res, s21_res);
   ck_assert_uint_eq(s21_a, lib_a);
   ck_assert_int_eq(s21_n, lib_n);
@@ -1268,9 +1054,6 @@ START_TEST(test_sscanf_overflow_long_octal) {
 
   s21_res = s21_sscanf("045156223377", "%lo %n", &s21_a, &s21_n);
   lib_res = sscanf("045156223377", "%lo %n", &lib_a, &lib_n);
-
-  // printf("lib первый чар %ld n: %d res: %d\n", lib_a, lib_n, lib_res);
-  // printf("s21 первый чар %ld n: %d res: %d\n", s21_a, s21_n, s21_res);
 
   ck_assert_int_eq(lib_res, s21_res);
   ck_assert_uint_eq(s21_a, lib_a);
@@ -1291,9 +1074,6 @@ START_TEST(test_sscanf_short_octal) {
   s21_res = s21_sscanf("0177777", "%ho %n", &s21_a, &s21_n);
   lib_res = sscanf("0177777", "%ho %n", &lib_a, &lib_n);
 
-  // printf("lib первый чар %hd n: %d res: %d\n", lib_a, lib_n, lib_res);
-  // printf("s21 первый чар %hd n: %d res: %d\n", s21_a, s21_n, s21_res);
-
   ck_assert_int_eq(lib_res, s21_res);
   ck_assert_uint_eq(s21_a, lib_a);
   ck_assert_int_eq(s21_n, lib_n);
@@ -1312,9 +1092,6 @@ START_TEST(test_sscanf_overflow_short_octal) {
 
   s21_res = s21_sscanf("02516077", "%ho %n", &s21_a, &s21_n);
   lib_res = sscanf("02516077", "%ho %n", &lib_a, &lib_n);
-
-  // printf("lib первый чар %hd n: %d res: %d\n", lib_a, lib_n, lib_res);
-  // printf("s21 первый чар %hd n: %d res: %d\n", s21_a, s21_n, s21_res);
 
   ck_assert_int_eq(lib_res, s21_res);
   ck_assert_uint_eq(s21_a, lib_a);
@@ -1341,13 +1118,6 @@ START_TEST(test_sscanf_hex_problematic) {
                        &s21_a, &s21_b, &s21_c, &s21_d, &s21_n);
   lib_res = sscanf("0x327 0x327f99 0x1007zf01 0x4001", "%x %x %X %X %n", &lib_a,
                    &lib_b, &lib_c, &lib_d, &lib_n);
-
-  // printf(
-  //     "lib первый чар %d второй чар %d третий: %d четыре %d  n: %d res:
-  //     %d\n", lib_a, lib_b, lib_c, lib_d, lib_n, lib_res);
-  // printf("s21 первый чар %d второй чар %d третий: %d четыре %d n: %d res:
-  // %d\n",
-  //  s21_a, s21_b, s21_c, s21_d, s21_n, s21_res);
 
   ck_assert_int_eq(lib_res, s21_res);
   ck_assert_uint_eq(s21_a, lib_a);
@@ -1378,13 +1148,6 @@ START_TEST(test_sscanf_hex) {
   lib_res = sscanf("0x327 0x327f99 0x1007f01 0x4001", "%x %x %X %X %n", &lib_a,
                    &lib_b, &lib_c, &lib_d, &lib_n);
 
-  // printf(
-  //     "lib первый чар %d второй чар %d третий: %d четыре %d  n: %d res:
-  //     %d\n", lib_a, lib_b, lib_c, lib_d, lib_n, lib_res);
-  // printf("s21 первый чар %d второй чар %d третий: %d четыре %d n: %d res:
-  // %d\n",
-  //        s21_a, s21_b, s21_c, s21_d, s21_n, s21_res);
-
   ck_assert_int_eq(lib_res, s21_res);
   ck_assert_uint_eq(s21_a, lib_a);
   ck_assert_uint_eq(s21_b, lib_b);
@@ -1407,9 +1170,6 @@ START_TEST(test_sscanf_long_hex) {
   s21_res = s21_sscanf("0xffffffff,", "%lx, %n", &s21_a, &s21_n);
   lib_res = sscanf("0xffffffff,", "%lx, %n", &lib_a, &lib_n);
 
-  // printf("lib первый чар %ld n: %d res: %d\n", lib_a, lib_n, lib_res);
-  // printf("s21 первый чар %ld n: %d res: %d\n", s21_a, s21_n, s21_res);
-
   ck_assert_int_eq(lib_res, s21_res);
   ck_assert_uint_eq(s21_a, lib_a);
   ck_assert_int_eq(s21_n, lib_n);
@@ -1428,9 +1188,6 @@ START_TEST(test_sscanf_overflow_long_hex) {
 
   s21_res = s21_sscanf("0x129b926ff,", "%lx, %n", &s21_a, &s21_n);
   lib_res = sscanf("0x129b926ff,", "%lx, %n", &lib_a, &lib_n);
-
-  // printf("lib первый чар %ld n: %d res: %d\n", lib_a, lib_n, lib_res);
-  // printf("s21 первый чар %ld n: %d res: %d\n", s21_a, s21_n, s21_res);
 
   ck_assert_int_eq(lib_res, s21_res);
   ck_assert_uint_eq(s21_a, lib_a);
@@ -1451,9 +1208,6 @@ START_TEST(test_sscanf_short_hex) {
   s21_res = s21_sscanf("0XFFFF", "%hx %n", &s21_a, &s21_n);
   lib_res = sscanf("0XFFFF", "%hx %n", &lib_a, &lib_n);
 
-  // printf("lib первый чар %hd n: %d res: %d\n", lib_a, lib_n, lib_res);
-  // printf("s21 первый чар %hd n: %d res: %d\n", s21_a, s21_n, s21_res);
-
   ck_assert_int_eq(lib_res, s21_res);
   ck_assert_uint_eq(s21_a, lib_a);
   ck_assert_int_eq(s21_n, lib_n);
@@ -1472,9 +1226,6 @@ START_TEST(test_sscanf_overflow_short_hex) {
 
   s21_res = s21_sscanf("0x11387", "%hx %n", &s21_a, &s21_n);
   lib_res = sscanf("0x11387", "%hx %n", &lib_a, &lib_n);
-
-  // printf("lib первый чар %hd n: %d res: %d\n", lib_a, lib_n, lib_res);
-  // printf("s21 первый чар %hd n: %d res: %d\n", s21_a, s21_n, s21_res);
 
   ck_assert_int_eq(lib_res, s21_res);
   ck_assert_uint_eq(s21_a, lib_a);
