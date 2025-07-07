@@ -100,7 +100,7 @@ END_TEST
 START_TEST(test_strncmp_substring) {
   char* str1 = "Hello";
   char* str2 = "Hello, world!";
-  s21_size_t n = 10;  // n больше длины str1, но меньше str2
+  s21_size_t n = 10;
 
   int s21_result = s21_strncmp(str1, str2, n);
   // int lib_result = strncmp(str1, str2, n);

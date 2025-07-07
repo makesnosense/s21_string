@@ -1263,9 +1263,6 @@ START_TEST(test_sscanf_float_2) {
   lib_res = sscanf("+1844.654656 1844.654656", "%f %f", &lib_a, &lib_b);
   s21_res = s21_sscanf("+1844.654656 1844.654656", "%f %f", &s21_a, &s21_b);
 
-  // printf("s21 first: %f second: %f res: %d\n", s21_a, s21_b, s21_res);
-  // printf("lib first: %f second: %f res: %d\n\n", lib_a, lib_b, lib_res);
-
   ck_assert_int_eq(lib_res, s21_res);
   ck_assert_float_eq(lib_a, s21_a);
   ck_assert_float_eq(lib_b, s21_b);
@@ -1283,9 +1280,6 @@ START_TEST(test_sscanf_float_3) {
 
   lib_res = sscanf("-0.999 -912.12", "%4f %f", &lib_a, &lib_b);
   s21_res = s21_sscanf("-0.999 -912.12", "%4f %f", &s21_a, &s21_b);
-
-  // printf("s21 first: %f second: %f res: %d\n", s21_a, s21_b, s21_res);
-  // printf("lib first: %f second: %f res: %d\n\n", lib_a, lib_b, lib_res);
 
   ck_assert_int_eq(lib_res, s21_res);
   ck_assert_float_eq(lib_a, s21_a);
@@ -2268,9 +2262,6 @@ START_TEST(test_sscanf_nonsimple_wchar_p1) {
   lib_res = sscanf("a \xFF ", " %lc %lc %n", &lib_a, &lib_b, &lib_c);
   s21_res = s21_sscanf("a \xFF ", " %lc %lc %n", &s21_a, &s21_b, &s21_c);
 
-  // printf("\ns21 первый чар %lc второй чар %lc n: %d\n", s21_a, s21_b, s21_c);
-  // printf("\nlib первый чар %lc второй чар %lc n: %d\n", lib_a, lib_b, lib_c);
-
   ck_assert_int_eq(lib_res, s21_res);
   ck_assert_int_eq(lib_a, s21_a);
   ck_assert_int_eq(lib_b, s21_b);
@@ -2299,9 +2290,6 @@ START_TEST(test_sscanf_nonsimple_wchar_p2) {
   lib_res = sscanf("\t\t й ツ \t \n \f", " %lc %lc %n", &lib_a, &lib_b, &lib_c);
   s21_res =
       s21_sscanf("\t\t й ツ \t \n \f", " %lc %lc %n", &s21_a, &s21_b, &s21_c);
-
-  // printf("\ns21 первый чар %lc второй чар %lc n: %d\n", s21_a, s21_b, s21_c);
-  // printf("\nlib первый чар %lc второй чар %lc n: %d\n", lib_a, lib_b, lib_c);
 
   ck_assert_int_eq(lib_res, s21_res);
   ck_assert_int_eq(lib_a, s21_a);
