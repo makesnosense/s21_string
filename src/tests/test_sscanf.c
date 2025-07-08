@@ -1301,9 +1301,6 @@ START_TEST(test_sscanf_long_float) {
   s21_res = s21_sscanf("1119007199254740992.6424 -1119007199254740992.6424",
                        "%lf %lf", &s21_a, &s21_b);
 
-  // printf("s21 first: %lf second: %lf res: %d\n", s21_a, s21_b, s21_res);
-  // printf("lib first: %lf second: %lf res: %d\n\n", lib_a, lib_b, lib_res);
-
   ck_assert_int_eq(lib_res, s21_res);
   ck_assert_double_eq(lib_a, s21_a);
   ck_assert_double_eq(lib_b, s21_b);
@@ -1323,9 +1320,6 @@ START_TEST(test_sscanf_long_long_float) {
                    &lib_a, &lib_b);
   s21_res = s21_sscanf("792281625142643375.0 -792281625142643375.0", "%Lf %Lf",
                        &s21_a, &s21_b);
-
-  // printf("s21 first: %Lf second: %Lf res: %d\n", s21_a, s21_b, s21_res);
-  // printf("lib first: %Lf second: %Lf res: %d\n\n", lib_a, lib_b, lib_res);
 
   ck_assert_int_eq(lib_res, s21_res);
   ck_assert_ldouble_eq(lib_a, s21_a);
@@ -1351,9 +1345,6 @@ START_TEST(test_sscanf_overflow_long_long_float) {
       "-792281625142643375.0 ",
       "%Lf %Lf", &s21_a, &s21_b);
 
-  // printf("s21 first: %Lf second: %Lf res: %d\n", s21_a, s21_b, s21_res);
-  // printf("lib first: %Lf second: %Lf res: %d\n\n", lib_a, lib_b, lib_res);
-
   ck_assert_int_eq(lib_res, s21_res);
   ck_assert_ldouble_eq(lib_a, s21_a);
   ck_assert_ldouble_eq(lib_b, s21_b);
@@ -1370,8 +1361,6 @@ START_TEST(test_sscanf_specific_float) {
   lib_res = sscanf(".43234", "%f", &lib_a);
   s21_res = s21_sscanf(".43234", "%f", &s21_a);
 
-  // printf("s21 first: %f res: %d\n", s21_a, s21_res);
-  // printf("lib first: %f res: %d\n\n", lib_a, lib_res);
   ck_assert_int_eq(lib_res, s21_res);
   ck_assert_float_eq(lib_a, s21_a);
 }
@@ -1391,8 +1380,6 @@ START_TEST(test_sscanf_unsigned) {
   s21_res = s21_sscanf("Unsigned 1: 7, unsigned 2: 123123123",
                        "Unsigned 1: %u, unsigned 2: %u", &s21_a, &s21_b);
 
-  // printf("s21 first: %u second: %u res: %d\n", s21_a, s21_b, s21_res);
-  // printf("lib first: %u second: %u res: %d\n\n", lib_a, lib_b, lib_res);
   ck_assert_int_eq(lib_res, s21_res);
   ck_assert_uint_eq(lib_a, s21_a);
   ck_assert_int_eq(lib_b, s21_b);
@@ -1409,9 +1396,6 @@ START_TEST(test_sscanf_long_unsigned) {
   lib_res = sscanf("4294967295", "%lu", &lib_a);
   s21_res = s21_sscanf("4294967295", "%lu", &s21_a);
 
-  // printf("s21 first: %lu res: %d\n", s21_a, s21_res);
-  // printf("lib first: %lu res: %d\n\n", lib_a, lib_res);
-
   ck_assert_int_eq(lib_res, s21_res);
   ck_assert_uint_eq(lib_a, s21_a);
 }
@@ -1426,9 +1410,6 @@ START_TEST(test_sscanf_overflow_long_unsigned) {
 
   lib_res = sscanf("59949672955", "%lu", &lib_a);
   s21_res = s21_sscanf("59949672955", "%lu", &s21_a);
-
-  // printf("s21 first: %lu res: %d\n", s21_a, s21_res);
-  // printf("lib first: %lu res: %d\n\n", lib_a, lib_res);
 
   ck_assert_int_eq(lib_res, s21_res);
   ck_assert_uint_eq(lib_a, s21_a);
@@ -1445,9 +1426,6 @@ START_TEST(test_sscanf_short_unsigned) {
   lib_res = sscanf("65535", "%hu", &lib_a);
   s21_res = s21_sscanf("65535", "%hu", &s21_a);
 
-  // printf("s21 first: %hu res: %d\n", s21_a, s21_res);
-  // printf("lib first: %hu res: %d\n\n", lib_a, lib_res);
-
   ck_assert_int_eq(lib_res, s21_res);
   ck_assert_uint_eq(lib_a, s21_a);
 }
@@ -1462,9 +1440,6 @@ START_TEST(test_sscanf_overflow_short_unsigned) {
 
   lib_res = sscanf("95536555", "%hu", &lib_a);
   s21_res = s21_sscanf("95536555", "%hu", &s21_a);
-
-  // printf("s21 first: %hu res: %d\n", s21_a, s21_res);
-  // printf("lib first: %hu res: %d\n\n", lib_a, lib_res);
 
   ck_assert_int_eq(lib_res, s21_res);
   ck_assert_uint_eq(lib_a, s21_a);
@@ -1568,9 +1543,6 @@ START_TEST(test_sscanf_string) {
   lib_res = sscanf("Hello, world", "%s", lib_a);
   s21_res = s21_sscanf("Hello, world", "%s", s21_a);
 
-  // printf("s21 string: %s\n", s21_a);
-  // printf("lib string: %s\n\n", lib_a);
-
   ck_assert_int_eq(lib_res, s21_res);
   ck_assert_str_eq(lib_a, s21_a);
 }
@@ -1587,9 +1559,6 @@ START_TEST(test_sscanf_string_suppresion) {
 
   lib_res = sscanf("Hello, world", "%*s %s", lib_b);
   s21_res = s21_sscanf("Hello, world", "%*s %s", s21_b);
-
-  // printf("s21 string one: %s string two: %s\n", s21_a, s21_b);
-  // printf("lib string one: %s string two: %s\n\n", lib_a, lib_b);
 
   ck_assert_int_eq(lib_res, s21_res);
   ck_assert_str_eq(lib_a, s21_a);
@@ -1609,9 +1578,6 @@ START_TEST(test_sscanf_string_width) {
   lib_res = sscanf("Hello, world", "%2s %s", lib_a, lib_b);
   s21_res = s21_sscanf("Hello, world", "%2s %s", s21_a, s21_b);
 
-  // printf("s21 string one: %s string two: %s\n", s21_a, s21_b);
-  // printf("lib string one: %s string two: %s\n\n", lib_a, lib_b);
-
   ck_assert_int_eq(lib_res, s21_res);
   ck_assert_str_eq(lib_a, s21_a);
   ck_assert_str_eq(lib_b, s21_b);
@@ -1629,9 +1595,6 @@ START_TEST(test_sscanf_string_mix_width_and_suppresion) {
 
   lib_res = sscanf("Hello, world", "%*2s %s", lib_b);
   s21_res = s21_sscanf("Hello, world", "%*2s %s", s21_b);
-
-  // printf("s21 string one: %s string two: %s\n", s21_a, s21_b);
-  // printf("lib string one: %s string two: %s\n\n", lib_a, lib_b);
 
   ck_assert_int_eq(lib_res, s21_res);
   ck_assert_str_eq(lib_a, s21_a);
@@ -1746,9 +1709,6 @@ START_TEST(test_sscanf_ptr_whitespaces) {
 
   lib_res = sscanf("      0x12345678", "%p", &lib_ptr);
   s21_res = s21_sscanf("      0x12345678", "%p", &s21_ptr);
-
-  // printf("s21 pointer: %p\n", s21_ptr);
-  // printf("lib pointer: %p\n\n", lib_ptr);
 
   ck_assert_int_eq(lib_res, s21_res);
   ck_assert_ptr_eq(lib_ptr, s21_ptr);
