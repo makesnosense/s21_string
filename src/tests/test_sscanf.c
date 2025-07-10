@@ -1871,9 +1871,6 @@ START_TEST(test_sscanf_e_inf) {
   lib_res = sscanf("inf", "%E", &lib_f);
   s21_res = s21_sscanf("inf", "%E", &s21_f);
 
-  // printf("s21 number: %e\n", s21_f);
-  // printf("lib number: %e\n\n", lib_f);
-
   ck_assert_int_eq(lib_res, s21_res);
   ck_assert_float_infinite(lib_f);
   ck_assert_float_infinite(s21_f);
@@ -1889,9 +1886,6 @@ START_TEST(test_sscanf_e_negative_inf) {
 
   lib_res = sscanf("-inf", "%E", &lib_f);
   s21_res = s21_sscanf("-inf", "%E", &s21_f);
-
-  // printf("s21 number: %e\n", s21_f);
-  // printf("lib number: %e\n\n", lib_f);
 
   ck_assert_int_eq(lib_res, s21_res);
   ck_assert_float_infinite(lib_f);
@@ -1909,9 +1903,6 @@ START_TEST(test_sscanf_e_nan) {
   lib_res = sscanf("nan", "%e", &lib_f);
   s21_res = s21_sscanf("nan", "%e", &s21_f);
 
-  // printf("s21 number: %e\n", s21_f);
-  // printf("lib number: %e\n\n", lib_f);
-
   ck_assert_int_eq(lib_res, s21_res);
   ck_assert_float_nan(s21_f);
   ck_assert_float_nan(lib_f);
@@ -1928,9 +1919,6 @@ START_TEST(test_sscanf_e_negative_nan) {
   lib_res = sscanf("-nan", "%e", &lib_f);
   s21_res = s21_sscanf("-nan", "%e", &s21_f);
 
-  // printf("s21 number: %e\n", s21_f);
-  // printf("lib number: %e\n\n", lib_f);
-
   ck_assert_int_eq(lib_res, s21_res);
   ck_assert_float_nan(s21_f);
   ck_assert_float_nan(lib_f);
@@ -1946,9 +1934,6 @@ START_TEST(test_sscanf_e_inf_nan_mixed) {
 
   lib_res = sscanf("inf+nan", "%e", &lib_f);
   s21_res = s21_sscanf("inf+nan", "%e", &s21_f);
-
-  // printf("s21 number: %e\n", s21_f);
-  // printf("lib number: %e\n\n", lib_f);
 
   ck_assert_int_eq(lib_res, s21_res);
   ck_assert_float_infinite(lib_f);
@@ -2071,9 +2056,6 @@ START_TEST(test_sscanf_g_inf) {
   lib_res = sscanf("inf", "%G", &lib_f);
   s21_res = s21_sscanf("inf", "%G", &s21_f);
 
-  // printf("s21 number: %e\n", s21_f);
-  // printf("lib number: %e\n\n", lib_f);
-
   ck_assert_int_eq(lib_res, s21_res);
   ck_assert_float_infinite(lib_f);
   ck_assert_float_infinite(s21_f);
@@ -2089,9 +2071,6 @@ START_TEST(test_sscanf_g_negative_inf) {
 
   lib_res = sscanf("-inf", "%G", &lib_f);
   s21_res = s21_sscanf("-inf", "%G", &s21_f);
-
-  // printf("s21 number: %e\n", s21_f);
-  // printf("lib number: %e\n\n", lib_f);
 
   ck_assert_int_eq(lib_res, s21_res);
   ck_assert_float_infinite(lib_f);
@@ -2109,9 +2088,6 @@ START_TEST(test_sscanf_g_nan) {
   lib_res = sscanf("nan", "%g", &lib_f);
   s21_res = s21_sscanf("nan", "%g", &s21_f);
 
-  // printf("s21 number: %e\n", s21_f);
-  // printf("lib number: %e\n\n", lib_f);
-
   ck_assert_int_eq(lib_res, s21_res);
   ck_assert_float_nan(s21_f);
   ck_assert_float_nan(lib_f);
@@ -2128,9 +2104,6 @@ START_TEST(test_sscanf_g_negative_nan) {
   lib_res = sscanf("-nan", "%g", &lib_f);
   s21_res = s21_sscanf("-nan", "%g", &s21_f);
 
-  // printf("s21 number: %e\n", s21_f);
-  // printf("lib number: %e\n\n", lib_f);
-
   ck_assert_int_eq(lib_res, s21_res);
   ck_assert_float_nan(s21_f);
   ck_assert_float_nan(lib_f);
@@ -2146,9 +2119,6 @@ START_TEST(test_sscanf_g_inf_nan_mixed) {
 
   lib_res = sscanf("inf+nan", "%g", &lib_f);
   s21_res = s21_sscanf("inf+nan", "%g", &s21_f);
-
-  // printf("s21 number: %e\n", s21_f);
-  // printf("lib number: %e\n\n", lib_f);
 
   ck_assert_int_eq(lib_res, s21_res);
   ck_assert_float_infinite(lib_f);
@@ -2285,9 +2255,6 @@ START_TEST(test_sscanf_nonsimple_wstring) {
   s21_res = s21_sscanf("молодец у мамы я", " %ls %ls %ls %ls %n", s21_a, s21_b,
                        s21_d, s21_e, &s21_c);
 
-  // printf("\ns21 %ls %ls %ls %ls n: %d\n", s21_a, s21_b, s21_d, s21_e, s21_c);
-  // printf("\nlib %ls %ls %ls %ls n: %d\n", lib_a, lib_b, lib_d, lib_e, lib_c);
-
   ck_assert_int_eq(wcscmp(lib_a, s21_a), 0);
   ck_assert_int_eq(wcscmp(lib_b, s21_b), 0);
   ck_assert_int_eq(wcscmp(lib_d, s21_d), 0);
@@ -2330,13 +2297,6 @@ START_TEST(test_sscanf_nonsimple_width_wstring) {
   s21_res = s21_sscanf("잘했어요 엄마 정말 좋아요", " %2ls %1ls %1ls %ls %n",
                        s21_a, s21_b, s21_d, s21_e, &s21_c);
 
-  // printf("\ns21 one: %ls two: %ls free: %ls fore: %ls n: %d\n", s21_a, s21_b,
-  //        s21_d, s21_e, s21_c);
-  // printf("\nlib one: %ls two: %ls free: %ls fore: %ls n: %d\n", lib_a, lib_b,
-  //        lib_d, lib_e, lib_c);
-
-  // printf("\ns21r %d libr %d\n", s21_res, lib_res);
-
   ck_assert_int_eq(wcscmp(lib_a, s21_a), 0);
   ck_assert_int_eq(wcscmp(lib_b, s21_b), 0);
   ck_assert_int_eq(wcscmp(lib_d, s21_d), 0);
@@ -2361,9 +2321,6 @@ START_TEST(test_sscanf_percent) {
 
   lib_res = sscanf("# 4323.234", "%% %g", &lib_f);
   s21_res = s21_sscanf("# 4323.234", "%% %g", &s21_f);
-
-  // printf("s21 number: %e\n", s21_f);
-  // printf("lib number: %e\n\n", lib_f);
 
   ck_assert_int_eq(lib_res, s21_res);
   ck_assert_float_eq(s21_f, lib_f);
