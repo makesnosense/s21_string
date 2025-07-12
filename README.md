@@ -1,9 +1,77 @@
 # s21_string
 
-Partial reimplementation of the string.h library (with additions) executed as a practice project at School 21 (formerly 42.fr)
+A reimplementation of `string.h` functions from the C standard library (with additions) executed as a practice project at School 21 (formerly 42.fr)
 
 *N.B.: The definition and use of s21_size_t type is part of the educational project requirements.*
 
+
+## Example Usage
+
+```c
+#include "s21_string.h"
+#include <stdio.h>
+
+int main() {
+    char buffer[100];
+    char* result;
+    
+    // string formatting
+    s21_sprintf(buffer, "Number: %d, Float: %.2f", 42, 3.14159);
+    printf("%s\n", buffer);
+    
+    // string processing
+    result = s21_to_upper("hello world");
+    printf("%s\n", result);  // "HELLO WORLD"
+    free(result);
+    
+    // string insertion
+    result = s21_insert("Hello", " World", 5);
+    printf("%s\n", result);  // "Hello World"
+    free(result);
+    
+    return 0;
+}
+```
+
+## Installation
+
+To use the s21_string library in your project:
+
+1. Clone the repository and build the library:
+```bash
+git clone https://github.com/makesnosense/s21_string.git
+cd s21_string/src
+make
+```
+
+2. Include the header file in your C project:
+```c
+#include "s21_string.h"
+```
+
+3. Link against the built library when compiling your project:
+```bash
+gcc your_program.c -I./path/to/s21_string/src -L./path/to/s21_string/src -ls21_string -o your_program
+```
+or link directly to the static library:
+```bash
+gcc your_program.c ./path/to/s21_string/src/s21_string.a -I./path/to/s21_string/src -o your_program
+```
+
+## Testing
+
+To run the test suite:
+```bash
+cd s21_string/src
+make test
+```
+
+To generate a code coverage report:
+```bash
+make gcov_report
+```
+
+## Function Reference
 ### string.h Functions
 
 Implemented string.h functions:
